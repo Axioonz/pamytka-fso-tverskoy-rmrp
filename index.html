@@ -217,7 +217,7 @@ body {letter-spacing:-.012em;transition:background-color .36s var(--ease-ui),col
 @keyframes fade-rise {from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:1240px){.feature{padding:23px}.intro h1{font-size:clamp(56px,5.3vw,72px)}}
 @media(max-width:720px){
- .app{margin-right:0}
+ .app{margin-left:0!important;margin-right:0!important}
  .rail,.rail:hover,.rail:focus-within,.rail.expanded{
   inset:auto 0 0 0!important; width:100%!important; height:78px;
   padding:6px 5px calc(6px + env(safe-area-inset-bottom,0px));
@@ -247,6 +247,46 @@ body {letter-spacing:-.012em;transition:background-color .36s var(--ease-ui),col
 .material-card summary{list-style:none;padding:20px 24px;cursor:pointer;font-weight:700;font-size:16px}.material-card summary::-webkit-details-marker{display:none}.material-card summary::after{content:'+';float:right;font-size:22px;line-height:1;color:var(--accent)}.material-card[open] summary::after{content:'−'}
 .material-body{padding:0 24px 23px;border-top:1px solid var(--line)}.material-summary{color:var(--muted);font-size:13px}.material-text{padding-top:17px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.72}.material-source{display:inline-block;margin-top:16px;color:var(--accent-strong);font-size:13px}
 @media(max-width:520px){.material-card summary{padding:16px 18px}.material-body{padding:0 18px 18px}}
+
+/* Отдельная компоновка для законодательства */
+.law-screen{padding:30px 0 75px;min-height:calc(100vh - 120px)}
+.law-top{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:22px}
+.law-top h1{font-size:clamp(29px,4vw,47px);margin:0;letter-spacing:-.055em}
+.law-top p{color:var(--muted);font-size:13px;margin:4px 0 0}
+.law-layout{display:grid;grid-template-columns:minmax(245px,330px) minmax(0,1fr);gap:18px;align-items:start}
+.law-sidebar,.law-reader{background:var(--surface);border:1px solid var(--line);border-radius:19px;min-width:0;overflow:hidden}
+.law-sidebar{position:sticky;top:18px;max-height:calc(100vh - 38px);display:flex;flex-direction:column}
+.law-sidebar-head{padding:16px;border-bottom:1px solid var(--line)}
+.law-search{width:100%;background:var(--input-bg);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:11px 13px;outline:0;font-size:13px}
+.law-search:focus{border-color:var(--accent-strong)}
+.law-filters{display:flex;gap:5px;flex-wrap:wrap;margin-top:12px}
+.law-filter{background:transparent;border:1px solid var(--line);border-radius:9px;color:var(--muted);padding:7px 9px;font-size:11px}
+.law-filter.active{color:var(--accent-strong);border-color:var(--accent-strong);background:var(--accent-wash)}
+.law-list{overflow-y:auto;min-height:120px;padding:6px;scrollbar-width:thin}
+.law-group-label{padding:10px 11px 4px;color:var(--faint);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.law-entry{width:100%;text-align:left;display:block;background:transparent;border:1px solid transparent;border-radius:11px;padding:11px 12px;color:var(--text)}
+.law-entry:hover{background:var(--surface2)}.law-entry.active{border-color:var(--line-hover);background:var(--accent-wash)}
+.law-entry b{font-weight:650;font-size:12px;line-height:1.42;display:block}
+.law-entry small{display:block;color:var(--muted);font-size:10px;margin-top:6px}
+.law-reader{padding:clamp(17px,2.8vw,34px);min-height:550px}
+.law-kicker{color:var(--accent);letter-spacing:.1em;text-transform:uppercase;font-size:10px;font-weight:700}
+.law-reader h2{font-size:clamp(25px,2.7vw,37px);letter-spacing:-.05em;line-height:1.2;margin:12px 0 12px;overflow-wrap:anywhere}
+.law-meta{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:20px;color:var(--muted);font-size:12px}
+.law-source{color:var(--accent-strong);font-size:12px;font-weight:700;text-decoration:none;border-bottom:1px solid currentColor}
+.law-note{padding:18px;border:1px dashed var(--line);border-radius:12px;font-size:13px;color:var(--muted);margin:15px 0}
+.law-document-tools{border-top:1px solid var(--line);padding:15px 0;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.law-document-tools input{flex:1;min-width:160px;border:1px solid var(--line);background:var(--input-bg);border-radius:10px;padding:11px 12px;color:var(--text);outline:0}
+.law-article-nav{display:flex;flex-wrap:wrap;gap:6px;max-height:116px;overflow:auto;scrollbar-width:thin;margin-bottom:14px}
+.law-article-nav button{border:1px solid var(--line);border-radius:9px;background:var(--surface2);font-size:11px;padding:6px 9px;color:var(--muted);max-width:100%;text-overflow:ellipsis;overflow:hidden;white-space:nowrap}
+.law-article-nav button:hover{color:var(--accent-strong);border-color:var(--line-hover)}
+.law-document{border-top:1px solid var(--line);padding-top:20px;line-height:1.79;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere;max-height:none}
+.law-document .law-line{display:block;min-height:1em;white-space:pre-wrap;margin:0 0 5px}
+.law-document .law-article{font-size:16px;line-height:1.45;font-weight:730;color:var(--accent-strong);margin:22px 0 12px;scroll-margin-top:20px}
+.law-document mark{background:#e1b853;color:#14202a;border-radius:2px;padding:0 2px}
+.law-count{color:var(--faint);font-size:11px;margin:8px 0 0}
+@media(max-width:1050px){.law-layout{grid-template-columns:260px minmax(0,1fr)}}
+@media(max-width:820px){.law-top{align-items:flex-start}.app{margin-left:0!important;margin-right:0!important}.law-layout{grid-template-columns:1fr}.law-sidebar{position:static;max-height:335px}.law-reader{min-height:400px}.law-screen{padding-top:20px}}
+
 </style>
 </head>
 <body>
@@ -313,8 +353,16 @@ body {letter-spacing:-.012em;transition:background-color .36s var(--ease-ui),col
    <p class="subpage-desc" id="section-description"></p>
    <div class="material-list" id="material-list" hidden></div><div class="empty-panel" id="empty-panel"><svg class="icon"><use href="#i-file"/></svg><b>Материалы пока не добавлены</b></div>
   </section>
+  <section class="law-screen" id="law-screen" hidden aria-label="Законодательство">
+   <div class="law-top"><div><h1>Законодательство</h1><p>RMRP · Тверской</p></div><a class="law-source" href="https://forum.rmrp.ru/forums/laws/" target="_blank" rel="noopener noreferrer">Форум RMRP ↗</a></div>
+   <div class="law-layout">
+    <aside class="law-sidebar" aria-label="Документы"><div class="law-sidebar-head"><input class="law-search" id="law-search" type="search" placeholder="Поиск документа…" aria-label="Поиск по названиям документов"><div class="law-filters" id="law-filters"></div><p class="law-count" id="law-count"></p></div><div class="law-list" id="law-list"></div></aside>
+    <article class="law-reader" id="law-reader" aria-live="polite"><div class="law-kicker">Документы</div><h2 id="law-title">Выберите документ</h2><div class="law-meta" id="law-meta"></div><div class="law-note" id="law-note">Тексты документов открываются после загрузки в админ-панель. Для каждого документа доступна ссылка на форум.</div><div id="law-document-tools" class="law-document-tools" hidden><input id="law-text-search" type="search" placeholder="Поиск по тексту и статьям…" aria-label="Поиск внутри документа"><button class="law-filter" id="law-clear-search" type="button">Сбросить</button><span class="law-count" id="law-match-count"></span></div><div class="law-article-nav" id="law-article-nav"></div><div class="law-document" id="law-document"></div></article>
+   </div>
+  </section>
  </main>
 </div>
+<script src="./law-catalog.js"></script>
 <script src="./config.js"></script>
 <script>
 'use strict';
@@ -350,6 +398,7 @@ async function loadPublic(){
   if(!response.ok)throw new Error('HTTP '+response.status);
   const info=await response.json();if(!info.ok)throw new Error(info.error||'API');
   publicMaterials=Array.isArray(info.items)?info.items:[];
+  if(!selectedLaw && publicMaterials.some(i=>i.sectionId==='laws'))renderLawList();
   const allowed=new Set(), homeButton=nav.querySelector('[data-page="home"]');
   const sorted=[...(info.sections||[])].filter(s=>s.visible).sort((a,b)=>a.order-b.order);
   for(const item of sorted){
@@ -384,9 +433,10 @@ $('theme-toggle').addEventListener('click',()=>applyTheme(document.documentEleme
 const probe=new Image();probe.onload=()=>{$('brand-mark').classList.add('has-image')};probe.src='./assets/logo.png';
 function go(page){
  if(!Object.prototype.hasOwnProperty.call(sections,page))page='home';
- const home=page==='home';
- $('home-screen').hidden=!home;$('section-screen').hidden=home;
- if(!home){$('section-title').textContent=sections[page].title;$('section-description').textContent=sections[page].description;renderMaterials(page)}
+ const home=page==='home',isLaws=page==='laws';
+ $('home-screen').hidden=!home;$('section-screen').hidden=home||isLaws;$('law-screen').hidden=!isLaws;
+ if(isLaws){renderLawList();if(!selectedLaw&&lawCatalog.length)openLaw(lawCatalog[0].id)}
+ else if(!home){$('section-title').textContent=sections[page].title;$('section-description').textContent=sections[page].description;renderMaterials(page)}
  document.querySelectorAll('[data-page]').forEach(el=>{
   const active=el.dataset.page===page;
   el.classList.toggle('active',active);
@@ -422,6 +472,82 @@ document.addEventListener('keydown',event=>{
  }
  if(event.key==='Escape'&&document.activeElement===$('section-search')){$('section-search').blur();$('search-results').hidden=true}
 });
+
+const lawCatalog=Array.isArray(window.FSO_LAW_CATALOG)?window.FSO_LAW_CATALOG:[];
+const lawLabels={all:'Все',code:'Кодексы',fkz:'ФКЗ',federal:'ФЗ',charter:'Уставы',order:'Приказы'};
+let lawFilter='all',selectedLaw='',lawBody='',lawFind='';
+function lawRecords(){
+ const map=new Map(lawCatalog.map(x=>[x.id,{...x,loaded:false}]));
+ for(const it of publicMaterials.filter(x=>x.sectionId==='laws')){
+  const x=map.get(it.id)||{id:it.id,category:it.summary?.includes('[ПРИКАЗ]')?'order':it.summary?.includes('[УСТАВ]')?'charter':'federal'};
+  map.set(it.id,{...x,...it,loaded:true});
+ }
+ return [...map.values()];
+}
+function renderLawList(){
+ const holder=$('law-list'),filters=$('law-filters'),query=$('law-search').value.trim().toLocaleLowerCase('ru-RU');
+ filters.replaceChildren();holder.replaceChildren();
+ for(const [key,label] of Object.entries(lawLabels)){
+  const b=document.createElement('button');b.type='button';b.className='law-filter'+(lawFilter===key?' active':'');b.textContent=label;b.addEventListener('click',()=>{lawFilter=key;renderLawList()});filters.append(b);
+ }
+ const records=lawRecords().filter(x=>(lawFilter==='all'||x.category===lawFilter)&&(!query||x.title.toLocaleLowerCase('ru-RU').includes(query)));
+ $('law-count').textContent=records.length+' документов';
+ for(const x of records){
+  const b=document.createElement('button');b.type='button';b.className='law-entry'+(selectedLaw===x.id?' active':'');
+  b.dataset.lawId=x.id;
+  const title=document.createElement('b');title.textContent=x.title;
+  const status=document.createElement('small');status.textContent=x.loaded?'Текст в памятке':'Первоисточник на форуме';
+  b.append(title,status);b.addEventListener('click',()=>openLaw(x.id));holder.append(b);
+ }
+}
+function textMark(target,text,query){
+ if(!query){target.textContent=text;return}
+ const lower=text.toLocaleLowerCase('ru-RU'),q=query.toLocaleLowerCase('ru-RU');let start=0,pos=0;
+ while((pos=lower.indexOf(q,start))!==-1){target.append(document.createTextNode(text.slice(start,pos)));const m=document.createElement('mark');m.textContent=text.slice(pos,pos+query.length);target.append(m);start=pos+query.length}
+ target.append(document.createTextNode(text.slice(start)));
+}
+function drawLawText(){
+ const nav=$('law-article-nav'),wrap=$('law-document'),term=$('law-text-search').value.trim();nav.replaceChildren();wrap.replaceChildren();
+ if(!lawBody)return;
+ const lines=lawBody.replace(/\r\n?/g,'\n').split('\n');
+ let hits=0,serial=0;
+ const frag=document.createDocumentFragment();
+ for(const line of lines){
+  const heading=/^\s*(?:Глава\s+(?:[IVXLC\d]+(?:\.\d+)*)(?:[.\s:–—-]|$)|Статья\s+\d+(?:\.\d+)*(?:[.\s:–—-]|$))/iu.test(line);
+  const el=document.createElement('div');el.className='law-line'+(heading?' law-article':'');
+  if(heading){el.id='law-heading-'+(++serial);const btn=document.createElement('button');btn.type='button';btn.textContent=line.trim().slice(0,85);btn.title=line.trim();btn.addEventListener('click',()=>el.scrollIntoView({behavior:'smooth',block:'start'}));nav.append(btn)}
+  if(term){hits+=line.toLocaleLowerCase('ru-RU').split(term.toLocaleLowerCase('ru-RU')).length-1}
+  textMark(el,line,term);frag.append(el);
+ }
+ wrap.append(frag);$('law-match-count').textContent=term?('Совпадений: '+hits):'';
+}
+async function openLaw(id){
+ const x=lawRecords().find(i=>i.id===id);if(!x)return;
+ selectedLaw=id;renderLawList();lawFind='';$('law-text-search').value='';
+ $('law-title').textContent=x.title;
+ const meta=$('law-meta');meta.replaceChildren();
+ const kind=document.createElement('span');kind.textContent=lawLabels[x.category]||'Документ';meta.append(kind);
+ if(x.sourceUrl&&/^https:\/\/forum\.rmrp\.ru\/threads\//.test(x.sourceUrl)){
+  const a=document.createElement('a');a.href=x.sourceUrl;a.target='_blank';a.rel='noopener noreferrer';a.className='law-source';a.textContent='Открыть на форуме ↗';meta.append(a);
+ }
+ const note=$('law-note');note.hidden=false;
+ $('law-document-tools').hidden=true;$('law-article-nav').replaceChildren();$('law-document').replaceChildren();
+ if(!x.loaded){note.textContent='Текст ещё не загружен в памятку. Откройте первоисточник или импортируйте документ через админ-панель.';lawBody='';return}
+ note.textContent='Загрузка текста…';
+ try{
+  const api=(window.FSO_API_URL||'').trim();if(!api)throw new Error('Адрес API не указан');
+  const url=new URL(api);url.searchParams.set('action','document');url.searchParams.set('id',id);
+  const response=await fetch(url.toString(),{cache:'no-store'});const result=await response.json();
+  if(!response.ok||!result.ok)throw new Error(result.error||'Текст недоступен');
+  if(selectedLaw!==id)return;
+  lawBody=result.item?.body||'';note.hidden=!!lawBody;
+  note.textContent=lawBody?'':'Текст документа пуст';$('law-document-tools').hidden=!lawBody;drawLawText();
+ }catch(err){note.hidden=false;note.textContent='Не удалось открыть текст: '+err.message}
+}
+$('law-search').addEventListener('input',renderLawList);
+$('law-text-search').addEventListener('input',drawLawText);
+$('law-clear-search').addEventListener('click',()=>{$('law-text-search').value='';drawLawText()});
+
 window.addEventListener('hashchange',()=>go(decodeURIComponent(location.hash.slice(1))));
 go(decodeURIComponent(location.hash.slice(1))||'home');
 loadPublic();
