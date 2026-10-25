@@ -34,7 +34,7 @@ function n(text,cls){const e=document.createElement('div');if(cls)e.className=cl
 async function api(action,body={},auth=true){
  if(!/^https:\/\//i.test(apiUrl))throw new Error('Сначала укажите URL функции в файле config.js');
  let response;
- try{response=await fetch(apiUrl+'?action='+encodeURIComponent(action),{method:'POST',headers:{'Content-Type':'application/json',...(auth?{Authorization:'Bearer '+token}:{})},body:JSON.stringify(body),cache:'no-store'})}
+ try{response=await fetch(apiUrl+'?action='+encodeURIComponent(action),{method:'POST',headers:{'Content-Type':'application/json',...(auth?{'X-FSO-Session':token}:{})},body:JSON.stringify(body),cache:'no-store'})}
  catch{throw new Error('Нет соединения с сервером. Проверьте URL и разрешённые домены (CORS)')}
  let result;try{result=await response.json()}catch{throw new Error('Сервер вернул неподдерживаемый ответ')}
  if(!response.ok||!result.ok)throw new Error(result.error||('Ошибка '+response.status));return result;
