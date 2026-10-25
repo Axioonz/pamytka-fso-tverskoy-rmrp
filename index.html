@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0d1219" id="theme-meta">
+<meta name="theme-color" content="#000000" id="theme-meta">
 <meta name="description" content="Памятка сотрудника ФСО — RMRP, сервер Тверской.">
 <title>ФСО / RMRP — Тверской</title>
 <!-- Неблокирующая загрузка шрифта. При недоступности Google Fonts используется системный. -->
@@ -24,13 +24,13 @@
 */
 :root {
  color-scheme:dark;
- --bg:#0d1219; --surface:#151e28; --surface2:#192634; --rail-bg:#0a1118;
- --line:#2a3b4b; --line-hover:#5b829f; --text:#eef4fa; --muted:#a4b2c0;
+ --bg:#000000; --surface:#0b0b0b; --surface2:#111111; --rail-bg:#050505;
+ --line:#20252b; --line-hover:#5b829f; --text:#eef4fa; --muted:#a4b2c0;
  --faint:#8194a7; --accent:#a9cbe8; --accent-strong:#7cb7e7; --accent-text:#102233;
  --accent-wash:rgba(99,146,185,.14); --input-bg:rgba(30,45,58,.88);
- --intro-image-shade:linear-gradient(90deg,rgba(13,18,25,.94),rgba(13,18,25,.83) 48%,rgba(13,18,25,.64));
- --card-shade:linear-gradient(90deg,rgba(19,28,38,.97),rgba(19,28,38,.78) 67%,rgba(19,28,38,.59));
- --card-shade-tall:linear-gradient(180deg,rgba(21,33,45,.95),rgba(17,28,39,.82) 70%,rgba(17,28,39,.67));
+ --intro-image-shade:linear-gradient(90deg,rgba(0,0,0,.96),rgba(0,0,0,.88) 48%,rgba(0,0,0,.68));
+ --card-shade:linear-gradient(90deg,rgba(10,10,10,.98),rgba(10,10,10,.84) 67%,rgba(10,10,10,.60));
+ --card-shade-tall:linear-gradient(180deg,rgba(10,10,10,.97),rgba(10,10,10,.86) 70%,rgba(10,10,10,.70));
  --focus-ring:#8dc5ec; --shadow:0 17px 45px rgba(0,0,0,.25);
 }
 html[data-theme="light"] {
@@ -301,40 +301,47 @@ body {letter-spacing:-.012em;transition:background-color .36s var(--ease-ui),col
 .law-note.law-warning{color:#d19b49;border-color:#b77e36;background:color-mix(in srgb,#b77e36 10%,var(--surface))}
 @media(max-width:720px){.law-document .law-chapter{font-size:17px}.law-paragraph{font-size:14px}}
 
-/* Правовой справочник: собственная компоновка, тематические фильтры и карточки. */
+/* Правовой справочник: заметный центральный список и раскрывающийся оверлей. */
 .reference-screen{padding:48px 0 95px;animation:fade-rise .35s var(--ease-ui) both}
-.reference-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:26px}
+.reference-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px}
 .reference-head h1{font-size:clamp(35px,4vw,56px);letter-spacing:-.06em;line-height:1.1;margin:0}
 .reference-head p{margin:10px 0 0;color:var(--muted);font-size:13px}
 .reference-count{font-size:12px;color:var(--faint);white-space:nowrap}
-.reference-controls{display:flex;flex-direction:column;gap:17px;margin:0 0 24px}
-.reference-search{width:100%;max-width:650px;border:1px solid var(--line);border-radius:15px;padding:13px 16px;color:var(--text);background:var(--surface);font:inherit;outline:none;transition:border-color .2s,box-shadow .2s}
+.reference-controls{display:flex;flex-direction:column;gap:17px;margin:0 0 24px;align-items:center}
+.reference-search{width:min(100%,760px);border:1px solid var(--line);border-radius:16px;padding:14px 18px;color:var(--text);background:#090909;font:inherit;outline:none;transition:border-color .2s,box-shadow .2s}
 .reference-search:focus{border-color:var(--accent-strong);box-shadow:0 0 0 3px var(--accent-wash)}
-.reference-filters{display:flex;gap:8px;flex-wrap:wrap}
-.reference-filter{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--muted);padding:10px 14px;font-size:12px;font-weight:650;transition:background .2s,border-color .2s,color .2s}
+.reference-filters{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.reference-filter{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:999px;background:#090909;color:var(--muted);padding:10px 14px;font-size:12px;font-weight:650;transition:background .2s,border-color .2s,color .2s}
 .reference-filter:hover{border-color:var(--line-hover);color:var(--text)}
 .reference-filter.active{background:var(--accent-wash);border-color:var(--accent-strong);color:var(--accent-strong)}
 .reference-filter span{opacity:.66;font-size:11px}
-.reference-layout{display:grid;grid-template-columns:minmax(260px,.8fr) minmax(390px,1.35fr);gap:18px;align-items:start}
-.reference-list,.reference-reader{background:var(--surface);border:1px solid var(--line);border-radius:19px;overflow:hidden}
-.reference-list{min-height:350px;max-height:min(72vh,900px);overflow-y:auto;padding:9px}
-.reference-entry{width:100%;text-align:left;display:grid;gap:8px;border:1px solid transparent;background:transparent;color:var(--text);border-radius:12px;padding:15px 16px;transition:background .18s,border-color .18s}
-.reference-entry:hover{background:var(--accent-wash)}
-.reference-entry.active{border-color:var(--line-hover);background:var(--accent-wash)}
-.reference-entry b{font-size:14px;line-height:1.4;letter-spacing:-.015em}
-.reference-entry small{color:var(--muted);font-size:12px;line-height:1.5}
+.reference-layout{display:block}
+.reference-list{max-width:980px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+.reference-entry{width:100%;text-align:left;display:grid;grid-template-columns:1fr auto;align-items:start;gap:12px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));color:var(--text);border-radius:18px;padding:18px 20px;transition:transform .18s,background .18s,border-color .18s,box-shadow .18s;min-height:110px}
+.reference-entry:hover{background:var(--accent-wash);border-color:var(--line-hover);transform:translateY(-1px);box-shadow:0 14px 30px rgba(0,0,0,.24)}
+.reference-entry.active{border-color:var(--accent-strong);background:var(--accent-wash)}
+.reference-entry-main{display:grid;gap:10px}
+.reference-entry b{font-size:16px;line-height:1.35;letter-spacing:-.015em}
 .reference-entry .ref-tags{font-size:11px;color:var(--accent-strong);line-height:1.5}
-.reference-reader{padding:27px 29px;min-height:350px;max-height:75vh;overflow:auto}
-.reference-reader h2{font-size:clamp(24px,2.6vw,34px);line-height:1.2;letter-spacing:-.045em;margin:0 0 15px}
-.reference-reader .ref-kicker{font-size:10px;font-weight:750;letter-spacing:.16em;color:var(--accent-strong);text-transform:uppercase;margin-bottom:12px}
-.reference-tags{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 20px}
+.reference-citation{font-size:11px;line-height:1.45;color:#d7e9ff;background:rgba(120,170,255,.08);border:1px solid rgba(120,170,255,.18);padding:8px 10px;border-radius:12px;max-width:220px;text-align:right}
+.reference-reader{display:none}
+.reference-empty{padding:32px 20px;color:var(--muted);font-size:13px;line-height:1.6;border:1px dashed var(--line);border-radius:18px;background:#090909;text-align:center;max-width:980px;margin:0 auto}
+.reference-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:26px;z-index:70}
+.reference-overlay.open{display:flex}
+.reference-modal{width:min(900px,100%);max-height:min(88vh,900px);overflow:auto;background:#070707;border:1px solid var(--line);border-radius:24px;box-shadow:0 30px 80px rgba(0,0,0,.45);padding:30px 30px 26px;position:relative}
+.reference-close{position:absolute;top:16px;right:16px;border:1px solid var(--line);background:#0d0d0d;color:var(--text);width:42px;height:42px;border-radius:14px;display:grid;place-items:center;transition:background .2s,border-color .2s}
+.reference-close:hover{background:var(--accent-wash);border-color:var(--line-hover)}
+.reference-modal h2{font-size:clamp(24px,2.6vw,34px);line-height:1.2;letter-spacing:-.045em;margin:0 52px 14px 0}
+.reference-modal .ref-citation-line{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(120,170,255,.18);background:rgba(120,170,255,.08);color:#d7e9ff;border-radius:999px;padding:7px 12px;font-size:12px;font-weight:650;margin:0 0 16px}
+.reference-tags{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 18px}
 .reference-tags span{border:1px solid var(--line);color:var(--accent-strong);border-radius:999px;padding:5px 10px;font-size:11px}
-.reference-reader .ref-summary{color:var(--muted);font-size:14px;margin:0 0 20px;line-height:1.7}
-.reference-reader .ref-body{border-top:1px solid var(--line);padding-top:20px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.85}
-.reference-reader .ref-source{display:inline-block;margin-top:24px;color:var(--accent-strong);text-decoration:none;border-bottom:1px solid currentColor;font-size:12px;font-weight:750}
-.reference-empty{padding:32px 20px;color:var(--muted);font-size:13px;line-height:1.6}
-@media(max-width:1040px){.reference-layout{grid-template-columns:1fr}.reference-list{min-height:auto;max-height:330px}.reference-reader{max-height:none;min-height:250px}}
-@media(max-width:720px){.reference-screen{padding-top:30px;padding-bottom:96px}.reference-head{align-items:flex-start;flex-direction:column}.reference-reader{padding:22px}.reference-filter{padding:9px 12px}}
+.reference-block{border-top:1px solid var(--line);padding-top:16px;margin-top:16px}
+.reference-block h3{margin:0 0 10px;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--faint)}
+.reference-block p,.reference-block div{margin:0;color:var(--text);font-size:14px;line-height:1.75;white-space:pre-wrap}
+.reference-block .muted{color:var(--muted)}
+.reference-reader .ref-source,.reference-modal .ref-source{display:inline-block;margin-top:24px;color:var(--accent-strong);text-decoration:none;border-bottom:1px solid currentColor;font-size:12px;font-weight:750}
+@media(max-width:1040px){.reference-list{grid-template-columns:1fr 1fr}.reference-citation{max-width:190px}}
+@media(max-width:760px){.reference-screen{padding-top:30px;padding-bottom:96px}.reference-head{align-items:flex-start;flex-direction:column}.reference-list{grid-template-columns:1fr}.reference-entry{grid-template-columns:1fr;}.reference-citation{text-align:left;max-width:none}.reference-overlay{padding:12px}.reference-modal{padding:22px 18px 20px;border-radius:20px}.reference-close{top:12px;right:12px;width:38px;height:38px;border-radius:12px}}
 </style>
 </head>
 <body>
@@ -403,9 +410,15 @@ body {letter-spacing:-.012em;transition:background-color .36s var(--ease-ui),col
   </section>
 
   <section class="reference-screen" id="reference-screen" hidden aria-label="Правовой справочник">
-   <div class="reference-head"><div><h1>Правовой справочник</h1><p>Основания и пояснения по действующим нормам RMRP</p></div><span class="reference-count" id="reference-count"></span></div>
-   <div class="reference-controls"><input class="reference-search" id="reference-search" type="search" aria-label="Поиск по правовому справочнику" placeholder="Поиск по названию, статье, тексту…"><div class="reference-filters" id="reference-filters" aria-label="Подразделы справочника"></div></div>
-   <div class="reference-layout"><div class="reference-list" id="reference-list" aria-label="Список правовых оснований"></div><article class="reference-reader" id="reference-reader" aria-live="polite"><div class="reference-empty">Выберите основание слева.</div></article></div>
+   <div class="reference-head"><div><h1>Правовой справочник</h1><p>Краткие основания. Подробности открываются по нажатию.</p></div><span class="reference-count" id="reference-count"></span></div>
+   <div class="reference-controls"><input class="reference-search" id="reference-search" type="search" aria-label="Поиск по правовому справочнику" placeholder="Поиск по названию, статье или закону…"><div class="reference-filters" id="reference-filters" aria-label="Подразделы справочника"></div></div>
+   <div class="reference-layout"><div class="reference-list" id="reference-list" aria-label="Список правовых оснований"></div><article class="reference-reader" id="reference-reader" aria-live="polite"></article></div>
+   <div class="reference-overlay" id="reference-overlay" hidden>
+    <div class="reference-modal" role="dialog" aria-modal="true" aria-labelledby="reference-modal-title">
+      <button class="reference-close" id="reference-close" type="button" aria-label="Закрыть"><svg class="icon"><use href="#i-close"/></svg></button>
+      <div id="reference-modal-body"></div>
+    </div>
+   </div>
   </section>
   <section class="law-screen" id="law-screen" hidden aria-label="Законодательство">
    <div class="law-top"><div><h1>Законодательство</h1><p>RMRP · Тверской</p></div><a class="law-source" href="https://forum.rmrp.ru/forums/laws/" target="_blank" rel="noopener noreferrer">Форум RMRP ↗</a></div>
@@ -434,49 +447,70 @@ const referenceCategories=Array.isArray(window.FSO_REFERENCE_CATEGORIES)?window.
 let referenceFilter='all',selectedReference='';
 function referenceItems(){return publicMaterials.filter(x=>x.sectionId==='reference')}
 function selectedReferenceMatches(items){
- const needle=$('reference-search').value.trim().toLocaleLowerCase('ru-RU');
+ const needle=$("reference-search").value.trim().toLocaleLowerCase('ru-RU');
  return items.filter(item=>{
   const cats=Array.isArray(item.categories)?item.categories:[];
   if(referenceFilter==='uncategorized'&&cats.length)return false;
   if(referenceFilter!=='all'&&referenceFilter!=='uncategorized'&&!cats.includes(referenceFilter))return false;
-  return !needle||[item.title,item.summary,item.body,...cats.map(id=>referenceCategories.find(c=>c.id===id)?.title||'')].join(' ').toLocaleLowerCase('ru-RU').includes(needle);
+  return !needle||[item.title,item.summary,item.body,extractCitation(item),extractQuote(item),...cats.map(id=>referenceCategories.find(c=>c.id===id)?.title||'')].join(' ').toLocaleLowerCase('ru-RU').includes(needle);
  });
+}
+function extractCitation(item){
+ if(item.citation)return String(item.citation).trim();
+ const body=String(item.body||'');
+ const m=body.match(/Правовое основание:\s*([^\n]+)/i);
+ return m?m[1].trim():'';
+}
+function extractQuote(item){ return String(item.quote||item.actualText||'').trim(); }
+function sanitizeBody(item){
+ let body=String(item.body||'').trim();
+ body=body.replace(/^Правовое основание:\s*[^\n]+\n*/i,'').trim();
+ return body;
 }
 function renderReference(){
  const all=referenceItems(),filtered=selectedReferenceMatches(all),filters=$('reference-filters'),list=$('reference-list');
  filters.replaceChildren();list.replaceChildren();
  const choices=[{id:'all',title:'Все'},...referenceCategories];
- if(all.some(x=>!Array.isArray(x.categories)||!x.categories.length))choices.push({id:'uncategorized',title:'Без подраздела'});
  for(const cat of choices){
-  const number=cat.id==='all'?all.length:all.filter(x=>cat.id==='uncategorized'?!(x.categories||[]).length:(x.categories||[]).includes(cat.id)).length;
+  const count=cat.id==='all'?all.length:all.filter(item=>(Array.isArray(item.categories)?item.categories:[]).includes(cat.id)).length;
   const b=document.createElement('button');b.type='button';b.className='reference-filter'+(referenceFilter===cat.id?' active':'');
   b.setAttribute('aria-pressed',String(referenceFilter===cat.id));
-  b.append(document.createTextNode(cat.title+' '));const count=document.createElement('span');count.textContent=number;b.append(count);
+  b.innerHTML=`<strong>${cat.title}</strong><span>${count}</span>`;
   b.addEventListener('click',()=>{referenceFilter=cat.id;renderReference()});filters.append(b);
  }
  $('reference-count').textContent=filtered.length+' из '+all.length;
- if(!filtered.length){const empty=document.createElement('div');empty.className='reference-empty';empty.textContent=all.length?'По этому запросу ничего не найдено.':'Правовые основания пока не опубликованы.';list.append(empty);$('reference-reader').replaceChildren();$('reference-reader').append(empty.cloneNode(true));return}
+ if(!filtered.length){const empty=document.createElement('div');empty.className='reference-empty';empty.textContent=all.length?'По этому запросу ничего не найдено.':'Правовые основания пока не опубликованы.';list.append(empty);return}
+ if(!selectedReference||!filtered.some(x=>x.id===selectedReference))selectedReference=filtered[0].id;
  for(const item of filtered){
   const b=document.createElement('button');b.type='button';b.className='reference-entry'+(selectedReference===item.id?' active':'');b.setAttribute('aria-pressed',String(selectedReference===item.id));
-  const heading=document.createElement('b');heading.textContent=item.title;b.append(heading);
-  if(item.summary){const sub=document.createElement('small');sub.textContent=item.summary;b.append(sub)}
   const labels=(item.categories||[]).map(id=>referenceCategories.find(c=>c.id===id)?.title).filter(Boolean);
-  if(labels.length){const tags=document.createElement('span');tags.className='ref-tags';tags.textContent=labels.join(' · ');b.append(tags)}
-  b.addEventListener('click',()=>{selectedReference=item.id;renderReference()});list.append(b);
+  const citation=extractCitation(item)||'Норма не указана';
+  b.innerHTML=`<div class="reference-entry-main"><b>${item.title}</b><div class="ref-tags">${labels.join(' · ')}</div></div><div class="reference-citation">${citation}</div>`;
+  b.addEventListener('click',()=>{selectedReference=item.id;renderReference();openReference(item)});list.append(b);
  }
- if(!filtered.some(x=>x.id===selectedReference))selectedReference=filtered[0].id;
- const selected=filtered.find(x=>x.id===selectedReference);
- const reader=$('reference-reader');reader.replaceChildren();
- const kicker=document.createElement('div');kicker.className='ref-kicker';kicker.textContent='Правовое основание';reader.append(kicker);
- const title=document.createElement('h2');title.textContent=selected.title;reader.append(title);
- const tags=document.createElement('div');tags.className='reference-tags';
- for(const id of selected.categories||[]){const cat=referenceCategories.find(c=>c.id===id);if(cat){const label=document.createElement('span');label.textContent=cat.title;tags.append(label)}}
- if(tags.childElementCount)reader.append(tags);
- if(selected.summary){const summary=document.createElement('p');summary.className='ref-summary';summary.textContent=selected.summary;reader.append(summary)}
- const body=document.createElement('div');body.className='ref-body';body.textContent=selected.body||'';reader.append(body);
- if(selected.sourceUrl&&/^https:\/\//i.test(selected.sourceUrl)){const a=document.createElement('a');a.className='ref-source';a.href=selected.sourceUrl;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Первоисточник ↗';reader.append(a)}
 }
+function renderReferenceModal(item){
+ const wrap=document.createElement('div');
+ const title=document.createElement('h2');title.id='reference-modal-title';title.textContent=item.title;wrap.append(title);
+ const citation=extractCitation(item); if(citation){const pill=document.createElement('div');pill.className='ref-citation-line';pill.textContent=citation;wrap.append(pill)}
+ const tags=document.createElement('div');tags.className='reference-tags';
+ for(const id of item.categories||[]){const cat=referenceCategories.find(c=>c.id===id);if(cat){const label=document.createElement('span');label.textContent=cat.title;tags.append(label)}}
+ if(tags.children.length)wrap.append(tags);
+ const summary=document.createElement('section');summary.className='reference-block';summary.innerHTML='<h3>Суть</h3>'; const summaryText=document.createElement('p'); summaryText.textContent=item.summary||'Краткое описание пока не добавлено.'; summary.append(summaryText); wrap.append(summary);
+ const bodyText=sanitizeBody(item); if(bodyText){ const body=document.createElement('section'); body.className='reference-block'; body.innerHTML='<h3>Описание</h3>'; const p=document.createElement('div'); p.textContent=bodyText; body.append(p); wrap.append(body); }
+ const quote=extractQuote(item); if(quote){ const q=document.createElement('section'); q.className='reference-block'; q.innerHTML='<h3>Формулировка нормы</h3>'; const p=document.createElement('div'); p.textContent=quote; q.append(p); wrap.append(q); }
+ else { const q=document.createElement('section'); q.className='reference-block'; q.innerHTML='<h3>Формулировка нормы</h3>'; const p=document.createElement('div'); p.className='muted'; p.textContent='Точная формулировка нормы ещё не добавлена.'; q.append(p); wrap.append(q); }
+ if(item.sourceUrl){const source=document.createElement('a');source.className='ref-source';source.href=item.sourceUrl;source.target='_blank';source.rel='noopener';source.textContent='Открыть первоисточник';wrap.append(source)}
+ return wrap;
+}
+function openReference(item){
+ const overlay=$('reference-overlay'), body=$('reference-modal-body'); body.replaceChildren(renderReferenceModal(item)); overlay.hidden=false; overlay.classList.add('open'); document.body.style.overflow='hidden';
+}
+function closeReference(){ const overlay=$('reference-overlay'); overlay.classList.remove('open'); overlay.hidden=true; document.body.style.overflow=''; }
 $('reference-search').addEventListener('input',renderReference);
+$('reference-close').addEventListener('click',closeReference);
+$('reference-overlay').addEventListener('click',e=>{ if(e.target===$('reference-overlay')) closeReference(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !$('reference-overlay').hidden) closeReference(); });
 const nav=$('rail').querySelector('.rail-nav');
 function renderMaterials(page){
  const items=publicMaterials.filter(x=>x.sectionId===page),wrap=$('material-list');

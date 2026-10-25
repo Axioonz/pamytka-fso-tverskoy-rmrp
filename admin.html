@@ -23,7 +23,7 @@ html[data-theme="light"]{color-scheme:light;--bg:#eef3f8;--panel:#fff;--sub:#f3f
 <div class="wrap">
 <header class="top"><div class="top-left"><a class="back" href="./index.html">← Памятка</a><div><h1>Админ-панель</h1><small>ФСО / RMRP — Тверской</small></div></div><div class="top-actions"><span class="muted" id="current-user"></span><button class="btn" type="button" id="theme-btn">Тема</button><button class="btn" type="button" id="logout-btn" hidden>Выйти</button></div></header>
 <section class="panel auth" id="auth-view"><h2>Вход</h2><p>Доступ к редактированию выдаётся владельцем памятки.</p><form id="login-form" class="stack"><label class="field"><span>Логин</span><input name="username" autocomplete="username" required minlength="3"></label><label class="field"><span>Пароль</span><input name="password" type="password" autocomplete="current-password" required></label><button class="btn primary" type="submit">Войти</button></form><p id="auth-status" class="status" role="status"></p></section>
-<div class="layout" id="workspace" hidden><nav class="aside" aria-label="Разделы управления"><button class="tab active" data-tab="materials">Материалы</button><button class="tab" data-tab="sections">Разделы</button><button class="tab" data-tab="import">Импорт законов</button><button class="tab" data-tab="reference-import">Импорт оснований</button><button class="tab" data-tab="users">Пользователи</button><button class="tab" data-tab="info">Инструкция</button></nav><main>
+<div class="layout" id="workspace" hidden><nav class="aside" aria-label="Разделы управления"><button class="tab active" data-tab="materials">Материалы</button><button class="tab" data-tab="sections">Разделы</button><button class="tab" data-tab="import">Импорт законов</button><button class="tab" data-tab="users">Пользователи</button><button class="tab" data-tab="info">Инструкция</button></nav><main>
 <section class="tab-view" id="materials-view"><div class="content-head"><div><h2>Материалы</h2><p>Черновики и опубликованные записи</p></div><button class="btn" id="new-material">+ Новый материал</button></div>
 <div class="cols"><div class="panel"><label class="field"><span>Поиск</span><input id="materials-filter" placeholder="Название или раздел"></label><div class="list" id="materials-list" style="margin-top:13px"></div></div><div class="panel"><form id="material-form" class="form-grid"><input type="hidden" name="id"><label class="field"><span>Название</span><input name="title" maxlength="180" required placeholder="Например: Проверка документов"></label><div class="row"><label class="field"><span>Раздел</span><select name="sectionId" id="material-section" required></select></label><label class="field"><span>Статус</span><select name="status" id="material-status"><option value="draft">Черновик</option><option value="published">Опубликовано</option></select></label></div><div class="reference-category-settings" id="reference-category-settings" hidden><strong>Подразделы правового справочника</strong><p>Можно выбрать несколько. Карточка останется одной, а появится во всех выбранных подразделах.</p><div class="reference-category-options" id="reference-category-options"></div></div><label class="field"><span>Краткое описание</span><textarea name="summary" maxlength="800" rows="2" style="min-height:72px"></textarea></label><label class="field"><span>Содержание</span><textarea name="body" maxlength="600000" required placeholder="Текст ситуации или статьи..."></textarea></label><label class="field"><span>Ссылка на источник (необязательно)</span><input name="sourceUrl" type="url" maxlength="1000" placeholder="https://forum.rmrp.ru/..."></label><div class="form-actions"><button class="btn danger" id="delete-material" type="button" disabled>Удалить</button><button class="btn primary" type="submit">Сохранить</button></div><div class="status" id="material-status-msg" role="status"></div></form></div></div></section>
 <section class="tab-view" id="import-view" hidden>
@@ -33,18 +33,6 @@ html[data-theme="light"]{color-scheme:light;--bg:#eef3f8;--panel:#fff;--sub:#f3f
  <label class="check"><input id="import-update" type="checkbox"><span>Обновлять ранее загруженные черновики</span></label>
  <label class="check"><input id="import-replace-published" type="checkbox"><span>Заменить опубликованные документы новым текстом (только владелец, после проверки)</span></label>
  <div class="form-actions" style="justify-content:flex-start"><button id="import-start" class="btn primary" type="button">Импортировать черновики</button></div><label class="check"><input id="publish-confirm" type="checkbox"><span>Я сверил тексты с форумом и подтверждаю публикацию</span></label><div><button id="publish-start" class="btn" type="button">Опубликовать проверенные документы</button></div><p class="status" id="import-status" aria-live="polite"></p><div class="list" id="import-log"></div>
- </div>
-</section>
-<section class="tab-view" id="reference-import-view" hidden>
- <div class="content-head"><div><h2>Импорт правовых оснований</h2><p>Карточки ФСО и охраняемых территорий</p></div></div>
- <div class="panel form-grid">
-  <p class="muted">Импорт принимает JSON с массивом <code>items</code>, сохраняет карточки как <b>черновики</b>, не перезаписывает существующие карточки и не меняет законодательство.</p>
-  <label class="field"><span>Файл с карточками JSON</span><input type="file" id="ref-import-file" accept=".json,application/json"></label>
-  <div class="form-actions" style="justify-content:flex-start"><button class="btn primary" id="ref-import-start" type="button">Добавить карточки как черновики</button></div>
-  <hr class="separator">
-  <label class="check"><input id="ref-publish-confirm" type="checkbox"><span>Я проверил тексты и основания карточек по актуальной редакции форума.</span></label>
-  <div class="form-actions" style="justify-content:flex-start"><button class="btn" id="ref-publish-start" type="button">Опубликовать проверенные карточки из набора</button></div>
-  <p class="status" id="ref-import-status" role="status" aria-live="polite"></p><div class="list" id="ref-import-log"></div>
  </div>
 </section>
 <section class="tab-view" id="sections-view" hidden><div class="content-head"><div><h2>Разделы</h2><p>Названия, порядок и отображение в памятке</p></div><button class="btn" id="new-section">+ Новый раздел</button></div><div class="cols"><div class="panel"><div class="list" id="sections-list"></div></div><div class="panel"><form id="section-form" class="form-grid"><input type="hidden" name="id"><label class="field"><span>Название раздела</span><input name="title" required maxlength="100"></label><label class="field"><span>Описание</span><textarea name="description" maxlength="300" rows="3" style="min-height:80px"></textarea></label><label class="field"><span>Порядок в меню</span><input name="order" type="number" min="0" max="1000" value="10"></label><label class="check"><input name="visible" type="checkbox" checked><span>Отображать на сайте</span></label><div class="form-actions"><button class="btn danger" type="button" id="delete-section" disabled>Удалить</button><button class="btn primary" type="submit">Сохранить раздел</button></div><div class="status" id="section-status-msg" role="status"></div></form></div></div></section>
@@ -194,54 +182,5 @@ $('publish-start').addEventListener('click',async()=>{
 });
 
 if(!/^https:\/\//i.test(apiUrl))message('auth-status','Перед входом задайте URL новой функции в config.js.',true);
-
-// Импорт карточек правового справочника через существующий API. Без обновления функции.
-function validRefCard(x){
- return x && typeof x.id==='string' && /^ref-rmrp-[a-z0-9-]{3,70}$/.test(x.id) &&
-   typeof x.title==='string' && x.title.trim().length>0 && x.title.length<=180 &&
-   typeof x.summary==='string' && x.summary.length<=800 &&
-   typeof x.body==='string' && x.body.trim().length>0 && x.body.length<=50000 &&
-   x.sectionId==='reference' && Array.isArray(x.categories) && x.categories.every(c=>referenceCategories.some(cat=>cat.id===c)) &&
-   typeof x.sourceUrl==='string' && /^https:\/\/forum\.rmrp\.ru\/threads\//.test(x.sourceUrl);
-}
-function addRefLog(str,err=false){const e=n(str,err?'status error':'status ok');$('ref-import-log').append(e)}
-$('ref-import-start').addEventListener('click',async()=>{
- const file=$('ref-import-file').files[0];if(!file){message('ref-import-status','Сначала выберите JSON-файл.',true);return}
- if(file.size>1500000){message('ref-import-status','Файл слишком большой.',true);return}
- let pack;try{pack=JSON.parse(await file.text())}catch(e){message('ref-import-status','Некорректный JSON: '+e.message,true);return}
- const incoming=Array.isArray(pack?.items)?pack.items:[];
- if(!incoming.length||incoming.length>150){message('ref-import-status','Ожидалось от 1 до 150 карточек.',true);return}
- if(incoming.some(x=>!validRefCard(x)) || new Set(incoming.map(x=>x.id)).size!==incoming.length){message('ref-import-status','В файле есть неверные записи или повторяются ID.',true);return}
- if(!sections.some(s=>s.id==='reference')){message('ref-import-status','Раздел «Правовой справочник» не найден.',true);return}
- const btn=$('ref-import-start');btn.disabled=true;$('ref-import-log').replaceChildren();
- let created=0,skipped=0,errors=0;
- try{
-  for(const item of incoming){
-   const exists=items.some(old=>old.id===item.id || (old.sectionId==='reference' && old.title.trim().toLocaleLowerCase('ru-RU')===item.title.trim().toLocaleLowerCase('ru-RU')));
-   if(exists){skipped++;addRefLog('Пропущено (уже есть): '+item.title);continue}
-   try{await api('save-item',{item:{...item,status:'draft'}});created++;items.push({...item,status:'draft'});addRefLog('Добавлено: '+item.title)}
-   catch(e){errors++;addRefLog('Ошибка: '+item.title+' — '+e.message,true)}
-   message('ref-import-status',`Добавлено: ${created}. Пропущено: ${skipped}. Ошибок: ${errors}.`)
-  }
-  await reload();
- }finally{btn.disabled=false}
-});
-$('ref-publish-start').addEventListener('click',async()=>{
- if(user?.role!=='owner'){message('ref-import-status','Публиковать материалы может только владелец.',true);return}
- if(!$('ref-publish-confirm').checked){message('ref-import-status','Подтвердите проверку текстов и номеров статей.',true);return}
- const candidates=items.filter(x=>x.sectionId==='reference' && /^ref-rmrp-/.test(x.id) && x.status==='draft');
- if(!candidates.length){message('ref-import-status','Нет черновиков из набора для публикации.');return}
- if(!confirm('Опубликовать '+candidates.length+' проверенных карточек? Подтверждение отменить нельзя.'))return;
- const btn=$('ref-publish-start');btn.disabled=true;$('ref-import-log').replaceChildren();let published=0,failed=0;
- try{
-  for(const item of candidates){
-   try{await api('save-item',{item:{...item,status:'published'}});published++;addRefLog('Опубликовано: '+item.title)}
-   catch(e){failed++;addRefLog('Ошибка: '+item.title+' — '+e.message,true)}
-   message('ref-import-status',`Опубликовано ${published}/${candidates.length}; ошибок: ${failed}`);
-  }
-  await reload();
- }finally{btn.disabled=false}
-});
-
 try{token=sessionStorage.getItem(tokenKey)||''}catch{}if(token){reload().then(()=>showWorkspace()).catch(()=>showAuth())}else showAuth();
 </script></body></html>
