@@ -442,6 +442,12 @@ const sections={
  laws:{title:'Законодательство',description:'Законы и кодексы проекта.',keys:['законы','кодексы']}
 };
 const $=id=>document.getElementById(id);
+function currentApiUrl(){
+ const fromConfig=(window.FSO_API_URL||'').trim();
+ try {const fromBrowser=(localStorage.getItem('fso-rmrp-api-url')||'').trim();if(/^https:\/\//i.test(fromBrowser))return fromBrowser;}catch{}
+ return fromConfig;
+}
+
 let publicMaterials=[];
 const referenceCategories=Array.isArray(window.FSO_REFERENCE_CATEGORIES)?window.FSO_REFERENCE_CATEGORIES:[];
 let referenceFilter='all',selectedReference='';
@@ -528,7 +534,7 @@ function renderMaterials(page){
  });
 }
 async function loadPublic(){
- const url=(window.FSO_API_URL||'').trim();if(!/^https:\/\//.test(url))return;
+ const url=currentApiUrl();if(!/^https:\/\//.test(url))return;
  try{
   const response=await fetch(url+'?action=public',{cache:'no-store'});
   if(!response.ok)throw new Error('HTTP '+response.status);
@@ -714,7 +720,7 @@ async function openLaw(id){
  if(!x.loaded){note.textContent='Текст ещё не загружен в памятку. Откройте первоисточник или импортируйте документ через админ-панель.';lawBody='';return}
  note.textContent='Загрузка текста…';
  try{
-  const api=(window.FSO_API_URL||'').trim();if(!api)throw new Error('Адрес API не указан');
+  const api=currentApiUrl();if(!api)throw new Error('Адрес API не указан');
   const url=new URL(api);url.searchParams.set('action','document');url.searchParams.set('id',id);
   const response=await fetch(url.toString(),{cache:'no-store'});const result=await response.json();
   if(!response.ok||!result.ok)throw new Error(result.error||'Текст недоступен');
