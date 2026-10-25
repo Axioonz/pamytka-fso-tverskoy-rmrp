@@ -300,6 +300,41 @@ body {letter-spacing:-.012em;transition:background-color .36s var(--ease-ui),col
 .law-article-nav button{border-radius:8px;padding:6px 10px;font-size:10px}
 .law-note.law-warning{color:#d19b49;border-color:#b77e36;background:color-mix(in srgb,#b77e36 10%,var(--surface))}
 @media(max-width:720px){.law-document .law-chapter{font-size:17px}.law-paragraph{font-size:14px}}
+
+/* Правовой справочник: собственная компоновка, тематические фильтры и карточки. */
+.reference-screen{padding:48px 0 95px;animation:fade-rise .35s var(--ease-ui) both}
+.reference-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:26px}
+.reference-head h1{font-size:clamp(35px,4vw,56px);letter-spacing:-.06em;line-height:1.1;margin:0}
+.reference-head p{margin:10px 0 0;color:var(--muted);font-size:13px}
+.reference-count{font-size:12px;color:var(--faint);white-space:nowrap}
+.reference-controls{display:flex;flex-direction:column;gap:17px;margin:0 0 24px}
+.reference-search{width:100%;max-width:650px;border:1px solid var(--line);border-radius:15px;padding:13px 16px;color:var(--text);background:var(--surface);font:inherit;outline:none;transition:border-color .2s,box-shadow .2s}
+.reference-search:focus{border-color:var(--accent-strong);box-shadow:0 0 0 3px var(--accent-wash)}
+.reference-filters{display:flex;gap:8px;flex-wrap:wrap}
+.reference-filter{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--muted);padding:10px 14px;font-size:12px;font-weight:650;transition:background .2s,border-color .2s,color .2s}
+.reference-filter:hover{border-color:var(--line-hover);color:var(--text)}
+.reference-filter.active{background:var(--accent-wash);border-color:var(--accent-strong);color:var(--accent-strong)}
+.reference-filter span{opacity:.66;font-size:11px}
+.reference-layout{display:grid;grid-template-columns:minmax(260px,.8fr) minmax(390px,1.35fr);gap:18px;align-items:start}
+.reference-list,.reference-reader{background:var(--surface);border:1px solid var(--line);border-radius:19px;overflow:hidden}
+.reference-list{min-height:350px;max-height:min(72vh,900px);overflow-y:auto;padding:9px}
+.reference-entry{width:100%;text-align:left;display:grid;gap:8px;border:1px solid transparent;background:transparent;color:var(--text);border-radius:12px;padding:15px 16px;transition:background .18s,border-color .18s}
+.reference-entry:hover{background:var(--accent-wash)}
+.reference-entry.active{border-color:var(--line-hover);background:var(--accent-wash)}
+.reference-entry b{font-size:14px;line-height:1.4;letter-spacing:-.015em}
+.reference-entry small{color:var(--muted);font-size:12px;line-height:1.5}
+.reference-entry .ref-tags{font-size:11px;color:var(--accent-strong);line-height:1.5}
+.reference-reader{padding:27px 29px;min-height:350px;max-height:75vh;overflow:auto}
+.reference-reader h2{font-size:clamp(24px,2.6vw,34px);line-height:1.2;letter-spacing:-.045em;margin:0 0 15px}
+.reference-reader .ref-kicker{font-size:10px;font-weight:750;letter-spacing:.16em;color:var(--accent-strong);text-transform:uppercase;margin-bottom:12px}
+.reference-tags{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 20px}
+.reference-tags span{border:1px solid var(--line);color:var(--accent-strong);border-radius:999px;padding:5px 10px;font-size:11px}
+.reference-reader .ref-summary{color:var(--muted);font-size:14px;margin:0 0 20px;line-height:1.7}
+.reference-reader .ref-body{border-top:1px solid var(--line);padding-top:20px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:14px;line-height:1.85}
+.reference-reader .ref-source{display:inline-block;margin-top:24px;color:var(--accent-strong);text-decoration:none;border-bottom:1px solid currentColor;font-size:12px;font-weight:750}
+.reference-empty{padding:32px 20px;color:var(--muted);font-size:13px;line-height:1.6}
+@media(max-width:1040px){.reference-layout{grid-template-columns:1fr}.reference-list{min-height:auto;max-height:330px}.reference-reader{max-height:none;min-height:250px}}
+@media(max-width:720px){.reference-screen{padding-top:30px;padding-bottom:96px}.reference-head{align-items:flex-start;flex-direction:column}.reference-reader{padding:22px}.reference-filter{padding:9px 12px}}
 </style>
 </head>
 <body>
@@ -366,6 +401,12 @@ body {letter-spacing:-.012em;transition:background-color .36s var(--ease-ui),col
    <p class="subpage-desc" id="section-description"></p>
    <div class="material-list" id="material-list" hidden></div><div class="empty-panel" id="empty-panel"><svg class="icon"><use href="#i-file"/></svg><b>Материалы пока не добавлены</b></div>
   </section>
+
+  <section class="reference-screen" id="reference-screen" hidden aria-label="Правовой справочник">
+   <div class="reference-head"><div><h1>Правовой справочник</h1><p>Основания и пояснения по действующим нормам RMRP</p></div><span class="reference-count" id="reference-count"></span></div>
+   <div class="reference-controls"><input class="reference-search" id="reference-search" type="search" aria-label="Поиск по правовому справочнику" placeholder="Поиск по названию, статье, тексту…"><div class="reference-filters" id="reference-filters" aria-label="Подразделы справочника"></div></div>
+   <div class="reference-layout"><div class="reference-list" id="reference-list" aria-label="Список правовых оснований"></div><article class="reference-reader" id="reference-reader" aria-live="polite"><div class="reference-empty">Выберите основание слева.</div></article></div>
+  </section>
   <section class="law-screen" id="law-screen" hidden aria-label="Законодательство">
    <div class="law-top"><div><h1>Законодательство</h1><p>RMRP · Тверской</p></div><a class="law-source" href="https://forum.rmrp.ru/forums/laws/" target="_blank" rel="noopener noreferrer">Форум RMRP ↗</a></div>
    <div class="law-layout">
@@ -376,6 +417,7 @@ body {letter-spacing:-.012em;transition:background-color .36s var(--ease-ui),col
  </main>
 </div>
 <script src="./law-catalog.js"></script>
+<script src="./reference-categories.js"></script>
 <script src="./config.js"></script>
 <script>
 'use strict';
@@ -388,6 +430,53 @@ const sections={
 };
 const $=id=>document.getElementById(id);
 let publicMaterials=[];
+const referenceCategories=Array.isArray(window.FSO_REFERENCE_CATEGORIES)?window.FSO_REFERENCE_CATEGORIES:[];
+let referenceFilter='all',selectedReference='';
+function referenceItems(){return publicMaterials.filter(x=>x.sectionId==='reference')}
+function selectedReferenceMatches(items){
+ const needle=$('reference-search').value.trim().toLocaleLowerCase('ru-RU');
+ return items.filter(item=>{
+  const cats=Array.isArray(item.categories)?item.categories:[];
+  if(referenceFilter==='uncategorized'&&cats.length)return false;
+  if(referenceFilter!=='all'&&referenceFilter!=='uncategorized'&&!cats.includes(referenceFilter))return false;
+  return !needle||[item.title,item.summary,item.body,...cats.map(id=>referenceCategories.find(c=>c.id===id)?.title||'')].join(' ').toLocaleLowerCase('ru-RU').includes(needle);
+ });
+}
+function renderReference(){
+ const all=referenceItems(),filtered=selectedReferenceMatches(all),filters=$('reference-filters'),list=$('reference-list');
+ filters.replaceChildren();list.replaceChildren();
+ const choices=[{id:'all',title:'Все'},...referenceCategories];
+ if(all.some(x=>!Array.isArray(x.categories)||!x.categories.length))choices.push({id:'uncategorized',title:'Без подраздела'});
+ for(const cat of choices){
+  const number=cat.id==='all'?all.length:all.filter(x=>cat.id==='uncategorized'?!(x.categories||[]).length:(x.categories||[]).includes(cat.id)).length;
+  const b=document.createElement('button');b.type='button';b.className='reference-filter'+(referenceFilter===cat.id?' active':'');
+  b.setAttribute('aria-pressed',String(referenceFilter===cat.id));
+  b.append(document.createTextNode(cat.title+' '));const count=document.createElement('span');count.textContent=number;b.append(count);
+  b.addEventListener('click',()=>{referenceFilter=cat.id;renderReference()});filters.append(b);
+ }
+ $('reference-count').textContent=filtered.length+' из '+all.length;
+ if(!filtered.length){const empty=document.createElement('div');empty.className='reference-empty';empty.textContent=all.length?'По этому запросу ничего не найдено.':'Правовые основания пока не опубликованы.';list.append(empty);$('reference-reader').replaceChildren();$('reference-reader').append(empty.cloneNode(true));return}
+ for(const item of filtered){
+  const b=document.createElement('button');b.type='button';b.className='reference-entry'+(selectedReference===item.id?' active':'');b.setAttribute('aria-pressed',String(selectedReference===item.id));
+  const heading=document.createElement('b');heading.textContent=item.title;b.append(heading);
+  if(item.summary){const sub=document.createElement('small');sub.textContent=item.summary;b.append(sub)}
+  const labels=(item.categories||[]).map(id=>referenceCategories.find(c=>c.id===id)?.title).filter(Boolean);
+  if(labels.length){const tags=document.createElement('span');tags.className='ref-tags';tags.textContent=labels.join(' · ');b.append(tags)}
+  b.addEventListener('click',()=>{selectedReference=item.id;renderReference()});list.append(b);
+ }
+ if(!filtered.some(x=>x.id===selectedReference))selectedReference=filtered[0].id;
+ const selected=filtered.find(x=>x.id===selectedReference);
+ const reader=$('reference-reader');reader.replaceChildren();
+ const kicker=document.createElement('div');kicker.className='ref-kicker';kicker.textContent='Правовое основание';reader.append(kicker);
+ const title=document.createElement('h2');title.textContent=selected.title;reader.append(title);
+ const tags=document.createElement('div');tags.className='reference-tags';
+ for(const id of selected.categories||[]){const cat=referenceCategories.find(c=>c.id===id);if(cat){const label=document.createElement('span');label.textContent=cat.title;tags.append(label)}}
+ if(tags.childElementCount)reader.append(tags);
+ if(selected.summary){const summary=document.createElement('p');summary.className='ref-summary';summary.textContent=selected.summary;reader.append(summary)}
+ const body=document.createElement('div');body.className='ref-body';body.textContent=selected.body||'';reader.append(body);
+ if(selected.sourceUrl&&/^https:\/\//i.test(selected.sourceUrl)){const a=document.createElement('a');a.className='ref-source';a.href=selected.sourceUrl;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Первоисточник ↗';reader.append(a)}
+}
+$('reference-search').addEventListener('input',renderReference);
 const nav=$('rail').querySelector('.rail-nav');
 function renderMaterials(page){
  const items=publicMaterials.filter(x=>x.sectionId===page),wrap=$('material-list');
@@ -411,6 +500,7 @@ async function loadPublic(){
   if(!response.ok)throw new Error('HTTP '+response.status);
   const info=await response.json();if(!info.ok)throw new Error(info.error||'API');
   publicMaterials=Array.isArray(info.items)?info.items:[];
+  renderReference();
   if(!selectedLaw && publicMaterials.some(i=>i.sectionId==='laws'))renderLawList();
   const allowed=new Set(), homeButton=nav.querySelector('[data-page="home"]');
   const sorted=[...(info.sections||[])].filter(s=>s.visible).sort((a,b)=>a.order-b.order);
@@ -446,9 +536,10 @@ $('theme-toggle').addEventListener('click',()=>applyTheme(document.documentEleme
 const probe=new Image();probe.onload=()=>{$('brand-mark').classList.add('has-image')};probe.src='./assets/logo.png';
 function go(page){
  if(!Object.prototype.hasOwnProperty.call(sections,page))page='home';
- const home=page==='home',isLaws=page==='laws';
- $('home-screen').hidden=!home;$('section-screen').hidden=home||isLaws;$('law-screen').hidden=!isLaws;
- if(isLaws){renderLawList();if(!selectedLaw&&lawCatalog.length)openLaw(lawCatalog[0].id)}
+ const home=page==='home',isLaws=page==='laws',isReference=page==='reference';
+ $('home-screen').hidden=!home;$('section-screen').hidden=home||isLaws||isReference;$('law-screen').hidden=!isLaws;$('reference-screen').hidden=!isReference;
+ if(isReference){renderReference()}
+ else if(isLaws){renderLawList();if(!selectedLaw&&lawCatalog.length)openLaw(lawCatalog[0].id)}
  else if(!home){$('section-title').textContent=sections[page].title;$('section-description').textContent=sections[page].description;renderMaterials(page)}
  document.querySelectorAll('[data-page]').forEach(el=>{
   const active=el.dataset.page===page;
