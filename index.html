@@ -287,6 +287,19 @@ body {letter-spacing:-.012em;transition:background-color .36s var(--ease-ui),col
 @media(max-width:1050px){.law-layout{grid-template-columns:260px minmax(0,1fr)}}
 @media(max-width:820px){.law-top{align-items:flex-start}.app{margin-left:0!important;margin-right:0!important}.law-layout{grid-template-columns:1fr}.law-sidebar{position:static;max-height:335px}.law-reader{min-height:400px}.law-screen{padding-top:20px}}
 
+
+/* Законодательство v2: структурная типографика без пустых блоков. */
+.law-document{white-space:normal;font-size:14px;line-height:1.72}
+.law-document .law-chapter{color:var(--text);font-size:19px;line-height:1.4;letter-spacing:-.025em;font-weight:760;margin:33px 0 20px;padding:0 0 11px;border-bottom:1px solid var(--line);scroll-margin-top:20px}
+.law-document .law-chapter:first-child{margin-top:5px}
+.law-article-block{margin:0 0 26px;padding:2px 0 4px;scroll-margin-top:20px}
+.law-document .law-article{color:var(--accent-strong);font-size:16px;font-weight:750;line-height:1.45;margin:9px 0 11px;letter-spacing:0;scroll-margin-top:16px}
+.law-paragraph{margin:0 0 10px;color:var(--text);font-weight:400;line-height:1.77;white-space:pre-wrap}
+.law-paragraph.law-point{padding-left:12px;border-left:2px solid var(--line)}
+.law-article-nav{gap:5px;max-height:135px}
+.law-article-nav button{border-radius:8px;padding:6px 10px;font-size:10px}
+.law-note.law-warning{color:#d19b49;border-color:#b77e36;background:color-mix(in srgb,#b77e36 10%,var(--surface))}
+@media(max-width:720px){.law-document .law-chapter{font-size:17px}.law-paragraph{font-size:14px}}
 </style>
 </head>
 <body>
@@ -506,20 +519,61 @@ function textMark(target,text,query){
  while((pos=lower.indexOf(q,start))!==-1){target.append(document.createTextNode(text.slice(start,pos)));const m=document.createElement('mark');m.textContent=text.slice(pos,pos+query.length);target.append(m);start=pos+query.length}
  target.append(document.createTextNode(text.slice(start)));
 }
+// Documents are plain text, but displayed semantically: chapters, articles and
+// paragraphs. Empty lines are separators, never separate blank DIVs.
+function lawTextQuality(text){
+ const rows=text.replace(/\r\n?/g,'\n').split('\n').map(s=>s.trim());
+ const starts=[];
+ rows.forEach((x,i)=>{if(/^Статья\s+\d+(?:[.\-]\d+)*(?:[.\s:–—-]|$)/iu.test(x))starts.push(i)});
+ if(!starts.length)return {ok:text.trim().length>=900,articles:0,empty:0};
+ let empty=0,volume=0;
+ starts.forEach((idx,i)=>{
+  const part=rows.slice(idx+1,starts[i+1]??rows.length).filter(s=>!/^Глава\s+|^Раздел\s+/iu.test(s)).join(' ').trim();
+  volume+=part.length;
+  if(part.length<12)empty++;
+ });
+ return {ok:text.length>=400 && empty/starts.length<=.12 && volume>=starts.length*32,articles:starts.length,empty};
+}
 function drawLawText(){
- const nav=$('law-article-nav'),wrap=$('law-document'),term=$('law-text-search').value.trim();nav.replaceChildren();wrap.replaceChildren();
+ const nav=$('law-article-nav'),wrap=$('law-document'),term=$('law-text-search').value.trim();
+ nav.replaceChildren();wrap.replaceChildren();
  if(!lawBody)return;
  const lines=lawBody.replace(/\r\n?/g,'\n').split('\n');
  let hits=0,serial=0;
  const frag=document.createDocumentFragment();
- for(const line of lines){
-  const heading=/^\s*(?:Глава\s+(?:[IVXLC\d]+(?:\.\d+)*)(?:[.\s:–—-]|$)|Статья\s+\d+(?:\.\d+)*(?:[.\s:–—-]|$))/iu.test(line);
-  const el=document.createElement('div');el.className='law-line'+(heading?' law-article':'');
-  if(heading){el.id='law-heading-'+(++serial);const btn=document.createElement('button');btn.type='button';btn.textContent=line.trim().slice(0,85);btn.title=line.trim();btn.addEventListener('click',()=>el.scrollIntoView({behavior:'smooth',block:'start'}));nav.append(btn)}
-  if(term){hits+=line.toLocaleLowerCase('ru-RU').split(term.toLocaleLowerCase('ru-RU')).length-1}
-  textMark(el,line,term);frag.append(el);
+ let article=null;
+ for(const raw of lines){
+  const line=raw.trim();
+  if(!line)continue;
+  const chapter=/^(?:Глава\s+[IVXLC\d]+|Раздел\s+[IVXLC\d]+)(?:[.\s:–—-]|$)/iu.test(line);
+  const heading=/^Статья\s+\d+(?:[.\-]\d+)*(?:[.\s:–—-]|$)/iu.test(line);
+  if(chapter)article=null;
+  let el;
+  if(chapter||heading){
+   if(heading){article=document.createElement('section');article.className='law-article-block';frag.append(article)}
+   el=document.createElement(chapter?'h2':'h3');
+   el.className=chapter?'law-chapter':'law-article';
+   el.id='law-heading-'+(++serial);
+   const btn=document.createElement('button');btn.type='button';btn.textContent=line.slice(0,90);
+   btn.title=line;btn.addEventListener('click',()=>el.scrollIntoView({behavior:'smooth',block:'start'}));nav.append(btn);
+  }else{
+   el=document.createElement('p');el.className='law-paragraph';
+   if(/^(?:\d+(?:\.\d+)*[.)]|[а-яё][)])\s+/iu.test(line))el.classList.add('law-point');
+  }
+  if(term)hits+=line.toLocaleLowerCase('ru-RU').split(term.toLocaleLowerCase('ru-RU')).length-1;
+  textMark(el,line,term);
+  (heading?article:(article||frag)).append(el);
  }
- wrap.append(frag);$('law-match-count').textContent=term?('Совпадений: '+hits):'';
+ wrap.append(frag);
+ $('law-match-count').textContent=term?'Совпадений: '+hits:'';
+ const q=lawTextQuality(lawBody),note=$('law-note');
+ if(!q.ok){
+  note.hidden=false;
+  note.textContent='Возможна неполная копия документа: у части статей отсутствует текст. Проверьте форум и повторите импорт, прежде чем использовать эти нормы.';
+  note.classList.add('law-warning');
+ }else{
+  note.hidden=true;note.classList.remove('law-warning');
+ }
 }
 async function openLaw(id){
  const x=lawRecords().find(i=>i.id===id);if(!x)return;

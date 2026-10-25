@@ -20,7 +20,8 @@ html[data-theme="light"]{color-scheme:light;--bg:#eef3f8;--panel:#fff;--sub:#f3f
  <div class="content-head"><div><h2>Импорт законов</h2><p>Загрузка текстов из файла, полученного с форума RMRP</p></div></div>
  <div class="panel form-grid"><p class="muted">Выберите JSON, который создала программа <code>tools/import_forum.py</code>. Документы сохраняются как черновики; проверка и публикация выполняются отдельно.</p>
  <label class="field"><span>Файл JSON</span><input type="file" id="import-file" accept=".json,application/json"></label>
- <label class="check"><input id="import-update" type="checkbox"><span>Обновлять ранее загруженные документы (сначала проверить редакции)</span></label>
+ <label class="check"><input id="import-update" type="checkbox"><span>Обновлять ранее загруженные черновики</span></label>
+ <label class="check"><input id="import-replace-published" type="checkbox"><span>Заменить опубликованные документы новым текстом (только владелец, после проверки)</span></label>
  <div class="form-actions" style="justify-content:flex-start"><button id="import-start" class="btn primary" type="button">Импортировать черновики</button></div><label class="check"><input id="publish-confirm" type="checkbox"><span>Я сверил тексты с форумом и подтверждаю публикацию</span></label><div><button id="publish-start" class="btn" type="button">Опубликовать проверенные документы</button></div><p class="status" id="import-status" aria-live="polite"></p><div class="list" id="import-log"></div>
  </div>
 </section>
@@ -84,19 +85,52 @@ function editUser(username){const u=users.find(x=>x.username===username);if(!u)r
 $('new-user').addEventListener('click',resetUser);
 $('user-form').addEventListener('submit',async e=>{e.preventDefault();const f=e.target;const data={username:f.elements.username.value,password:f.elements.password.value,role:f.elements.role.value};if(selectedUser)data.disabled=f.elements.disabled.checked;try{const login=selectedUser||data.username;await api(selectedUser?'update-user':'create-user',data);await reload();editUser(login);message('user-status-msg','Пользователь сохранён. Передайте пароль лично.') }catch(err){message('user-status-msg',err.message,true)}});
 
+function importedLawQuality(body){
+ const lines=String(body||'').replace(/\r\n?/g,'\n').split('\n').map(s=>s.trim());
+ const starts=[];lines.forEach((s,i)=>{if(/^Статья\s+\d+(?:[.\-]\d+)*(?:[.\s:–—-]|$)/iu.test(s))starts.push(i)});
+ if(!starts.length)return body.length>=900;
+ let empty=0,total=0;
+ starts.forEach((i,k)=>{
+  const text=lines.slice(i+1,starts[k+1]??lines.length).filter(s=>!/^Глава\s+|^Раздел\s+/iu.test(s)).join(' ').trim();
+  total+=text.length;if(text.length<12)empty++;
+ });
+ return body.length>=400&&empty/starts.length<=.12&&total>=starts.length*32;
+}
+function downloadLawBackup(backup){
+ const blob=new Blob([JSON.stringify({createdAt:new Date().toISOString(),source:'FSO RMRP admin backup',items:backup},null,2)],{type:'application/json;charset=utf-8'});
+ const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='fso-rmrp-laws-before-repair-'+new Date().toISOString().slice(0,10)+'.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);
+}
 $('import-start').addEventListener('click',async()=>{
  const file=$('import-file').files[0];if(!file){message('import-status','Выберите JSON-файл.',true);return}
  let incoming;try{incoming=JSON.parse(await file.text())}catch(e){message('import-status','Неверный JSON: '+e.message,true);return}
  const docs=Array.isArray(incoming)?incoming:Array.isArray(incoming.items)?incoming.items:[];
  if(!docs.length){message('import-status','В JSON нет документов.',true);return}
  if(docs.length>150){message('import-status','Слишком большой список.',true);return}
+ const replace=$('import-replace-published').checked;
+ if(replace&&user?.role!=='owner'){message('import-status','Менять опубликованные законы может только владелец.',true);return}
+ if(replace&&!$('publish-confirm').checked){message('import-status','Для замены опубликованных законов подтвердите проверку текстов с форумом.',true);return}
+ const candidates=docs.filter(d=>d.sectionId==='laws'&&typeof d.body==='string'&&importedLawQuality(d.body));
+ const publishedCandidates=candidates.filter(d=>items.some(i=>i.id===d.id&&i.status==='published'));
+ if(replace&&publishedCandidates.length){
+  if(!confirm('Будет заменено '+publishedCandidates.length+' ОПУБЛИКОВАННЫХ законов. Продолжить только после сверки источников?'))return;
+  const backup=[];
+  try{
+   for(const d of publishedCandidates){const old=await api('admin-document',{id:d.id});backup.push(old.item)}
+  }catch(e){message('import-status','Не удалось сохранить резервную копию. Замена отменена: '+e.message,true);return}
+  downloadLawBackup(backup);
+ }
  const btn=$('import-start'),log=$('import-log');btn.disabled=true;log.replaceChildren();let success=0,failed=0,skipped=0;
  for(const d of docs){
-  if(d.sectionId!=='laws'||typeof d.title!=='string'||typeof d.body!=='string'||!d.body.trim()||!/^law-\d+$/.test(d.id||'')){failed++;log.append(n('Неверная запись: '+String(d.title||d.id),'status error'));continue}
+  if(d.sectionId!=='laws'||typeof d.title!=='string'||typeof d.body!=='string'||!/^law-\d+$/.test(d.id||'')){
+   failed++;log.append(n('Некорректная запись: '+String(d.title||d.id),'status error'));continue;
+  }
+  if(!importedLawQuality(d.body)){
+   failed++;log.append(n('✗ '+d.title+': отсутствует содержимое статей или документ подозрительно короткий','status error'));continue;
+  }
   const old=items.find(x=>x.id===d.id);
-  if(old&&!$('import-update').checked){skipped++;continue}
-  if(old?.status==='published'){skipped++;log.append(n('Опубликованный документ не перезаписан: '+d.title,'muted'));continue}
-  const item={id:d.id,title:d.title.slice(0,180),summary:String(d.summary||'').slice(0,800),body:d.body,sectionId:'laws',status:'draft',sourceUrl:d.sourceUrl};
+  if(old?.status==='published'&&!replace){skipped++;log.append(n('Опубликованный закон пропущен: '+d.title,'muted'));continue}
+  if(old?.status==='draft'&&!$('import-update').checked){skipped++;continue}
+  const item={id:d.id,title:d.title.slice(0,180),summary:String(d.summary||'').slice(0,800),body:d.body,sectionId:'laws',status:old?.status==='published'?'published':'draft',sourceUrl:d.sourceUrl};
   try{await api('save-item',{item});success++;log.append(n('✓ '+d.title,'status ok'))}
   catch(e){failed++;log.append(n('✗ '+d.title+': '+e.message,'status error'))}
   message('import-status',`Обработано ${success+skipped+failed}/${docs.length} · Сохранено ${success} · Пропущено ${skipped} · Ошибки ${failed}`);
@@ -104,7 +138,6 @@ $('import-start').addEventListener('click',async()=>{
  try{await reload()}catch(e){message('import-status','Импорт завершён, но обновление списка не удалось: '+e.message,true)}
  btn.disabled=false;
 });
-
 
 $('publish-start').addEventListener('click',async()=>{
  if(user?.role!=='owner'){message('import-status','Публиковать может только владелец.',true);return}
@@ -115,6 +148,7 @@ $('publish-start').addEventListener('click',async()=>{
  for(const meta of drafts){
   try{
    const details=await api('admin-document',{id:meta.id});
+   if(!importedLawQuality(details.item.body))throw new Error('Документ неполный: статьи без текста');
    await api('save-item',{item:{...details.item,status:'published'}});published++;
   }catch(e){failed++;$('import-log').append(n('✗ '+meta.title+': '+e.message,'status error'))}
   message('import-status',`Опубликовано ${published}/${drafts.length}; ошибок: ${failed}`);
