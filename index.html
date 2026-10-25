@@ -316,20 +316,20 @@ body {letter-spacing:-.012em;transition:background-color .36s var(--ease-ui),col
 .reference-filter.active{background:var(--accent-wash);border-color:var(--accent-strong);color:var(--accent-strong)}
 .reference-filter span{opacity:.66;font-size:11px}
 .reference-layout{display:block}
-.reference-list{max-width:980px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
-.reference-entry{width:100%;text-align:left;display:grid;grid-template-columns:1fr auto;align-items:start;gap:12px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));color:var(--text);border-radius:18px;padding:18px 20px;transition:transform .18s,background .18s,border-color .18s,box-shadow .18s;min-height:110px}
+.reference-list{max-width:1060px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+.reference-entry{width:100%;text-align:left;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:20px;border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01));color:var(--text);border-radius:18px;padding:18px 20px;transition:transform .18s,background .18s,border-color .18s,box-shadow .18s;min-height:110px}
 .reference-entry:hover{background:var(--accent-wash);border-color:var(--line-hover);transform:translateY(-1px);box-shadow:0 14px 30px rgba(0,0,0,.24)}
 .reference-entry.active{border-color:var(--accent-strong);background:var(--accent-wash)}
-.reference-entry-main{display:grid;gap:10px}
+.reference-entry-main{display:grid;gap:7px;min-width:0}
 .reference-entry b{font-size:16px;line-height:1.35;letter-spacing:-.015em}
-.reference-entry .ref-tags{font-size:11px;color:var(--accent-strong);line-height:1.5}
-.reference-citation{font-size:11px;line-height:1.45;color:#d7e9ff;background:rgba(120,170,255,.08);border:1px solid rgba(120,170,255,.18);padding:8px 10px;border-radius:12px;max-width:220px;text-align:right}
+.reference-entry .ref-summary{font-size:13px;color:var(--muted);line-height:1.55;max-width:700px;overflow-wrap:anywhere}
+.reference-citation{font-size:12px;line-height:1.45;color:var(--accent-strong);background:var(--accent-wash);border:1px solid var(--line);padding:9px 11px;border-radius:12px;max-width:280px;text-align:right;overflow-wrap:anywhere}
 .reference-reader{display:none}
 .reference-empty{padding:32px 20px;color:var(--muted);font-size:13px;line-height:1.6;border:1px dashed var(--line);border-radius:18px;background:#090909;text-align:center;max-width:980px;margin:0 auto}
-.reference-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:26px;z-index:70}
-.reference-overlay.open{display:flex}
-.reference-modal{width:min(900px,100%);max-height:min(88vh,900px);overflow:auto;background:#070707;border:1px solid var(--line);border-radius:24px;box-shadow:0 30px 80px rgba(0,0,0,.45);padding:30px 30px 26px;position:relative}
-.reference-close{position:absolute;top:16px;right:16px;border:1px solid var(--line);background:#0d0d0d;color:var(--text);width:42px;height:42px;border-radius:14px;display:grid;place-items:center;transition:background .2s,border-color .2s}
+.reference-overlay{position:fixed;inset:0;width:100vw;height:100dvh;background:rgba(0,0,0,.78);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);display:none;align-items:center;justify-content:center;padding:26px;z-index:9999;isolation:isolate}
+.reference-overlay.open:not([hidden]){display:flex}
+.reference-modal{width:min(900px,100%);max-height:min(88dvh,900px);overflow:auto;background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:24px;box-shadow:0 30px 80px rgba(0,0,0,.65);padding:30px 30px 26px;position:relative;animation:ref-pop .24s cubic-bezier(.2,.8,.2,1) both;scrollbar-width:thin}
+.reference-close{position:absolute;top:16px;right:16px;border:1px solid var(--line);background:var(--surface2);color:var(--text);font-family:inherit;font-size:28px;line-height:1;width:42px;height:42px;border-radius:14px;display:grid;place-items:center;transition:background .2s,border-color .2s}
 .reference-close:hover{background:var(--accent-wash);border-color:var(--line-hover)}
 .reference-modal h2{font-size:clamp(24px,2.6vw,34px);line-height:1.2;letter-spacing:-.045em;margin:0 52px 14px 0}
 .reference-modal .ref-citation-line{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(120,170,255,.18);background:rgba(120,170,255,.08);color:#d7e9ff;border-radius:999px;padding:7px 12px;font-size:12px;font-weight:650;margin:0 0 16px}
@@ -340,8 +340,11 @@ body {letter-spacing:-.012em;transition:background-color .36s var(--ease-ui),col
 .reference-block p,.reference-block div{margin:0;color:var(--text);font-size:14px;line-height:1.75;white-space:pre-wrap}
 .reference-block .muted{color:var(--muted)}
 .reference-reader .ref-source,.reference-modal .ref-source{display:inline-block;margin-top:24px;color:var(--accent-strong);text-decoration:none;border-bottom:1px solid currentColor;font-size:12px;font-weight:750}
-@media(max-width:1040px){.reference-list{grid-template-columns:1fr 1fr}.reference-citation{max-width:190px}}
-@media(max-width:760px){.reference-screen{padding-top:30px;padding-bottom:96px}.reference-head{align-items:flex-start;flex-direction:column}.reference-list{grid-template-columns:1fr}.reference-entry{grid-template-columns:1fr;}.reference-citation{text-align:left;max-width:none}.reference-overlay{padding:12px}.reference-modal{padding:22px 18px 20px;border-radius:20px}.reference-close{top:12px;right:12px;width:38px;height:38px;border-radius:12px}}
+@media(max-width:1040px){.reference-list{grid-template-columns:minmax(0,1fr)}.reference-citation{max-width:240px}}
+@media(max-width:760px){.reference-screen{padding-top:30px;padding-bottom:96px}.reference-head{align-items:flex-start;flex-direction:column}.reference-list{grid-template-columns:minmax(0,1fr)}.reference-entry{grid-template-columns:minmax(0,1fr);gap:8px}.reference-citation{text-align:left;max-width:100%;width:max-content}.reference-overlay{padding:12px}.reference-modal{padding:22px 18px 20px;border-radius:20px}.reference-close{top:12px;right:12px;width:38px;height:38px;border-radius:12px}}
+@keyframes ref-pop{from{opacity:.55;transform:translateY(14px) scale(.975)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.reference-modal{animation:none!important}}
+body.reference-dialog-open{overflow:hidden}
 </style>
 </head>
 <body>
@@ -413,12 +416,7 @@ body {letter-spacing:-.012em;transition:background-color .36s var(--ease-ui),col
    <div class="reference-head"><div><h1>Правовой справочник</h1><p>Краткие основания. Подробности открываются по нажатию.</p></div><span class="reference-count" id="reference-count"></span></div>
    <div class="reference-controls"><input class="reference-search" id="reference-search" type="search" aria-label="Поиск по правовому справочнику" placeholder="Поиск по названию, статье или закону…"><div class="reference-filters" id="reference-filters" aria-label="Подразделы справочника"></div></div>
    <div class="reference-layout"><div class="reference-list" id="reference-list" aria-label="Список правовых оснований"></div><article class="reference-reader" id="reference-reader" aria-live="polite"></article></div>
-   <div class="reference-overlay" id="reference-overlay" hidden>
-    <div class="reference-modal" role="dialog" aria-modal="true" aria-labelledby="reference-modal-title">
-      <button class="reference-close" id="reference-close" type="button" aria-label="Закрыть"><svg class="icon"><use href="#i-close"/></svg></button>
-      <div id="reference-modal-body"></div>
-    </div>
-   </div>
+
   </section>
   <section class="law-screen" id="law-screen" hidden aria-label="Законодательство">
    <div class="law-top"><div><h1>Законодательство</h1><p>RMRP · Тверской</p></div><a class="law-source" href="https://forum.rmrp.ru/forums/laws/" target="_blank" rel="noopener noreferrer">Форум RMRP ↗</a></div>
@@ -428,6 +426,12 @@ body {letter-spacing:-.012em;transition:background-color .36s var(--ease-ui),col
    </div>
   </section>
  </main>
+</div>
+<div class="reference-overlay" id="reference-overlay" hidden aria-hidden="true">
+ <div class="reference-modal" role="dialog" aria-modal="true" aria-labelledby="reference-modal-title" tabindex="-1">
+  <button class="reference-close" id="reference-close" type="button" aria-label="Закрыть окно" title="Закрыть окно">×</button>
+  <div id="reference-modal-body"></div>
+ </div>
 </div>
 <script src="./law-catalog.js"></script>
 <script src="./reference-categories.js"></script>
@@ -488,11 +492,17 @@ function renderReference(){
  if(!filtered.length){const empty=document.createElement('div');empty.className='reference-empty';empty.textContent=all.length?'По этому запросу ничего не найдено.':'Правовые основания пока не опубликованы.';list.append(empty);return}
  if(!selectedReference||!filtered.some(x=>x.id===selectedReference))selectedReference=filtered[0].id;
  for(const item of filtered){
-  const b=document.createElement('button');b.type='button';b.className='reference-entry'+(selectedReference===item.id?' active':'');b.setAttribute('aria-pressed',String(selectedReference===item.id));
-  const labels=(item.categories||[]).map(id=>referenceCategories.find(c=>c.id===id)?.title).filter(Boolean);
-  const citation=extractCitation(item)||'Норма не указана';
-  b.innerHTML=`<div class="reference-entry-main"><b>${item.title}</b><div class="ref-tags">${labels.join(' · ')}</div></div><div class="reference-citation">${citation}</div>`;
-  b.addEventListener('click',()=>{selectedReference=item.id;renderReference();openReference(item)});list.append(b);
+  const b=document.createElement('button');b.type='button';b.className='reference-entry';
+  b.setAttribute('aria-haspopup','dialog');b.setAttribute('aria-label','Открыть основание: '+item.title);
+  const left=document.createElement('div');left.className='reference-entry-main';
+  const title=document.createElement('b');title.textContent=item.title||'Без названия';left.append(title);
+  const summary=document.createElement('span');summary.className='ref-summary';
+  summary.textContent=(item.summary||'').trim() || sanitizeBody(item).split('\n')[0].slice(0,220) || 'Описание не добавлено';
+  left.append(summary);
+  const citation=document.createElement('span');citation.className='reference-citation';
+  citation.textContent=extractCitation(item)||'Статья не указана';
+  b.append(left,citation);
+  b.addEventListener('click',()=>openReference(item,b));list.append(b);
  }
 }
 function renderReferenceModal(item){
@@ -509,14 +519,40 @@ function renderReferenceModal(item){
  if(item.sourceUrl){const source=document.createElement('a');source.className='ref-source';source.href=item.sourceUrl;source.target='_blank';source.rel='noopener';source.textContent='Открыть первоисточник';wrap.append(source)}
  return wrap;
 }
-function openReference(item){
- const overlay=$('reference-overlay'), body=$('reference-modal-body'); body.replaceChildren(renderReferenceModal(item)); overlay.hidden=false; overlay.classList.add('open'); document.body.style.overflow='hidden';
+let referencePreviousFocus=null;
+function openReference(item,trigger){
+ const overlay=$('reference-overlay'),body=$('reference-modal-body');
+ if(!overlay||!body)return;
+ referencePreviousFocus=trigger||document.activeElement;
+ body.replaceChildren(renderReferenceModal(item));
+ overlay.hidden=false;
+ overlay.setAttribute('aria-hidden','false');
+ overlay.classList.add('open');
+ document.body.classList.add('reference-dialog-open');
+ $('reference-close').focus({preventScroll:true});
 }
-function closeReference(){ const overlay=$('reference-overlay'); overlay.classList.remove('open'); overlay.hidden=true; document.body.style.overflow=''; }
+function closeReference(){
+ const overlay=$('reference-overlay');if(!overlay||overlay.hidden)return;
+ overlay.classList.remove('open');overlay.hidden=true;
+ overlay.setAttribute('aria-hidden','true');
+ document.body.classList.remove('reference-dialog-open');
+ if(referencePreviousFocus?.isConnected)referencePreviousFocus.focus({preventScroll:true});
+ referencePreviousFocus=null;
+}
 $('reference-search').addEventListener('input',renderReference);
 $('reference-close').addEventListener('click',closeReference);
 $('reference-overlay').addEventListener('click',e=>{ if(e.target===$('reference-overlay')) closeReference(); });
-document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !$('reference-overlay').hidden) closeReference(); });
+document.addEventListener('keydown',e=>{
+ const overlay=$('reference-overlay');if(overlay.hidden)return;
+ if(e.key==='Escape'){e.preventDefault();closeReference();return}
+ if(e.key==='Tab'){
+  const controls=[...overlay.querySelectorAll('button:not([disabled]),a[href]')];
+  if(!controls.length)return;
+  const first=controls[0],last=controls[controls.length-1];
+  if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}
+  else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}
+ }
+});
 const nav=$('rail').querySelector('.rail-nav');
 function renderMaterials(page){
  const items=publicMaterials.filter(x=>x.sectionId===page),wrap=$('material-list');
@@ -575,6 +611,7 @@ $('theme-toggle').addEventListener('click',()=>applyTheme(document.documentEleme
 // Логотип не обязателен: если файла нет, отображается встроенный значок щита.
 const probe=new Image();probe.onload=()=>{$('brand-mark').classList.add('has-image')};probe.src='./assets/logo.png';
 function go(page){
+ closeReference();
  if(!Object.prototype.hasOwnProperty.call(sections,page))page='home';
  const home=page==='home',isLaws=page==='laws',isReference=page==='reference';
  $('home-screen').hidden=!home;$('section-screen').hidden=home||isLaws||isReference;$('law-screen').hidden=!isLaws;$('reference-screen').hidden=!isReference;
