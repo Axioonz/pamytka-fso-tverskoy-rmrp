@@ -438,7 +438,7 @@ html[data-theme="light"] .reference-citation{background:rgba(49,105,152,.10);col
    <div class="law-top"><div><h1>Законодательство</h1><p>RMRP · Тверской</p></div><a class="law-source" href="https://forum.rmrp.ru/forums/laws/" target="_blank" rel="noopener noreferrer">Форум RMRP ↗</a></div>
    <div class="law-layout">
     <aside class="law-sidebar" aria-label="Документы"><div class="law-sidebar-head"><input class="law-search" id="law-search" type="search" placeholder="Поиск документа…" aria-label="Поиск по названиям документов"><div class="law-filters" id="law-filters"></div><p class="law-count" id="law-count"></p></div><div class="law-list" id="law-list"></div></aside>
-    <article class="law-reader" id="law-reader" aria-live="polite"><div class="law-kicker">Документы</div><h2 id="law-title">Выберите документ</h2><div class="law-meta" id="law-meta"></div><div class="law-note" id="law-note">Тексты документов открываются после загрузки в админ-панель. Для каждого документа доступна ссылка на форум.</div><div id="law-document-tools" class="law-document-tools" hidden><input id="law-text-search" type="search" placeholder="Поиск по тексту и статьям…" aria-label="Поиск внутри документа"><button class="law-filter" id="law-clear-search" type="button">Сбросить</button><span class="law-count" id="law-match-count"></span></div><div class="law-article-nav" id="law-article-nav"></div><div class="law-document" id="law-document"></div></article>
+    <article class="law-reader" id="law-reader" aria-live="polite"><div class="law-kicker">Документы</div><h2 id="law-title">Выберите документ</h2><div class="law-meta" id="law-meta"></div><div class="law-note" id="law-note">Тексты доступны после обновления законодательства на GitHub. Ссылка на форум есть у каждого документа.</div><div id="law-document-tools" class="law-document-tools" hidden><input id="law-text-search" type="search" placeholder="Поиск по тексту и статьям…" aria-label="Поиск внутри документа"><button class="law-filter" id="law-clear-search" type="button">Сбросить</button><span class="law-count" id="law-match-count"></span></div><div class="law-article-nav" id="law-article-nav"></div><div class="law-document" id="law-document"></div></article>
    </div>
   </section>
  </main>
@@ -577,22 +577,28 @@ function referenceSourceLink(wrap,item){
  }
 }
 const referencePendingDocuments=new Map();
+// Public law texts are served as static GitHub Pages files, not as Yandex API content.
+const staticLawRequests=new Map();
+async function fetchStaticLaw(id){
+ if(!/^law-\d{3,8}$/.test(id))throw new Error('Неверный ID документа');
+ if(referenceLawCache.has(id))return referenceLawCache.get(id);
+ if(staticLawRequests.has(id))return staticLawRequests.get(id);
+ const promise=(async()=>{
+  const res=await fetch('./laws-data/'+id+'.json',{cache:'no-store'});
+  if(!res.ok)throw new Error('Документ ещё не добавлен на сайт');
+  const doc=await res.json();
+  if(doc.id!==id||typeof doc.body!=='string'||!lawTextQuality(doc.body).ok){
+   throw new Error('Текст закона неполон или повреждён');
+  }
+  referenceLawCache.set(id,doc.body);
+  return doc.body;
+ })();
+ staticLawRequests.set(id,promise);
+ try{return await promise}finally{staticLawRequests.delete(id)}
+}
 async function loadReferenceLaw(info){
  if(!info.source)return null;
- const id=info.source.lawId;
- if(referenceLawCache.has(id))return referenceLawCache.get(id);
- if(referencePendingDocuments.has(id))return referencePendingDocuments.get(id);
- const request=(async()=>{
-  const api=currentApiUrl();if(!/^https:\/\//i.test(api))throw new Error('Адрес функции не настроен');
-  const url=new URL(api);url.searchParams.set('action','document');url.searchParams.set('id',id);
-  const response=await fetch(url.toString(),{cache:'no-store'});
-  const result=await response.json();if(!response.ok||!result.ok)throw new Error(result.error||'Текст закона недоступен');
-  const body=String(result.item?.body||'');
-  if(!body.trim())throw new Error('В базе нет текста закона');
-  referenceLawCache.set(id,body);return body;
- })();
- referencePendingDocuments.set(id,request);
- try{return await request}finally{referencePendingDocuments.delete(id)}
+ return fetchStaticLaw(info.source.lawId);
 }
 function renderReferenceModal(item){
  const info=referenceSourceInfo(item),wrap=document.createElement('div');
@@ -614,7 +620,7 @@ async function fillReferenceNorm(item,info,body,requestId){
  }catch(error){
   if(requestId!==referenceRequestId)return;
   body.replaceChildren();
-  const warning=document.createElement('p');warning.className='ref-warning';warning.textContent='Не удалось получить текст статьи из опубликованного законодательства: '+error.message+'. Используйте ссылку на первоисточник ниже.';body.append(warning);
+  const warning=document.createElement('p');warning.className='ref-warning';warning.textContent='Текст статьи пока недоступен в памятке ('+error.message+'). Откройте закон на форуме по ссылке ниже.';body.append(warning);
   return;
  }
  if(requestId!==referenceRequestId)return;
@@ -622,7 +628,7 @@ async function fillReferenceNorm(item,info,body,requestId){
  if(norm.trim()){
   const text=document.createElement('div');text.className='ref-law-text';text.textContent=norm.trim();body.append(text);
  }else{
-  const warning=document.createElement('p');warning.className='ref-warning';warning.textContent='В памятке пока нет проверенного текста этого пункта. Сначала обновите соответствующий документ через «Импорт законов» в админ-панели. Ссылка на первоисточник ниже.';body.append(warning);
+  const warning=document.createElement('p');warning.className='ref-warning';warning.textContent='Этот пункт не найден в загруженной редакции закона. Проверьте формулировку на форуме по ссылке ниже.';body.append(warning);
  }
 }
 let referencePreviousFocus=null;
@@ -684,7 +690,7 @@ async function loadPublic(){
   const info=await response.json();if(!info.ok)throw new Error(info.error||'API');
   publicMaterials=Array.isArray(info.items)?info.items:[];
   renderReference();
-  if(!selectedLaw && publicMaterials.some(i=>i.sectionId==='laws'))renderLawList();
+  renderLawList();
   const allowed=new Set(), homeButton=nav.querySelector('[data-page="home"]');
   const sorted=[...(info.sections||[])].filter(s=>s.visible).sort((a,b)=>a.order-b.order);
   for(const item of sorted){
@@ -696,7 +702,7 @@ async function loadPublic(){
    button.querySelector('span').textContent=item.title;button.setAttribute('aria-label',item.title);button.title=item.title;
    nav.append(button);allowed.add(item.id);
   }
-  for(const button of [...nav.querySelectorAll('[data-page]')]){if(button.dataset.page!=='home'&&!allowed.has(button.dataset.page)){button.remove();delete sections[button.dataset.page]}}
+  for(const button of [...nav.querySelectorAll('[data-page]')]){if(button.dataset.page!=='home'&&!allowed.has(button.dataset.page)&&!['laws','reference'].includes(button.dataset.page)){button.remove();delete sections[button.dataset.page]}}
   if(homeButton)nav.prepend(homeButton);
   document.querySelectorAll('.feature[data-page]').forEach(el=>{el.hidden=!allowed.has(el.dataset.page)});
   const page=decodeURIComponent(location.hash.slice(1))||'home';go(page);
@@ -764,11 +770,21 @@ document.addEventListener('keydown',event=>{
 const lawCatalog=Array.isArray(window.FSO_LAW_CATALOG)?window.FSO_LAW_CATALOG:[];
 const lawLabels={all:'Все',code:'Кодексы',fkz:'ФКЗ',federal:'ФЗ',charter:'Уставы',order:'Приказы'};
 let lawFilter='all',selectedLaw='',lawBody='',lawFind='';
+let staticLawManifest={};
+async function loadStaticLawManifest(){
+ try{
+  const result=await fetch('./laws-data/manifest.json',{cache:'no-store'});
+  if(!result.ok)throw new Error('Манифест пока не опубликован');
+  const data=await result.json();
+  staticLawManifest=(data&&data.documents&&typeof data.documents==='object')?data.documents:{};
+  renderLawList();
+  if(selectedLaw){await openLaw(selectedLaw)}
+ }catch(error){console.warn('Каталог локальных законов:',error.message)}
+}
 function lawRecords(){
- const map=new Map(lawCatalog.map(x=>[x.id,{...x,loaded:false}]));
+ const map=new Map(lawCatalog.map(x=>[x.id,{...x,loaded:!!staticLawManifest[x.id]}]));
  for(const it of publicMaterials.filter(x=>x.sectionId==='laws')){
-  const x=map.get(it.id)||{id:it.id,category:it.summary?.includes('[ПРИКАЗ]')?'order':it.summary?.includes('[УСТАВ]')?'charter':'federal'};
-  map.set(it.id,{...x,...it,loaded:true});
+  if(!map.has(it.id))map.set(it.id,{id:it.id,title:it.title,category:'federal',sourceUrl:it.sourceUrl,loaded:!!staticLawManifest[it.id]});
  }
  return [...map.values()];
 }
@@ -861,15 +877,12 @@ async function openLaw(id){
  }
  const note=$('law-note');note.hidden=false;
  $('law-document-tools').hidden=true;$('law-article-nav').replaceChildren();$('law-document').replaceChildren();
- if(!x.loaded){note.textContent='Текст ещё не загружен в памятку. Откройте первоисточник или импортируйте документ через админ-панель.';lawBody='';return}
+ if(!x.loaded){note.textContent='Документ ещё не загружен в сайт. Его можно открыть на форуме по ссылке выше.';lawBody='';return}
  note.textContent='Загрузка текста…';
  try{
-  const api=currentApiUrl();if(!api)throw new Error('Адрес API не указан');
-  const url=new URL(api);url.searchParams.set('action','document');url.searchParams.set('id',id);
-  const response=await fetch(url.toString(),{cache:'no-store'});const result=await response.json();
-  if(!response.ok||!result.ok)throw new Error(result.error||'Текст недоступен');
+  const body=await fetchStaticLaw(id);
   if(selectedLaw!==id)return;
-  lawBody=result.item?.body||'';note.hidden=!!lawBody;
+  lawBody=body;note.hidden=!!lawBody;
   note.textContent=lawBody?'':'Текст документа пуст';$('law-document-tools').hidden=!lawBody;drawLawText();
  }catch(err){note.hidden=false;note.textContent='Не удалось открыть текст: '+err.message}
 }
@@ -880,6 +893,7 @@ $('law-clear-search').addEventListener('click',()=>{$('law-text-search').value='
 window.addEventListener('hashchange',()=>go(decodeURIComponent(location.hash.slice(1))));
 go(decodeURIComponent(location.hash.slice(1))||'home');
 loadPublic();
+loadStaticLawManifest();
 
 
 
