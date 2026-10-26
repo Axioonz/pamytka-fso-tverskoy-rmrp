@@ -345,6 +345,16 @@ body {letter-spacing:-.012em;transition:background-color .36s var(--ease-ui),col
 @keyframes ref-pop{from{opacity:.55;transform:translateY(14px) scale(.975)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.reference-modal{animation:none!important}}
 body.reference-dialog-open{overflow:hidden}
+
+/* Справочник: только юридический текст во всплывающей карточке. */
+.ref-citation-line{max-width:100%;overflow-wrap:anywhere}
+.reference-norm-content{padding:22px 0 4px;border-top:1px solid var(--line);margin-top:12px;min-height:90px}
+.reference-norm-content .ref-law-text{white-space:pre-wrap;overflow-wrap:anywhere;font-size:15px;line-height:1.85;color:var(--text);font-family:inherit}
+.reference-norm-content .ref-loading{color:var(--muted);margin:0}
+.reference-norm-content .ref-warning{color:var(--muted);margin:0;line-height:1.7;font-size:14px}
+.reference-entry{grid-template-columns:minmax(0,1fr) minmax(115px,230px)}
+.reference-entry .ref-summary{max-width:700px}
+@media(max-width:760px){.reference-entry{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -454,77 +464,168 @@ function currentApiUrl(){
 
 let publicMaterials=[];
 const referenceCategories=Array.isArray(window.FSO_REFERENCE_CATEGORIES)?window.FSO_REFERENCE_CATEGORIES:[];
-let referenceFilter='all',selectedReference='';
+let referenceFilter='all';
+const referenceLawCache=new Map();
+let referenceRequestId=0;
 function referenceItems(){return publicMaterials.filter(x=>x.sectionId==='reference')}
+function extractCitation(item){
+ const body=String(item.body||'');
+ return String(item.citation||body.match(/Правовое основание:\s*([^\n]+)/i)?.[1]||'').trim();
+}
+function referenceSourceInfo(item){
+ const url=String(item.sourceUrl||'');
+ const citation=extractCitation(item);
+ let source=null;
+ if(/(?:\.25069\/|№\s*22-ФЗ)/i.test(url+' '+citation))source={lawId:'law-25069',short:'ФЗ о ФСО',full:'Федеральный закон № 22-ФЗ «О Федеральной службе охраны»'};
+ else if(/(?:\.26625\/|№\s*86-ФЗ)/i.test(url+' '+citation))source={lawId:'law-26625',short:'ФЗ о территориях',full:'Федеральный закон № 86-ФЗ «О государственной собственности, закрытых и охраняемых территориях»'};
+ const article=citation.match(/ст\.\s*(\d+(?:-\d+)?)/i)?.[1]||'';
+ const partMatch=citation.match(/ч\.\s*(\d+(?:\.\d+)?)(?:\s*[–—-]\s*(\d+(?:\.\d+)?))?/i);
+ const part=partMatch?.[1]||'',partTo=partMatch?.[2]||'';
+ const point=citation.match(/п\.\s*(\d+)/i)?.[1]||'';
+ const paragraph=citation.match(/абз\.\s*(\d+)/i)?.[1]||'';
+ const suffix=[article?'ст. '+article:'',part?'ч. '+part+(partTo?'–'+partTo:''):'',point?'п. '+point:'',paragraph?'абз. '+paragraph:''].filter(Boolean).join(' · ');
+ return {source,article,part,partTo,point,paragraph,shortCitation:source?[source.short,suffix].filter(Boolean).join(' · '):citation,fullCitation:source?[source.full,suffix].filter(Boolean).join(' · '):citation};
+}
 function selectedReferenceMatches(items){
- const needle=$("reference-search").value.trim().toLocaleLowerCase('ru-RU');
+ const needle=$('reference-search').value.trim().toLocaleLowerCase('ru-RU');
  return items.filter(item=>{
   const cats=Array.isArray(item.categories)?item.categories:[];
   if(referenceFilter==='uncategorized'&&cats.length)return false;
   if(referenceFilter!=='all'&&referenceFilter!=='uncategorized'&&!cats.includes(referenceFilter))return false;
-  return !needle||[item.title,item.summary,item.body,extractCitation(item),extractQuote(item),...cats.map(id=>referenceCategories.find(c=>c.id===id)?.title||'')].join(' ').toLocaleLowerCase('ru-RU').includes(needle);
+  return !needle||[item.title,item.summary,item.body,extractCitation(item),referenceSourceInfo(item).shortCitation,...cats.map(id=>referenceCategories.find(c=>c.id===id)?.title||'')].join(' ').toLocaleLowerCase('ru-RU').includes(needle);
  });
-}
-function extractCitation(item){
- if(item.citation)return String(item.citation).trim();
- const body=String(item.body||'');
- const m=body.match(/Правовое основание:\s*([^\n]+)/i);
- return m?m[1].trim():'';
-}
-function extractQuote(item){ return String(item.quote||item.actualText||'').trim(); }
-function sanitizeBody(item){
- let body=String(item.body||'').trim();
- body=body.replace(/^Правовое основание:\s*[^\n]+\n*/i,'').trim();
- return body;
 }
 function renderReference(){
  const all=referenceItems(),filtered=selectedReferenceMatches(all),filters=$('reference-filters'),list=$('reference-list');
  filters.replaceChildren();list.replaceChildren();
- const choices=[{id:'all',title:'Все'},...referenceCategories];
- for(const cat of choices){
+ for(const cat of [{id:'all',title:'Все'},...referenceCategories]){
   const count=cat.id==='all'?all.length:all.filter(item=>(Array.isArray(item.categories)?item.categories:[]).includes(cat.id)).length;
   const b=document.createElement('button');b.type='button';b.className='reference-filter'+(referenceFilter===cat.id?' active':'');
   b.setAttribute('aria-pressed',String(referenceFilter===cat.id));
-  b.innerHTML=`<strong>${cat.title}</strong><span>${count}</span>`;
+  const label=document.createElement('strong');label.textContent=cat.title;
+  const num=document.createElement('span');num.textContent=String(count);b.append(label,num);
   b.addEventListener('click',()=>{referenceFilter=cat.id;renderReference()});filters.append(b);
  }
  $('reference-count').textContent=filtered.length+' из '+all.length;
  if(!filtered.length){const empty=document.createElement('div');empty.className='reference-empty';empty.textContent=all.length?'По этому запросу ничего не найдено.':'Правовые основания пока не опубликованы.';list.append(empty);return}
- if(!selectedReference||!filtered.some(x=>x.id===selectedReference))selectedReference=filtered[0].id;
  for(const item of filtered){
   const b=document.createElement('button');b.type='button';b.className='reference-entry';
-  b.setAttribute('aria-haspopup','dialog');b.setAttribute('aria-label','Открыть основание: '+item.title);
+  b.setAttribute('aria-haspopup','dialog');b.setAttribute('aria-label','Открыть норму: '+item.title);
   const left=document.createElement('div');left.className='reference-entry-main';
   const title=document.createElement('b');title.textContent=item.title||'Без названия';left.append(title);
-  const summary=document.createElement('span');summary.className='ref-summary';
-  summary.textContent=(item.summary||'').trim() || sanitizeBody(item).split('\n')[0].slice(0,220) || 'Описание не добавлено';
-  left.append(summary);
-  const citation=document.createElement('span');citation.className='reference-citation';
-  citation.textContent=extractCitation(item)||'Статья не указана';
+  const summary=document.createElement('span');summary.className='ref-summary';summary.textContent=String(item.summary||'').trim();left.append(summary);
+  const citation=document.createElement('span');citation.className='reference-citation';citation.textContent=referenceSourceInfo(item).shortCitation||'Статья не указана';
   b.append(left,citation);
   b.addEventListener('click',()=>openReference(item,b));list.append(b);
  }
 }
+function referenceArticleLines(fullText,info){
+ if(!info.article)return null;
+ const lines=String(fullText||'').replace(/\r/g,'').replace(/[\u200b-\u200d\ufeff]/g,'').split('\n').map(l=>l.trim()).filter(Boolean);
+ const heading=/^(?:#{1,6}\s*)?(?:\*\*)?Статья\s+(\d+(?:-\d+)?)(?=[.。\s]|$)\s*[.。]?\s*(?:\*\*)?/i;
+ const candidates=[];
+ for(let i=0;i<lines.length;i++){
+  const m=lines[i].match(heading);if(!m||m[1]!==info.article)continue;
+  let j=i+1;while(j<lines.length&&!heading.test(lines[j]))j++;
+  let segment=lines.slice(i,j).filter(l=>!/^Глава\s+[IVXLC\d]+\b/i.test(l));
+  let content=segment.slice(1).filter(l=>!/^Статья\s+\d+/i.test(l));
+  const meaningful=content.join(' ').length>50 && content.some(l=>/^\d+(?:\.\d+)+\./.test(l)||l.length>35);
+  if(meaningful)candidates.push(segment);
+ }
+ if(!candidates.length)return null;
+ const section=candidates.sort((a,b)=>b.join('').length-a.join('').length)[0];
+ let body=section.slice(1);
+ // In the RMRP laws, "10.1." is a part within Article 10, not Article 10.1.
+ if(info.part){
+  const partRE=new RegExp('^'+info.part.replaceAll('.','\\.')+'\\.(?:\\s|$)');
+  const start=body.findIndex(l=>partRE.test(l));if(start<0)return null;
+  const nextRE=/^\d+(?:\.\d+)+\.(?:\s|$)/;
+  let finish=start+1;while(finish<body.length&&!nextRE.test(body[finish]))finish++;
+  if(info.partTo){
+   const endRE=new RegExp('^'+info.partTo.replaceAll('.','\\.')+'\\.(?:\\s|$)');
+   const second=body.findIndex((l,k)=>k>=start&&endRE.test(l));if(second<0)return null;
+   finish=second+1;while(finish<body.length&&!nextRE.test(body[finish]))finish++;
+  }
+  body=body.slice(start,finish);
+ }
+ if(info.point){
+  const pointRE=new RegExp('^'+info.point+'\\s*[)）]');
+  const index=body.findIndex(l=>pointRE.test(l));if(index<0)return null;
+  const nextItem=/^\d+\s*[)）]/;
+  let stop=index+1;while(stop<body.length&&!nextItem.test(body[stop]))stop++;
+  body=body.slice(index,stop);
+ }
+ if(info.paragraph){
+  // An explicit second paragraph of the same statutory part, not its second numbered point.
+  const n=Number(info.paragraph),paragraphs=body.filter(x=>x.trim());
+  if(n>0&&paragraphs[n-1])body=[paragraphs[n-1]];
+  else return null;
+ }
+ const raw=body.join('\n\n').trim();
+ if(raw.length<25)return null; // No fake article reconstructed from a table of contents.
+ return raw;
+}
+function referenceSourceLink(wrap,item){
+ if(/^https:\/\/forum\.rmrp\.ru\/threads\//.test(item.sourceUrl||'')){
+  const a=document.createElement('a');a.className='ref-source';a.href=item.sourceUrl;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Открыть закон на форуме ↗';wrap.append(a);
+ }
+}
+const referencePendingDocuments=new Map();
+async function loadReferenceLaw(info){
+ if(!info.source)return null;
+ const id=info.source.lawId;
+ if(referenceLawCache.has(id))return referenceLawCache.get(id);
+ if(referencePendingDocuments.has(id))return referencePendingDocuments.get(id);
+ const request=(async()=>{
+  const api=currentApiUrl();if(!/^https:\/\//i.test(api))throw new Error('Адрес функции не настроен');
+  const url=new URL(api);url.searchParams.set('action','document');url.searchParams.set('id',id);
+  const response=await fetch(url.toString(),{cache:'no-store'});
+  const result=await response.json();if(!response.ok||!result.ok)throw new Error(result.error||'Текст закона недоступен');
+  const body=String(result.item?.body||'');
+  if(!body.trim())throw new Error('В базе нет текста закона');
+  referenceLawCache.set(id,body);return body;
+ })();
+ referencePendingDocuments.set(id,request);
+ try{return await request}finally{referencePendingDocuments.delete(id)}
+}
 function renderReferenceModal(item){
- const wrap=document.createElement('div');
+ const info=referenceSourceInfo(item),wrap=document.createElement('div');
  const title=document.createElement('h2');title.id='reference-modal-title';title.textContent=item.title;wrap.append(title);
- const citation=extractCitation(item); if(citation){const pill=document.createElement('div');pill.className='ref-citation-line';pill.textContent=citation;wrap.append(pill)}
- const tags=document.createElement('div');tags.className='reference-tags';
- for(const id of item.categories||[]){const cat=referenceCategories.find(c=>c.id===id);if(cat){const label=document.createElement('span');label.textContent=cat.title;tags.append(label)}}
- if(tags.children.length)wrap.append(tags);
- const summary=document.createElement('section');summary.className='reference-block';summary.innerHTML='<h3>Суть</h3>'; const summaryText=document.createElement('p'); summaryText.textContent=item.summary||'Краткое описание пока не добавлено.'; summary.append(summaryText); wrap.append(summary);
- const bodyText=sanitizeBody(item); if(bodyText){ const body=document.createElement('section'); body.className='reference-block'; body.innerHTML='<h3>Описание</h3>'; const p=document.createElement('div'); p.textContent=bodyText; body.append(p); wrap.append(body); }
- const quote=extractQuote(item); if(quote){ const q=document.createElement('section'); q.className='reference-block'; q.innerHTML='<h3>Формулировка нормы</h3>'; const p=document.createElement('div'); p.textContent=quote; q.append(p); wrap.append(q); }
- else { const q=document.createElement('section'); q.className='reference-block'; q.innerHTML='<h3>Формулировка нормы</h3>'; const p=document.createElement('div'); p.className='muted'; p.textContent='Точная формулировка нормы ещё не добавлена.'; q.append(p); wrap.append(q); }
- if(item.sourceUrl){const source=document.createElement('a');source.className='ref-source';source.href=item.sourceUrl;source.target='_blank';source.rel='noopener';source.textContent='Открыть первоисточник';wrap.append(source)}
- return wrap;
+ const subtitle=document.createElement('div');subtitle.className='ref-citation-line';subtitle.textContent=info.fullCitation||'Правовая норма';wrap.append(subtitle);
+ const body=document.createElement('div');body.className='reference-norm-content';body.setAttribute('aria-live','polite');
+ const waiting=document.createElement('p');waiting.className='ref-loading';waiting.textContent='Загрузка текста закона…';body.append(waiting);wrap.append(body);
+ referenceSourceLink(wrap,item);
+ return {wrap,body,info};
+}
+async function fillReferenceNorm(item,info,body,requestId){
+ let norm='';
+ try{
+  if(item.quote||item.actualText){norm=String(item.quote||item.actualText)}
+  else {
+   const text=await loadReferenceLaw(info);
+   norm=referenceArticleLines(text,info)||'';
+  }
+ }catch(error){
+  if(requestId!==referenceRequestId)return;
+  body.replaceChildren();
+  const warning=document.createElement('p');warning.className='ref-warning';warning.textContent='Не удалось получить текст статьи из опубликованного законодательства: '+error.message+'. Используйте ссылку на первоисточник ниже.';body.append(warning);
+  return;
+ }
+ if(requestId!==referenceRequestId)return;
+ body.replaceChildren();
+ if(norm.trim()){
+  const text=document.createElement('div');text.className='ref-law-text';text.textContent=norm.trim();body.append(text);
+ }else{
+  const warning=document.createElement('p');warning.className='ref-warning';warning.textContent='Текст этой нормы отсутствует или неполон в загруженной версии закона. Проверьте оригинал на форуме.';body.append(warning);
+ }
 }
 let referencePreviousFocus=null;
 function openReference(item,trigger){
  const overlay=$('reference-overlay'),body=$('reference-modal-body');
  if(!overlay||!body)return;
  referencePreviousFocus=trigger||document.activeElement;
- body.replaceChildren(renderReferenceModal(item));
+ const modal=renderReferenceModal(item);body.replaceChildren(modal.wrap);
+ const requestId=++referenceRequestId;void fillReferenceNorm(item,modal.info,modal.body,requestId);
  overlay.hidden=false;
  overlay.setAttribute('aria-hidden','false');
  overlay.classList.add('open');
@@ -535,7 +636,7 @@ function closeReference(){
  const overlay=$('reference-overlay');if(!overlay||overlay.hidden)return;
  overlay.classList.remove('open');overlay.hidden=true;
  overlay.setAttribute('aria-hidden','true');
- document.body.classList.remove('reference-dialog-open');
+ document.body.classList.remove('reference-dialog-open');referenceRequestId++;
  if(referencePreviousFocus?.isConnected)referencePreviousFocus.focus({preventScroll:true});
  referencePreviousFocus=null;
 }
