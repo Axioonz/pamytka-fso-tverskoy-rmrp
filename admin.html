@@ -26,37 +26,18 @@ html[data-theme="light"]{color-scheme:light;--bg:#eef3f8;--panel:#fff;--sub:#f3f
 .api-connection form{padding-top:16px;gap:11px}
 .api-connection-note{font-size:12px!important;line-height:1.6;margin:0!important}
 .api-reset{font-weight:500;font-size:12px;padding:9px 12px}
+
+#reference-edit-hint{display:block;font-size:12px;line-height:1.55;margin-top:4px}
 </style></head><body>
 <div class="wrap">
 <header class="top"><div class="top-left"><a class="back" href="./index.html">← Памятка</a><div><h1>Админ-панель</h1><small>ФСО / RMRP — Тверской</small></div></div><div class="top-actions"><span class="muted" id="current-user"></span><button class="btn" type="button" id="theme-btn">Тема</button><button class="btn" type="button" id="logout-btn" hidden>Выйти</button></div></header>
 <section class="panel auth" id="auth-view"><h2>Вход</h2><p>Доступ к редактированию выдаётся владельцем памятки.</p><form id="login-form" class="stack"><label class="field"><span>Логин</span><input name="username" autocomplete="username" required minlength="3"></label><label class="field"><span>Пароль</span><input name="password" type="password" autocomplete="current-password" required></label><button class="btn primary" type="submit">Войти</button></form><p id="auth-status" class="status" role="status"></p><details id="api-url-details" class="api-connection"><summary>Адрес серверной функции</summary><form id="api-url-form" class="stack"><label class="field"><span>URL Yandex Cloud Function</span><input id="api-url-input" name="endpoint" type="url" autocomplete="url" placeholder="https://functions.yandexcloud.net/ID" required></label><button class="btn" type="submit">Сохранить адрес</button><div class="status" id="api-url-status" role="status"></div><button class="btn api-reset" id="api-url-reset" type="button">Использовать адрес из config.js</button><p class="api-connection-note">Адрес хранится в этом браузере. Для всех посетителей сайта он по-прежнему должен быть указан в <code>config.js</code> на GitHub. Пароль здесь вводить не нужно.</p></form></details></section>
-<div class="layout" id="workspace" hidden><nav class="aside" aria-label="Разделы управления"><button class="tab active" data-tab="materials">Материалы</button><button class="tab" data-tab="sections">Разделы</button><button class="tab" data-tab="import">Импорт законов</button><button class="tab" data-tab="reference-import">Импорт оснований</button><button class="tab" data-tab="users">Пользователи</button><button class="tab" data-tab="info">Инструкция</button></nav><main>
+<div class="layout" id="workspace" hidden><nav class="aside" aria-label="Разделы управления"><button class="tab active" data-tab="materials">Материалы</button><button class="tab" data-tab="sections">Разделы</button><button class="tab" data-tab="users">Пользователи</button><button class="tab" data-tab="info">Инструкция</button></nav><main>
 <section class="tab-view" id="materials-view"><div class="content-head"><div><h2>Материалы</h2><p>Черновики и опубликованные записи</p></div><button class="btn" id="new-material">+ Новый материал</button></div>
-<div class="cols"><div class="panel"><label class="field"><span>Поиск</span><input id="materials-filter" placeholder="Название или раздел"></label><div class="list" id="materials-list" style="margin-top:13px"></div></div><div class="panel"><form id="material-form" class="form-grid"><input type="hidden" name="id"><label class="field"><span>Название</span><input name="title" maxlength="180" required placeholder="Например: Проверка документов"></label><div class="row"><label class="field"><span>Раздел</span><select name="sectionId" id="material-section" required></select></label><label class="field"><span>Статус</span><select name="status" id="material-status"><option value="draft">Черновик</option><option value="published">Опубликовано</option></select></label></div><div class="reference-category-settings" id="reference-category-settings" hidden><strong>Подразделы правового справочника</strong><p>Можно выбрать несколько. Карточка останется одной, а появится во всех выбранных подразделах.</p><div class="reference-category-options" id="reference-category-options"></div></div><label class="field"><span>Краткое описание</span><textarea name="summary" maxlength="800" rows="2" style="min-height:72px"></textarea></label><label class="field"><span>Содержание</span><textarea name="body" maxlength="600000" required placeholder="Текст ситуации или статьи..."></textarea></label><label class="field"><span>Ссылка на источник (необязательно)</span><input name="sourceUrl" type="url" maxlength="1000" placeholder="https://forum.rmrp.ru/..."></label><div class="form-actions"><button class="btn danger" id="delete-material" type="button" disabled>Удалить</button><button class="btn primary" type="submit">Сохранить</button></div><div class="status" id="material-status-msg" role="status"></div></form></div></div></section>
-<section class="tab-view" id="import-view" hidden>
- <div class="content-head"><div><h2>Импорт законов</h2><p>Загрузка текстов из файла, полученного с форума RMRP</p></div></div>
- <div class="panel form-grid"><p class="muted">Выберите JSON, который создала программа <code>tools/import_forum.py</code>. Документы сохраняются как черновики; проверка и публикация выполняются отдельно.</p>
- <label class="field"><span>Файл JSON</span><input type="file" id="import-file" accept=".json,application/json"></label>
- <label class="check"><input id="import-update" type="checkbox"><span>Обновлять ранее загруженные черновики</span></label>
- <label class="check"><input id="import-replace-published" type="checkbox"><span>Заменить опубликованные документы новым текстом (только владелец, после проверки)</span></label>
- <div class="form-actions" style="justify-content:flex-start"><button id="import-start" class="btn primary" type="button">Импортировать черновики</button></div><label class="check"><input id="publish-confirm" type="checkbox"><span>Я сверил тексты с форумом и подтверждаю публикацию</span></label><div><button id="publish-start" class="btn" type="button">Опубликовать проверенные документы</button></div><p class="status" id="import-status" aria-live="polite"></p><div class="list" id="import-log"></div>
- </div>
-</section>
-<section class="tab-view" id="reference-import-view" hidden>
- <div class="content-head"><div><h2>Импорт правовых оснований</h2><p>Карточки ФСО и охраняемых территорий</p></div></div>
- <div class="panel form-grid">
-  <p class="muted">Импорт принимает JSON с массивом <code>items</code>, сохраняет карточки как <b>черновики</b>, не перезаписывает существующие карточки и не меняет законодательство.</p>
-  <label class="field"><span>Файл с карточками JSON</span><input type="file" id="ref-import-file" accept=".json,application/json"></label>
-  <div class="form-actions" style="justify-content:flex-start"><button class="btn primary" id="ref-import-start" type="button">Добавить карточки как черновики</button></div>
-  <hr class="separator">
-  <label class="check"><input id="ref-publish-confirm" type="checkbox"><span>Я проверил тексты и основания карточек по актуальной редакции форума.</span></label>
-  <div class="form-actions" style="justify-content:flex-start"><button class="btn" id="ref-publish-start" type="button">Опубликовать проверенные карточки из набора</button></div>
-  <p class="status" id="ref-import-status" role="status" aria-live="polite"></p><div class="list" id="ref-import-log"></div>
- </div>
-</section>
+<div class="cols"><div class="panel"><label class="field"><span>Поиск</span><input id="materials-filter" placeholder="Название или раздел"></label><div class="list" id="materials-list" style="margin-top:13px"></div></div><div class="panel"><form id="material-form" class="form-grid"><input type="hidden" name="id"><label class="field"><span>Название</span><input name="title" maxlength="180" required placeholder="Например: Проверка документов"></label><div class="row"><label class="field"><span>Раздел</span><select name="sectionId" id="material-section" required></select></label><label class="field"><span>Статус</span><select name="status" id="material-status"><option value="draft">Черновик</option><option value="published">Опубликовано</option></select></label></div><div class="reference-category-settings" id="reference-category-settings" hidden><strong>Подразделы правового справочника</strong><p>Можно выбрать несколько. Карточка останется одной, а появится во всех выбранных подразделах.</p><div class="reference-category-options" id="reference-category-options"></div></div><label class="field" id="reference-citation-field" hidden><span>Закон и пункт (на обложке)</span><input id="reference-citation-input" maxlength="250" placeholder="ФЗ о ФСО · ст. 10 · ч. 1 · п. 2"></label><label class="field"><span>Краткое описание</span><textarea name="summary" maxlength="800" rows="2" style="min-height:72px"></textarea></label><label class="field"><span id="material-body-label">Содержание</span><textarea name="body" maxlength="600000" required placeholder="Текст ситуации или статьи..."></textarea><small id="reference-edit-hint" class="muted" hidden>Для справочника здесь должен быть дословный текст пункта закона, а не пояснение. На сайте он будет показан при открытии карточки.</small></label><label class="field"><span>Ссылка на источник (необязательно)</span><input name="sourceUrl" type="url" maxlength="1000" placeholder="https://forum.rmrp.ru/..."></label><div class="form-actions"><button class="btn danger" id="delete-material" type="button" disabled>Удалить</button><button class="btn primary" type="submit">Сохранить</button></div><div class="status" id="material-status-msg" role="status"></div></form></div></div></section>
 <section class="tab-view" id="sections-view" hidden><div class="content-head"><div><h2>Разделы</h2><p>Названия, порядок и отображение в памятке</p></div><button class="btn" id="new-section">+ Новый раздел</button></div><div class="cols"><div class="panel"><div class="list" id="sections-list"></div></div><div class="panel"><form id="section-form" class="form-grid"><input type="hidden" name="id"><label class="field"><span>Название раздела</span><input name="title" required maxlength="100"></label><label class="field"><span>Описание</span><textarea name="description" maxlength="300" rows="3" style="min-height:80px"></textarea></label><label class="field"><span>Порядок в меню</span><input name="order" type="number" min="0" max="1000" value="10"></label><label class="check"><input name="visible" type="checkbox" checked><span>Отображать на сайте</span></label><div class="form-actions"><button class="btn danger" type="button" id="delete-section" disabled>Удалить</button><button class="btn primary" type="submit">Сохранить раздел</button></div><div class="status" id="section-status-msg" role="status"></div></form></div></div></section>
 <section class="tab-view" id="users-view" hidden><div class="content-head"><div><h2>Пользователи</h2><p>Логины, роли, пароли и доступ</p></div></div><div class="cols"><div class="panel"><div class="list" id="users-list"></div></div><div class="panel"><h3 id="user-form-title">Создать учётную запись</h3><form class="form-grid" id="user-form"><label class="field"><span>Логин (латиницей)</span><input name="username" required pattern="[a-zA-Z0-9_.-]{3,32}" maxlength="32"></label><label class="field"><span>Пароль</span><input name="password" type="password" minlength="12" maxlength="128" autocomplete="new-password" placeholder="Не менее 12 символов"></label><label class="field"><span>Роль</span><select name="role"><option value="editor">Редактор (только черновики)</option><option value="owner">Владелец (полные права)</option></select></label><label class="check" id="disabled-row" hidden><input name="disabled" type="checkbox"><span>Заблокировать доступ</span></label><div class="form-actions"><button class="btn" type="button" id="new-user">Создать другого</button><button class="btn primary" type="submit">Сохранить пользователя</button></div><div class="status" id="user-status-msg" role="status"></div></form></div></div></section>
-<section class="tab-view" id="info-view" hidden><div class="content-head"><div><h2>О работе админ-панели</h2></div></div><div class="panel tips"><p>Сначала создайте материал, выберите раздел, впишите текст и сохраните как <b>черновик</b>. Материал появится на сайте только со статусом <b>«Опубликовано»</b>.</p><p>Редакторы могут создавать, менять и удалять только черновики. Владельцы управляют публикациями, разделами и пользователями.</p><p>Созданный пользователь входит на странице <code>admin.html</code>. Пароль задаётся при создании, хранится в Object Storage в виде стойкого хеша и не отображается после сохранения.</p><p>Смена пароля и блокировка учётной записи доступны владельцу в разделе «Пользователи». После изменения доступ со старым токеном отзывается.</p><p>До настройки <code>config.js</code> и отдельной функции в Yandex Cloud вход работать не будет.</p></div></section>
+<section class="tab-view" id="info-view" hidden><div class="content-head"><div><h2>О работе админ-панели</h2></div></div><div class="panel tips"><p>Для правового справочника выберите раздел, укажите краткое описание (обложка), реквизиты статьи и дословный текст (открываемое окно). Сначала сохраните как <b>черновик</b>. Материал появится на сайте только со статусом <b>«Опубликовано»</b>.</p><p>Редакторы могут создавать, менять и удалять только черновики. Владельцы управляют публикациями, разделами и пользователями.</p><p>Созданный пользователь входит на странице <code>admin.html</code>. Пароль задаётся при создании, хранится в Object Storage в виде стойкого хеша и не отображается после сохранения.</p><p>Смена пароля и блокировка учётной записи доступны владельцу в разделе «Пользователи». После изменения доступ со старым токеном отзывается.</p><p>До настройки <code>config.js</code> и отдельной функции в Yandex Cloud вход работать не будет.</p></div></section>
 </main></div><p id="global-status" class="status" aria-live="polite"></p>
 </div>
 <script src="./reference-categories.js"></script><script src="./config.js"></script><script>
@@ -103,7 +84,12 @@ let token='',user=null,items=[],sections=[],users=[],selectedUser='';
 const tkey='fso-rmrp-theme',tokenKey='fso-rmrp-session';
 const referenceCategories=Array.isArray(window.FSO_REFERENCE_CATEGORIES)?window.FSO_REFERENCE_CATEGORIES:[];
 function updateReferenceCategoryVisibility(){
- $('reference-category-settings').hidden=$('material-section').value!=='reference';
+ const reference=$('material-section').value==='reference';
+ $('reference-category-settings').hidden=!reference;
+ $('reference-citation-field').hidden=!reference;
+ $('reference-edit-hint').hidden=!reference;
+ $('material-body-label').textContent=reference?'Дословный текст нормы':'Содержание';
+ $('material-form').elements.body.placeholder=reference?'Вставьте точный пункт закона, например: 2) осуществлять проверку документов...':'Текст ситуации или статьи...';
 }
 function fillReferenceCategorySelection(values=[]){
  const selected=new Set(Array.isArray(values)?values:[]);
@@ -136,14 +122,31 @@ $('login-form').addEventListener('submit',async(e)=>{e.preventDefault();const f=
 $('logout-btn').addEventListener('click',async()=>{try{await api('logout')}catch{}showAuth()});
 async function reload(){try{const d=await api('admin-data');user=d.user;items=d.items;sections=d.sections;users=d.users||[];renderMaterials();renderSections();renderUsers();refreshSectionsSelect()}catch(e){if(/вход|сессия|авториз|401/i.test(e.message))showAuth();throw e}}
 function refreshSectionsSelect(){const select=$('material-section'),value=select.value;select.replaceChildren();for(const s of [...sections].sort((a,b)=>a.order-b.order)){const opt=document.createElement('option');opt.value=s.id;opt.textContent=s.title;select.append(opt)}if(sections.some(s=>s.id===value))select.value=value;updateReferenceCategoryVisibility()}
-function resetMaterial(){const f=$('material-form');f.reset();f.elements.id.value='';$('delete-material').disabled=true;message('material-status-msg','');const option=f.elements.status.querySelector('[value="published"]');option.disabled=user?.role!=='owner';f.elements.status.value='draft';f.elements.body.disabled=false;f.querySelector('button[type="submit"]').disabled=false;fillReferenceCategorySelection([]);updateReferenceCategoryVisibility()}
+function resetMaterial(){const f=$('material-form');f.reset();f.elements.id.value='';$('delete-material').disabled=true;message('material-status-msg','');const option=f.elements.status.querySelector('[value="published"]');option.disabled=user?.role!=='owner';f.elements.status.value='draft';f.elements.body.disabled=false;f.querySelector('button[type="submit"]').disabled=false;fillReferenceCategorySelection([]);$('reference-citation-input').value='';updateReferenceCategoryVisibility()}
 function renderMaterials(){const list=$('materials-list'),query=$('materials-filter').value.trim().toLowerCase();list.replaceChildren();const filtered=[...items].filter(i=>[i.title,sections.find(s=>s.id===i.sectionId)?.title,...(i.categories||[]).map(id=>referenceCategories.find(c=>c.id===id)?.title||'')].join(' ').toLowerCase().includes(query)).sort((a,b)=>String(b.updatedAt).localeCompare(String(a.updatedAt)));
  if(!filtered.length){list.append(n('Нет материалов','empty'));return}
  for(const item of filtered){const b=document.createElement('button');b.type='button';b.className='item';const title=document.createElement('b');title.textContent=item.title;b.append(title);const sub=document.createElement('small');sub.textContent=(sections.find(s=>s.id===item.sectionId)?.title||item.sectionId)+' · '+(item.status==='published'?'Опубликовано':'Черновик');b.append(sub);if(item.sectionId==='reference'&&item.categories?.length){const tags=document.createElement('small');tags.textContent=item.categories.map(id=>referenceCategories.find(c=>c.id===id)?.title||id).join(' · ');b.append(tags)}b.addEventListener('click',()=>editMaterial(item.id));list.append(b)} }
 async function editMaterial(id){const item=items.find(x=>x.id===id);if(!item)return;
- if(item.sectionId==='laws'&&!item.body){try{const d=await api('admin-document',{id});item.body=d.item.body||''}catch(e){message('material-status-msg','Не удалось загрузить документ: '+e.message,true);return}}const f=$('material-form');for(const key of ['id','title','summary','body','sectionId','status','sourceUrl'])f.elements[key].value=item[key]||'';const blocked=user.role==='editor'&&item.status==='published';$('delete-material').disabled=blocked;f.querySelector('button[type="submit"]').disabled=blocked;f.elements.body.disabled=blocked;f.elements.status.querySelector('[value="published"]').disabled=user.role!=='owner';fillReferenceCategorySelection(item.categories||[]);updateReferenceCategoryVisibility();message('material-status-msg',blocked?'Опубликованные материалы изменяет владелец.':'')}
+ if(item.sectionId==='laws'&&!item.body){try{const d=await api('admin-document',{id});item.body=d.item.body||''}catch(e){message('material-status-msg','Не удалось загрузить документ: '+e.message,true);return}}const f=$('material-form');for(const key of ['id','title','summary','body','sectionId','status','sourceUrl'])f.elements[key].value=item[key]||'';const blocked=user.role==='editor'&&item.status==='published';$('delete-material').disabled=blocked;f.querySelector('button[type="submit"]').disabled=blocked;f.elements.body.disabled=blocked;f.elements.status.querySelector('[value="published"]').disabled=user.role!=='owner';fillReferenceCategorySelection(item.categories||[]);
+ if(item.sectionId==='reference'){
+  const raw=String(item.body||'');
+  const match=raw.match(/^Правовое основание:\s*([^\n]+)/i);
+  $('reference-citation-input').value=match?match[1].trim():'';
+  const marker='ТОЧНЫЙ ТЕКСТ НОРМЫ:';
+  const pos=raw.indexOf(marker);
+  f.elements.body.value=pos<0?'':raw.slice(pos+marker.length).trim();
+  if(pos<0)message('material-status-msg','Старая карточка содержит пояснение вместо текста закона. Вставьте точную формулировку и реквизиты статьи перед публикацией.',true);
+ }else{$('reference-citation-input').value='';}
+ updateReferenceCategoryVisibility();if(item.sectionId!=='reference')message('material-status-msg',blocked?'Опубликованные материалы изменяет владелец.':'')}
 $('materials-filter').addEventListener('input',renderMaterials);$('new-material').addEventListener('click',resetMaterial);
-$('material-form').addEventListener('submit',async e=>{e.preventDefault();const f=e.target,item=Object.fromEntries(new FormData(f));item.categories=item.sectionId==='reference'?[...f.querySelectorAll('input[data-reference-category]:checked')].map(x=>x.value):[];try{const d=await api('save-item',{item});await reload();await editMaterial(d.item.id);message('material-status-msg','Сохранено. '+(d.item.status==='published'?'Материал опубликован.':'Материал остался черновиком.'))}catch(err){message('material-status-msg',err.message,true)}});
+$('material-form').addEventListener('submit',async e=>{e.preventDefault();const f=e.target,item=Object.fromEntries(new FormData(f));item.categories=item.sectionId==='reference'?[...f.querySelectorAll('input[data-reference-category]:checked')].map(x=>x.value):[];
+ if(item.sectionId==='reference'){
+  const citation=$('reference-citation-input').value.trim();
+  const quote=String(item.body||'').trim();
+  if(!citation||!quote){message('material-status-msg','Укажите реквизиты статьи и её дословный текст.',true);return}
+  item.body='Правовое основание: '+citation+'\n\nТОЧНЫЙ ТЕКСТ НОРМЫ:\n'+quote;
+ }
+ try{const d=await api('save-item',{item});await reload();await editMaterial(d.item.id);message('material-status-msg','Сохранено. '+(d.item.status==='published'?'Материал опубликован.':'Материал остался черновиком.'))}catch(err){message('material-status-msg',err.message,true)}});
 $('delete-material').addEventListener('click',async()=>{const id=$('material-form').elements.id.value;if(!id||!confirm('Удалить материал без возможности восстановления?'))return;try{await api('delete-item',{id});await reload();resetMaterial();message('material-status-msg','Материал удалён')}catch(err){message('material-status-msg',err.message,true)}});
 function resetSection(){const f=$('section-form');f.reset();f.elements.id.value='';f.elements.order.value=sections.length+1;$('delete-section').disabled=true;message('section-status-msg','')}
 function renderSections(){
@@ -164,129 +167,6 @@ function renderUsers(){const list=$('users-list');list.replaceChildren();if(user
 function editUser(username){const u=users.find(x=>x.username===username);if(!u)return;selectedUser=username;const f=$('user-form');f.reset();f.elements.username.value=u.username;f.elements.username.readOnly=true;f.elements.role.value=u.role;f.elements.disabled.checked=u.disabled;f.elements.password.required=false;$('disabled-row').hidden=false;$('user-form-title').textContent='Изменить пользователя';message('user-status-msg','Оставьте пароль пустым, если менять его не нужно.')}
 $('new-user').addEventListener('click',resetUser);
 $('user-form').addEventListener('submit',async e=>{e.preventDefault();const f=e.target;const data={username:f.elements.username.value,password:f.elements.password.value,role:f.elements.role.value};if(selectedUser)data.disabled=f.elements.disabled.checked;try{const login=selectedUser||data.username;await api(selectedUser?'update-user':'create-user',data);await reload();editUser(login);message('user-status-msg','Пользователь сохранён. Передайте пароль лично.') }catch(err){message('user-status-msg',err.message,true)}});
-
-function importedLawQuality(body){
- const lines=String(body||'').replace(/\r\n?/g,'\n').split('\n').map(s=>s.trim());
- const starts=[];lines.forEach((s,i)=>{if(/^Статья\s+\d+(?:[.\-]\d+)*(?:[.\s:–—-]|$)/iu.test(s))starts.push(i)});
- if(!starts.length)return body.length>=900;
- let empty=0,total=0;
- starts.forEach((i,k)=>{
-  const text=lines.slice(i+1,starts[k+1]??lines.length).filter(s=>!/^Глава\s+|^Раздел\s+/iu.test(s)).join(' ').trim();
-  total+=text.length;if(text.length<12)empty++;
- });
- return body.length>=400&&empty/starts.length<=.12&&total>=starts.length*32;
-}
-function downloadLawBackup(backup){
- const blob=new Blob([JSON.stringify({createdAt:new Date().toISOString(),source:'FSO RMRP admin backup',items:backup},null,2)],{type:'application/json;charset=utf-8'});
- const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='fso-rmrp-laws-before-repair-'+new Date().toISOString().slice(0,10)+'.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);
-}
-$('import-start').addEventListener('click',async()=>{
- const file=$('import-file').files[0];if(!file){message('import-status','Выберите JSON-файл.',true);return}
- let incoming;try{incoming=JSON.parse(await file.text())}catch(e){message('import-status','Неверный JSON: '+e.message,true);return}
- const docs=Array.isArray(incoming)?incoming:Array.isArray(incoming.items)?incoming.items:[];
- if(!docs.length){message('import-status','В JSON нет документов.',true);return}
- if(docs.length>150){message('import-status','Слишком большой список.',true);return}
- const replace=$('import-replace-published').checked;
- if(replace&&user?.role!=='owner'){message('import-status','Менять опубликованные законы может только владелец.',true);return}
- if(replace&&!$('publish-confirm').checked){message('import-status','Для замены опубликованных законов подтвердите проверку текстов с форумом.',true);return}
- const candidates=docs.filter(d=>d.sectionId==='laws'&&typeof d.body==='string'&&importedLawQuality(d.body));
- const publishedCandidates=candidates.filter(d=>items.some(i=>i.id===d.id&&i.status==='published'));
- if(replace&&publishedCandidates.length){
-  if(!confirm('Будет заменено '+publishedCandidates.length+' ОПУБЛИКОВАННЫХ законов. Продолжить только после сверки источников?'))return;
-  const backup=[];
-  try{
-   for(const d of publishedCandidates){const old=await api('admin-document',{id:d.id});backup.push(old.item)}
-  }catch(e){message('import-status','Не удалось сохранить резервную копию. Замена отменена: '+e.message,true);return}
-  downloadLawBackup(backup);
- }
- const btn=$('import-start'),log=$('import-log');btn.disabled=true;log.replaceChildren();let success=0,failed=0,skipped=0;
- for(const d of docs){
-  if(d.sectionId!=='laws'||typeof d.title!=='string'||typeof d.body!=='string'||!/^law-\d+$/.test(d.id||'')){
-   failed++;log.append(n('Некорректная запись: '+String(d.title||d.id),'status error'));continue;
-  }
-  if(!importedLawQuality(d.body)){
-   failed++;log.append(n('✗ '+d.title+': отсутствует содержимое статей или документ подозрительно короткий','status error'));continue;
-  }
-  const old=items.find(x=>x.id===d.id);
-  if(old?.status==='published'&&!replace){skipped++;log.append(n('Опубликованный закон пропущен: '+d.title,'muted'));continue}
-  if(old?.status==='draft'&&!$('import-update').checked){skipped++;continue}
-  const item={id:d.id,title:d.title.slice(0,180),summary:String(d.summary||'').slice(0,800),body:d.body,sectionId:'laws',status:old?.status==='published'?'published':'draft',sourceUrl:d.sourceUrl};
-  try{await api('save-item',{item});success++;log.append(n('✓ '+d.title,'status ok'))}
-  catch(e){failed++;log.append(n('✗ '+d.title+': '+e.message,'status error'))}
-  message('import-status',`Обработано ${success+skipped+failed}/${docs.length} · Сохранено ${success} · Пропущено ${skipped} · Ошибки ${failed}`);
- }
- try{await reload()}catch(e){message('import-status','Импорт завершён, но обновление списка не удалось: '+e.message,true)}
- btn.disabled=false;
-});
-
-$('publish-start').addEventListener('click',async()=>{
- if(user?.role!=='owner'){message('import-status','Публиковать может только владелец.',true);return}
- if(!$('publish-confirm').checked){message('import-status','Сначала подтвердите сверку текстов.',true);return}
- if(!confirm('Опубликовать все черновики законов из текущего списка? Перед публикацией убедитесь, что тексты полные и действующие.'))return;
- const drafts=items.filter(x=>x.sectionId==='laws'&&x.status==='draft');if(!drafts.length){message('import-status','Нет черновиков законов.');return}
- let published=0,failed=0;const btn=$('publish-start');btn.disabled=true;
- for(const meta of drafts){
-  try{
-   const details=await api('admin-document',{id:meta.id});
-   if(!importedLawQuality(details.item.body))throw new Error('Документ неполный: статьи без текста');
-   await api('save-item',{item:{...details.item,status:'published'}});published++;
-  }catch(e){failed++;$('import-log').append(n('✗ '+meta.title+': '+e.message,'status error'))}
-  message('import-status',`Опубликовано ${published}/${drafts.length}; ошибок: ${failed}`);
- }
- try{await reload()}catch(e){message('import-status','Опубликовано, но обновление списка не удалось: '+e.message,true)}
- btn.disabled=false;
-});
-
-refreshApiSettings();
-if(!/^https:\/\//i.test(apiUrl))message('auth-status','Ниже формы входа укажи URL Yandex Cloud Function.',true);
-
-// Импорт карточек правового справочника через существующий API. Без обновления функции.
-function validRefCard(x){
- return x && typeof x.id==='string' && /^ref-rmrp-[a-z0-9-]{3,70}$/.test(x.id) &&
-   typeof x.title==='string' && x.title.trim().length>0 && x.title.length<=180 &&
-   typeof x.summary==='string' && x.summary.length<=800 &&
-   typeof x.body==='string' && x.body.trim().length>0 && x.body.length<=50000 &&
-   x.sectionId==='reference' && Array.isArray(x.categories) && x.categories.every(c=>referenceCategories.some(cat=>cat.id===c)) &&
-   typeof x.sourceUrl==='string' && /^https:\/\/forum\.rmrp\.ru\/threads\//.test(x.sourceUrl);
-}
-function addRefLog(str,err=false){const e=n(str,err?'status error':'status ok');$('ref-import-log').append(e)}
-$('ref-import-start').addEventListener('click',async()=>{
- const file=$('ref-import-file').files[0];if(!file){message('ref-import-status','Сначала выберите JSON-файл.',true);return}
- if(file.size>1500000){message('ref-import-status','Файл слишком большой.',true);return}
- let pack;try{pack=JSON.parse(await file.text())}catch(e){message('ref-import-status','Некорректный JSON: '+e.message,true);return}
- const incoming=Array.isArray(pack?.items)?pack.items:[];
- if(!incoming.length||incoming.length>150){message('ref-import-status','Ожидалось от 1 до 150 карточек.',true);return}
- if(incoming.some(x=>!validRefCard(x)) || new Set(incoming.map(x=>x.id)).size!==incoming.length){message('ref-import-status','В файле есть неверные записи или повторяются ID.',true);return}
- if(!sections.some(s=>s.id==='reference')){message('ref-import-status','Раздел «Правовой справочник» не найден.',true);return}
- const btn=$('ref-import-start');btn.disabled=true;$('ref-import-log').replaceChildren();
- let created=0,skipped=0,errors=0;
- try{
-  for(const item of incoming){
-   const exists=items.some(old=>old.id===item.id || (old.sectionId==='reference' && old.title.trim().toLocaleLowerCase('ru-RU')===item.title.trim().toLocaleLowerCase('ru-RU')));
-   if(exists){skipped++;addRefLog('Пропущено (уже есть): '+item.title);continue}
-   try{await api('save-item',{item:{...item,status:'draft'}});created++;items.push({...item,status:'draft'});addRefLog('Добавлено: '+item.title)}
-   catch(e){errors++;addRefLog('Ошибка: '+item.title+' — '+e.message,true)}
-   message('ref-import-status',`Добавлено: ${created}. Пропущено: ${skipped}. Ошибок: ${errors}.`)
-  }
-  await reload();
- }finally{btn.disabled=false}
-});
-$('ref-publish-start').addEventListener('click',async()=>{
- if(user?.role!=='owner'){message('ref-import-status','Публиковать материалы может только владелец.',true);return}
- if(!$('ref-publish-confirm').checked){message('ref-import-status','Подтвердите проверку текстов и номеров статей.',true);return}
- const candidates=items.filter(x=>x.sectionId==='reference' && /^ref-rmrp-/.test(x.id) && x.status==='draft');
- if(!candidates.length){message('ref-import-status','Нет черновиков из набора для публикации.');return}
- if(!confirm('Опубликовать '+candidates.length+' проверенных карточек? Подтверждение отменить нельзя.'))return;
- const btn=$('ref-publish-start');btn.disabled=true;$('ref-import-log').replaceChildren();let published=0,failed=0;
- try{
-  for(const item of candidates){
-   try{await api('save-item',{item:{...item,status:'published'}});published++;addRefLog('Опубликовано: '+item.title)}
-   catch(e){failed++;addRefLog('Ошибка: '+item.title+' — '+e.message,true)}
-   message('ref-import-status',`Опубликовано ${published}/${candidates.length}; ошибок: ${failed}`);
-  }
-  await reload();
- }finally{btn.disabled=false}
-});
 
 try{token=sessionStorage.getItem(tokenKey)||''}catch{}if(token){reload().then(()=>showWorkspace()).catch(()=>showAuth())}else showAuth();
 </script></body></html>

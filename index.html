@@ -368,6 +368,13 @@ html[data-theme="light"] .reference-citation{background:rgba(49,105,152,.10);col
 .ref-fallback-title{font-size:12px;font-weight:750;letter-spacing:.07em;text-transform:uppercase;color:var(--accent-strong);margin:0 0 12px}
 .ref-law-hint{color:var(--faint);margin:17px 0 0;font-size:11px;line-height:1.6}
 @media(max-width:740px){.reference-entry{grid-template-columns:minmax(0,1fr)!important}.reference-citation{min-width:0!important;max-width:100%!important;text-align:left!important;justify-self:start!important}.reference-modal{width:100%;padding:26px 20px 24px}}
+
+/* Последняя версия: компактное обозначение нормы без узкого переноса слов. */
+.reference-entry{grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center}
+.reference-citation{display:inline-block!important;width:fit-content!important;min-width:0!important;max-width:min(43vw,340px)!important;padding:8px 12px;text-align:right!important;line-height:1.45;white-space:normal!important;overflow-wrap:normal!important;word-break:normal!important;justify-self:end!important}
+.reference-modal{width:min(1100px,calc(100vw - 56px));max-width:none}
+.ref-law-text{line-height:1.9;font-size:clamp(15px,1.3vw,17px);white-space:pre-wrap;overflow-wrap:break-word}
+@media(max-width:700px){.reference-entry{grid-template-columns:1fr!important}.reference-citation{max-width:100%!important;width:fit-content!important;text-align:left!important;justify-self:start!important}.reference-modal{width:calc(100vw - 24px)}}
 </style>
 </head>
 <body>
@@ -445,7 +452,7 @@ html[data-theme="light"] .reference-citation{background:rgba(49,105,152,.10);col
    <div class="law-top"><div><h1>Законодательство</h1><p>RMRP · Тверской</p></div><a class="law-source" href="https://forum.rmrp.ru/forums/laws/" target="_blank" rel="noopener noreferrer">Форум RMRP ↗</a></div>
    <div class="law-layout">
     <aside class="law-sidebar" aria-label="Документы"><div class="law-sidebar-head"><input class="law-search" id="law-search" type="search" placeholder="Поиск документа…" aria-label="Поиск по названиям документов"><div class="law-filters" id="law-filters"></div><p class="law-count" id="law-count"></p></div><div class="law-list" id="law-list"></div></aside>
-    <article class="law-reader" id="law-reader" aria-live="polite"><div class="law-kicker">Документы</div><h2 id="law-title">Выберите документ</h2><div class="law-meta" id="law-meta"></div><div class="law-note" id="law-note">Для чтения полного закона откройте официальный текст по ссылке. В правовом справочнике уже доступны пояснения к основным нормам.</div><div id="law-document-tools" class="law-document-tools" hidden><input id="law-text-search" type="search" placeholder="Поиск по тексту и статьям…" aria-label="Поиск внутри документа"><button class="law-filter" id="law-clear-search" type="button">Сбросить</button><span class="law-count" id="law-match-count"></span></div><div class="law-article-nav" id="law-article-nav"></div><div class="law-document" id="law-document"></div></article>
+    <article class="law-reader" id="law-reader" aria-live="polite"><div class="law-kicker">Документы</div><h2 id="law-title">Выберите документ</h2><div class="law-meta" id="law-meta"></div><div class="law-note" id="law-note">Для чтения полного закона откройте официальный текст по ссылке. Основания в справочнике содержат текст конкретного пункта.</div><div id="law-document-tools" class="law-document-tools" hidden><input id="law-text-search" type="search" placeholder="Поиск по тексту и статьям…" aria-label="Поиск внутри документа"><button class="law-filter" id="law-clear-search" type="button">Сбросить</button><span class="law-count" id="law-match-count"></span></div><div class="law-article-nav" id="law-article-nav"></div><div class="law-document" id="law-document"></div></article>
    </div>
   </section>
  </main>
@@ -459,14 +466,13 @@ html[data-theme="light"] .reference-citation{background:rgba(49,105,152,.10);col
 <script src="./law-catalog.js"></script>
 <script src="./reference-categories.js"></script>
 <script src="./config.js"></script>
-<script id="fso-law-bundle" type="application/json">{}</script>
-<script id="fso-curated-refs" type="application/json">[{"id":"embedded-01","title":"Проверка документов у объекта","summary":"Проверка удостоверения личности, документов на транспорт и грузы.","body":"Правовое основание: ФЗ № 22-ФЗ · ст. 10, ч. 10.1, п. 2\n\nПри охране объекта сотрудник ФСО может запросить документы личности, транспортного средства и перевозимого груза в районе охраны.","sectionId":"reference","categories":["territories","procedure"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-federalnoj-sluzhbe-oxrany-no-22-fz.25069/","citation":"ФЗ № 22-ФЗ · ст. 10, ч. 10.1, п. 2","description":"При охране объекта сотрудник ФСО может запросить документы личности, транспортного средства и перевозимого груза в районе охраны."},{"id":"embedded-02","title":"Запрещённые предметы на объекте","summary":"Определение предметов, запрещённых к проносу и провозу.","body":"Правовое основание: ФЗ № 22-ФЗ · ст. 10, ч. 10.1, п. 3\n\nОрганы государственной охраны могут устанавливать перечень вещей, с которыми не допускается вход или въезд на охраняемый объект.","sectionId":"reference","categories":["territories"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-federalnoj-sluzhbe-oxrany-no-22-fz.25069/","citation":"ФЗ № 22-ФЗ · ст. 10, ч. 10.1, п. 3","description":"Органы государственной охраны могут устанавливать перечень вещей, с которыми не допускается вход или въезд на охраняемый объект."},{"id":"embedded-03","title":"Ограничение доступа на объект","summary":"Установление круга лиц с ограниченным доступом.","body":"Правовое основание: ФЗ № 22-ФЗ · ст. 10, ч. 10.1, п. 4\n\nФСО может определять перечень лиц, которым ограничен доступ на охраняемый объект. При применении ограничения учитывай действующий режим допуска.","sectionId":"reference","categories":["territories"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-federalnoj-sluzhbe-oxrany-no-22-fz.25069/","citation":"ФЗ № 22-ФЗ · ст. 10, ч. 10.1, п. 4","description":"ФСО может определять перечень лиц, которым ограничен доступ на охраняемый объект. При применении ограничения учитывай действующий режим допуска."},{"id":"embedded-04","title":"Фото-, аудио- и видеофиксация","summary":"Документирование фактов и событий.","body":"Правовое основание: ФЗ № 22-ФЗ · ст. 10, ч. 10.1, п. 5\n\nФСО вправе фотографировать, вести звукозапись и видеосъёмку происходящих событий в рамках своих охранных задач.","sectionId":"reference","categories":["procedure","territories"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-federalnoj-sluzhbe-oxrany-no-22-fz.25069/","citation":"ФЗ № 22-ФЗ · ст. 10, ч. 10.1, п. 5","description":"ФСО вправе фотографировать, вести звукозапись и видеосъёмку происходящих событий в рамках своих охранных задач."},{"id":"embedded-05","title":"Задержание при угрозе охраняемому лицу","summary":"Задержание при обоснованной угрозе на закреплённых за ФСО закрытых или охраняемых территориях с немедленной передачей в МВД или СК.","body":"Правовое основание: ФЗ № 22-ФЗ · ст. 10, ч. 10.1, п. 6\n\nПолномочие относится к лицам, предположительно угрожающим безопасности объектов государственной охраны, на закреплённых за ФСО закрытых и охраняемых территориях. Задержанного незамедлительно передают в МВД или Следственный комитет. Само по себе нахождение гражданина рядом с объектом не является достаточным основанием.","sectionId":"reference","categories":["procedure","escort","territories"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-federalnoj-sluzhbe-oxrany-no-22-fz.25069/","citation":"ФЗ № 22-ФЗ · ст. 10, ч. 10.1, п. 6","description":"Полномочие относится к лицам, предположительно угрожающим безопасности объектов государственной охраны, на закреплённых за ФСО закрытых и охраняемых территориях. Задержанного незамедлительно передают в МВД или Следственный комитет. Само по себе нахождение гражданина рядом с объектом не является достаточным основанием."},{"id":"embedded-06","title":"Ограничение движения при охране","summary":"Временное перекрытие движения транспорта и пешеходов.","body":"Правовое основание: ФЗ № 22-ФЗ · ст. 10, ч. 10.1, п. 7\n\nПри необходимости обеспечить безопасный проезд охраняемого лица ФСО может временно ограничивать движение и доступ к отдельным участкам либо объектам.","sectionId":"reference","categories":["escort","territories"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-federalnoj-sluzhbe-oxrany-no-22-fz.25069/","citation":"ФЗ № 22-ФЗ · ст. 10, ч. 10.1, п. 7","description":"При необходимости обеспечить безопасный проезд охраняемого лица ФСО может временно ограничивать движение и доступ к отдельным участкам либо объектам."},{"id":"embedded-07","title":"Поиск и задержание при угрозе","summary":"Поиск и задержание предполагаемого источника угрозы охраняемому объекту.","body":"Правовое основание: ФЗ № 22-ФЗ · ст. 14, ч. 14.1\n\nФСО может разыскивать лиц, предположительно представляющих угрозу охраняемым лицам или объектам, и при наличии оснований задерживать их для передачи правоохранительным органам. Основания и процессуальный порядок проверяются отдельно.","sectionId":"reference","categories":["procedure","escort"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-federalnoj-sluzhbe-oxrany-no-22-fz.25069/","citation":"ФЗ № 22-ФЗ · ст. 14, ч. 14.1","description":"ФСО может разыскивать лиц, предположительно представляющих угрозу охраняемым лицам или объектам, и при наличии оснований задерживать их для передачи правоохранительным органам. Основания и процессуальный порядок проверяются отдельно."},{"id":"embedded-08","title":"Применение силы и оружия","summary":"Физическая сила, специальные средства и оружие — только по законным основаниям.","body":"Правовое основание: ФЗ № 22-ФЗ · ст. 17, ч. 17.1\n\nПрименение силы, специальных средств и оружия допускается в случаях и порядке, установленных законодательством. Статья не даёт безусловного разрешения применять их в любой обстановке.","sectionId":"reference","categories":["procedure","escort"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-federalnoj-sluzhbe-oxrany-no-22-fz.25069/","citation":"ФЗ № 22-ФЗ · ст. 17, ч. 17.1","description":"Применение силы, специальных средств и оружия допускается в случаях и порядке, установленных законодательством. Статья не даёт безусловного разрешения применять их в любой обстановке."},{"id":"embedded-09","title":"Обязательность законных требований","summary":"Законные требования сотрудника ФСО обязательны для исполнения.","body":"Правовое основание: ФЗ № 22-ФЗ · ст. 15, ч. 15.1\n\nСотрудник органов государственной охраны — представитель власти. Его законные требования обязательны для граждан и должностных лиц, но сами требования должны опираться на предусмотренные законом полномочия.","sectionId":"reference","categories":["procedure","territories"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-federalnoj-sluzhbe-oxrany-no-22-fz.25069/","citation":"ФЗ № 22-ФЗ · ст. 15, ч. 15.1","description":"Сотрудник органов государственной охраны — представитель власти. Его законные требования обязательны для граждан и должностных лиц, но сами требования должны опираться на предусмотренные законом полномочия."},{"id":"embedded-10","title":"Поведение на службе","summary":"Сдержанность и ограничение посторонних разговоров во время охраны.","body":"Правовое основание: ФЗ № 22-ФЗ · ст. 15, ч. 15.2\n\nПри непосредственном обеспечении госохраны сотрудник не отвлекается на посторонние разговоры. Возможность действовать без предварительных объяснений не отменяет требований законодательства к применяемой мере.","sectionId":"reference","categories":["escort"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-federalnoj-sluzhbe-oxrany-no-22-fz.25069/","citation":"ФЗ № 22-ФЗ · ст. 15, ч. 15.2","description":"При непосредственном обеспечении госохраны сотрудник не отвлекается на посторонние разговоры. Возможность действовать без предварительных объяснений не отменяет требований законодательства к применяемой мере."},{"id":"embedded-11","title":"Правоохранительный статус ФСО","summary":"ФСО исполняет функции правоохранительного органа.","body":"Правовое основание: ФЗ № 22-ФЗ · ст. 15, ч. 15.3\n\nСотрудник ФСО обладает статусом представителя власти и правоохранителя, но реализует соответствующие функции только в предусмотренном законом объёме.","sectionId":"reference","categories":["procedure"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-federalnoj-sluzhbe-oxrany-no-22-fz.25069/","citation":"ФЗ № 22-ФЗ · ст. 15, ч. 15.3","description":"Сотрудник ФСО обладает статусом представителя власти и правоохранителя, но реализует соответствующие функции только в предусмотренном законом объёме."},{"id":"embedded-12","title":"Предъявление удостоверения и жетона","summary":"По просьбе гражданина назвать данные о службе и предъявить удостоверение.","body":"Правовое основание: ФЗ № 22-ФЗ · ст. 9, ч. 9.1, п. 7\n\nПри исполнении сотрудник по просьбе гражданина называет должность, звание, фамилию и предъявляет удостоверение. Если личность сотрудника засекречена, используются жетон и его номер.","sectionId":"reference","categories":["procedure","territories"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-federalnoj-sluzhbe-oxrany-no-22-fz.25069/","citation":"ФЗ № 22-ФЗ · ст. 9, ч. 9.1, п. 7","description":"При исполнении сотрудник по просьбе гражданина называет должность, звание, фамилию и предъявляет удостоверение. Если личность сотрудника засекречена, используются жетон и его номер."},{"id":"embedded-13","title":"Удостоверение при сопровождении","summary":"При сопровождении удостоверение можно не предъявлять, если не заявляется законное требование.","body":"Правовое основание: ФЗ № 22-ФЗ · ст. 10, ч. 10.1, п. 22\n\nСотрудник ФСО, сопровождающий охраняемое лицо, может не предъявлять удостоверение при обращении, кроме случаев предъявления законного требования.","sectionId":"reference","categories":["escort","procedure"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-federalnoj-sluzhbe-oxrany-no-22-fz.25069/","citation":"ФЗ № 22-ФЗ · ст. 10, ч. 10.1, п. 22","description":"Сотрудник ФСО, сопровождающий охраняемое лицо, может не предъявлять удостоверение при обращении, кроме случаев предъявления законного требования."},{"id":"embedded-14","title":"Маски, бронежилеты и оружие на объекте","summary":"Ограничения для гражданских по маскам, бронежилетам и оружию на охраняемых объектах.","body":"Правовое основание: ФЗ № 22-ФЗ · ст. 12, п. 1–2\n\nНа охраняемом объекте сотрудник ФСО вправе ограничить присутствие гражданских в масках, скрывающих лицо, бронежилетах и с оружием в руках. Закон также регулирует обыск, изъятие запрещённых предметов и отказ в допуске. Для государственных служащих предусмотрено исключение.","sectionId":"reference","categories":["territories","procedure"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-federalnoj-sluzhbe-oxrany-no-22-fz.25069/","citation":"ФЗ № 22-ФЗ · ст. 12, п. 1–2","description":"На охраняемом объекте сотрудник ФСО вправе ограничить присутствие гражданских в масках, скрывающих лицо, бронежилетах и с оружием в руках. Закон также регулирует обыск, изъятие запрещённых предметов и отказ в допуске. Для государственных служащих предусмотрено исключение."},{"id":"embedded-15","title":"Ограничение въезда личного транспорта","summary":"Ограничение въезда гражданских на охраняемый объект на личном транспорте.","body":"Правовое основание: ФЗ № 22-ФЗ · ст. 12, п. 3\n\nПри охране объекта ФСО вправе ограничивать въезд гражданских на личных автомобилях, мотоциклах и велосипедах. Это полномочие привязано к охраняемой территории.","sectionId":"reference","categories":["territories","escort"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-federalnoj-sluzhbe-oxrany-no-22-fz.25069/","citation":"ФЗ № 22-ФЗ · ст. 12, п. 3","description":"При охране объекта ФСО вправе ограничивать въезд гражданских на личных автомобилях, мотоциклах и велосипедах. Это полномочие привязано к охраняемой территории."},{"id":"embedded-16","title":"Охраняемая территория","summary":"Территория под охраной с ограниченным или запрещённым доступом.","body":"Правовое основание: ФЗ № 86-ФЗ · ст. 1, ч. 1.1, п. 1\n\nПравовой статус территории указывает на установленную охрану и ограничение доступа гражданских. Конкретные правила входа определяются режимом данного объекта.","sectionId":"reference","categories":["territories"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-gosudarstvennoj-sobstvennosti-zakrytyx-i-oxranjaemyx-territorijax-no-86-fz.26625/","citation":"ФЗ № 86-ФЗ · ст. 1, ч. 1.1, п. 1","description":"Правовой статус территории указывает на установленную охрану и ограничение доступа гражданских. Конкретные правила входа определяются режимом данного объекта."},{"id":"embedded-17","title":"Закрытая территория","summary":"Закрытый доступ гражданским, ограничения для сотрудников госорганов.","body":"Правовое основание: ФЗ № 86-ФЗ · ст. 1, ч. 1.1, п. 2\n\nНа закрытой территории действует строгий режим посещения: вход гражданских закрыт, а государственным служащим может потребоваться специальное основание для допуска.","sectionId":"reference","categories":["territories"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-gosudarstvennoj-sobstvennosti-zakrytyx-i-oxranjaemyx-territorijax-no-86-fz.26625/","citation":"ФЗ № 86-ФЗ · ст. 1, ч. 1.1, п. 2","description":"На закрытой территории действует строгий режим посещения: вход гражданских закрыт, а государственным служащим может потребоваться специальное основание для допуска."},{"id":"embedded-18","title":"Зелёная зона","summary":"Зона свободного передвижения граждан.","body":"Правовое основание: ФЗ № 86-ФЗ · ст. 1, ч. 1.1, п. 4\n\nЗелёная зона определяет территорию общего порядка без специального запрета на свободное передвижение по самому цветовому обозначению.","sectionId":"reference","categories":["territories"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-gosudarstvennoj-sobstvennosti-zakrytyx-i-oxranjaemyx-territorijax-no-86-fz.26625/","citation":"ФЗ № 86-ФЗ · ст. 1, ч. 1.1, п. 4","description":"Зелёная зона определяет территорию общего порядка без специального запрета на свободное передвижение по самому цветовому обозначению."},{"id":"embedded-19","title":"Жёлтая зона","summary":"Зона ограниченного доступа.","body":"Правовое основание: ФЗ № 86-ФЗ · ст. 1, ч. 1.1, п. 5\n\nЖёлтым обозначается охраняемая территория с ограниченным режимом посещения. При проверке допуска нужно учитывать конкретные правила объекта.","sectionId":"reference","categories":["territories"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-gosudarstvennoj-sobstvennosti-zakrytyx-i-oxranjaemyx-territorijax-no-86-fz.26625/","citation":"ФЗ № 86-ФЗ · ст. 1, ч. 1.1, п. 5","description":"Жёлтым обозначается охраняемая территория с ограниченным режимом посещения. При проверке допуска нужно учитывать конкретные правила объекта."},{"id":"embedded-20","title":"Красная зона","summary":"Закрытая для общего посещения зона строгого режима.","body":"Правовое основание: ФЗ № 86-ФЗ · ст. 1, ч. 1.1, п. 6\n\nКрасная зона относится к закрытым территориям. Свободное посещение запрещено; допуск возможен по предусмотренным законом основаниям.","sectionId":"reference","categories":["territories"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-gosudarstvennoj-sobstvennosti-zakrytyx-i-oxranjaemyx-territorijax-no-86-fz.26625/","citation":"ФЗ № 86-ФЗ · ст. 1, ч. 1.1, п. 6","description":"Красная зона относится к закрытым территориям. Свободное посещение запрещено; допуск возможен по предусмотренным законом основаниям."},{"id":"embedded-21","title":"Доступ на закреплённую территорию","summary":"Сотрудники могут проходить на территорию своего ведомства.","body":"Правовое основание: ФЗ № 86-ФЗ · ст. 7, ч. 7.1–7.2\n\nСотрудникам государственных организаций и федеральных органов исполнительной власти предоставляется свободный доступ к территориям, закреплённым за ними.","sectionId":"reference","categories":["territories"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-gosudarstvennoj-sobstvennosti-zakrytyx-i-oxranjaemyx-territorijax-no-86-fz.26625/","citation":"ФЗ № 86-ФЗ · ст. 7, ч. 7.1–7.2","description":"Сотрудникам государственных организаций и федеральных органов исполнительной власти предоставляется свободный доступ к территориям, закреплённым за ними."},{"id":"embedded-22","title":"Доступ должностных лиц на режимные объекты","summary":"Особый порядок допуска перечисленных законом должностных лиц.","body":"Правовое основание: ФЗ № 86-ФЗ · ст. 4, ч. 4.1\n\nГубернатор, отдельные руководители органов власти, судьи и другие перечисленные в законе лица имеют право доступа на закрытые и охраняемые территории с учётом прямо предусмотренных законом исключений.","sectionId":"reference","categories":["territories","escort"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-gosudarstvennoj-sobstvennosti-zakrytyx-i-oxranjaemyx-territorijax-no-86-fz.26625/","citation":"ФЗ № 86-ФЗ · ст. 4, ч. 4.1","description":"Губернатор, отдельные руководители органов власти, судьи и другие перечисленные в законе лица имеют право доступа на закрытые и охраняемые территории с учётом прямо предусмотренных законом исключений."},{"id":"embedded-23","title":"Пропускной режим","summary":"Правила входа, въезда и перемещения имущества на объекте.","body":"Правовое основание: ФЗ № 86-ФЗ · ст. 30, ч. 30.1\n\nПропускной режим объединяет правила доступа людей и транспорта, а также контроль перемещения материальных ценностей в зданиях и на территории органов власти.","sectionId":"reference","categories":["territories","procedure"],"status":"published","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-gosudarstvennoj-sobstvennosti-zakrytyx-i-oxranjaemyx-territorijax-no-86-fz.26625/","citation":"ФЗ № 86-ФЗ · ст. 30, ч. 30.1","description":"Пропускной режим объединяет правила доступа людей и транспорта, а также контроль перемещения материальных ценностей в зданиях и на территории органов власти."}]</script>
+<script id="fso-curated-refs" type="application/json">[{"id":"ref-exact-fso-10-1-2","title":"Проверка документов","summary":"Проверка документов осуществляется в районе охраны объектов.","sectionId":"reference","categories":["territories","procedure"],"citation":"ФЗ о ФСО · ст. 10 · ч. 1 · п. 2","fullCitation":"Федеральный закон № 22-ФЗ «О Федеральной службе охраны» · статья 10, часть 1, пункт 2","sourceUrl":"https://forum.rmrp.ru/threads/federalnyj-zakon-o-federalnoj-sluzhbe-oxrany-no-22-fz.25069/","quote":"2) осуществлять проверку документов, удостоверяющих личность, а также документов на транспортные средства и перевозимые грузы в районе охраны объектов;","status":"published"}]</script>
 <script>
 'use strict';
 const sections={
  home:{title:'Главная',keys:[]},
  situations:{title:'Ситуации',description:'Служебные ситуации и действия сотрудника.',keys:['сценарии','ситуация']},
- reference:{title:'Правовой справочник',description:'Правовые основания и краткие пояснения.',keys:['статьи','основания','справочник']},
+ reference:{title:'Правовой справочник',description:'Правовые основания и точные формулировки.',keys:['статьи','основания','справочник']},
  detention:{title:'Порядок задержания',description:'Порядок и основания задержания.',keys:['задержание','процедуры']},
  laws:{title:'Законодательство',description:'Законы и кодексы проекта.',keys:['законы','кодексы']}
 };
@@ -477,210 +483,87 @@ function currentApiUrl(){
  return fromConfig;
 }
 
-// Самодостаточный стартовый справочник: работает даже без входа и импорта.
+// Справочник: обложка с краткой сутью, внутри — только проверенный текст нормы.
+// Новые статьи добавляются обычной формой «Материалы» в админ-панели.
+// Старые пересказы без маркировки точного текста остаются в админке, но не публикуются как цитаты закона.
 const embeddedReferences=JSON.parse(document.getElementById('fso-curated-refs').textContent);
 let publicMaterials=[...embeddedReferences];
+const referenceLawCache=new Map();
 const referenceCategories=Array.isArray(window.FSO_REFERENCE_CATEGORIES)?window.FSO_REFERENCE_CATEGORIES:[];
 let referenceFilter='all';
-const referenceLawCache=new Map();
-// This bundle is populated by tools/prepare.py on the owner's computer.
-// It contains only the public statutes; admin credentials stay in Yandex.
-try {
- const raw=document.getElementById('fso-law-bundle')?.textContent||'{}';
- const entries=JSON.parse(raw);
- for(const [id,body] of Object.entries(entries)){
-  if(/^law-\d{3,8}$/.test(id)&&typeof body==='string'&&body.length>500){
-   referenceLawCache.set(id,body);
-  }
- }
-}catch(e){console.warn('Неверный формат локальных законов',e)}
-let referenceRequestId=0;
-function referenceItems(){return publicMaterials.filter(x=>x.sectionId==='reference')}
-function extractCitation(item){
+const EXACT_MARKER='ТОЧНЫЙ ТЕКСТ НОРМЫ:';
+function getReferenceCitation(item){
+ const original=String(item.citation||String(item.body||'').match(/Правовое основание:\s*([^\n]+)/i)?.[1]||'').trim();
+ if(!original)return '';
+ let raw=original.replace(/ФЗ\s*№?\s*22-ФЗ/i,'ФЗ о ФСО').replace(/ФЗ\s*№?\s*86-ФЗ/i,'ФЗ о территориях');
+ raw=raw.replace(/ч\.\s*(\d+)\.1\b/g,'ч. 1');
+ raw=raw.replace(/ч\.\s*(\d+)\.(\d+)\b/g,(_,a,b)=>'ч. '+b);
+ raw=raw.replace(/[·,]/g,' · ').replace(/\s*·\s*/g,' · ').replace(/(?:\s*·\s*){2,}/g,' · ').trim();
+ // Citation might be stored as 'ст. 10 ч. 10.1 п. 2' from older cards.
+ raw=raw.replace(/ст\.\s*(\d+)(?:\s*·\s*)ч\.\s*\1\.\s*(\d+)/i,(_,a,b)=>'ст. '+a+' · ч. '+b);
+ return raw;
+}
+function getExactQuote(item){
+ if(typeof item.quote==='string'&&item.quote.trim())return item.quote.trim();
  const body=String(item.body||'');
- return String(item.citation||body.match(/Правовое основание:\s*([^\n]+)/i)?.[1]||'').trim();
+ const idx=body.indexOf(EXACT_MARKER);
+ if(idx<0)return '';
+ return body.slice(idx+EXACT_MARKER.length).trim();
 }
-function referenceSourceInfo(item){
- const url=String(item.sourceUrl||'');
- const citation=extractCitation(item);
- let source=null;
- if(/(?:\.25069\/|№\s*22-ФЗ)/i.test(url+' '+citation))source={lawId:'law-25069',short:'ФЗ о ФСО',full:'Федеральный закон № 22-ФЗ «О Федеральной службе охраны»'};
- else if(/(?:\.26625\/|№\s*86-ФЗ)/i.test(url+' '+citation))source={lawId:'law-26625',short:'ФЗ о территориях',full:'Федеральный закон № 86-ФЗ «О государственной собственности, закрытых и охраняемых территориях»'};
- const articleMatch=citation.match(/ст\.\s*(\d+(?:-\d+)?)(?:\.(\d+))?/i);
- const article=articleMatch?.[1]||'';
- const partMatch=citation.match(/ч\.\s*(\d+(?:\.\d+)?)(?:\s*[–—-]\s*(\d+(?:\.\d+)?))?/i);
- const part=partMatch?.[1]||(articleMatch?.[2]?article+'.'+articleMatch[2]:''),partTo=partMatch?.[2]||'';
- const displayPart=(v)=>v && article && v.startsWith(article+'.')?v.slice(article.length+1):v;
- const pointMatch=citation.match(/п\.\s*(\d+)(?:\s*[–—-]\s*(\d+))?/i);
- const point=pointMatch?.[1]||'',pointTo=pointMatch?.[2]||'';
- const paragraph=citation.match(/абз\.\s*(\d+)/i)?.[1]||'';
- const suffix=[article?'ст. '+article:'',part?'ч. '+displayPart(part)+(partTo?'–'+displayPart(partTo):''):'',point?'п. '+point+(pointTo?'–'+pointTo:''):'',paragraph?'абз. '+paragraph:''].filter(Boolean).join(' · ');
- return {source,article,part,partTo,point,pointTo,paragraph,shortCitation:source?[source.short,suffix].filter(Boolean).join(' · '):citation,fullCitation:source?[source.full,suffix].filter(Boolean).join(' · '):citation};
-}
-function selectedReferenceMatches(items){
+function referenceItems(){return publicMaterials.filter(x=>x.sectionId==='reference'&&getExactQuote(x))}
+function matchingReferences(items){
  const needle=$('reference-search').value.trim().toLocaleLowerCase('ru-RU');
  return items.filter(item=>{
   const cats=Array.isArray(item.categories)?item.categories:[];
-  if(referenceFilter==='uncategorized'&&cats.length)return false;
-  if(referenceFilter!=='all'&&referenceFilter!=='uncategorized'&&!cats.includes(referenceFilter))return false;
-  return !needle||[item.title,item.summary,item.body,extractCitation(item),referenceSourceInfo(item).shortCitation,...cats.map(id=>referenceCategories.find(c=>c.id===id)?.title||'')].join(' ').toLocaleLowerCase('ru-RU').includes(needle);
+  if(referenceFilter!=='all'&&!cats.includes(referenceFilter))return false;
+  return !needle||[item.title,item.summary,getReferenceCitation(item),getExactQuote(item)].join(' ').toLocaleLowerCase('ru-RU').includes(needle);
  });
 }
 function renderReference(){
- const all=referenceItems(),filtered=selectedReferenceMatches(all),filters=$('reference-filters'),list=$('reference-list');
+ const all=referenceItems(),filtered=matchingReferences(all),filters=$('reference-filters'),list=$('reference-list');
  filters.replaceChildren();list.replaceChildren();
  for(const cat of [{id:'all',title:'Все'},...referenceCategories]){
   const count=cat.id==='all'?all.length:all.filter(item=>(Array.isArray(item.categories)?item.categories:[]).includes(cat.id)).length;
-  const b=document.createElement('button');b.type='button';b.className='reference-filter'+(referenceFilter===cat.id?' active':'');
-  b.setAttribute('aria-pressed',String(referenceFilter===cat.id));
+  const b=document.createElement('button');b.type='button';b.className='reference-filter'+(referenceFilter===cat.id?' active':'');b.setAttribute('aria-pressed',String(referenceFilter===cat.id));
   const label=document.createElement('strong');label.textContent=cat.title;
   const num=document.createElement('span');num.textContent=String(count);b.append(label,num);
   b.addEventListener('click',()=>{referenceFilter=cat.id;renderReference()});filters.append(b);
  }
  $('reference-count').textContent=filtered.length+' из '+all.length;
- if(!filtered.length){const empty=document.createElement('div');empty.className='reference-empty';empty.textContent=all.length?'По этому запросу ничего не найдено.':'Правовые основания пока не опубликованы.';list.append(empty);return}
+ if(!filtered.length){const empty=document.createElement('div');empty.className='reference-empty';empty.textContent=all.length?'По запросу ничего не найдено.':'Проверенных оснований пока нет.';list.append(empty);return}
  for(const item of filtered){
-  const b=document.createElement('button');b.type='button';b.className='reference-entry';
-  b.setAttribute('aria-haspopup','dialog');b.setAttribute('aria-label','Открыть норму: '+item.title);
+  const button=document.createElement('button');button.type='button';button.className='reference-entry';button.setAttribute('aria-haspopup','dialog');
   const left=document.createElement('div');left.className='reference-entry-main';
-  const title=document.createElement('b');title.textContent=item.title||'Без названия';left.append(title);
-  const summary=document.createElement('span');summary.className='ref-summary';summary.textContent=String(item.summary||'').trim();left.append(summary);
-  const citation=document.createElement('span');citation.className='reference-citation';citation.textContent=referenceSourceInfo(item).shortCitation||'Статья не указана';
-  b.append(left,citation);
-  b.addEventListener('click',()=>openReference(item,b));list.append(b);
+  const heading=document.createElement('b');heading.textContent=item.title||'Основание';
+  const desc=document.createElement('span');desc.className='ref-summary';desc.textContent=item.summary||'';
+  left.append(heading,desc);
+  const citation=document.createElement('span');citation.className='reference-citation';citation.textContent=getReferenceCitation(item);
+  button.append(left,citation);button.addEventListener('click',()=>openReference(item,button));list.append(button);
  }
-}
-function referenceArticleLines(fullText,info){
- if(!info.article)return null;
- const lines=String(fullText||'').replace(/\r/g,'').replace(/[\u200b-\u200d\ufeff]/g,'').split('\n').map(l=>l.trim()).filter(Boolean);
- const heading=/^(?:#{1,6}\s*)?(?:\*\*)?Статья\s+(\d+(?:-\d+)?)(?=[.。\s]|$)\s*[.。]?\s*(?:\*\*)?/i;
- const candidates=[];
- for(let i=0;i<lines.length;i++){
-  const m=lines[i].match(heading);if(!m||m[1]!==info.article)continue;
-  let j=i+1;while(j<lines.length&&!heading.test(lines[j]))j++;
-  let segment=lines.slice(i,j).filter(l=>!/^Глава\s+[IVXLC\d]+\b/i.test(l));
-  let content=segment.slice(1).filter(l=>!/^Статья\s+\d+/i.test(l));
-  const meaningful=content.join(' ').length>50 && content.some(l=>/^\d+(?:\.\d+)+\./.test(l)||l.length>35);
-  if(meaningful)candidates.push(segment);
- }
- if(!candidates.length)return null;
- const section=candidates.sort((a,b)=>b.join('').length-a.join('').length)[0];
- let body=section.slice(1);
- // In the RMRP laws, "10.1." is a part within Article 10, not Article 10.1.
- if(info.part){
-  const partRE=new RegExp('^'+info.part.replaceAll('.','\\.')+'\\.(?:\\s|$)');
-  const start=body.findIndex(l=>partRE.test(l));if(start<0)return null;
-  const nextRE=/^\d+(?:\.\d+)+\.(?:\s|$)/;
-  let finish=start+1;while(finish<body.length&&!nextRE.test(body[finish]))finish++;
-  if(info.partTo){
-   const endRE=new RegExp('^'+info.partTo.replaceAll('.','\\.')+'\\.(?:\\s|$)');
-   const second=body.findIndex((l,k)=>k>=start&&endRE.test(l));if(second<0)return null;
-   finish=second+1;while(finish<body.length&&!nextRE.test(body[finish]))finish++;
-  }
-  body=body.slice(start,finish);
- }
- if(info.point){
-  const pointRE=new RegExp('^'+info.point+'\\s*[)）]');
-  const index=body.findIndex(l=>pointRE.test(l));if(index<0)return null;
-  const nextItem=/^\d+\s*[)）]/;
-  let stop=index+1;while(stop<body.length&&!nextItem.test(body[stop]))stop++;
-  if(info.pointTo){
-   const nextPoint=new RegExp('^'+info.pointTo+'\\s*[)）]');
-   const last=body.findIndex((l,k)=>k>=index&&nextPoint.test(l));
-   if(last<0)return null;
-   stop=last+1;while(stop<body.length&&!nextItem.test(body[stop]))stop++;
-  }
-  body=body.slice(index,stop);
- }
- if(info.paragraph){
-  // An explicit second paragraph of the same statutory part, not its second numbered point.
-  const n=Number(info.paragraph),paragraphs=body.filter(x=>x.trim());
-  if(n>0&&paragraphs[n-1])body=[paragraphs[n-1]];
-  else return null;
- }
- const raw=body.join('\n\n').trim();
- if(raw.length<25)return null; // No fake article reconstructed from a table of contents.
- return raw;
-}
-function referenceSourceLink(wrap,item){
- if(/^https:\/\/forum\.rmrp\.ru\/threads\//.test(item.sourceUrl||'')){
-  const a=document.createElement('a');a.className='ref-source';a.href=item.sourceUrl;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Открыть закон на форуме ↗';wrap.append(a);
- }
-}
-const referencePendingDocuments=new Map();
-// Public law texts are served as static GitHub Pages files, not as Yandex API content.
-const staticLawRequests=new Map();
-async function fetchStaticLaw(id){
- if(!/^law-\d{3,8}$/.test(id))throw new Error('Неверный ID документа');
- if(referenceLawCache.has(id))return referenceLawCache.get(id);
- if(staticLawRequests.has(id))return staticLawRequests.get(id);
- const promise=(async()=>{
-  const res=await fetch('./laws-data/'+id+'.json',{cache:'no-store'});
-  if(!res.ok)throw new Error('Документ ещё не добавлен на сайт');
-  const doc=await res.json();
-  if(doc.id!==id||typeof doc.body!=='string'||!lawTextQuality(doc.body).ok){
-   throw new Error('Текст закона неполон или повреждён');
-  }
-  referenceLawCache.set(id,doc.body);
-  return doc.body;
- })();
- staticLawRequests.set(id,promise);
- try{return await promise}finally{staticLawRequests.delete(id)}
-}
-async function loadReferenceLaw(info){
- if(!info.source)return null;
- return fetchStaticLaw(info.source.lawId);
 }
 function renderReferenceModal(item){
- const info=referenceSourceInfo(item),wrap=document.createElement('div');
+ const wrap=document.createElement('div');
  const title=document.createElement('h2');title.id='reference-modal-title';title.textContent=item.title;wrap.append(title);
- const subtitle=document.createElement('div');subtitle.className='ref-citation-line';subtitle.textContent=info.fullCitation||'Правовая норма';wrap.append(subtitle);
- const body=document.createElement('div');body.className='reference-norm-content';body.setAttribute('aria-live','polite');
- const waiting=document.createElement('p');waiting.className='ref-loading';waiting.textContent='Загрузка текста закона…';body.append(waiting);wrap.append(body);
- referenceSourceLink(wrap,item);
- return {wrap,body,info};
-}
-function renderReferenceExplanation(item,body){
- body.replaceChildren();
- const p=document.createElement('p');p.className='ref-warning';
- p.textContent='Для этого основания точный текст ещё не загружен. Откройте первоисточник по ссылке ниже.';
- body.append(p);
-}
-async function fillReferenceNorm(item,info,body,requestId){
- let norm='';
- try{
-  if(item.quote||item.actualText)norm=String(item.quote||item.actualText);
-  else { const text=await loadReferenceLaw(info); norm=referenceArticleLines(text,info)||''; }
- }catch(error){
-  if(requestId!==referenceRequestId)return;
-  renderReferenceExplanation(item,body);
-  return;
+ const citation=document.createElement('div');citation.className='ref-citation-line';citation.textContent=item.fullCitation||getReferenceCitation(item);wrap.append(citation);
+ const norm=document.createElement('div');norm.className='ref-law-text';norm.textContent=getExactQuote(item);wrap.append(norm);
+ if(/^https:\/\/forum\.rmrp\.ru\/threads\//.test(item.sourceUrl||'')){
+  const a=document.createElement('a');a.className='ref-source';a.href=item.sourceUrl;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Первоисточник на форуме';wrap.append(a);
  }
- if(requestId!==referenceRequestId)return;
- body.replaceChildren();
- if(norm.trim()){
-  const text=document.createElement('div');text.className='ref-law-text';text.textContent=norm.trim();body.append(text);
- }else{renderReferenceExplanation(item,body)}
+ return wrap;
 }
-
-let referencePreviousFocus=null;
 function openReference(item,trigger){
- const overlay=$('reference-overlay'),body=$('reference-modal-body');
- if(!overlay||!body)return;
+ const overlay=$('reference-overlay'),body=$('reference-modal-body');if(!overlay||!body)return;
  referencePreviousFocus=trigger||document.activeElement;
- const modal=renderReferenceModal(item);body.replaceChildren(modal.wrap);
- const requestId=++referenceRequestId;void fillReferenceNorm(item,modal.info,modal.body,requestId);
- overlay.hidden=false;
- overlay.setAttribute('aria-hidden','false');
- overlay.classList.add('open');
- document.body.classList.add('reference-dialog-open');
+ body.replaceChildren(renderReferenceModal(item));
+ overlay.hidden=false;overlay.setAttribute('aria-hidden','false');overlay.classList.add('open');document.body.classList.add('reference-dialog-open');
  $('reference-close').focus({preventScroll:true});
 }
+let referencePreviousFocus=null;
 function closeReference(){
  const overlay=$('reference-overlay');if(!overlay||overlay.hidden)return;
  overlay.classList.remove('open');overlay.hidden=true;
  overlay.setAttribute('aria-hidden','true');
- document.body.classList.remove('reference-dialog-open');referenceRequestId++;
+ document.body.classList.remove('reference-dialog-open');
  if(referencePreviousFocus?.isConnected)referencePreviousFocus.focus({preventScroll:true});
  referencePreviousFocus=null;
 }
@@ -722,8 +605,10 @@ async function loadPublic(){
   const info=await response.json();if(!info.ok)throw new Error(info.error||'API');
   // Серверные карточки остаются доступны; встроенные проверенные карточки работают всегда.
   const remoteItems=Array.isArray(info.items)?info.items:[];
-  const embeddedNames=new Set(embeddedReferences.map(x=>String(x.title||'').trim().toLocaleLowerCase('ru-RU')));
-  publicMaterials=[...embeddedReferences,...remoteItems.filter(x=>!embeddedNames.has(String(x.title||'').trim().toLocaleLowerCase('ru-RU')))];
+  const approvedRemote=remoteItems.filter(x=>x.sectionId==='reference'&&getExactQuote(x));
+  const overrides=new Set(approvedRemote.map(x=>getReferenceCitation(x).toLocaleLowerCase('ru-RU')));
+  publicMaterials=[...embeddedReferences.filter(x=>!overrides.has(getReferenceCitation(x).toLocaleLowerCase('ru-RU'))),
+   ...remoteItems.filter(x=>x.sectionId!=='reference'||getExactQuote(x))];
   renderReference();
   renderLawList();
   const allowed=new Set(), homeButton=nav.querySelector('[data-page="home"]');
