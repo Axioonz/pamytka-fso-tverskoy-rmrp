@@ -520,7 +520,12 @@ function getExactQuote(item){
  if(idx<0)return '';
  return body.slice(idx+EXACT_MARKER.length).trim();
 }
-function referenceItems(){return publicMaterials.filter(x=>x.sectionId==='reference'&&hasUsableNorm(x))}
+function referenceItems(){
+ const merged=new Map(publicMaterials.filter(x=>x.sectionId==='reference'&&hasUsableNorm(x)).map(x=>[x.id,x]));
+ // A quote extracted from the actual source takes precedence over old handwritten excerpts.
+ for(const item of verifiedLegalReferences){if(item.sectionId==='reference'&&hasUsableNorm(item))merged.set(item.id,item);}
+ return [...merged.values()];
+}
 function hasUsableNorm(item){const t=getExactQuote(item);if(t.length<28 || /^(?:справочн|пояснен|текст\s+статьи\s+пока)/iu.test(t))return false;const c=getReferenceCitation(item);const point=c.match(/п\.\s*(\d+)/i);if(point)return t.startsWith(point[1]+')');const article=c.match(/ст\.\s*(\d+)/i),part=c.match(/ч\.\s*(\d+)/i);if(article&&part)return t.startsWith(article[1]+'.'+part[1]+'.');return true}
 function matchingReferences(items){
  const needle=$('reference-search').value.trim().toLocaleLowerCase('ru-RU');
@@ -729,18 +734,30 @@ const lawCatalog=Array.isArray(window.FSO_LAW_CATALOG)?window.FSO_LAW_CATALOG:[]
 const lawLabels={all:'Все',code:'Кодексы',fkz:'ФКЗ',federal:'ФЗ',charter:'Уставы',order:'Приказы'};
 let lawFilter='all',selectedLaw='',lawBody='',lawFind='';
 let staticLawManifest={};
+let staticLawMeta={};
+let verifiedLegalReferences=[];
 async function loadStaticLawManifest(){
  try{
   const result=await fetch('./laws-data/manifest.json',{cache:'no-store'});
   if(!result.ok)throw new Error('Манифест не используется: законы могут быть встроены в HTML');
   const data=await result.json();
   staticLawManifest=(data&&data.documents&&typeof data.documents==='object')?data.documents:{};
+  staticLawMeta=(data&&data.documentMeta&&typeof data.documentMeta==='object')?data.documentMeta:{};
+  // Never show an unverified reference or use a summary as a law excerpt.
+  if(data.references==='laws-data/verified-references.json'){
+   const vr=await fetch('./laws-data/verified-references.json',{cache:'no-store'});
+   if(vr.ok){const rows=await vr.json();verifiedLegalReferences=Array.isArray(rows)?rows.filter(x=>x&&typeof x.quote==='string'&&x.quote.trim()):[];}
+  }
+  renderReference();
   renderLawList();
   if(selectedLaw && lawRecords().some(x=>x.id===selectedLaw)){await openLaw(selectedLaw)}
  }catch(error){console.warn('Каталог локальных законов:',error.message)}
 }
 function lawRecords(){
- const map=new Map(lawCatalog.filter(x=>referenceLawCache.has(x.id)||!!staticLawManifest[x.id]).map(x=>[x.id,{...x,loaded:true}]));
+ const map=new Map(lawCatalog.filter(x=>referenceLawCache.has(x.id)||!!staticLawManifest[x.id]).map(x=>[x.id,{...x,...(staticLawMeta[x.id]||{}),loaded:true}]));
+ for(const [id,meta] of Object.entries(staticLawMeta)){
+  if((referenceLawCache.has(id)||!!staticLawManifest[id])&&!map.has(id))map.set(id,{id,...meta,loaded:true});
+ }
  for(const it of publicMaterials.filter(x=>x.sectionId==='laws')){
   if(!map.has(it.id) && (referenceLawCache.has(it.id)||!!staticLawManifest[it.id]))map.set(it.id,{id:it.id,title:it.title,category:'federal',sourceUrl:it.sourceUrl,loaded:true});
  }
