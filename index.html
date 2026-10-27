@@ -380,6 +380,15 @@ html[data-theme="light"] .reference-citation{background:rgba(49,105,152,.10);col
 a.reference-entry-external{text-decoration:none;cursor:pointer}
 a.reference-entry-external .reference-citation{color:var(--accent-strong)}
 a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);outline-offset:3px}
+
+.reference-entry-summary{border-style:dashed}
+.reference-editorial-label{display:block;font-size:12px;color:var(--accent-strong);margin-bottom:10px}
+.ref-law-text p{margin:0;line-height:1.7}
+.law-dossier-intro{padding:16px 20px;border:1px solid var(--line);border-radius:14px;margin-bottom:18px;color:var(--muted);font-size:13px}
+.law-dossier-card{padding:20px 22px;margin-bottom:14px;border:1px solid var(--line);border-radius:17px}
+.law-dossier-card .law-article{margin-top:0}
+.law-entry-citation{font-size:12px;color:var(--accent-strong);margin:8px 0}
+.law-entry-kind{font-size:11px;color:var(--muted);margin:6px 0 12px}
 </style>
 </head>
 <body>
@@ -538,23 +547,30 @@ function renderReference(){
  if(!filtered.length){const empty=document.createElement('div');empty.className='reference-empty';empty.textContent=all.length?'По запросу ничего не найдено.':'Проверенных оснований пока нет.';list.append(empty);return}
  for(const item of filtered){
   const external=item.status==='source-linked'&&!getExactQuote(item);
-  const button=document.createElement(external?'a':'button');
-  if(external){button.href=item.sourceUrl;button.target='_blank';button.rel='noopener noreferrer';button.title='Открыть полный текст статьи на форуме RMRP';}
-  else {button.type='button';button.setAttribute('aria-haspopup','dialog');}
-  button.className='reference-entry'+(external?' reference-entry-external':'');
+  const button=document.createElement('button');
+  button.type='button';button.setAttribute('aria-haspopup','dialog');
+  button.className='reference-entry'+(external?' reference-entry-summary':'');
   const left=document.createElement('div');left.className='reference-entry-main';
   const heading=document.createElement('b');heading.textContent=item.title||'Основание';
   const desc=document.createElement('span');desc.className='ref-summary';desc.textContent=item.summary||'';
   left.append(heading,desc);
-  const citation=document.createElement('span');citation.className='reference-citation';citation.textContent=getReferenceCitation(item)+(external?' ↗':'');
-  button.append(left,citation);if(!external)button.addEventListener('click',()=>openReference(item,button));list.append(button);
+  const citation=document.createElement('span');citation.className='reference-citation';citation.textContent=getReferenceCitation(item);
+  button.append(left,citation);button.addEventListener('click',()=>openReference(item,button));list.append(button);
  }
 }
 function renderReferenceModal(item){
  const wrap=document.createElement('div');
  const title=document.createElement('h2');title.id='reference-modal-title';title.textContent=item.title;wrap.append(title);
  const citation=document.createElement('div');citation.className='ref-citation-line';citation.textContent=item.fullCitation||getReferenceCitation(item);wrap.append(citation);
- const norm=document.createElement('div');norm.className='ref-law-text';norm.textContent=getExactQuote(item);wrap.append(norm);
+  const norm=document.createElement('div');norm.className='ref-law-text';
+  const exact=getExactQuote(item);
+  if(exact){norm.textContent=exact;}
+  else {
+   const label=document.createElement('strong');label.className='reference-editorial-label';label.textContent='Справочное изложение — не текст закона';
+   const content=document.createElement('p');content.textContent=item.summary||'Для данного основания нет подтверждённого текста.';
+   norm.append(label,content);
+  }
+  wrap.append(norm);
  if(/^https:\/\/forum\.rmrp\.ru\/threads\//.test(item.sourceUrl||'')){
   const a=document.createElement('a');a.className='ref-source';a.href=item.sourceUrl;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Первоисточник на форуме';wrap.append(a);
  }
@@ -696,6 +712,40 @@ document.addEventListener('keydown',event=>{
  if(event.key==='Escape'&&document.activeElement===$('section-search')){$('section-search').blur();$('search-results').hidden=true}
 });
 
+const INTERNAL_DOCUMENT_IDS={
+ 'https://forum.rmrp.ru/threads/federalnyj-zakon-o-federalnoj-sluzhbe-oxrany-no-22-fz.25069/':'law-25069',
+ 'https://forum.rmrp.ru/threads/federalnyj-zakon-o-gosudarstvennoj-sobstvennosti-zakrytyx-i-oxranjaemyx-territorijax-no-86-fz.26625/':'law-26625',
+ 'https://forum.rmrp.ru/threads/processualnyj-kodeks-rossijskoj-federacii.58424/':'law-58424',
+ 'https://forum.rmrp.ru/threads/ugolovnyj-kodeks-rossijskoj-federacii.58209/':'law-58209',
+ 'https://forum.rmrp.ru/threads/kodeks-ob-administrativnyx-pravonarushenijax-rossijskoj-federacii.58229/':'law-58229'
+};
+// Prepared read-only collection. Only existing quote fields are presented as verbatim.
+function lawIndexMaterials(id){
+ return embeddedReferences.filter(x=>INTERNAL_DOCUMENT_IDS[x.sourceUrl]===id);
+}
+function hasLawSummary(id){return lawIndexMaterials(id).length>0}
+function renderLawDossier(id){
+ const rows=lawIndexMaterials(id),nav=$('law-article-nav'),wrap=$('law-document');
+ nav.replaceChildren();wrap.replaceChildren();
+ const intro=document.createElement('div');intro.className='law-dossier-intro';
+ const verified=rows.filter(x=>!!getExactQuote(x)).length;
+ intro.textContent=`В памятке: ${rows.length} избранных норм. Сохранённых формулировок: ${verified}. ${rows.length-verified} кратких описаний не являются оригинальным текстом закона. Полной копией документа этот раздел не считается.`;
+ wrap.append(intro);
+ rows.forEach((item,index)=>{
+  const block=document.createElement('section');block.className='law-article-block law-dossier-card';block.id='law-entry-'+index;
+  const name=document.createElement('h3');name.className='law-article';name.textContent=item.title||'Основание';
+  const citation=document.createElement('div');citation.className='law-entry-citation';citation.textContent=item.fullCitation||getReferenceCitation(item);
+  const content=document.createElement('p');content.className='law-paragraph';
+  const exact=getExactQuote(item);
+  content.textContent=exact||item.summary||'';
+  const kind=document.createElement('div');kind.className='law-entry-kind';kind.textContent=exact?'Ранее сохранённая формулировка (сверьте с действующей редакцией)':'Справочное описание, не формулировка закона';
+  block.append(name,citation,kind,content);wrap.append(block);
+  const jump=document.createElement('button');jump.type='button';jump.textContent=item.title;
+  jump.addEventListener('click',()=>block.scrollIntoView({behavior:'smooth',block:'start'}));nav.append(jump);
+ });
+ $('law-match-count').textContent='';
+ $('law-document-tools').hidden=true;
+}
 const lawCatalog=Array.isArray(window.FSO_LAW_CATALOG)?window.FSO_LAW_CATALOG:[];
 const lawLabels={all:'Все',code:'Кодексы',fkz:'ФКЗ',federal:'ФЗ',charter:'Уставы',order:'Приказы'};
 let lawFilter='all',selectedLaw='',lawBody='',lawFind='';
@@ -711,7 +761,7 @@ async function loadStaticLawManifest(){
  }catch(error){console.warn('Каталог локальных законов:',error.message)}
 }
 function lawRecords(){
- const map=new Map(lawCatalog.map(x=>[x.id,{...x,loaded:referenceLawCache.has(x.id)||!!staticLawManifest[x.id]}]));
+ const map=new Map(lawCatalog.map(x=>[x.id,{...x,loaded:hasLawSummary(x.id)||referenceLawCache.has(x.id)||!!staticLawManifest[x.id],isSummary:hasLawSummary(x.id)}]));
  for(const it of publicMaterials.filter(x=>x.sectionId==='laws')){
   if(!map.has(it.id))map.set(it.id,{id:it.id,title:it.title,category:'federal',sourceUrl:it.sourceUrl,loaded:referenceLawCache.has(it.id)||!!staticLawManifest[it.id]});
  }
@@ -729,7 +779,7 @@ function renderLawList(){
   const b=document.createElement('button');b.type='button';b.className='law-entry'+(selectedLaw===x.id?' active':'');
   b.dataset.lawId=x.id;
   const title=document.createElement('b');title.textContent=x.title;
-  const status=document.createElement('small');status.textContent=x.loaded?'Текст в памятке':'Первоисточник на форуме';
+  const status=document.createElement('small');status.textContent=(x.isSummary&&!staticLawManifest[x.id])?'Основания и выдержки':x.loaded?'Сохранённый текст':'Текст не перенесён';
   b.append(title,status);b.addEventListener('click',()=>openLaw(x.id));holder.append(b);
  }
 }
@@ -795,6 +845,16 @@ function drawLawText(){
   note.hidden=true;note.classList.remove('law-warning');
  }
 }
+async function fetchStaticLaw(id){
+ const cached=referenceLawCache.get(id);if(typeof cached==='string'&&cached.trim())return cached;
+ const x=staticLawManifest[id];if(!x)throw new Error('Текст не найден в каталоге');
+ let path=typeof x==='string'?x:String(x.path||x.file||'');
+ if(!/^laws-data\/[a-z0-9_./-]+$/i.test(path)||path.includes('..'))throw new Error('Некорректный путь к документу');
+ const res=await fetch('./'+path,{cache:'no-store'});
+ if(!res.ok)throw new Error('HTTP '+res.status);
+ const txt=await res.text();if(txt.trim().length<100)throw new Error('Файл документа пустой');
+ referenceLawCache.set(id,txt);return txt;
+}
 async function openLaw(id){
  const x=lawRecords().find(i=>i.id===id);if(!x)return;
  selectedLaw=id;renderLawList();lawFind='';$('law-text-search').value='';
@@ -806,8 +866,14 @@ async function openLaw(id){
  }
  const note=$('law-note');note.hidden=false;
  $('law-document-tools').hidden=true;$('law-article-nav').replaceChildren();$('law-document').replaceChildren();
- if(!x.loaded){note.textContent='Документ ещё не загружен в сайт. Его можно открыть на форуме по ссылке выше.';lawBody='';return}
- note.textContent='Загрузка текста…';
+  if(x.isSummary&&!staticLawManifest[id]&&!referenceLawCache.has(id)){
+    lawBody='';note.hidden=true;renderLawDossier(id);return;
+  }
+  if(!x.loaded){
+    lawBody='';note.textContent='Полного текста документа в этой версии нет. В каталоге сохранена ссылка на первоисточник; неподтверждённые статьи не подменяются вымышленными формулировками.';
+    note.classList.add('law-warning');return;
+  }
+  note.textContent='Загрузка текста…';
  try{
   const body=await fetchStaticLaw(id);
   if(selectedLaw!==id)return;
