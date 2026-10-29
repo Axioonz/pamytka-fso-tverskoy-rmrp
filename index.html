@@ -594,6 +594,64 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
  url('./assets/senate-palace.webp');}
 }
 
+
+/* Новые разделы: без иллюстраций. Фоновые изображения остаются только на главной. */
+.work-screen{padding:43px 0 110px;animation:fade-rise .3s var(--ease-ui) both;max-width:1460px}
+.work-header{margin-bottom:29px;max-width:890px}
+.work-overline{display:block;color:var(--accent-strong);text-transform:uppercase;letter-spacing:.16em;font-size:10px;font-weight:750;margin-bottom:14px}
+.work-header h1{font-weight:750;font-size:clamp(35px,4.5vw,62px);letter-spacing:-.06em;line-height:1.12;margin:0 0 15px}
+.work-header p{max-width:740px;color:var(--muted);font-size:15px;line-height:1.7;margin:0}
+.work-notice{border-left:2px solid var(--accent-strong);padding:14px 18px;background:var(--surface);color:var(--muted);font-size:12px;line-height:1.7;border-radius:0 10px 10px 0;max-width:1060px;margin:0 0 28px}
+.work-filterbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:20px}
+.work-filter{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:11px 15px;font-size:12px;font-weight:650;color:var(--muted)}
+.work-filter[aria-pressed="true"],.work-filter:hover{border-color:var(--line-hover);background:var(--accent-wash);color:var(--accent-strong)}
+.work-norm-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.work-norm{background:var(--surface);border:1px solid var(--line);border-radius:17px;padding:24px;min-width:0;display:flex;flex-direction:column;gap:10px}
+.work-norm:hover{border-color:var(--line-hover)}
+.work-norm small{color:var(--accent-strong);font-size:11px;line-height:1.5}
+.work-norm h3{font-weight:700;letter-spacing:-.035em;font-size:20px;line-height:1.28;margin:0}
+.work-norm p{color:var(--muted);font-size:13px;line-height:1.7;margin:0;flex:1}
+.work-norm-actions{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin-top:8px}
+.work-primary,.work-ghost,.fav-button{border:1px solid var(--line);border-radius:10px;background:var(--surface2);padding:10px 13px;font-size:12px;font-weight:700;color:var(--muted)}
+.work-primary{background:var(--accent-wash);color:var(--accent-strong);border-color:var(--line-hover)}
+.work-primary:hover,.work-ghost:hover,.fav-button:hover{border-color:var(--accent-strong);color:var(--accent-strong)}
+.fav-button[aria-pressed="true"]{color:var(--accent-strong);border-color:var(--accent-strong);background:var(--accent-wash)}
+.work-steps{display:grid;gap:16px;max-width:1130px}
+.work-step{display:grid;grid-template-columns:44px minmax(0,1fr);gap:15px;align-items:start}
+.work-step-num{font-weight:800;color:var(--accent-strong);background:var(--surface);border:1px solid var(--line);border-radius:12px;text-align:center;padding:12px 0}
+.work-step-body{background:var(--surface);border:1px solid var(--line);border-radius:17px;padding:23px}
+.work-step-body h2{font-size:22px;letter-spacing:-.035em;margin:0 0 9px}
+.work-step-body>p{color:var(--muted);font-size:13px;line-height:1.7;margin:0 0 15px}
+.work-step-refs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.work-mini{background:var(--surface2);border:1px solid var(--line);border-radius:11px;padding:15px;text-align:left}
+.work-mini b{font-size:13px;display:block;margin-bottom:6px}.work-mini small{font-size:11px;color:var(--accent-strong)}
+.fav-controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:20px}
+.fav-controls input{flex:1;min-width:210px;background:var(--input-bg);border:1px solid var(--line);border-radius:10px;color:var(--text);padding:12px}
+.work-counter{font-size:12px;color:var(--muted)}
+.work-empty{padding:28px;border:1px dashed var(--line);border-radius:15px;background:var(--surface);grid-column:1/-1;color:var(--muted);line-height:1.7;font-size:13px}
+.reference-fav,.law-fav{margin-top:17px}
+.material-body .fav-button{margin-top:18px}
+.quiz-levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;max-width:1150px;margin-bottom:24px}
+.quiz-levels button{display:flex;flex-direction:column;gap:11px;min-height:150px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;text-align:left}
+.quiz-levels button:hover,.quiz-levels button[aria-pressed="true"]{border-color:var(--accent-strong);background:var(--accent-wash)}
+.quiz-levels strong{font-size:19px}.quiz-levels span{color:var(--muted);font-size:12px;line-height:1.6}.quiz-levels small{color:var(--accent-strong);font-size:11px;margin-top:auto}
+.quiz-panel{max-width:1000px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:clamp(18px,3vw,34px)}
+.quiz-progress{color:var(--accent-strong);font-size:12px;font-weight:700;margin-bottom:14px}
+.quiz-meter{height:5px;background:var(--surface2);border-radius:4px;overflow:hidden;margin:0 0 25px}
+.quiz-meter div{height:100%;background:var(--accent-strong);transition:width .2s}
+.quiz-panel h2{font-size:clamp(20px,2.3vw,27px);letter-spacing:-.035em;margin:0 0 20px;line-height:1.4}
+.quiz-answers{display:grid;gap:9px}
+.quiz-answer{border:1px solid var(--line);background:var(--surface2);border-radius:12px;padding:14px 15px;text-align:left;font-size:14px;line-height:1.55}
+.quiz-answer:hover:not(:disabled){border-color:var(--accent-strong)}
+.quiz-answer.correct{border-color:#67b88b;background:rgba(44,140,88,.13)}
+.quiz-answer.incorrect{border-color:#bc6868;background:rgba(140,44,44,.13)}
+.quiz-result{margin-top:22px;border-top:1px solid var(--line);padding-top:20px;color:var(--muted);font-size:13px;line-height:1.7}
+.quiz-result b{color:var(--text)}.quiz-result p{margin:8px 0 14px}.quiz-result .work-primary{margin-right:8px}
+.quiz-final{display:grid;gap:15px}.quiz-final strong{font-size:42px;color:var(--accent-strong)}
+@media(max-width:920px){.work-norm-grid,.work-step-refs{grid-template-columns:1fr}.quiz-levels{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){.work-screen{padding-top:26px}.work-norm-grid,.quiz-levels{grid-template-columns:1fr}.work-norm{padding:19px}.work-step{grid-template-columns:34px minmax(0,1fr);gap:8px}.work-step-body{padding:18px}.work-step-num{padding:10px 0}.quiz-levels button{min-height:115px}.portal-important-grid{grid-template-columns:1fr 1fr}.portal-topic{padding:17px 14px}.portal-topic b{font-size:14px}.portal-topic-index{font-size:9px}}
+@media(max-width:400px){.portal-important-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -621,7 +679,11 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
   <button class="rail-button" data-page="reference" aria-label="Правовой справочник" title="Правовой справочник"><svg class="icon"><use href="#i-scale"/></svg><span>Правовой справочник</span></button>
   <button class="rail-button" data-page="concepts" aria-label="Понятия" title="Понятия"><svg class="icon"><use href="#i-file"/></svg><span>Понятия</span></button>
 <button class="rail-button" data-page="detention" aria-label="Порядок задержания" title="Порядок задержания"><svg class="icon"><use href="#i-list"/></svg><span>Про задержания</span></button>
-  <button class="rail-button" data-page="laws" aria-label="Законодательство" title="Законодательство"><svg class="icon"><use href="#i-book"/></svg><span>Законодательство</span></button>
+  <button class="rail-button" data-page="territories" aria-label="Территории и объекты" title="Территории и объекты"><svg class="icon"><use href="#i-pin"/></svg><span>Территории и объекты</span></button>
+<button class="rail-button" data-page="escort" aria-label="Сопровождение и кортежи" title="Сопровождение и кортежи"><svg class="icon"><use href="#i-users"/></svg><span>Сопровождение и кортежи</span></button>
+<button class="rail-button" data-page="favorites" aria-label="Личная шпаргалка" title="Личная шпаргалка"><svg class="icon"><use href="#i-file"/></svg><span>Личная шпаргалка</span></button>
+<button class="rail-button" data-page="quiz" aria-label="Проверка знаний" title="Проверка знаний"><svg class="icon"><use href="#i-shield"/></svg><span>Проверка знаний</span></button>
+<button class="rail-button" data-page="laws" aria-label="Законодательство" title="Законодательство"><svg class="icon"><use href="#i-book"/></svg><span>Законодательство</span></button>
  </nav>
  <div class="rail-bottom">
   <button class="theme-toggle rail-theme" id="theme-toggle" aria-label="Включить светлую тему" title="Переключить тему"><svg class="icon sun"><use href="#i-sun"/></svg><svg class="icon moon"><use href="#i-moon"/></svg><span id="theme-label">Светлая тема</span></button>
@@ -633,76 +695,68 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
  </header>
  <main class="container">
   <section class="home-screen portal-home" id="home-screen" aria-labelledby="home-title">
-    <div class="portal-hero">
-      <div class="portal-hero-content">
-        <h1 id="home-title">Памятка <strong>сотрудника ФСО</strong></h1>
-        <p>Правовые основания, действия в типовых ситуациях и законодательство проекта. Нужная и быстрая информация без заморочек.</p>
-        <div class="portal-facts" aria-label="Содержание памятки">
-          <span><b id="portal-ref-count">105</b> правовых оснований</span>
-          <span><b id="portal-sit-count">10</b> ситуаций</span>
-          <span><b id="portal-law-count">31</b> документ</span>
-        </div>
-      </div>
-      <aside class="portal-hero-side" aria-label="Начало работы">
-        <h2>Основания</h2>
-        <p>Полезные основания из разных законодательств, которые помогут сотрудникам ФСО при выполнении служебных обязанностей.</p>
-        <button type="button" class="portal-hero-button" data-page="reference">Открыть правовой справочник <svg class="icon"><use href="#i-arrow"/></svg></button>
-      </aside>
+<div class="portal-hero">
+  <div class="portal-hero-content">
+    <h1 id="home-title">Памятка <strong>сотрудника ФСО</strong></h1>
+    <p>Правовые основания, действия в типовых ситуациях и законодательство проекта. Нужная информация без долгого поиска.</p>
+    <div class="portal-facts" aria-label="Содержание памятки"><span><b id="portal-ref-count">105</b> правовых оснований</span><span><b id="portal-sit-count">9</b> ситуаций</span><span><b id="portal-law-count">31</b> документ</span></div>
+  </div>
+  <aside class="portal-hero-side" aria-label="Быстрый переход">
+    <h2>Правовой справочник</h2>
+    <p>Полномочия ФСО и статьи законодательства, которые нужны во время службы.</p>
+    <button class="portal-hero-button" type="button" data-page="reference">Открыть справочник <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+  </aside>
+</div>
+<section class="portal-search-section" aria-label="Поиск по памятке">
+  <div class="portal-section-heading portal-search-heading"><div><h2>Поиск по всей памятке</h2><p>Ищите по ситуации, статье или названию закона.</p></div><span class="portal-shortcut">Ctrl + K</span></div>
+  <form class="search portal-search-form" id="section-search-form" role="search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><label class="visually-hidden" for="section-search">Поиск по материалам, нормам и документам</label><input type="search" id="section-search" autocomplete="off" placeholder="Например: задержание, пропуск, ст. 10…"><button type="submit">Найти</button></form>
+  <div class="portal-query-suggestions"><span>Часто ищут</span><button type="button" data-search-query="проверка документов">Документы</button><button type="button" data-search-query="задержание">Задержание</button><button type="button" data-search-query="кортеж">Кортеж</button><button type="button" data-search-query="Кремль">Кремль</button></div>
+  <p class="search-hint" id="search-hint" aria-live="polite">Поиск по статьям, ситуациям, понятиям и названиям законов.</p>
+  <div class="search-results portal-search-results" id="search-results" hidden></div>
+</section>
+<section class="portal-module" aria-labelledby="portal-important-title">
+  <div class="portal-section-heading"><div><h2 id="portal-important-title">Частые основания</h2><p>Нажмите на карточку, чтобы прочитать статью.</p></div><button type="button" class="portal-link" data-page="reference">Все основания ↗</button></div>
+  <div class="portal-important-grid">
+    <button type="button" class="portal-topic" data-reference-id="ref-exact-fso-10-1-2"><span class="portal-topic-index">01 / ДОКУМЕНТЫ</span><b>Проверка документов</b><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 2</small><span class="portal-topic-arrow">↗</span></button>
+    <button type="button" class="portal-topic" data-reference-id="ref-exact-fso-10-1-4"><span class="portal-topic-index">02 / ДОСТУП</span><b>Ограничение доступа</b><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 4</small><span class="portal-topic-arrow">↗</span></button>
+    <button type="button" class="portal-topic" data-reference-id="ref-exact-fso-10-1-6"><span class="portal-topic-index">03 / ЗАДЕРЖАНИЕ</span><b>Задержание при угрозе объекту</b><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 6</small><span class="portal-topic-arrow">↗</span></button>
+    <button type="button" class="portal-topic" data-reference-id="ref-exact-fso-10-1-7"><span class="portal-topic-index">04 / СОПРОВОЖДЕНИЕ</span><b>Перекрытие маршрута</b><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 7</small><span class="portal-topic-arrow">↗</span></button>
+  </div>
+</section>
+<section class="portal-module" aria-labelledby="portal-sections-title">
+  <div class="portal-section-heading"><div><h2 id="portal-sections-title">Разделы памятки</h2><p>Выберите нужную тему.</p></div></div>
+  <div class="portal-section-grid">
+    <button type="button" class="portal-section-card" data-page="situations"><span class="portal-section-icon"><svg class="icon"><use href="#i-message"/></svg></span><b>Ситуации</b><p>Действия сотрудника в частых случаях.</p><span>Открыть ↗</span></button>
+    <button type="button" class="portal-section-card" data-page="reference"><span class="portal-section-icon"><svg class="icon"><use href="#i-scale"/></svg></span><b>Правовой справочник</b><p>Полномочия и точные формулировки статей.</p><span>Открыть ↗</span></button>
+    <button type="button" class="portal-section-card" data-page="detention"><span class="portal-section-icon"><svg class="icon"><use href="#i-list"/></svg></span><b>Порядок задержания</b><p>Последовательность действий и права задержанного.</p><span>Открыть ↗</span></button>
+    <button type="button" class="portal-section-card" data-page="territories"><span class="portal-section-icon"><svg class="icon"><use href="#i-pin"/></svg></span><b>Территории и объекты</b><p>Режимы территорий, доступ, Кремль и КПП.</p><span>Открыть ↗</span></button>
+    <button type="button" class="portal-section-card" data-page="escort"><span class="portal-section-icon"><svg class="icon"><use href="#i-users"/></svg></span><b>Сопровождение и кортежи</b><p>Маршруты, полномочия и действия при угрозе.</p><span>Открыть ↗</span></button>
+    <button type="button" class="portal-section-card" data-page="laws"><span class="portal-section-icon"><svg class="icon"><use href="#i-book"/></svg></span><b>Законодательство</b><p>Тексты законов и кодексов.</p><span>Открыть ↗</span></button>
+    <button type="button" class="portal-section-card" data-page="concepts"><span class="portal-section-icon"><svg class="icon"><use href="#i-file"/></svg></span><b>Понятия и термины</b><p>Определения из законодательства.</p><span>Открыть ↗</span></button>
+    <button type="button" class="portal-section-card" data-page="favorites"><span class="portal-section-icon"><svg class="icon"><use href="#i-file"/></svg></span><b>Личная шпаргалка</b><p>Сохранённые статьи, ситуации и документы.</p><span>Открыть ↗</span></button>
+    <button type="button" class="portal-section-card" data-page="quiz"><span class="portal-section-icon"><svg class="icon"><use href="#i-shield"/></svg></span><b>Проверка знаний</b><p>Тесты трёх уровней сложности с разбором ответов.</p><span>Начать ↗</span></button>
+  </div>
+</section>
+<div class="portal-lower-grid">
+  <section class="portal-module portal-practice" aria-labelledby="portal-practice-title"><div class="portal-section-heading"><div><h2 id="portal-practice-title">Разбор ситуаций</h2></div><button class="portal-link" data-page="situations" type="button">Все ситуации ↗</button></div>
+    <div class="portal-situation-list">
+      <button data-situation-id="situation-1" type="button"><span class="portal-line-num">01</span><span><b>Человек возле охраняемого объекта</b><small>Проверка документов и пределы полномочий</small></span><span class="portal-line-arrow">↗</span></button>
+      <button data-situation-id="situation-3" type="button"><span class="portal-line-num">02</span><span><b>Не пропускают через КПП</b><small>Проверка, досмотр и условия доступа</small></span><span class="portal-line-arrow">↗</span></button>
+      <button data-situation-id="situation-6" type="button"><span class="portal-line-num">03</span><span><b>Подозрение в нарушении и задержание</b><small>Полномочия ФСО и передача задержанного</small></span><span class="portal-line-arrow">↗</span></button>
     </div>
-
-    <section class="portal-search-section" aria-label="Поиск по памятке">
-      <div class="portal-section-heading portal-search-heading"><div><span class="portal-kicker"></span><h2>Поиск по всей памятке</h2></div>
-      <form class="search portal-search-form" id="section-search-form" role="search">
-        <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
-        <label class="visually-hidden" for="section-search">Поиск по материалам, нормам и документам</label>
-        <input id="section-search" type="search" autocomplete="off" placeholder="Например: документы, задержание, пропуск, ст. 10...">
-        <button type="submit">Найти</button>
-      </form>
-      <div class="search-results portal-search-results" id="search-results" hidden></div>
-    </section>
-
-    <section class="portal-module" aria-labelledby="portal-important-title">
-      <div class="portal-section-heading"><div><span class="portal-kicker"></span><h2 id="portal-important-title">Частые основания</h2>
-      <div class="portal-important-grid">
-        <button class="portal-topic" type="button" data-reference-id="ref-exact-fso-10-1-2"><span class="portal-topic-index"></span><b>Проверка документов</b><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 2</small><span class="portal-topic-arrow">↗</span></button>
-        <button class="portal-topic" type="button" data-reference-id="ref-exact-fso-10-1-4"><span class="portal-topic-index"></span><b>Ограничение доступа</b><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 4</small><span class="portal-topic-arrow">↗</span></button>
-        <button class="portal-topic" type="button" data-reference-id="ref-exact-fso-10-1-6"><span class="portal-topic-index"></span><b>Задержание при угрозе объекту</b><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 6</small><span class="portal-topic-arrow">↗</span></button>
-      </div>
-    </section>
-
-    <section class="portal-module" aria-labelledby="portal-sections-title">
-      <div class="portal-section-heading"><div><span class="portal-kicker">БИБЛИОТЕКА</span><h2 id="portal-sections-title">Разделы памятки</h2><p>Поиск нормы, последовательность действий или полный закон.</p></div></div>
-      <div class="portal-section-grid">
-        <button class="portal-section-card" type="button" data-page="situations"><span class="portal-section-icon"><svg class="icon"><use href="#i-message"/></svg></span><b>Ситуации</b><p>Что делать в частых случаях.</p><span></span></button>
-        <button class="portal-section-card" type="button" data-page="reference"><span class="portal-section-icon"><svg class="icon"><use href="#i-scale"/></svg></span><b>Правовой справочник</b><p>Краткая суть и точные формулировки статей</p><span></span></button>
-        <button class="portal-section-card" type="button" data-page="detention"><span class="portal-section-icon"><svg class="icon"><use href="#i-list"/></svg></span><b>Порядок задержания</b><p>Последовательность и полезные подсказки при задержании.</p><span></span></button>
-        <button class="portal-section-card" type="button" data-page="laws"><span class="portal-section-icon"><svg class="icon"><use href="#i-book"/></svg></span><b>Законодательство</b><p>Полные тексты законов не переходя на форум.</p><span></span></button>
-        <button class="portal-section-card" type="button" data-page="concepts"><span class="portal-section-icon"><svg class="icon"><use href="#i-file"/></svg></span><b>Понятия и термины</b><p>Определения из законодательства простым языком.</p><span></span></button>
-      </div>
-    </section>
-
-    <div class="portal-lower-grid">
-      <section class="portal-module portal-practice" aria-labelledby="portal-practice-title">
-        <div class="portal-section-heading"><div><span class="portal-kicker"></span><h2 id="portal-practice-title">Разбор ситуаций</h2></div><button class="portal-link" type="button" data-page="situations"></button></div>
-        <div class="portal-situation-list">
-          <button type="button" data-situation-id="situation-1"><span class="portal-line-num">01</span><span><b>Человек возле охраняемого объекта</b><small>Первоначальные действия сотрудника</small></span><span class="portal-line-arrow">↗</span></button>
-          <button type="button" data-situation-id="situation-3"><span class="portal-line-num">02</span><span><b>Дейсвтия на КПП</b><small>Проверка документов, досмотр и действия на КПП</small></span><span class="portal-line-arrow">↗</span></button>
-          <button type="button" data-situation-id="situation-6"><span class="portal-line-num">03</span><span><b>ХЗ</b><small>хз</small></span><span class="portal-line-arrow">↗</span></button>
-        </div>
-      </section>
-      <section class="portal-module portal-docs" aria-labelledby="portal-docs-title">
-        <div class="portal-section-heading"><div><span class="portal-kicker"></span><h2 id="portal-docs-title">Основные документы</h2></div><button class="portal-link" type="button" data-page="laws"></button></div>
-        <div class="portal-doc-list">
-          <button type="button" data-law-id="law-25069"><b>ФЗ «О Федеральной службе охраны»</b><span>№ 22-ФЗ ↗</span></button>
-          <button type="button" data-law-id="law-58424"><b>Процессуальный кодекс</b><span>ПК ↗</span></button>
-          <button type="button" data-law-id="law-26625"><b>ФЗ «О государственной собственности, закрытых и охраняемых территориях»</b><span>№ 86-ФЗ ↗</span></button>
-          <button type="button" data-law-id="law-58209"><b>Уголовный кодекс</b><span>УК ↗</span></button>
-        </div>
-      </section>
-    </div>
-    <div class="portal-footer"><span>Неофициальная памятка для проекта RMRP · Тверской. Приоритет у действующих нормативных актов сервера.</span><a href="./admin.html">Управление содержимым ↗</a></div>
   </section>
-  <section class="subpage" id="section-screen" hidden aria-live="polite">
+  <section class="portal-module portal-docs" aria-labelledby="portal-docs-title"><div class="portal-section-heading"><div><h2 id="portal-docs-title">Основные документы</h2></div><button class="portal-link" data-page="laws" type="button">Все документы ↗</button></div>
+    <div class="portal-doc-list">
+      <button data-law-id="law-25069" type="button"><b>ФЗ «О Федеральной службе охраны»</b><span>№ 22-ФЗ ↗</span></button>
+      <button data-law-id="law-58424" type="button"><b>Процессуальный кодекс</b><span>ПК ↗</span></button>
+      <button data-law-id="law-26625" type="button"><b>ФЗ «О государственной собственности, закрытых и охраняемых территориях»</b><span>№ 86-ФЗ ↗</span></button>
+      <button data-law-id="law-58209" type="button"><b>Уголовный кодекс</b><span>УК ↗</span></button>
+    </div>
+  </section>
+</div>
+<div class="portal-footer"><span>Неофициальная памятка ФСО RMRP · Тверской. При расхождениях проверяйте действующие правила сервера.</span><a href="./admin.html">Управление содержимым ↗</a></div>
+</section>
+<section class="subpage" id="section-screen" hidden aria-live="polite">
    <button class="back" data-page="home">← На главную</button>
    <h1 id="section-title">Раздел</h1>
    <p class="subpage-desc" id="section-description"></p>
@@ -740,7 +794,34 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
    </div>
   </section>
 
-  <section class="reference-screen" id="reference-screen" hidden aria-label="Правовой справочник">
+  
+<section class="work-screen" id="territories-screen" hidden aria-labelledby="territories-title">
+  <header class="work-header"><span class="work-overline">Справочник</span><h1 id="territories-title">Территории и объекты</h1><p>Режимы территорий, доступ в Московский Кремль и пропускной режим. Каждое основание открывается с точным текстом нормы.</p></header>
+  <div class="work-notice">Режим территории зависит от её статуса и действующих ограничений. Памятка не заменяет текст закона и распоряжения уполномоченных лиц.</div>
+  <div class="work-filterbar" id="territories-filters" aria-label="Темы раздела"></div>
+  <div class="work-norm-grid" id="territories-list"></div>
+</section>
+<section class="work-screen" id="escort-screen" hidden aria-labelledby="escort-title">
+  <header class="work-header"><span class="work-overline">Справочник</span><h1 id="escort-title">Сопровождение и кортежи</h1><p>Полномочия ФСО на маршруте, при сопровождении охраняемых лиц и при возникновении угрозы.</p></header>
+  <div class="work-notice">Здесь собраны выдержки из законов RMRP. Схемы построения кортежей и конкретные маршруты не приведены, поскольку подтверждённых схем в памятке нет.</div>
+  <div class="work-steps" id="escort-content"></div>
+</section>
+<section class="work-screen" id="favorites-screen" hidden aria-labelledby="favorites-title">
+  <header class="work-header"><span class="work-overline">Мои материалы</span><h1 id="favorites-title">Личная шпаргалка</h1><p>Сохраняйте нужные статьи, ситуации и документы. Они останутся в этом браузере.</p></header>
+  <div class="work-notice">Список хранится только на этом устройстве. Для переноса или резервной копии скачайте его в текстовом файле. Данные не отправляются на сервер.</div>
+  <div class="fav-controls"><input id="fav-search" type="search" placeholder="Найти в сохранённом…" aria-label="Поиск по сохранённым материалам"><span id="fav-total" class="work-counter"></span><button type="button" id="fav-export" class="work-ghost">Скачать список</button></div>
+  <div class="work-norm-grid" id="favorites-list"></div>
+</section>
+<section class="work-screen" id="quiz-screen" hidden aria-labelledby="quiz-title">
+  <header class="work-header"><span class="work-overline">Тренировка</span><h1 id="quiz-title">Проверка знаний</h1><p>Вопросы составлены по нормам законодательства, сохранённым в памятке. После ответа можно открыть статью и проверить формулировку.</p></header>
+  <div class="quiz-levels" id="quiz-levels" aria-label="Уровень сложности">
+    <button data-quiz-level="easy" type="button"><strong>Начальный</strong><span>Основные полномочия и сроки</span><small id="quiz-best-easy"></small></button>
+    <button data-quiz-level="medium" type="button"><strong>Средний</strong><span>Территории, доступ и сопровождение</span><small id="quiz-best-medium"></small></button>
+    <button data-quiz-level="hard" type="button"><strong>Сложный</strong><span>Ситуации с ограничениями полномочий</span><small id="quiz-best-hard"></small></button>
+  </div>
+  <div class="quiz-panel" id="quiz-panel" hidden aria-live="polite"></div>
+</section>
+<section class="reference-screen" id="reference-screen" hidden aria-label="Правовой справочник">
    <div class="reference-head"><div><h1>Правовой справочник</h1><p>Нажмите на основание, чтобы прочитать точную формулировку.</p></div><span class="reference-count" id="reference-count"></span></div>
    <div class="reference-controls"><input class="reference-search" id="reference-search" type="search" aria-label="Поиск по правовому справочнику" placeholder="Поиск по названию, статье или закону…"><div class="reference-filters" id="reference-filters" aria-label="Подразделы справочника"></div></div>
    <div class="reference-layout"><div class="reference-list" id="reference-list" aria-label="Список правовых оснований"></div><article class="reference-reader" id="reference-reader" aria-live="polite"></article></div>
@@ -776,7 +857,11 @@ const sections={
  reference:{title:'Правовой справочник',description:'Правовые основания и точные формулировки.',keys:['статьи','основания','справочник']},
  concepts:{title:'Понятия',description:'Определения из законодательства RMRP.',keys:['значения','понятия','определения']},
  detention:{title:'Порядок задержания',description:'Порядок и основания задержания.',keys:['задержание','процедуры']},
- laws:{title:'Законодательство',description:'Законы и кодексы проекта.',keys:['законы','кодексы']}
+ laws:{title:'Законодательство',description:'Законы и кодексы проекта.',keys:['законы','кодексы']},
+ territories:{title:'Территории и объекты',description:'Режимы территорий и доступ.',keys:['территории','кремль','зот','кпп','доступ']},
+ escort:{title:'Сопровождение и кортежи',description:'Полномочия на маршруте.',keys:['кортеж','маршрут','сопровождение']},
+ favorites:{title:'Личная шпаргалка',description:'Сохранённые материалы.',keys:['избранное','закладки','шпаргалка']},
+ quiz:{title:'Проверка знаний',description:'Вопросы по законодательству RMRP.',keys:['тест','экзамен','вопросы','аттестация']}
 };
 const $=id=>document.getElementById(id);
 function currentApiUrl(){
@@ -851,7 +936,7 @@ function renderReference(){
 function renderReferenceModal(item){
  const wrap=document.createElement('div');
  const title=document.createElement('h2');title.id='reference-modal-title';title.textContent=item.title;wrap.append(title);
- const citation=document.createElement('div');citation.className='ref-citation-line';citation.textContent=item.fullCitation||getReferenceCitation(item);wrap.append(citation);
+ const citation=document.createElement('div');citation.className='ref-citation-line';citation.textContent=item.fullCitation||getReferenceCitation(item);wrap.append(citation);wrap.append(bookmarkButton('ref',item.id,'reference-fav'));
   const norm=document.createElement('div');norm.className='ref-law-text';
   const exact=getExactQuote(item);
   if(exact){norm.textContent=exact;}
@@ -975,7 +1060,7 @@ function renderMaterials(page){
   if(x.sourceUrl && /^https:\/\//i.test(x.sourceUrl)){
    const link=document.createElement('a');link.href=x.sourceUrl;link.target='_blank';link.rel='noopener noreferrer';link.className='material-source';link.textContent='Источник';inner.append(link)
   }
-  article.append(inner);wrap.append(article);
+  inner.append(bookmarkButton(page==='situations'?'situation':'concept',x.id));article.append(inner);wrap.append(article);
  });
 }
 async function loadPublic(){
@@ -1029,11 +1114,17 @@ function go(page){
  closeReference();
  if(!Object.prototype.hasOwnProperty.call(sections,page))page='home';
  const home=page==='home',isLaws=page==='laws',isReference=page==='reference',isDetention=page==='detention';
- $('home-screen').hidden=!home;$('section-screen').hidden=home||isLaws||isReference||isDetention;$('law-screen').hidden=!isLaws;$('reference-screen').hidden=!isReference;$('detention-screen').hidden=!isDetention;
- if(isReference){renderReference()}
- else if(isLaws){renderLawList();if(!selectedLaw&&lawCatalog.length)openLaw(lawCatalog[0].id)}
- else if(isDetention){renderDetention()}
- else if(!home){$('section-title').textContent=sections[page].title;$('section-description').textContent=sections[page].description;renderMaterials(page)}
+  const custom=['territories','escort','favorites','quiz'];
+  $('home-screen').hidden=!home;$('section-screen').hidden=home||isLaws||isReference||isDetention||custom.includes(page);$('law-screen').hidden=!isLaws;$('reference-screen').hidden=!isReference;$('detention-screen').hidden=!isDetention;
+  custom.forEach(id=>$(id+'-screen').hidden=page!==id);
+  if(isReference){renderReference()}
+  else if(isLaws){renderLawList();if(!selectedLaw&&lawCatalog.length)openLaw(lawCatalog[0].id)}
+  else if(isDetention){renderDetention()}
+  else if(page==='territories'){renderTerritories()}
+  else if(page==='escort'){renderEscort()}
+  else if(page==='favorites'){renderFavorites()}
+  else if(page==='quiz'){renderQuizLevels()}
+  else if(!home){$('section-title').textContent=sections[page].title;$('section-description').textContent=sections[page].description;renderMaterials(page)}
  document.querySelectorAll('[data-page]').forEach(el=>{
   const active=el.dataset.page===page;
   el.classList.toggle('active',active);
@@ -1255,7 +1346,7 @@ async function openLaw(id){
  selectedLaw=id;renderLawList();lawFind='';$('law-text-search').value='';
  $('law-title').textContent=x.title;
  const meta=$('law-meta');meta.replaceChildren();
- const kind=document.createElement('span');kind.textContent=lawLabels[x.category]||'Документ';meta.append(kind);
+ const kind=document.createElement('span');kind.textContent=lawLabels[x.category]||'Документ';meta.append(kind);meta.append(bookmarkButton('law',x.id,'law-fav'));
  if(x.sourceUrl&&/^https:\/\/forum\.rmrp\.ru\/threads\//.test(x.sourceUrl)){
   const a=document.createElement('a');a.href=x.sourceUrl;a.target='_blank';a.rel='noopener noreferrer';a.className='law-source';a.textContent='Открыть на форуме ↗';meta.append(a);
  }
@@ -1277,9 +1368,183 @@ $('law-search').addEventListener('input',renderLawList);
 $('law-text-search').addEventListener('input',drawLawText);
 $('law-clear-search').addEventListener('click',()=>{$('law-text-search').value='';drawLawText()});
 
+
+// === Материалы для новых разделов: ссылки только на существующие точные нормы. ===
+const territoryGroups=[
+ {id:'types',name:'Виды территорий',refs:['ref-exact-territories-1-1-1','ref-exact-territories-1-1-2','ref-exact-territories-7-1-all']},
+ {id:'kremlin',name:'Московский Кремль',refs:['ref-exact-territories-9-1-all','ref-exact-territories-9-2-all']},
+ {id:'entry',name:'Пропускной режим',refs:['verified-26625-30-1-all','ref-exact-territories-30-2-all','verified-26625-31-3-1','verified-26625-31-3-2','verified-26625-31-3-3']},
+ {id:'fso',name:'Полномочия ФСО',refs:['ref-exact-fso-10-1-2','ref-exact-fso-10-1-3','ref-exact-fso-10-1-4','ref-exact-fso-10-1-17']}
+];
+let territoryFilter='all';
+function findRef(id){return publicMaterials.find(it=>it.id===id&&it.sectionId==='reference')}
+function btn(text,cls,handler){const b=document.createElement('button');b.type='button';b.className=cls||'';b.textContent=text;b.addEventListener('click',handler);return b}
+function normCard(item){
+ const card=document.createElement('article');card.className='work-norm';
+ const citation=document.createElement('small');citation.textContent=getReferenceCitation(item);
+ const head=document.createElement('h3');head.textContent=item.title;
+ const desc=document.createElement('p');desc.textContent=item.summary||'Точный текст нормы';
+ const actions=document.createElement('div');actions.className='work-norm-actions';
+ actions.append(btn('Читать норму ↗','work-primary',()=>openReference(item)),bookmarkButton('ref',item.id));
+ card.append(citation,head,desc,actions);return card;
+}
+function renderTerritories(){
+ const bar=$('territories-filters'),list=$('territories-list');bar.replaceChildren();list.replaceChildren();
+ for(const group of [{id:'all',name:'Все'},...territoryGroups]){
+  const b=btn(group.name,'work-filter',()=>{territoryFilter=group.id;renderTerritories()});b.setAttribute('aria-pressed',String(territoryFilter===group.id));bar.append(b)
+ }
+ const groups=territoryFilter==='all'?territoryGroups:territoryGroups.filter(x=>x.id===territoryFilter);
+ const ids=[...new Set(groups.flatMap(x=>x.refs))];
+ let count=0;for(const id of ids){const it=findRef(id);if(!it)continue;list.append(normCard(it));count++}
+ if(!count){const empty=document.createElement('div');empty.className='work-empty';empty.textContent='В сохранённой базе нет подтверждённых норм по этому подразделу.';list.append(empty)}
+}
+const escortGroups=[
+ {title:'Маршрут и движение',description:'Временные ограничения движения и требования изменить маршрут в пределах полномочий ФСО.',refs:['ref-exact-fso-10-1-7','ref-exact-fso-11-1-3']},
+ {title:'Проход при сопровождении',description:'Условия прохода на территории для выполнения полномочий при сопровождении охраняемого лица.',refs:['ref-exact-fso-10-1-8','ref-exact-fso-10-1-22']},
+ {title:'Охранная зона и доступ',description:'Ограничения доступа, предусмотренные для обеспечения безопасности охраняемого лица.',refs:['ref-exact-fso-7-6-3','ref-exact-fso-10-1-17']},
+ {title:'Действия при угрозе',description:'Специальные меры применяются только при условиях, указанных в законе. Само движение кортежа не является таким основанием.',refs:['ref-exact-fso-7-6-5']},
+ {title:'Материалы о правонарушении',description:'Передача материалов уполномоченным органам для процессуального решения.',refs:['ref-exact-fso-7-8-all']}
+];
+function renderEscort(){
+ const content=$('escort-content');content.replaceChildren();
+ escortGroups.forEach((group,i)=>{
+  const step=document.createElement('section');step.className='work-step';
+  const number=document.createElement('div');number.className='work-step-num';number.textContent=String(i+1).padStart(2,'0');
+  const body=document.createElement('div');body.className='work-step-body';const title=document.createElement('h2');title.textContent=group.title;
+  const text=document.createElement('p');text.textContent=group.description;const refs=document.createElement('div');refs.className='work-step-refs';
+  for(const id of group.refs){const item=findRef(id);if(!item)continue;
+   const button=btn('', 'work-mini',()=>openReference(item));
+   const name=document.createElement('b');name.textContent=item.title;
+   const law=document.createElement('small');law.textContent=getReferenceCitation(item)+' ↗';button.append(name,law);refs.append(button)
+  }
+  body.append(title,text,refs);step.append(number,body);content.append(step)
+ });
+}
+// Локальные закладки: никакой серверной записи и синхронизации.
+const favoriteKey='fso-rmrp-bookmarks-v1';
+function readFavorites(){try{const raw=JSON.parse(localStorage.getItem(favoriteKey)||'[]');return Array.isArray(raw)?raw.filter(x=>x&&['ref','law','situation','concept'].includes(x.type)&&typeof x.id==='string').slice(0,500):[]}catch{return []}}
+let favoriteFallback=[];
+function favorites(){const v=readFavorites();return v.length?v:favoriteFallback}
+function storeFavorites(value){favoriteFallback=value;try{localStorage.setItem(favoriteKey,JSON.stringify(value))}catch{}}
+function isFavorite(type,id){return favorites().some(x=>x.type===type&&x.id===id)}
+function toggleFavorite(type,id){const before=favorites(),have=isFavorite(type,id);storeFavorites(have?before.filter(x=>!(x.type===type&&x.id===id)):[...before,{type,id}]);
+ document.querySelectorAll('[data-bookmark]').forEach(x=>{if(x.dataset.bookmark===type+':'+id){x.setAttribute('aria-pressed',String(!have));x.textContent=!have?'✓ Сохранено':'☆ В шпаргалку'}});
+ if(!$('favorites-screen').hidden)renderFavorites();
+}
+function bookmarkButton(type,id,cls=''){
+ const saved=isFavorite(type,id);const b=btn(saved?'✓ Сохранено':'☆ В шпаргалку','fav-button '+cls,()=>toggleFavorite(type,id));
+ b.dataset.bookmark=type+':'+id;b.setAttribute('aria-pressed',String(saved));b.setAttribute('aria-label',saved?'Удалить из личной шпаргалки':'Сохранить в личную шпаргалку');return b;
+}
+function favoriteTarget(f){
+ if(f.type==='ref'){const item=findRef(f.id);return item&&{title:item.title,subtitle:getReferenceCitation(item),summary:item.summary||'',open:()=>{go('reference');openReference(item)}}}
+ if(f.type==='law'){const item=lawRecords().find(x=>x.id===f.id);return item&&{title:item.title,subtitle:'Законодательство',summary:'Полный текст документа',open:()=>{go('laws');openLaw(item.id)}}}
+ const item=publicMaterials.find(x=>x.id===f.id&&x.sectionId===(f.type==='situation'?'situations':'concepts'));
+ if(item)return{title:item.title,subtitle:f.type==='situation'?'Ситуация':'Понятие',summary:item.summary||'',open:()=>openPortalHit({type:f.type,id:item.id})};
+ return null;
+}
+function renderFavorites(){
+ const list=$('favorites-list'),query=$('fav-search').value.trim().toLowerCase();list.replaceChildren();const stored=favorites();$('fav-total').textContent='Сохранено: '+stored.length;
+ let hits=0;
+ for(const f of stored){const item=favoriteTarget(f);if(!item)continue;
+  if(query&&!([item.title,item.subtitle,item.summary].join(' ').toLowerCase().includes(query)))continue;
+  const card=document.createElement('article');card.className='work-norm';
+  const subtitle=document.createElement('small');subtitle.textContent=item.subtitle;
+  const heading=document.createElement('h3');heading.textContent=item.title;
+  const desc=document.createElement('p');desc.textContent=item.summary;
+  const buttons=document.createElement('div');buttons.className='work-norm-actions';buttons.append(btn('Открыть ↗','work-primary',item.open),bookmarkButton(f.type,f.id));
+  card.append(subtitle,heading,desc,buttons);list.append(card);hits++;
+ }
+ if(!hits){const note=document.createElement('div');note.className='work-empty';note.textContent=stored.length?'По запросу ничего не найдено.':'Пока ничего не сохранено. Откройте статью или документ и нажмите «В шпаргалку». После этого материал появится здесь.';list.append(note)}
+}
+$('fav-search').addEventListener('input',renderFavorites);
+$('fav-export').addEventListener('click',()=>{
+ const lines=['Личная шпаргалка ФСО RMRP · Тверской','Создана '+new Date().toLocaleString('ru-RU'),''];
+ for(const f of favorites()){const v=favoriteTarget(f);if(v){lines.push(v.title+'\n'+v.subtitle+'\n'+v.summary+'\n')}}
+ const url=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='FSO_RMRP_шпаргалка.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+
+// Проверка знаний по существующим цитатам. Правильные ответы соответствуют указанным цитатам.
+const quizBank={
+ easy:[
+  {q:'Где ФСО может проверять документы граждан на основании п. 2 ч. 1 ст. 10?',options:['На любой улице без связи с охраной','В районе охраны объектов','Только в здании суда','Только в помещениях полиции'],correct:1,ref:'ref-exact-fso-10-1-2',why:'Норма прямо указывает район охраны объектов.'},
+  {q:'Какой максимальный срок предварительного задержания по ПК?',options:['5 минут','15 минут','30 минут','60 минут'],correct:1,ref:'verified-58424-6-3-all',why:'В ч. 3 ст. 6 ПК указан срок не более 15 минут с фактического задержания.'},
+  {q:'Какой срок указан для задержания сотрудником правоохранительного органа по ПК?',options:['15 минут','30 минут','60 минут','120 минут'],correct:2,ref:'verified-58424-6-1-all',why:'В ч. 1 ст. 6 ПК установлен срок не более 60 минут.'},
+  {q:'Что имеет право определить ФСО по п. 3 ч. 1 ст. 10?',options:['Перечень запрещённых к проносу и провозу вещей','Уголовное наказание для гражданина','Срок лишения свободы','Состав суда'],correct:0,ref:'ref-exact-fso-10-1-3',why:'Пункт относится именно к перечню вещей для охраняемых объектов.'},
+  {q:'Может ли гражданин посещать охраняемую территорию Московского Кремля по ст. 9.1?',options:['Нет, никогда','Только после задержания','Да, при соблюдении правил, если не введены ограничения','Только с разрешения адвоката'],correct:2,ref:'ref-exact-territories-9-1-all',why:'Правило допускает посещение при соблюдении правил с оговоркой об ограничениях.'},
+  {q:'Какое действие предусматривает закон при отказе от проверки в рамках пропускного режима?',options:['Обязательный арест','Отказ в посещении либо требование покинуть территорию','Автоматический штраф','Лишение водительских прав'],correct:1,ref:'verified-26625-31-3-3',why:'Ст. 31.3.3 предусматривает отказ в посещении либо требование покинуть территорию.'},
+  {q:'Кому ФСО должна незамедлительно передать задержанного согласно специальному полномочию?',options:['Любому знакомому сотруднику','Сотруднику охраны соседнего объекта','В органы внутренних дел или Следственный комитет','Администратору сайта'],correct:2,ref:'ref-exact-fso-10-1-6',why:'Норма прямо называет органы внутренних дел и Следственный комитет.'}
+ ],
+ medium:[
+  {q:'Что характеризует закрытую территорию по ФЗ о территориях?',options:['Доступ открыт всем гражданам','Ограничен только проезд транспорта','Закрыт доступ гражданским и частично ограничен доступ государственных сотрудников','Вход свободен при любой ситуации'],correct:2,ref:'ref-exact-territories-1-1-2',why:'Ст. 1.1.2 различает доступ граждан и государственных сотрудников.'},
+  {q:'Когда допускается временно ограничивать движение по п. 7 ч. 1 ст. 10 ФЗ о ФСО?',options:['На трассах проезда объектов государственной охраны','Всегда в любом районе города','Для личного удобства сотрудника','Только в выходные'],correct:0,ref:'ref-exact-fso-10-1-7',why:'Норма привязывает меру к трассам проезда объектов государственной охраны.'},
+  {q:'В какой цели ст. 10.1.8 позволяет ФСО проходить на закрытые и частные территории?',options:['Для личного посещения','Для выполнения полномочий при сопровождении охраняемых лиц','Для проведения публичных мероприятий','Для осмотра недвижимости на продажу'],correct:1,ref:'ref-exact-fso-10-1-8',why:'Право связано с исполнением полномочий именно при сопровождении.'},
+  {q:'В каком случае сотрудник при сопровождении всё же должен предъявлять удостоверение по ст. 10.1.22?',options:['При предъявлении законного требования','При каждом шаге','Только если есть видеокамера','Никогда'],correct:0,ref:'ref-exact-fso-10-1-22',why:'Исключение из правила прямо касается предъявления законного требования.'},
+  {q:'Кто по ст. 9.2 может вводить и отменять ограничения посещения Московского Кремля?',options:['Любой охранник','Любой посетитель','Только адвокат','Губернатор, Правительство округа, комендант Кремля или его заместитель'],correct:3,ref:'ref-exact-territories-9-2-all',why:'Все перечисленные должностные лица и органы названы в статье.'},
+  {q:'Что ФСО вправе передавать уполномоченным органам при выявлении правонарушений в ходе охраны лица?',options:['Только устное сообщение','Материалы, включая данные видеофиксации','Только личное оружие','Только пропуска'],correct:1,ref:'ref-exact-fso-7-8-all',why:'Ч. 8 ст. 7 прямо допускает передачу материалов, включая видео.'},
+  {q:'Сколько длится предусмотренный ПК телефонный звонок задержанного?',options:['До 2 минут','До 10 минут','Без ограничения времени','Ровно 15 минут'],correct:0,ref:'verified-58424-8-1-all',why:'В ч. 1 ст. 8 ПК указано не более двух минут.'}
+ ],
+ hard:[
+  {q:'ФСО задерживает лицо за пределами закреплённой ЗОТ по ст. 10.1.6. Какое условие прямо названо?',options:['Любой отказ показать документы','Только непосредственное преследование лица, совершившего посягательство на объект госохраны','Любое административное правонарушение','Общее распоряжение старшего смены'],correct:1,ref:'ref-exact-fso-10-1-6',why:'За пределами указанных территорий специальное задержание ограничено непосредственным преследованием лица, совершившего посягательство.'},
+  {q:'При движении кортежа сотрудник хочет применить специальный манёвр. Какое условие указано в ст. 7.6.5?',options:['Сам факт движения кортежа','Опоздание на мероприятие','Угроза жизни и здоровью охраняемого лица или сотрудников госохраны','Любое неудобство на дороге'],correct:2,ref:'ref-exact-fso-7-6-5',why:'Норма допускает перечисленные меры при возникновении угрозы, а не просто из-за движения кортежа.'},
+  {q:'Как соотносятся сроки 15 и 60 минут в ст. 6 ПК?',options:['Это сроки одной и той же меры для всех','15 минут относится к предварительному задержанию госслужащим, 60 к задержанию правоохранительным органом','Оба срока отсчитываются с предъявления обвинения','Срок выбирает задержанный'],correct:1,ref:'verified-58424-6-3-all',why:'Ст. 6 различает предварительное и обычное задержание по субъекту и сроку. Сравните также ч. 1 этой статьи.'},
+  {q:'Кто прямо назван среди уполномоченных на задержание госслужащего при исполнении по ПК ст. 12.1?',options:['Любой сотрудник любой госорганизации','Любой гражданин по просьбе администрации','Только сотрудники ФСО','СК, ФСБ, прокуратура или правоохранительные органы по решению прокурора'],correct:3,ref:'verified-58424-12-1-all',why:'Перечень субъектов дан в ч. 1 ст. 12 ПК, с дополнительным условием о преступлениях из ч. 2.'},
+  {q:'Гражданин отказывается от процедуры пропускного режима. Что прямо допускает ст. 31.3.3?',options:['Запретить посещение либо потребовать покинуть территорию','Автоматически признать его преступником','Назначить суд без разбирательства','Применить любое наказание по усмотрению'],correct:0,ref:'verified-26625-31-3-3',why:'Отказ в допуске и требование покинуть территорию не равнозначны уголовному наказанию.'},
+  {q:'Какова максимальная продолжительность конфиденциальной беседы с адвокатом по ст. 8.1 ПК?',options:['2 минуты','3 минуты','5 минут','15 минут'],correct:2,ref:'verified-58424-8-1-all',why:'В ч. 1 ст. 8 ПК названа конфиденциальная беседа не более 5 минут.'},
+  {q:'Какую информацию сотрудник обязан огласить в процедуре задержания по п. 3 ч. 1 ст. 10 ПК?',options:['Личный телефон старшего','Время следующей смены','Перечень статей, инкриминируемых задержанному','Список сотрудников объекта'],correct:2,ref:'verified-58424-10-1-3',why:'Пункт 3 требует оглашения перечня инкриминируемых статей.'},
+  {q:'Кто по ст. 9.2 может ограничивать посещение Кремля помимо Губернатора и Правительства округа?',options:['Любой сотрудник КПП','Комендант Московского Кремля или его заместитель','Любой посетитель по требованию','Только сотрудник адвокатуры'],correct:1,ref:'ref-exact-territories-9-2-all',why:'Статья отдельно называет коменданта Московского Кремля и его заместителя.'}
+ ]
+};
+let quizState=null;
+function renderQuizLevels(){
+ for(const key of Object.keys(quizBank)){
+  const b=document.querySelector('[data-quiz-level="'+key+'"]');b.setAttribute('aria-pressed',String(quizState?.level===key));
+  let best='';try{best=localStorage.getItem('fso-quiz-best-'+key)||''}catch{}
+  $('quiz-best-'+key).textContent=best?'Лучший результат: '+best:'Вопросов: '+quizBank[key].length;
+ }
+}
+document.querySelectorAll('[data-quiz-level]').forEach(b=>b.addEventListener('click',()=>startQuiz(b.dataset.quizLevel)));
+function startQuiz(level){
+ if(!quizBank[level])return;
+ quizState={level,index:0,score:0,answered:false};$('quiz-panel').hidden=false;renderQuizLevels();renderQuizQuestion();
+ $('quiz-panel').scrollIntoView({block:'start',behavior:'smooth'});
+}
+function renderQuizQuestion(){
+ const panel=$('quiz-panel');panel.replaceChildren();const state=quizState;
+ if(!state)return;
+ const questions=quizBank[state.level];
+ if(state.index>=questions.length){
+  const end=document.createElement('div');end.className='quiz-final';
+  const title=document.createElement('h2');title.textContent='Тест завершён';
+  const score=document.createElement('strong');score.textContent=state.score+' / '+questions.length;
+  const note=document.createElement('p');note.textContent='Правильных ответов: '+Math.round(state.score/questions.length*100)+'%. При повторном прохождении результат обновится.';
+  end.append(title,score,note,btn('Пройти ещё раз','work-primary',()=>startQuiz(state.level)),btn('Выбрать другой уровень','work-ghost',()=>{$('quiz-panel').hidden=true;quizState=null;renderQuizLevels()}));panel.append(end);
+  try{const old=parseInt(localStorage.getItem('fso-quiz-best-'+state.level)||'0',10);if(state.score>old)localStorage.setItem('fso-quiz-best-'+state.level,String(state.score)+' / '+questions.length)}catch{}
+  renderQuizLevels();return;
+ }
+ const q=questions[state.index];const progress=document.createElement('div');progress.className='quiz-progress';progress.textContent='Вопрос '+(state.index+1)+' из '+questions.length+' · Верных ответов '+state.score;
+ const meter=document.createElement('div');meter.className='quiz-meter';const fill=document.createElement('div');fill.style.width=(state.index/questions.length*100)+'%';meter.append(fill);
+ const title=document.createElement('h2');title.textContent=q.q;const answers=document.createElement('div');answers.className='quiz-answers';
+ q.options.forEach((option,i)=>answers.append(btn(option,'quiz-answer',()=>answerQuiz(i))));
+ panel.append(progress,meter,title,answers);
+}
+function answerQuiz(choice){
+ if(!quizState||quizState.answered)return;
+ const state=quizState,q=quizBank[state.level][state.index];state.answered=true;
+ const correct=choice===q.correct;if(correct)state.score++;
+ const options=$('quiz-panel').querySelectorAll('.quiz-answer');options.forEach((b,i)=>{b.disabled=true;if(i===q.correct)b.classList.add('correct');if(i===choice&&!correct)b.classList.add('incorrect')});
+ const result=document.createElement('div');result.className='quiz-result';const heading=document.createElement('b');heading.textContent=correct?'Верно.':'Неверно.';
+ const explanation=document.createElement('p');explanation.textContent=q.why;result.append(heading,explanation);
+ const item=findRef(q.ref);
+ if(item){const source=document.createElement('p');source.textContent='Основание: '+getReferenceCitation(item);result.append(source);
+  result.append(btn('Открыть норму ↗','work-ghost',()=>openReference(item)));}
+ result.append(btn(state.index===quizBank[state.level].length-1?'Показать результат':'Следующий вопрос →','work-primary',()=>{state.index++;state.answered=false;renderQuizQuestion()}));
+ $('quiz-panel').append(result);
+}
+
 window.addEventListener('hashchange',()=>go(decodeURIComponent(location.hash.slice(1))));
 go(decodeURIComponent(location.hash.slice(1))||'home');
 updatePortalStats();
+renderQuizLevels();
 loadPublic();
 // Законы встроены в текущий HTML: импорт и manifest не нужны.
 
