@@ -389,6 +389,71 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
 .scenario-native-step h3{margin:0 0 10px;font-size:15px}.scenario-native-action{font-weight:700;margin:8px 0}.scenario-native-reason{color:var(--muted);line-height:1.6}
 .scenario-native-law{margin:8px 0;border:1px solid var(--line);border-radius:9px;background:var(--panel)}.scenario-native-law>summary{cursor:pointer;padding:10px;color:var(--accent);font-weight:750}
 .scenario-native-verbatim{white-space:pre-wrap;padding:12px;border-top:1px solid var(--line);line-height:1.6}
+
+/* Порядок задержания · открытый маршрут без аккордеонов */
+.det-screen{padding:47px 0 96px;animation:fade-rise .35s var(--ease-ui) both}
+.det-head{max-width:1100px;position:relative}
+.det-crumb{display:inline-flex;gap:9px;align-items:center;color:var(--accent);font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:750}
+.det-crumb::before{content:'';width:19px;height:1px;background:var(--accent)}
+.det-head h1{font-size:clamp(43px,5vw,69px);font-weight:750;line-height:1.05;letter-spacing:-.07em;margin:19px 0 16px}
+.det-head p{font-size:16px;line-height:1.7;color:var(--muted);max-width:690px;margin:0}
+.det-quick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:32px 0 39px}
+.det-stat{min-width:0;min-height:129px;padding:19px 22px;background:linear-gradient(135deg,var(--surface),var(--surface2));border:1px solid var(--line);border-radius:17px;position:relative;overflow:hidden}
+.det-stat:before{content:'';width:30px;height:2px;background:var(--accent-strong);position:absolute;top:0;left:22px;opacity:.7}
+.det-stat b{display:block;font-size:26px;font-weight:760;color:var(--text);letter-spacing:-.05em;line-height:1.2;white-space:nowrap}
+.det-stat span{display:block;color:var(--muted);font-size:12px;margin-top:9px;line-height:1.5}
+.det-stat small{font-size:10px;color:var(--accent-strong);display:block;margin-top:7px}
+.det-grid{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:33px;align-items:start;max-width:1390px}
+.det-main{min-width:0}
+.det-lead{margin-bottom:23px;padding:22px 24px;border:1px solid color-mix(in srgb,var(--accent-strong) 25%,var(--line));border-radius:17px;background:var(--accent-wash);display:flex;gap:17px;align-items:flex-start}
+.det-lead-mark{flex:0 0 34px;width:34px;height:34px;border-radius:10px;background:var(--accent);color:var(--accent-text);display:grid;place-items:center;font-weight:800;font-size:17px}
+.det-lead strong{display:block;font-size:14px;margin:0 0 5px;font-weight:760}
+.det-lead p{margin:0;font-size:13px;line-height:1.7;color:var(--muted)}
+.det-steps{display:flex;flex-direction:column;gap:0}
+.det-step{position:relative;display:grid;grid-template-columns:54px minmax(0,1fr);column-gap:14px;padding:0 0 21px;scroll-margin-top:24px}
+.det-step:not(:last-child)::before{content:'';position:absolute;left:26px;top:61px;bottom:0;width:1px;background:var(--line)}
+.det-step-index{height:54px;width:54px;border:1px solid var(--line);background:var(--surface);border-radius:16px;display:grid;place-items:center;color:var(--accent-strong);font-size:16px;letter-spacing:-.035em;font-weight:750;position:relative;z-index:1}
+.det-step-card{background:var(--surface);border:1px solid var(--line);border-radius:19px;padding:26px 29px 27px;min-width:0}
+.det-step-topline{color:var(--faint);font-size:10px;text-transform:uppercase;letter-spacing:.14em;font-weight:740;margin-bottom:10px}
+.det-step h2{font-size:clamp(23px,2.3vw,29px);line-height:1.25;letter-spacing:-.045em;margin:0 0 17px;font-weight:740}
+.det-step-action{font-size:15px;line-height:1.67;margin:0;color:var(--text);font-weight:620}
+.det-step-reason{margin:13px 0 0;font-size:13px;line-height:1.7;color:var(--muted)}
+.det-hint{border-left:2px solid var(--accent-strong);margin:20px 0 0;padding:3px 0 3px 14px;font-size:12px;line-height:1.65;color:var(--muted)}
+.det-hint b{color:var(--accent);font-weight:750;margin-right:6px}
+.det-norms{border-top:1px solid var(--line);margin-top:23px;padding-top:18px;display:grid;gap:15px}
+.det-norms-heading{font-size:10px;color:var(--faint);letter-spacing:.12em;font-weight:760;text-transform:uppercase}
+.det-norm{padding:15px 17px;background:var(--surface2);border-radius:13px;border:1px solid var(--line)}
+.det-norm cite{display:block;font-style:normal;font-size:12px;font-weight:750;color:var(--accent-strong);margin-bottom:9px}
+.det-norm-text{font-size:12px;color:var(--muted);line-height:1.77;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}
+.det-aside{position:sticky;top:19px;display:grid;gap:14px}
+.det-aside-box{padding:21px;background:var(--surface);border:1px solid var(--line);border-radius:17px}
+.det-aside-title{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:750;margin:0 0 16px}
+.det-nav{display:grid;gap:4px}
+.det-nav button{display:flex;gap:11px;align-items:center;width:100%;background:transparent;border:1px solid transparent;border-radius:10px;padding:10px 8px;color:var(--muted);text-align:left;font-size:12px;font-weight:650;line-height:1.4;transition:color .18s,background .18s,border-color .18s}
+.det-nav button:hover,.det-nav button.active{color:var(--accent-strong);background:var(--accent-wash);border-color:color-mix(in srgb,var(--accent-strong) 24%,transparent)}
+.det-nav-num{flex:0 0 20px;font-size:11px;color:var(--faint);font-weight:760}
+.det-nav button.active .det-nav-num{color:var(--accent-strong)}
+.det-checklist{display:grid;gap:12px}
+.det-check{display:flex;align-items:flex-start;gap:9px;color:var(--muted);font-size:12px;line-height:1.5;cursor:pointer}
+.det-check input{width:16px;height:16px;margin:1px 0 0;flex:none;accent-color:var(--accent-strong)}
+.det-check:has(input:checked) span{color:var(--faint);text-decoration:line-through;text-decoration-color:var(--line-hover)}
+.det-check-note{margin:15px 0 0;padding-top:13px;border-top:1px solid var(--line);font-size:11px;line-height:1.55;color:var(--faint)}
+.det-footnote{font-size:12px;color:var(--faint);line-height:1.8;padding:14px 0 0 68px;max-width:860px}
+.det-footnote button{border:0;background:none;padding:0;color:var(--accent-strong);font:inherit;text-decoration:underline;text-decoration-color:var(--line-hover);text-underline-offset:3px}
+.det-extra{display:grid;gap:11px;margin:33px 0 0 68px}
+.det-extra article{border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:23px}
+.det-extra h3{font-size:20px;letter-spacing:-.04em;margin:0 0 10px}
+.det-extra p{white-space:pre-wrap;line-height:1.7;color:var(--muted)}
+.home-quicklinks{border-top:1px solid var(--line);margin-top:42px;padding-top:23px;display:flex;align-items:center;gap:21px;flex-wrap:wrap}
+.home-quicklinks>strong{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:750;white-space:nowrap}
+.home-quicklinks-grid{display:flex;gap:10px;flex-wrap:wrap}
+.home-quicklinks-grid button{font-size:12px;font-weight:650;color:var(--muted);border:1px solid var(--line);background:var(--surface);padding:11px 15px;border-radius:12px;transition:border-color .2s,color .2s,background .2s}
+.home-quicklinks-grid button:hover{border-color:var(--line-hover);color:var(--accent-strong);background:var(--accent-wash)}
+@media(max-width:1200px){.det-grid{grid-template-columns:minmax(0,1fr) 224px;gap:21px}.det-stat{padding:18px}.det-step-card{padding:23px}}
+@media(max-width:950px){.det-quick{grid-template-columns:repeat(2,minmax(0,1fr))}.det-grid{grid-template-columns:minmax(0,1fr)}.det-aside{position:static;grid-row:1;display:grid;grid-template-columns:1fr 1fr}.det-nav{grid-template-columns:1fr 1fr}.det-step{scroll-margin-top:15px}}
+@media(max-width:620px){.det-screen{padding:33px 0 110px}.det-head h1{font-size:clamp(37px,9vw,53px)}.det-head p{font-size:14px}.det-quick{gap:9px;margin:25px 0}.det-stat{padding:17px 14px;min-height:108px}.det-stat b{font-size:22px}.det-stat span{font-size:11px}.det-aside{grid-template-columns:1fr}.det-aside-box{padding:17px}.det-nav{grid-template-columns:1fr 1fr;gap:3px}.det-nav button{font-size:11px;min-height:48px}.det-step{grid-template-columns:38px minmax(0,1fr);gap:9px;padding-bottom:15px}.det-step-index{width:38px;height:38px;border-radius:12px;font-size:12px}.det-step:not(:last-child)::before{left:18px;top:45px}.det-step-card{padding:19px 17px;border-radius:16px}.det-step h2{font-size:22px}.det-step-action{font-size:13px}.det-lead{padding:18px;gap:11px}.det-footnote{padding-left:47px}.det-extra{margin-left:47px}.home-quicklinks{margin-top:26px;gap:12px}}
+@media(prefers-reduced-motion:reduce){.det-screen{animation:none}}
+
 </style>
 </head>
 <body>
@@ -449,12 +514,51 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
      <button class="feature feature-detention" data-page="detention"><span class="number">03</span><h2>Порядок<br>задержания</h2><p>Последовательность действий.</p><span class="arrow">Открыть <svg class="icon"><use href="#i-arrow"/></svg></span></button>
     </div>
    </div>
+   <div class="home-quicklinks" aria-label="Быстрые переходы">
+    <strong>Быстрый доступ</strong>
+    <div class="home-quicklinks-grid">
+     <button type="button" data-det-step="0">Основания задержания ↗</button>
+     <button type="button" data-det-step="3">Права задержанного ↗</button>
+     <button type="button" data-page="laws">Тексты законов ↗</button>
+    </div>
+   </div>
   </section>
   <section class="subpage" id="section-screen" hidden aria-live="polite">
    <button class="back" data-page="home">← На главную</button>
    <h1 id="section-title">Раздел</h1>
    <p class="subpage-desc" id="section-description"></p>
    <div class="material-list" id="material-list" hidden></div><div class="empty-panel" id="empty-panel"><svg class="icon"><use href="#i-file"/></svg><b>Материалы пока не добавлены</b></div>
+  </section>
+
+  <section class="det-screen" id="detention-screen" hidden aria-label="Порядок задержания">
+   <header class="det-head">
+    <div class="det-crumb">Практический алгоритм · ФСО RMRP</div>
+    <h1>Порядок задержания</h1>
+    <p>Последовательность действий, ограничения полномочий и точные выдержки из законодательства сервера «Тверской». Весь порядок открыт сразу, без дополнительных нажатий.</p>
+   </header>
+   <div class="det-quick" aria-label="Ключевые ориентиры">
+    <div class="det-stat"><b>15 мин</b><span>Предварительное задержание госслужащим</span><small>ПК · ст. 6.3</small></div>
+    <div class="det-stat"><b>60 мин</b><span>Задержание сотрудником правоохранительного органа</span><small>ПК · ст. 6.1</small></div>
+    <div class="det-stat"><b>ЗОТ</b><span>Специальные условия задержания сотрудником ФСО</span><small>ФЗ о ФСО · ст. 10.1.6</small></div>
+    <div class="det-stat"><b>Передача</b><span>Задержанного незамедлительно передают уполномоченным органам</span><small>ФЗ о ФСО · ст. 10.1.6</small></div>
+   </div>
+   <div class="det-grid">
+    <div class="det-main">
+     <div class="det-lead"><div class="det-lead-mark">!</div><div><strong>Главный принцип</strong><p>Прежде чем ограничивать свободу человека, установить фактическое основание, пределы полномочий ФСО и вид задержания. Охрана объекта сама по себе не даёт общего права задерживать любого нарушителя.</p></div></div>
+     <div id="detention-steps" class="det-steps" aria-label="Этапы задержания"></div>
+     <div id="detention-extra" class="det-extra" hidden></div>
+     <div class="det-footnote">Материалы основаны на нормах, сохранённых в памятке RMRP. При изменении правил сервера сверяйте текст с разделом <button type="button" data-page="laws">«Законодательство»</button>. Подсказки поясняют порядок, но не заменяют правовую норму.</div>
+    </div>
+    <aside class="det-aside" aria-label="Ориентиры и проверка">
+     <section class="det-aside-box"><h2 class="det-aside-title">Содержание</h2><nav id="detention-nav" class="det-nav" aria-label="Этапы задержания"></nav></section>
+     <section class="det-aside-box"><h2 class="det-aside-title">Перед задержанием проверь</h2><div class="det-checklist">
+      <label class="det-check"><input type="checkbox"><span>Есть конкретные факты и основание</span></label>
+      <label class="det-check"><input type="checkbox"><span>Проверены территория и полномочия ФСО</span></label>
+      <label class="det-check"><input type="checkbox"><span>Определён вид задержания и срок</span></label>
+      <label class="det-check"><input type="checkbox"><span>Понятен порядок передачи задержанного</span></label>
+     </div><p class="det-check-note">Чек-лист для самопроверки. Отметки не сохраняются и не являются процессуальным документом.</p></section>
+    </aside>
+   </div>
   </section>
 
   <section class="reference-screen" id="reference-screen" hidden aria-label="Правовой справочник">
@@ -631,6 +735,55 @@ function addStepContent(container,item){
   steps.append(box);
  });container.append(steps);return true;
 }
+
+const detentionHints={
+ 'Основание':'Отдельно проверь место, факты и конкретную норму. Не смешивай охранные полномочия с общим правом на задержание.',
+ 'Проверить вид задержания':'Срок считается с фактического задержания. Ограничение в 60 минут не переносится на предварительное задержание, для которого указан отдельный срок.',
+ 'Сообщить причину':'Указывай конкретное предполагаемое деяние и статью. Процессуальные действия выполняются только в пределах компетенции.',
+ 'Обеспечить права':'Проверь, кто проводит процессуальное задержание, где реализуются отдельные права и какая очередность предусмотрена ПК.',
+ 'Госслужащий или адвокат':'Проверь особый порядок и полномочия органа прежде, чем продолжать процессуальные действия.',
+ 'Передача':'Сохрани сведения о фактах и доступные материалы, включая видео, чтобы передать их уполномоченному органу.'
+};
+let detentionObserver=null;
+function renderDetention(){
+ const list=$('detention-steps'),nav=$('detention-nav'),extra=$('detention-extra');
+ list.replaceChildren();nav.replaceChildren();extra.replaceChildren();
+ if(detentionObserver){detentionObserver.disconnect();detentionObserver=null;}
+ const detItems=publicMaterials.filter(x=>x.sectionId==='detention');
+ const guide=detItems.find(x=>Array.isArray(x.steps)&&x.steps.length);
+ if(!guide){const empty=document.createElement('p');empty.className='det-step-card';empty.textContent='Этапы задержания пока не добавлены.';list.append(empty);return;}
+ const buttons=[];
+ (guide.steps||[]).forEach((step,i)=>{
+  const section=document.createElement('section');section.className='det-step';section.id='det-step-'+(i+1);
+  const number=document.createElement('div');number.className='det-step-index';number.setAttribute('aria-hidden','true');number.textContent=String(i+1).padStart(2,'0');section.append(number);
+  const card=document.createElement('article');card.className='det-step-card';
+  const kicker=document.createElement('div');kicker.className='det-step-topline';kicker.textContent='Этап '+String(i+1).padStart(2,'0');card.append(kicker);
+  const h=document.createElement('h2');h.textContent=step.title;card.append(h);
+  const action=document.createElement('p');action.className='det-step-action';action.textContent=step.action||'';card.append(action);
+  if(step.explain){const reason=document.createElement('p');reason.className='det-step-reason';reason.textContent=step.explain;card.append(reason)}
+  if(detentionHints[step.title]){const hint=document.createElement('div');hint.className='det-hint';const label=document.createElement('b');label.textContent='Подсказка';hint.append(label,document.createTextNode(detentionHints[step.title]));card.append(hint)}
+  if(Array.isArray(step.norms)&&step.norms.length){
+   const norms=document.createElement('div');norms.className='det-norms';const label=document.createElement('div');label.className='det-norms-heading';label.textContent='Правовое основание · точный текст';norms.append(label);
+   step.norms.forEach(n=>{const box=document.createElement('div');box.className='det-norm';const cite=document.createElement('cite');cite.textContent=n.citation||'Норма';const quote=document.createElement('p');quote.className='det-norm-text';quote.textContent=n.text||'';box.append(cite,quote);norms.append(box)});
+   card.append(norms);
+  }
+  section.append(card);list.append(section);
+  const btn=document.createElement('button');btn.type='button';btn.className=i===0?'active':'';
+  const num=document.createElement('span');num.className='det-nav-num';num.textContent=String(i+1).padStart(2,'0');const text=document.createElement('span');text.textContent=step.title;btn.append(num,text);
+  btn.addEventListener('click',()=>{section.scrollIntoView({behavior:'smooth',block:'start'});buttons.forEach(b=>b.classList.remove('active'));btn.classList.add('active')});nav.append(btn);buttons.push(btn);
+ });
+ if('IntersectionObserver' in window){detentionObserver=new IntersectionObserver((entries)=>{for(const entry of entries){if(entry.isIntersecting){const ix=(guide.steps||[]).findIndex((_,i)=>entry.target.id==='det-step-'+(i+1));if(ix>=0)buttons.forEach((b,j)=>b.classList.toggle('active',j===ix))}}},{rootMargin:'-5% 0px -70% 0px',threshold:0});list.querySelectorAll('.det-step').forEach(x=>detentionObserver.observe(x));}
+ const other=detItems.filter(x=>x!==guide);extra.hidden=!other.length;
+ for(const item of other){const article=document.createElement('article');const h=document.createElement('h3');h.textContent=item.title;article.append(h);if(item.summary){const p=document.createElement('p');p.textContent=item.summary;article.append(p)}if(Array.isArray(item.steps)){
+   for(const stage of item.steps){const title=document.createElement('h4');title.textContent=stage.title;article.append(title);const action=document.createElement('p');action.textContent=stage.action||'';article.append(action);if(stage.explain){const reason=document.createElement('p');reason.textContent=stage.explain;article.append(reason)}for(const n of stage.norms||[]){const norm=document.createElement('div');norm.className='det-norm';const citation=document.createElement('cite');citation.textContent=n.citation||'';const txt=document.createElement('p');txt.className='det-norm-text';txt.textContent=n.text||'';norm.append(citation,txt);article.append(norm)}}
+  }else{const p=document.createElement('p');p.textContent=item.body||'';article.append(p)}extra.append(article)}
+}
+document.addEventListener('click',event=>{
+ const shortcut=event.target.closest('[data-det-step]');if(!shortcut)return;
+ const step=Number(shortcut.dataset.detStep)+1;go('detention');
+ requestAnimationFrame(()=>{$('det-step-'+step)?.scrollIntoView({behavior:'smooth',block:'start'})});
+});
+
 function renderMaterials(page){
  const items=publicMaterials.filter(x=>x.sectionId===page),wrap=$('material-list');
  wrap.replaceChildren();wrap.hidden=items.length===0;$('empty-panel').hidden=items.length!==0;
@@ -695,10 +848,11 @@ const probe=new Image();probe.onload=()=>{$('brand-mark').classList.add('has-ima
 function go(page){
  closeReference();
  if(!Object.prototype.hasOwnProperty.call(sections,page))page='home';
- const home=page==='home',isLaws=page==='laws',isReference=page==='reference';
- $('home-screen').hidden=!home;$('section-screen').hidden=home||isLaws||isReference;$('law-screen').hidden=!isLaws;$('reference-screen').hidden=!isReference;
+ const home=page==='home',isLaws=page==='laws',isReference=page==='reference',isDetention=page==='detention';
+ $('home-screen').hidden=!home;$('section-screen').hidden=home||isLaws||isReference||isDetention;$('law-screen').hidden=!isLaws;$('reference-screen').hidden=!isReference;$('detention-screen').hidden=!isDetention;
  if(isReference){renderReference()}
  else if(isLaws){renderLawList();if(!selectedLaw&&lawCatalog.length)openLaw(lawCatalog[0].id)}
+ else if(isDetention){renderDetention()}
  else if(!home){$('section-title').textContent=sections[page].title;$('section-description').textContent=sections[page].description;renderMaterials(page)}
  document.querySelectorAll('[data-page]').forEach(el=>{
   const active=el.dataset.page===page;
