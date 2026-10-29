@@ -671,6 +671,86 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
 .portal-search-section .portal-search-results{margin-top:14px}
 .portal-important-grid{margin-top:12px}
 .portal-home .portal-section-card>span:last-child:empty{display:none}
+
+/* Только раздел «Территории и объекты»: собственная информационная компоновка, без изображений. */
+.territory-guide{max-width:1520px;padding-top:38px}
+.territory-guide *{min-width:0}
+.territory-guide button{font:inherit;cursor:pointer}
+.territory-guide button:focus-visible,.territory-guide a:focus-visible{outline:2px solid var(--accent-strong);outline-offset:3px}
+.territory-guide [hidden]{display:none!important}
+.tg-header{padding-bottom:24px;border-bottom:1px solid var(--line)}
+.tg-breadcrumb,.tg-eyebrow{font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent-strong);font-weight:750}
+.tg-breadcrumb span{color:var(--faint);padding:0 8px}
+.tg-header-main{display:flex;justify-content:space-between;gap:30px;align-items:end;margin-top:15px}
+.tg-header h1{margin:0 0 14px;font-size:clamp(37px,4.4vw,67px);line-height:1.09;letter-spacing:-.067em}
+.tg-header-main p{margin:0;max-width:740px;color:var(--muted);font-size:14px;line-height:1.7}
+.tg-all-law,.tg-article-link,.tg-footer button{border:1px solid var(--line-hover);border-radius:10px;padding:11px 15px;color:var(--accent-strong);background:var(--accent-wash);font-weight:700;white-space:nowrap;font-size:12px!important}
+.tg-all-law span{margin-left:9px}
+.tg-toc{display:flex;gap:8px;flex-wrap:wrap;margin-top:26px}
+.tg-toc a{border:1px solid var(--line);background:var(--surface);padding:8px 14px;border-radius:10px;font-size:12px;text-decoration:none;color:var(--muted);transition:all .18s}
+.tg-toc a:hover{border-color:var(--line-hover);color:var(--accent-strong)}
+.tg-keynote{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:18px;align-items:start;margin-top:24px;padding:20px 24px;border:1px solid color-mix(in srgb,#c7a46e 32%,var(--line));background:linear-gradient(115deg,rgba(192,140,66,.075),transparent 80%),var(--surface);border-radius:16px}
+.tg-keynote-symbol{width:38px;height:38px;display:grid;place-items:center;font-weight:800;font-size:20px;border-radius:10px;color:#e0b777;background:rgba(209,161,85,.12)}
+.tg-keynote b{font-size:14px}.tg-keynote p{font-size:12px;line-height:1.7;margin:8px 0 0;color:var(--muted)}
+.tg-keynote button{background:transparent;border:0;color:var(--accent-strong);padding:5px 0;font-size:11px!important;white-space:nowrap}
+.tg-part{padding-top:53px;scroll-margin-top:18px}
+.tg-part-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:21px}
+.tg-part-head h2{font-size:clamp(24px,2.8vw,36px);letter-spacing:-.05em;line-height:1.16;margin:8px 0 8px}
+.tg-part-head p{margin:0;color:var(--muted);font-size:13px;line-height:1.6;max-width:740px}
+.tg-regime-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.tg-regime{--reg:#78b99a;background:linear-gradient(180deg,color-mix(in srgb,var(--reg) 8%,var(--surface)),var(--surface) 75%);border:1px solid var(--line);border-top:3px solid var(--reg);border-radius:15px;padding:24px;min-height:218px;display:flex;flex-direction:column;gap:12px}
+.tg-yellow{--reg:#d5bc77}.tg-red{--reg:#cb7d7f}
+.tg-regime-top{display:flex;align-items:center;gap:10px;color:var(--reg)}.tg-regime-top small{letter-spacing:.12em;font-size:10px;font-weight:780}
+.tg-disc,.tg-small-dot{width:12px;height:12px;border-radius:50%;background:var(--reg);box-shadow:0 0 0 4px color-mix(in srgb,var(--reg) 14%,transparent);flex:none}
+.tg-regime h3{font-size:23px;letter-spacing:-.035em;margin:4px 0 0}.tg-regime p{font-size:13px;line-height:1.64;color:var(--muted);margin:0;flex:1}
+.tg-regime-bottom{border-top:1px solid var(--line);padding-top:13px;font-size:11px;color:var(--faint);display:flex;gap:10px;align-items:center;justify-content:space-between}
+.tg-regime-bottom button,.tg-kremlin-zone-head button,.tg-access-row button,.tg-example button,.tg-procedure button{font-size:11px!important;color:var(--accent-strong);border:0;background:transparent;padding:3px 0;white-space:nowrap;font-weight:700}
+.tg-object-tools{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:15px}
+.tg-object-search{display:flex;align-items:center;gap:10px;padding:10px 13px;border-radius:11px;border:1px solid var(--line);background:var(--surface);width:min(530px,100%)}
+.tg-object-search .icon{height:18px;width:18px;color:var(--faint)}
+.tg-object-search input{width:100%;border:0;outline:0;color:var(--text);background:transparent;font-size:12px;min-width:0}
+.tg-object-count{white-space:nowrap;color:var(--faint);font-size:11px}
+.tg-object-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.tg-object-group{background:var(--surface);border:1px solid var(--line);border-radius:17px;padding:21px;display:flex;flex-direction:column}
+.tg-object-group-head{display:flex;gap:12px;align-items:center;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.tg-object-group-index{display:grid;place-items:center;font-size:16px;color:var(--accent-strong);width:39px;height:39px;border:1px solid var(--line);background:var(--surface2);border-radius:11px}
+.tg-object-group h3{font-size:16px;margin:0 0 2px}.tg-object-group small{color:var(--faint);font-size:10px}
+.tg-object-group ul{list-style:none;padding:12px 0 0;margin:0;display:grid;gap:4px}
+.tg-object-group li{font-size:12px;color:var(--muted);line-height:1.5;padding:8px 0 8px 14px;position:relative;border-bottom:1px solid color-mix(in srgb,var(--line) 75%,transparent)}
+.tg-object-group li::before{content:'';position:absolute;top:16px;left:1px;width:5px;height:5px;border-radius:50%;background:var(--accent-strong)}
+.tg-object-group li:last-child{border-bottom:0}
+.tg-clarification{color:var(--faint);font-size:12px;line-height:1.7;margin:13px 0 0}
+.tg-kremlin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.tg-kremlin-zone{--zone:#e4c078;background:var(--surface);border:1px solid var(--line);border-radius:17px;padding:23px 24px}
+.tg-kremlin-closed{--zone:#d48181}
+.tg-kremlin-zone-head{display:flex;gap:10px;align-items:center;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.tg-kremlin-zone .tg-small-dot{--reg:var(--zone);height:10px;width:10px}
+.tg-kremlin-zone h3{margin:0;font-size:19px;letter-spacing:-.025em;flex:1}
+.tg-kremlin-zone ul{padding-left:18px;margin:16px 0 0;display:grid;gap:12px}.tg-kremlin-zone li{color:var(--muted);font-size:13px;line-height:1.56;padding-left:3px}.tg-kremlin-zone li::marker{color:var(--zone)}
+.tg-example{display:grid;grid-template-columns:42px 1fr auto;align-items:center;gap:15px;padding:18px 20px;margin-top:15px;border:1px solid color-mix(in srgb,var(--accent-strong) 34%,var(--line));background:var(--accent-wash);border-radius:15px}
+.tg-example-icon{font-size:23px;color:var(--accent-strong)}.tg-example strong{font-size:14px}.tg-example p{margin:6px 0 0;font-size:12px;line-height:1.65;color:var(--muted)}
+.tg-access-layout{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(245px,.7fr);gap:14px;align-items:start}
+.tg-access-rows{display:grid;gap:9px}.tg-access-row{display:grid;grid-template-columns:35px minmax(0,1fr) auto;align-items:start;gap:13px;background:var(--surface);border:1px solid var(--line);padding:18px;border-radius:13px}
+.tg-access-num{font-size:11px;font-weight:800;color:var(--accent-strong);padding-top:3px}.tg-access-row h3{font-size:14px;margin:0 0 7px}.tg-access-row p{font-size:12px;line-height:1.6;margin:0;color:var(--muted)}
+.tg-access-aside{background:linear-gradient(140deg,color-mix(in srgb,var(--accent-strong) 11%,var(--surface)),var(--surface) 70%);border:1px solid var(--line-hover);padding:24px;border-radius:15px}
+.tg-access-aside small,.tg-procedure small{color:var(--accent-strong);font-size:10px;letter-spacing:.11em;font-weight:770}
+.tg-access-aside h3{font-size:22px;line-height:1.24;letter-spacing:-.045em;margin:18px 0 13px}.tg-access-aside p{font-size:12px;line-height:1.74;color:var(--muted)}
+.tg-access-aside button{font-size:12px!important;background:var(--accent-wash);color:var(--accent-strong);border:1px solid var(--line-hover);border-radius:9px;padding:10px 12px;margin-top:10px}
+.tg-aside-bottom{border-top:1px solid var(--line);padding-top:16px;margin-top:19px;color:var(--faint);font-size:11px;line-height:1.6}
+.tg-pass-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:11px}
+.tg-pass-grid article{border:1px solid var(--line);border-radius:13px;background:var(--surface);padding:19px;min-height:160px}
+.tg-pass-grid article span{font-size:11px;font-weight:780;color:var(--accent-strong)}
+.tg-pass-grid h3{margin:13px 0 7px;font-size:15px;letter-spacing:-.025em}.tg-pass-grid p{margin:0;color:var(--muted);font-size:11px;line-height:1.62}
+.tg-procedure{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:24px;margin-top:15px}
+.tg-procedure h3{font-size:20px;margin:9px 0 12px}.tg-procedure p{max-width:900px;font-size:12px;line-height:1.7;color:var(--muted);margin:0 0 12px}
+.tg-procedure .tg-procedure-caution{color:var(--text);border-left:2px solid var(--accent-strong);padding-left:13px;margin:15px 0 0}
+.tg-footer{margin-top:50px;border-top:1px solid var(--line);padding:23px 0;display:flex;justify-content:space-between;gap:20px;align-items:center}
+.tg-footer strong{font-size:13px}.tg-footer p{color:var(--faint);font-size:11px;line-height:1.62;max-width:760px;margin:6px 0 0}
+@media(max-width:1120px){.tg-regime-grid,.tg-object-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tg-pass-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:810px){.tg-header-main{align-items:start}.tg-regime-grid,.tg-object-grid,.tg-kremlin-grid{grid-template-columns:1fr}.tg-access-layout{grid-template-columns:1fr}.tg-pass-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.territory-guide{padding-top:25px}.tg-header-main{flex-direction:column;gap:14px}.tg-header h1{font-size:clamp(36px,10vw,46px)}.tg-header-main p{font-size:13px}.tg-toc{flex-wrap:nowrap;overflow-x:auto;padding-bottom:5px;scrollbar-width:thin}.tg-toc a{white-space:nowrap;flex:none}.tg-keynote{grid-template-columns:30px minmax(0,1fr);padding:15px;gap:11px}.tg-keynote-symbol{width:29px;height:29px;font-size:17px}.tg-keynote button{grid-column:2;justify-self:start}.tg-part{padding-top:41px}.tg-part-head{align-items:start;gap:8px}.tg-part-head h2{font-size:26px}.tg-part-head p{font-size:12px}.tg-part-head .tg-article-link{padding:8px 9px;font-size:10px!important}.tg-regime{min-height:0;padding:19px}.tg-object-group,.tg-kremlin-zone{padding:19px}.tg-object-tools{align-items:start}.tg-object-count{font-size:10px}.tg-example{grid-template-columns:28px 1fr;gap:8px;padding:15px}.tg-example button{grid-column:2;justify-self:start}.tg-access-row{grid-template-columns:26px 1fr;gap:9px;padding:15px}.tg-access-row button{grid-column:2;justify-self:start}.tg-pass-grid{grid-template-columns:1fr 1fr;gap:8px}.tg-pass-grid article{padding:15px;min-height:160px}.tg-pass-grid h3{font-size:14px}.tg-procedure{grid-template-columns:1fr;gap:5px;padding:18px}.tg-footer{align-items:start;flex-direction:column}}
+@media(max-width:400px){.tg-pass-grid{grid-template-columns:1fr}.tg-part-head{flex-direction:column}.tg-object-tools{flex-direction:column}.tg-object-count{margin-left:2px}}
+
 </style>
 </head>
 <body>
@@ -818,11 +898,91 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
   </section>
 
   
-<section class="work-screen" id="territories-screen" hidden aria-labelledby="territories-title">
-  <header class="work-header"><span class="work-overline">Справочник</span><h1 id="territories-title">Территории и объекты</h1><p>Режимы территорий, доступ в Московский Кремль и пропускной режим. Каждое основание открывается с точным текстом нормы.</p></header>
-  <div class="work-notice">Режим территории зависит от её статуса и действующих ограничений. Памятка не заменяет текст закона и распоряжения уполномоченных лиц.</div>
-  <div class="work-filterbar" id="territories-filters" aria-label="Темы раздела"></div>
-  <div class="work-norm-grid" id="territories-list"></div>
+<section class="work-screen territory-guide" id="territories-screen" hidden aria-labelledby="territories-title">
+ <header class="tg-header">
+  <div class="tg-breadcrumb">ФЗ № 86-ФЗ <span>•</span> Территории</div>
+  <div class="tg-header-main"><div>
+    <h1 id="territories-title">Территории и объекты</h1>
+    <p>Виды территорий, режимы доступа и перечень государственных объектов. Основные положения ФЗ «О государственной собственности, закрытых и охраняемых территориях».</p>
+  </div><button type="button" class="tg-all-law" data-territory-law="1">Читать закон <span>↗</span></button></div>
+  <nav class="tg-toc" aria-label="Навигация по разделу">
+   <a href="#tg-regimes">Режимы</a><a href="#tg-objects">Объекты</a><a href="#tg-kremlin">Московский Кремль</a><a href="#tg-access">Доступ</a><a href="#tg-passes">Пропуска</a>
+  </nav>
+ </header>
+ <div class="tg-keynote"><div class="tg-keynote-symbol">!</div><div><b>Режим территории и полномочия сотрудника не одно и то же</b><p>Перед ограничением доступа необходимо определить статус участка и применимую норму. Сам по себе цвет зоны не является самостоятельным основанием для задержания.</p></div><button type="button" data-territory-ref="ref-exact-fso-10-1-6">ФЗ о ФСО, ст. 10 ↗</button></div>
+
+ <section class="tg-part" id="tg-regimes" aria-labelledby="tg-regimes-title">
+  <div class="tg-part-head"><div><span class="tg-eyebrow">01 / ЗОНЫ</span><h2 id="tg-regimes-title">Три обозначения территории</h2><p>Цветовая классификация из статьи 1.1 ФЗ № 86-ФЗ. Это обозначения из закона, а не карта конкретного объекта.</p></div><button class="tg-article-link" data-territory-law="1">ст. 1.1 ↗</button></div>
+  <div class="tg-regime-grid">
+   <article class="tg-regime tg-green"><div class="tg-regime-top"><span class="tg-disc"></span><small>01 / ЗЕЛЁНАЯ</small></div><h3>Общего порядка</h3><p>Свободное передвижение граждан. Закон определяет зелёную зону как территорию общего порядка.</p><div class="tg-regime-bottom">Свободное передвижение <button data-territory-law="1">п. 4 ↗</button></div></article>
+   <article class="tg-regime tg-yellow"><div class="tg-regime-top"><span class="tg-disc"></span><small>02 / ЖЁЛТАЯ</small></div><h3>Охраняемая</h3><p>Охраняемая территория с ограниченным доступом. Ограничения зависят от закона и режима конкретного места.</p><div class="tg-regime-bottom">Ограниченный доступ <button data-territory-law="1">п. 1, 5 ↗</button></div></article>
+   <article class="tg-regime tg-red"><div class="tg-regime-top"><span class="tg-disc"></span><small>03 / КРАСНАЯ</small></div><h3>Закрытая</h3><p>Зона строгого режима, закрытая для общего посещения. Для государственных служащих тоже могут действовать ограничения.</p><div class="tg-regime-bottom">Закрыта для посещения <button data-territory-law="1">п. 2, 6 ↗</button></div></article>
+  </div>
+ </section>
+
+ <section class="tg-part" id="tg-objects" aria-labelledby="tg-objects-title">
+  <div class="tg-part-head"><div><span class="tg-eyebrow">02 / ПЕРЕЧЕНЬ</span><h2 id="tg-objects-title">Государственные объекты</h2><p>13 позиций, перечисленных в статье 6.3. Для удобства поиска они сгруппированы по назначению, а не по цвету зоны.</p></div><button class="tg-article-link" data-territory-law="6">ст. 6.3 ↗</button></div>
+  <div class="tg-object-tools"><label class="tg-object-search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="visually-hidden">Поиск по объектам</span><input type="search" id="tg-object-query" placeholder="Найти объект, например МВД, больница, Кремль…" autocomplete="off"></label><span class="tg-object-count" id="tg-object-count">13 объектов</span></div>
+  <div class="tg-object-grid" id="tg-object-grid">
+    <article class="tg-object-group" data-tg-group="authority"><div class="tg-object-group-head"><span class="tg-object-group-index">А</span><div><h3>Органы власти</h3><small>4 позиции</small></div></div><ul>
+      <li data-tg-object="правительство правительственные здания">Правительство Российской Федерации</li>
+      <li data-tg-object="прокуратура генеральная">Прокуратура Российской Федерации</li>
+      <li data-tg-object="следственный комитет ск">Следственный комитет Российской Федерации</li>
+      <li data-tg-object="суды суд судебные здания">Суды Российской Федерации</li>
+    </ul></article>
+    <article class="tg-object-group" data-tg-group="security"><div class="tg-object-group-head"><span class="tg-object-group-index">Б</span><div><h3>Силовые организации</h3><small>4 позиции</small></div></div><ul>
+      <li data-tg-object="фсб федеральная служба безопасности">Управление ФСБ</li>
+      <li data-tg-object="мвд полиция органы внутренних дел">Органы МВД</li>
+      <li data-tg-object="росгвардия уфсвнг национальная гвардия">Управление Росгвардии</li>
+      <li data-tg-object="войсковые части военные">Войсковые части</li>
+    </ul></article>
+    <article class="tg-object-group" data-tg-group="other"><div class="tg-object-group-head"><span class="tg-object-group-index">В</span><div><h3>Другие объекты</h3><small>5 позиций</small></div></div><ul>
+      <li data-tg-object="московский кремль кремль">Московский Кремль</li>
+      <li data-tg-object="москва live вгтрк телевидение">ВГТРК «Москва Live»</li>
+      <li data-tg-object="больница гбуз медицинские учреждения">Государственные учреждения здравоохранения</li>
+      <li data-tg-object="склады государственные складские помещения">Государственные склады и складские помещения</li>
+      <li data-tg-object="гку казенные учреждения">Государственные казённые учреждения</li>
+    </ul></article>
+  </div>
+  <p class="tg-clarification">Перечень объектов не означает, что все они относятся к одному режиму. Конкретные участки, помещения и порядок прохода определяются соответствующими статьями закона и установленными актами.</p>
+ </section>
+
+ <section class="tg-part" id="tg-kremlin" aria-labelledby="tg-kremlin-title">
+  <div class="tg-part-head"><div><span class="tg-eyebrow">03 / РАЗБОР ОБЪЕКТА</span><h2 id="tg-kremlin-title">Московский Кремль</h2><p>На одной территории есть участки с разным режимом. Ниже приведён перечень из статьи 8, без переноса правил РО.</p></div><button class="tg-article-link" data-territory-law="8">ст. 8 ↗</button></div>
+  <div class="tg-kremlin-grid">
+   <article class="tg-kremlin-zone tg-kremlin-open"><div class="tg-kremlin-zone-head"><span class="tg-small-dot"></span><h3>Охраняемые участки</h3><button data-territory-law="8">ст. 8.2 ↗</button></div><ul>
+    <li>Общая территория Кремля</li><li>Контрольно-пропускные пункты</li><li>Красная площадь и прилегающие территории</li><li>Участки рядом с Кремлёвской стеной</li><li>Холл здания ФСО</li>
+   </ul></article>
+   <article class="tg-kremlin-zone tg-kremlin-closed"><div class="tg-kremlin-zone-head"><span class="tg-small-dot"></span><h3>Закрытые участки</h3><button data-territory-law="8">ст. 8.1 ↗</button></div><ul>
+    <li>Кабинеты и помещения ФСО, кроме холла</li><li>Крыши зданий на территории Кремля и Красной площади</li><li>Кремлёвские стены</li><li>Комнаты совещаний судов</li><li>Залы совещаний законодательных органов во время заседаний</li>
+   </ul></article>
+  </div>
+  <div class="tg-example"><div class="tg-example-icon">↔</div><div><strong>Одно здание, разные правила</strong><p>Холл ФСО указан среди охраняемых территорий, но кабинеты и остальные помещения здания, кроме холла, относятся к закрытым. Статус всего объекта нельзя автоматически переносить на каждую комнату.</p></div><button data-territory-law="8">ст. 8 ↗</button></div>
+ </section>
+
+ <section class="tg-part" id="tg-access" aria-labelledby="tg-access-title">
+  <div class="tg-part-head"><div><span class="tg-eyebrow">04 / ДОСТУП</span><h2 id="tg-access-title">Кто может проходить</h2><p>Общие нормы допуска и специальные правила для Кремля.</p></div><button class="tg-article-link" data-territory-law="4">ст. 4 ↗</button></div>
+  <div class="tg-access-layout"><div class="tg-access-rows">
+   <article class="tg-access-row"><div class="tg-access-num">01</div><div><h3>Закреплённая территория организации</h3><p>Сотрудники государственных организаций имеют свободный доступ к закреплённым за ними территориям.</p></div><button data-territory-law="7">ст. 7.1 ↗</button></article>
+   <article class="tg-access-row"><div class="tg-access-num">02</div><div><h3>Чужая закрытая территория</h3><p>В общем порядке сотрудники ФСО получают доступ в сопровождении лица, которое имеет право находиться на такой территории. При этом закон предусматривает отдельные специальные основания и исключения.</p></div><button data-territory-law="4">ст. 4.5 ↗</button></article>
+   <article class="tg-access-row"><div class="tg-access-num">03</div><div><h3>Охраняемая территория Кремля</h3><p>Посещение допускается для любых лиц с соблюдением правил поведения, если не введены ограничения на свободный доступ.</p></div><button data-territory-law="9">ст. 9.1 ↗</button></article>
+   <article class="tg-access-row"><div class="tg-access-num">04</div><div><h3>Закрытая территория Кремля</h3><p>Закон отдельно определяет круг лиц с правом доступа, включая сотрудников ФСО, и предусматривает вход по приглашению уполномоченных лиц.</p></div><button data-territory-law="9">ст. 9.3, 9.7 ↗</button></article>
+  </div>
+  <aside class="tg-access-aside"><small>КОГДА КРЕМЛЬ МОГУТ ЗАКРЫТЬ</small><h3>Временное ограничение посещения</h3><p>По статье 9.2 вводить и отменять ограничения на свободное посещение охраняемой территории Кремля могут Губернатор округа, Правительство округа, комендант Кремля или его заместитель.</p><button data-territory-law="9">Открыть ст. 9.2 ↗</button><div class="tg-aside-bottom">Для конкретного прохода проверяй действующее ограничение, а не только общий статус территории.</div></aside></div>
+ </section>
+
+ <section class="tg-part" id="tg-passes" aria-labelledby="tg-passes-title">
+  <div class="tg-part-head"><div><span class="tg-eyebrow">05 / КПП</span><h2 id="tg-passes-title">Пропускной режим</h2><p>Виды пропусков по статье 31.1. Назначение и порядок выдачи различаются.</p></div><button class="tg-article-link" data-territory-law="31">ст. 30–31 ↗</button></div>
+  <div class="tg-pass-grid">
+   <article><span>01</span><h3>Постоянный</h3><p>Многократный доступ на установленный срок для постоянной работы или службы.</p></article>
+   <article><span>02</span><h3>Служебный</h3><p>Постоянный доступ в пределах должностных обязанностей, включая отдельные режимные помещения.</p></article>
+   <article><span>03</span><h3>Временный</h3><p>Многократный доступ на период временных работ или другой ограниченной по сроку деятельности.</p></article>
+   <article><span>04</span><h3>Разовый</h3><p>Один проход для посетителей и иных лиц, прибывших с конкретной целью.</p></article>
+   <article><span>05</span><h3>Материальный</h3><p>Для ввоза, вывоза, внесения или выноса материальных ценностей.</p></article>
+  </div>
+  <div class="tg-procedure"><div><small>ПОЛНОМОЧИЯ НА КПП</small><h3>Проверка документов и отказ в допуске</h3><p>Статья 31.3 определяет действия сотрудников органов государственной власти с пропускным режимом, охраняющих подведомственную территорию. При отказе лица от предусмотренных проверочных процедур допускается отказать в посещении или потребовать покинуть территорию.</p><p class="tg-procedure-caution">Это не универсальное разрешение любому сотруднику проводить такие действия на любой территории. Важны статус объекта и полномочия конкретного сотрудника.</p></div><button data-territory-law="31">ст. 31.3 ↗</button></div>
+ </section>
+ <footer class="tg-footer"><div><strong>Первичный источник</strong><p>Федеральный закон № 86-ФЗ. Пересказ и группировка на этой странице предназначены для быстрого чтения; точные формулировки смотри в тексте закона.</p></div><button type="button" data-territory-law="1">Перейти к закону ↗</button></footer>
 </section>
 <section class="work-screen" id="escort-screen" hidden aria-labelledby="escort-title">
   <header class="work-header"><span class="work-overline">Справочник</span><h1 id="escort-title">Сопровождение и кортежи</h1><p>Полномочия ФСО на маршруте, при сопровождении охраняемых лиц и при возникновении угрозы.</p></header>
@@ -1414,14 +1574,35 @@ function normCard(item){
  card.append(citation,head,desc,actions);return card;
 }
 function renderTerritories(){
- const bar=$('territories-filters'),list=$('territories-list');bar.replaceChildren();list.replaceChildren();
- for(const group of [{id:'all',name:'Все'},...territoryGroups]){
-  const b=btn(group.name,'work-filter',()=>{territoryFilter=group.id;renderTerritories()});b.setAttribute('aria-pressed',String(territoryFilter===group.id));bar.append(b)
- }
- const groups=territoryFilter==='all'?territoryGroups:territoryGroups.filter(x=>x.id===territoryFilter);
- const ids=[...new Set(groups.flatMap(x=>x.refs))];
- let count=0;for(const id of ids){const it=findRef(id);if(!it)continue;list.append(normCard(it));count++}
- if(!count){const empty=document.createElement('div');empty.className='work-empty';empty.textContent='В сохранённой базе нет подтверждённых норм по этому подразделу.';list.append(empty)}
+ const root=$('territories-screen');
+ if(root.dataset.ready==='true')return;
+ root.dataset.ready='true';
+ const search=$('tg-object-query'),counter=$('tg-object-count'),groups=[...root.querySelectorAll('.tg-object-group')];
+ const filterObjects=()=>{
+  const q=search.value.trim().toLocaleLowerCase('ru-RU');let num=0;
+  for(const group of groups){let visible=0;
+   for(const li of group.querySelectorAll('[data-tg-object]')){
+    const match=!q||(li.textContent+' '+li.dataset.tgObject).toLocaleLowerCase('ru-RU').includes(q);
+    li.hidden=!match;if(match){num++;visible++}
+   }
+   group.hidden=visible===0;
+  }
+  counter.textContent=num+' из 13';
+ };
+ search.addEventListener('input',filterObjects);
+ // Открываем именно встроенный в RMRP закон, без ссылок на статьи из РО.
+ root.addEventListener('click',async event=>{
+  const refButton=event.target.closest('button[data-territory-ref]');
+  if(refButton){const norm=findRef(refButton.dataset.territoryRef);if(norm)openReference(norm,refButton);return}
+  const button=event.target.closest('button[data-territory-law]');if(!button)return;
+  const article=String(button.dataset.territoryLaw||'1');
+  go('laws');await openLaw('law-26625');
+  const heads=[...$('law-document').querySelectorAll('.law-article')];
+  // В исходном документе перед основным текстом встречается оглавление. Выбираем последнюю подходящую статью.
+  const found=heads.filter(x=>new RegExp('^Статья\\s+'+article+'(?![\\d-])(?:\\.|\\s|$)','iu').test(x.textContent.trim())).at(-1);
+  if(found)found.scrollIntoView({behavior:'smooth',block:'start'});
+  else $('law-title').scrollIntoView({behavior:'smooth',block:'start'});
+ });
 }
 const escortGroups=[
  {title:'Маршрут и движение',description:'Временные ограничения движения и требования изменить маршрут в пределах полномочий ФСО.',refs:['ref-exact-fso-10-1-7','ref-exact-fso-11-1-3']},
