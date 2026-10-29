@@ -652,6 +652,25 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
 @media(max-width:620px){.work-screen{padding-top:26px}.work-norm-grid,.quiz-levels{grid-template-columns:1fr}.work-norm{padding:19px}.work-step{grid-template-columns:34px minmax(0,1fr);gap:8px}.work-step-body{padding:18px}.work-step-num{padding:10px 0}.quiz-levels button{min-height:115px}.portal-important-grid{grid-template-columns:1fr 1fr}.portal-topic{padding:17px 14px}.portal-topic b{font-size:14px}.portal-topic-index{font-size:9px}}
 @media(max-width:400px){.portal-important-grid{grid-template-columns:1fr}}
 
+
+/* Боковое меню всегда содержит локальные разделы и прокручивается по высоте. */
+@media(min-width:721px){
+ .rail{overflow:hidden}
+ .rail-nav{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:var(--line-hover) transparent;padding:1px 1px 8px 0}
+ .rail-nav::-webkit-scrollbar{width:4px}
+ .rail-nav::-webkit-scrollbar-thumb{background:var(--line-hover);border-radius:4px}
+ .rail-bottom{flex-shrink:0}
+}
+@media(max-width:720px){
+ .rail-nav{overflow-x:auto!important;overflow-y:hidden!important;min-height:0;scroll-behavior:smooth}
+ .rail-button{flex:0 0 68px}
+}
+@media(min-width:1201px){.portal-important-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+/* Восстанавливаем компактную, отредактированную автором главную без пустых кнопок. */
+.portal-search-section .portal-search-form{width:100%;margin-top:4px}
+.portal-search-section .portal-search-results{margin-top:14px}
+.portal-important-grid{margin-top:12px}
+.portal-home .portal-section-card>span:last-child:empty{display:none}
 </style>
 </head>
 <body>
@@ -694,67 +713,71 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
   <div class="brand"><span class="brand-mark" id="brand-mark" aria-hidden="true"><svg class="icon"><use href="#i-shield"/></svg></span><span class="brand-title">ФСО | RMRP — Тверской</span></div>
  </header>
  <main class="container">
-  <section class="home-screen portal-home" id="home-screen" aria-labelledby="home-title">
+  <section aria-labelledby="home-title" class="home-screen portal-home" id="home-screen">
 <div class="portal-hero">
-  <div class="portal-hero-content">
-    <h1 id="home-title">Памятка <strong>сотрудника ФСО</strong></h1>
-    <p>Правовые основания, действия в типовых ситуациях и законодательство проекта. Нужная информация без долгого поиска.</p>
-    <div class="portal-facts" aria-label="Содержание памятки"><span><b id="portal-ref-count">105</b> правовых оснований</span><span><b id="portal-sit-count">9</b> ситуаций</span><span><b id="portal-law-count">31</b> документ</span></div>
-  </div>
-  <aside class="portal-hero-side" aria-label="Быстрый переход">
-    <h2>Правовой справочник</h2>
-    <p>Полномочия ФСО и статьи законодательства, которые нужны во время службы.</p>
-    <button class="portal-hero-button" type="button" data-page="reference">Открыть справочник <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></button>
-  </aside>
+<div class="portal-hero-content">
+<h1 id="home-title">Памятка <strong>сотрудника ФСО</strong></h1>
+<p>Правовые основания, действия в типовых ситуациях и законодательство проекта. Нужная и быстрая информация без заморочек.</p>
+<div aria-label="Содержание памятки" class="portal-facts">
+<span><b id="portal-ref-count">105</b> правовых оснований</span>
+<span><b id="portal-sit-count">10</b> ситуаций</span>
+<span><b id="portal-law-count">31</b> документ</span>
 </div>
-<section class="portal-search-section" aria-label="Поиск по памятке">
-  <div class="portal-section-heading portal-search-heading"><div><h2>Поиск по всей памятке</h2><p>Ищите по ситуации, статье или названию закона.</p></div><span class="portal-shortcut">Ctrl + K</span></div>
-  <form class="search portal-search-form" id="section-search-form" role="search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><label class="visually-hidden" for="section-search">Поиск по материалам, нормам и документам</label><input type="search" id="section-search" autocomplete="off" placeholder="Например: задержание, пропуск, ст. 10…"><button type="submit">Найти</button></form>
-  <div class="portal-query-suggestions"><span>Часто ищут</span><button type="button" data-search-query="проверка документов">Документы</button><button type="button" data-search-query="задержание">Задержание</button><button type="button" data-search-query="кортеж">Кортеж</button><button type="button" data-search-query="Кремль">Кремль</button></div>
-  <p class="search-hint" id="search-hint" aria-live="polite">Поиск по статьям, ситуациям, понятиям и названиям законов.</p>
-  <div class="search-results portal-search-results" id="search-results" hidden></div>
-</section>
-<section class="portal-module" aria-labelledby="portal-important-title">
-  <div class="portal-section-heading"><div><h2 id="portal-important-title">Частые основания</h2><p>Нажмите на карточку, чтобы прочитать статью.</p></div><button type="button" class="portal-link" data-page="reference">Все основания ↗</button></div>
-  <div class="portal-important-grid">
-    <button type="button" class="portal-topic" data-reference-id="ref-exact-fso-10-1-2"><span class="portal-topic-index">01 / ДОКУМЕНТЫ</span><b>Проверка документов</b><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 2</small><span class="portal-topic-arrow">↗</span></button>
-    <button type="button" class="portal-topic" data-reference-id="ref-exact-fso-10-1-4"><span class="portal-topic-index">02 / ДОСТУП</span><b>Ограничение доступа</b><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 4</small><span class="portal-topic-arrow">↗</span></button>
-    <button type="button" class="portal-topic" data-reference-id="ref-exact-fso-10-1-6"><span class="portal-topic-index">03 / ЗАДЕРЖАНИЕ</span><b>Задержание при угрозе объекту</b><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 6</small><span class="portal-topic-arrow">↗</span></button>
-    <button type="button" class="portal-topic" data-reference-id="ref-exact-fso-10-1-7"><span class="portal-topic-index">04 / СОПРОВОЖДЕНИЕ</span><b>Перекрытие маршрута</b><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 7</small><span class="portal-topic-arrow">↗</span></button>
-  </div>
-</section>
-<section class="portal-module" aria-labelledby="portal-sections-title">
-  <div class="portal-section-heading"><div><h2 id="portal-sections-title">Разделы памятки</h2><p>Выберите нужную тему.</p></div></div>
-  <div class="portal-section-grid">
-    <button type="button" class="portal-section-card" data-page="situations"><span class="portal-section-icon"><svg class="icon"><use href="#i-message"/></svg></span><b>Ситуации</b><p>Действия сотрудника в частых случаях.</p><span>Открыть ↗</span></button>
-    <button type="button" class="portal-section-card" data-page="reference"><span class="portal-section-icon"><svg class="icon"><use href="#i-scale"/></svg></span><b>Правовой справочник</b><p>Полномочия и точные формулировки статей.</p><span>Открыть ↗</span></button>
-    <button type="button" class="portal-section-card" data-page="detention"><span class="portal-section-icon"><svg class="icon"><use href="#i-list"/></svg></span><b>Порядок задержания</b><p>Последовательность действий и права задержанного.</p><span>Открыть ↗</span></button>
-    <button type="button" class="portal-section-card" data-page="territories"><span class="portal-section-icon"><svg class="icon"><use href="#i-pin"/></svg></span><b>Территории и объекты</b><p>Режимы территорий, доступ, Кремль и КПП.</p><span>Открыть ↗</span></button>
-    <button type="button" class="portal-section-card" data-page="escort"><span class="portal-section-icon"><svg class="icon"><use href="#i-users"/></svg></span><b>Сопровождение и кортежи</b><p>Маршруты, полномочия и действия при угрозе.</p><span>Открыть ↗</span></button>
-    <button type="button" class="portal-section-card" data-page="laws"><span class="portal-section-icon"><svg class="icon"><use href="#i-book"/></svg></span><b>Законодательство</b><p>Тексты законов и кодексов.</p><span>Открыть ↗</span></button>
-    <button type="button" class="portal-section-card" data-page="concepts"><span class="portal-section-icon"><svg class="icon"><use href="#i-file"/></svg></span><b>Понятия и термины</b><p>Определения из законодательства.</p><span>Открыть ↗</span></button>
-    <button type="button" class="portal-section-card" data-page="favorites"><span class="portal-section-icon"><svg class="icon"><use href="#i-file"/></svg></span><b>Личная шпаргалка</b><p>Сохранённые статьи, ситуации и документы.</p><span>Открыть ↗</span></button>
-    <button type="button" class="portal-section-card" data-page="quiz"><span class="portal-section-icon"><svg class="icon"><use href="#i-shield"/></svg></span><b>Проверка знаний</b><p>Тесты трёх уровней сложности с разбором ответов.</p><span>Начать ↗</span></button>
-  </div>
+</div>
+<aside aria-label="Начало работы" class="portal-hero-side">
+<h2>Основания</h2>
+<p>Полезные основания из разных законодательств, которые помогут сотрудникам ФСО при выполнении служебных обязанностей.</p>
+<button class="portal-hero-button" data-page="reference" type="button">Открыть правовой справочник <svg class="icon"><use href="#i-arrow"></use></svg></button>
+</aside>
+</div>
+<section aria-label="Поиск по памятке" class="portal-search-section">
+<div class="portal-section-heading portal-search-heading"><div><span class="portal-kicker"></span><h2>Поиск по всей памятке</h2></div>
+
+
+</div><form class="search portal-search-form" id="section-search-form" role="search">
+<svg aria-hidden="true" class="icon"><use href="#i-search"></use></svg>
+<label class="visually-hidden" for="section-search">Поиск по материалам, нормам и документам</label>
+<input autocomplete="off" id="section-search" placeholder="Например: документы, задержание, пропуск, ст. 10..." type="search"/>
+<button type="submit">Найти</button>
+</form><p aria-live="polite" class="visually-hidden search-hint" id="search-hint"></p><div class="search-results portal-search-results" hidden="" id="search-results"></div></section>
+<section aria-labelledby="portal-important-title" class="portal-module">
+<div class="portal-section-heading"><div><span class="portal-kicker"></span><h2 id="portal-important-title">Частые основания</h2>
+
+</div></div><div class="portal-important-grid">
+<button class="portal-topic" data-reference-id="ref-exact-fso-10-1-2" type="button"><span class="portal-topic-index"></span><b>Проверка документов</b><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 2</small><span class="portal-topic-arrow">↗</span></button>
+<button class="portal-topic" data-reference-id="ref-exact-fso-10-1-4" type="button"><span class="portal-topic-index"></span><b>Ограничение доступа</b><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 4</small><span class="portal-topic-arrow">↗</span></button>
+<button class="portal-topic" data-reference-id="ref-exact-fso-10-1-6" type="button"><span class="portal-topic-index"></span><b>Задержание при угрозе объекту</b><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 6</small><span class="portal-topic-arrow">↗</span></button>
+</div></section>
+<section aria-labelledby="portal-sections-title" class="portal-module">
+<div class="portal-section-heading"><div><span class="portal-kicker">БИБЛИОТЕКА</span><h2 id="portal-sections-title">Разделы памятки</h2><p>Поиск нормы, последовательность действий или полный закон.</p></div></div>
+<div class="portal-section-grid">
+<button class="portal-section-card" data-page="situations" type="button"><span class="portal-section-icon"><svg class="icon"><use href="#i-message"></use></svg></span><b>Ситуации</b><p>Что делать в частых случаях.</p><span></span></button>
+<button class="portal-section-card" data-page="reference" type="button"><span class="portal-section-icon"><svg class="icon"><use href="#i-scale"></use></svg></span><b>Правовой справочник</b><p>Краткая суть и точные формулировки статей</p><span></span></button>
+<button class="portal-section-card" data-page="detention" type="button"><span class="portal-section-icon"><svg class="icon"><use href="#i-list"></use></svg></span><b>Порядок задержания</b><p>Последовательность и полезные подсказки при задержании.</p><span></span></button>
+<button class="portal-section-card" data-page="laws" type="button"><span class="portal-section-icon"><svg class="icon"><use href="#i-book"></use></svg></span><b>Законодательство</b><p>Полные тексты законов не переходя на форум.</p><span></span></button>
+<button class="portal-section-card" data-page="concepts" type="button"><span class="portal-section-icon"><svg class="icon"><use href="#i-file"></use></svg></span><b>Понятия и термины</b><p>Определения из законодательства простым языком.</p><span></span></button>
+</div>
 </section>
 <div class="portal-lower-grid">
-  <section class="portal-module portal-practice" aria-labelledby="portal-practice-title"><div class="portal-section-heading"><div><h2 id="portal-practice-title">Разбор ситуаций</h2></div><button class="portal-link" data-page="situations" type="button">Все ситуации ↗</button></div>
-    <div class="portal-situation-list">
-      <button data-situation-id="situation-1" type="button"><span class="portal-line-num">01</span><span><b>Человек возле охраняемого объекта</b><small>Проверка документов и пределы полномочий</small></span><span class="portal-line-arrow">↗</span></button>
-      <button data-situation-id="situation-3" type="button"><span class="portal-line-num">02</span><span><b>Не пропускают через КПП</b><small>Проверка, досмотр и условия доступа</small></span><span class="portal-line-arrow">↗</span></button>
-      <button data-situation-id="situation-6" type="button"><span class="portal-line-num">03</span><span><b>Подозрение в нарушении и задержание</b><small>Полномочия ФСО и передача задержанного</small></span><span class="portal-line-arrow">↗</span></button>
-    </div>
-  </section>
-  <section class="portal-module portal-docs" aria-labelledby="portal-docs-title"><div class="portal-section-heading"><div><h2 id="portal-docs-title">Основные документы</h2></div><button class="portal-link" data-page="laws" type="button">Все документы ↗</button></div>
-    <div class="portal-doc-list">
-      <button data-law-id="law-25069" type="button"><b>ФЗ «О Федеральной службе охраны»</b><span>№ 22-ФЗ ↗</span></button>
-      <button data-law-id="law-58424" type="button"><b>Процессуальный кодекс</b><span>ПК ↗</span></button>
-      <button data-law-id="law-26625" type="button"><b>ФЗ «О государственной собственности, закрытых и охраняемых территориях»</b><span>№ 86-ФЗ ↗</span></button>
-      <button data-law-id="law-58209" type="button"><b>Уголовный кодекс</b><span>УК ↗</span></button>
-    </div>
-  </section>
+<section aria-labelledby="portal-practice-title" class="portal-module portal-practice">
+<div class="portal-section-heading"><div><span class="portal-kicker"></span><h2 id="portal-practice-title">Разбор ситуаций</h2></div></div>
+<div class="portal-situation-list">
+<button data-situation-id="situation-1" type="button"><span class="portal-line-num">01</span><span><b>Человек возле охраняемого объекта</b><small>Первоначальные действия сотрудника</small></span><span class="portal-line-arrow">↗</span></button>
+<button data-situation-id="situation-3" type="button"><span class="portal-line-num">02</span><span><b>Действия на КПП</b><small>Проверка документов, досмотр и действия на КПП</small></span><span class="portal-line-arrow">↗</span></button>
+
 </div>
-<div class="portal-footer"><span>Неофициальная памятка ФСО RMRP · Тверской. При расхождениях проверяйте действующие правила сервера.</span><a href="./admin.html">Управление содержимым ↗</a></div>
+</section>
+<section aria-labelledby="portal-docs-title" class="portal-module portal-docs">
+<div class="portal-section-heading"><div><span class="portal-kicker"></span><h2 id="portal-docs-title">Основные документы</h2></div></div>
+<div class="portal-doc-list">
+<button data-law-id="law-25069" type="button"><b>ФЗ «О Федеральной службе охраны»</b><span>№ 22-ФЗ ↗</span></button>
+<button data-law-id="law-58424" type="button"><b>Процессуальный кодекс</b><span>ПК ↗</span></button>
+<button data-law-id="law-26625" type="button"><b>ФЗ «О государственной собственности, закрытых и охраняемых территориях»</b><span>№ 86-ФЗ ↗</span></button>
+<button data-law-id="law-58209" type="button"><b>Уголовный кодекс</b><span>УК ↗</span></button>
+</div>
+</section>
+</div>
+<div class="portal-footer"><span>Неофициальная памятка для проекта RMRP · Тверской. Приоритет у действующих нормативных актов сервера.</span><a href="./admin.html">Управление содержимым ↗</a></div>
 </section>
 <section class="subpage" id="section-screen" hidden aria-live="polite">
    <button class="back" data-page="home">← На главную</button>
@@ -1079,17 +1102,19 @@ async function loadPublic(){
   renderLawList();
   updatePortalStats();
   const allowed=new Set(), homeButton=nav.querySelector('[data-page="home"]');
+  // Локальные разделы не должны исчезать, когда сервер возвращает только разделы API.
+  const builtInPages=new Set(['home','situations','reference','concepts','detention','territories','escort','favorites','quiz','laws']);
   const sorted=[...(info.sections||[])].filter(s=>s.visible).sort((a,b)=>a.order-b.order);
   for(const item of sorted){
    if(!item.id || !/^[a-z0-9-]{1,80}$/.test(item.id))continue;
    const existing=sections[item.id];
-   sections[item.id]={title:item.title,description:item.description||'',keys:existing?.keys||[]};
+   if(!builtInPages.has(item.id)) sections[item.id]={title:item.title,description:item.description||'',keys:existing?.keys||[]};
    let button=nav.querySelector('[data-page="'+item.id+'"]');
    if(!button){button=document.createElement('button');button.className='rail-button';button.dataset.page=item.id;const icon=document.createElementNS('http://www.w3.org/2000/svg','svg');icon.setAttribute('class','icon');icon.setAttribute('aria-hidden','true');const use=document.createElementNS('http://www.w3.org/2000/svg','use');use.setAttribute('href','#i-file');icon.append(use);button.append(icon);const label=document.createElement('span');button.append(label)}
-   button.querySelector('span').textContent=item.title;button.setAttribute('aria-label',item.title);button.title=item.title;
-   nav.append(button);allowed.add(item.id);
+   if(!builtInPages.has(item.id)){button.querySelector('span').textContent=item.title;button.setAttribute('aria-label',item.title);button.title=item.title;nav.append(button)}
+   allowed.add(item.id);
   }
-  for(const button of [...nav.querySelectorAll('[data-page]')]){if(button.dataset.page!=='home'&&!allowed.has(button.dataset.page)&&!['laws','reference'].includes(button.dataset.page)){button.remove();delete sections[button.dataset.page]}}
+  for(const button of [...nav.querySelectorAll('[data-page]')]){if(!builtInPages.has(button.dataset.page)&&!allowed.has(button.dataset.page)){button.remove();delete sections[button.dataset.page]}}
   if(homeButton)nav.prepend(homeButton);
   document.querySelectorAll('.feature[data-page]').forEach(el=>{el.hidden=!allowed.has(el.dataset.page)});
   const page=decodeURIComponent(location.hash.slice(1))||'home';go(page);
