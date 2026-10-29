@@ -454,6 +454,146 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
 @media(max-width:620px){.det-screen{padding:33px 0 110px}.det-head h1{font-size:clamp(37px,9vw,53px)}.det-head p{font-size:14px}.det-quick{gap:9px;margin:25px 0}.det-stat{padding:17px 14px;min-height:108px}.det-stat b{font-size:22px}.det-stat span{font-size:11px}.det-aside{grid-template-columns:1fr}.det-aside-box{padding:17px}.det-nav{grid-template-columns:1fr 1fr;gap:3px}.det-nav button{font-size:11px;min-height:48px}.det-step{grid-template-columns:38px minmax(0,1fr);gap:9px;padding-bottom:15px}.det-step-index{width:38px;height:38px;border-radius:12px;font-size:12px}.det-step:not(:last-child)::before{left:18px;top:45px}.det-step-card{padding:19px 17px;border-radius:16px}.det-step h2{font-size:22px}.det-step-action{font-size:13px}.det-lead{padding:18px;gap:11px}.det-footnote{padding-left:47px}.det-extra{margin-left:47px}.home-quicklinks{margin-top:26px;gap:12px}}
 @media(prefers-reduced-motion:reduce){.det-screen{animation:none}}
 
+
+/* Стартовая страница V4. Не влияет на юридические тексты и разделы */
+.portal-home{padding-top:32px;padding-bottom:70px}
+.portal-home button{text-align:left}
+.portal-home .portal-hero{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(270px,.68fr);gap:42px;align-items:stretch;min-height:330px;padding:clamp(28px,3.4vw,54px);border:1px solid var(--line);border-radius:23px;background:radial-gradient(ellipse at 22% 110%,rgba(87,140,181,.15),transparent 55%),radial-gradient(ellipse at 90% 0%,rgba(99,146,185,.11),transparent 47%),var(--surface);overflow:hidden;position:relative}
+.portal-hero::before{content:"";position:absolute;pointer-events:none;inset:0;background:linear-gradient(118deg,transparent 50%,rgba(151,194,225,.035) 50%,transparent 82%)}
+.portal-hero-content,.portal-hero-side{position:relative;z-index:1}
+.portal-overline,.portal-kicker{display:block;font-size:10px;font-weight:780;letter-spacing:.16em;color:var(--accent-strong);text-transform:uppercase}
+.portal-overline{display:flex;align-items:center;gap:10px}
+.portal-signal{width:7px;height:7px;border-radius:50%;background:var(--accent-strong);box-shadow:0 0 0 4px var(--accent-wash)}
+.portal-hero h1{font-size:clamp(40px,4.1vw,67px);line-height:1.08;letter-spacing:-.07em;margin:25px 0 17px;font-weight:750;max-width:630px}
+.portal-hero h1 strong{font-weight:760;color:var(--accent)}
+.portal-hero-content>p{max-width:650px;color:var(--muted);line-height:1.65;font-size:14px;margin:0}
+.portal-facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+.portal-facts span{font-size:11px;color:var(--muted);padding:8px 11px;background:var(--accent-wash);border:1px solid color-mix(in srgb,var(--accent-strong) 12%,var(--line));border-radius:8px}
+.portal-facts b{color:var(--text);font-weight:780;font-size:13px;margin-right:3px}
+.portal-hero-side{border:1px solid var(--line);border-radius:16px;background:color-mix(in srgb,var(--surface2) 75%,transparent);padding:26px;align-self:stretch;display:flex;flex-direction:column;align-items:flex-start}
+.portal-side-label{font-size:10px;font-weight:750;letter-spacing:.13em;color:var(--accent);margin-bottom:18px}
+.portal-hero-side h2{font-size:clamp(21px,1.8vw,28px);font-weight:710;letter-spacing:-.047em;line-height:1.23;margin:0 0 13px}
+.portal-hero-side p{font-size:12px;line-height:1.7;color:var(--muted);margin:0 0 17px}
+.portal-hero-button{display:flex;align-items:center;gap:10px;margin-top:auto;border:1px solid var(--line-hover);background:var(--accent-wash);color:var(--accent);padding:12px 14px;border-radius:10px;font-weight:700;font-size:11px;transition:background .2s}
+.portal-hero-button:hover{background:color-mix(in srgb,var(--accent-strong) 22%,var(--surface))}.portal-hero-button .icon{width:15px;height:15px}
+.portal-search-section{margin-top:24px;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:27px 31px;position:relative}
+.portal-section-heading{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:18px}
+.portal-section-heading h2{font-size:clamp(23px,2.1vw,30px);letter-spacing:-.055em;line-height:1.2;font-weight:710;margin:7px 0 0}
+.portal-section-heading p{font-size:12px;color:var(--muted);margin:7px 0 0}
+.portal-search-heading{margin-bottom:18px}
+.portal-shortcut{border:1px solid var(--line);padding:6px 9px;border-radius:7px;font-size:11px;color:var(--faint);font-weight:700}
+.portal-search-form{width:100%;max-width:none;min-height:58px;border-radius:11px;background:var(--input-bg)}
+.portal-search-form input{font-size:14px}
+.portal-query-suggestions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:14px}
+.portal-query-suggestions span{color:var(--faint);font-size:11px;margin-right:6px}
+.portal-query-suggestions button{border:1px solid var(--line);background:var(--surface2);font-size:11px;padding:7px 11px;border-radius:8px;color:var(--muted)}
+.portal-query-suggestions button:hover{border-color:var(--line-hover);color:var(--text)}
+.portal-search-section .search-hint{font-size:11px;margin-top:10px;color:var(--faint)}
+.portal-search-section .portal-search-results{width:100%;margin-top:6px;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.portal-search-results button{min-height:70px;border:1px solid var(--line);padding:12px 14px;background:var(--surface2);border-radius:10px;display:grid;gap:3px}
+.portal-search-results button b{font-size:12px;line-height:1.4;font-weight:710;color:var(--text)}
+.portal-search-results button small{font-size:10px;color:var(--muted);line-height:1.4}
+.portal-search-results button:hover{border-color:var(--accent-strong);transform:translateY(-1px)}
+.portal-module{margin-top:42px}
+.portal-link{border:0;background:transparent;color:var(--accent-strong);font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px;white-space:nowrap;padding:6px 0}.portal-link:hover{text-decoration:underline}.portal-link .icon{width:15px;height:15px}
+.portal-important-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.portal-topic{position:relative;min-height:170px;border:1px solid var(--line);background:var(--surface);padding:22px 20px;border-radius:15px;display:flex;flex-direction:column;transition:transform .22s,border-color .2s}
+.portal-topic:hover{border-color:var(--line-hover);transform:translateY(-3px)}
+.portal-topic-index{color:var(--accent-strong);font-size:9px;font-weight:780;letter-spacing:.09em}
+.portal-topic b{display:block;font-size:17px;font-weight:700;letter-spacing:-.04em;line-height:1.25;margin-top:22px;max-width:220px}
+.portal-topic small{font-size:10px;line-height:1.45;color:var(--muted);margin-top:auto;padding-top:10px;max-width:90%}
+.portal-topic-arrow{position:absolute;right:17px;bottom:15px;color:var(--accent-strong);font-size:16px}
+.portal-section-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.portal-section-card{min-height:180px;border-radius:15px;border:1px solid var(--line);background:var(--surface);padding:23px;display:flex;flex-direction:column;align-items:flex-start;transition:border-color .2s,transform .2s}
+.portal-section-card:hover{border-color:var(--line-hover);transform:translateY(-2px)}
+.portal-section-icon{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:var(--accent-strong);background:var(--accent-wash);margin-bottom:14px}
+.portal-section-icon .icon{width:19px;height:19px}
+.portal-section-card b{font-size:16px;font-weight:700;letter-spacing:-.035em;line-height:1.3}
+.portal-section-card p{font-size:12px;color:var(--muted);line-height:1.55;margin:8px 0 12px}
+.portal-section-card>span:last-child{font-size:11px;font-weight:700;color:var(--accent-strong);margin-top:auto}
+.portal-lower-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;margin-top:0}
+.portal-lower-grid .portal-module{min-width:0}
+.portal-situation-list,.portal-doc-list{display:grid;gap:0;border:1px solid var(--line);background:var(--surface);border-radius:16px;overflow:hidden}
+.portal-situation-list button,.portal-doc-list button{display:flex;align-items:center;gap:15px;min-height:77px;padding:16px 19px;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--text)}
+.portal-situation-list button:last-child,.portal-doc-list button:last-child{border-bottom:0}
+.portal-situation-list button:hover,.portal-doc-list button:hover{background:var(--accent-wash)}
+.portal-situation-list button>span:nth-child(2){flex:1;min-width:0}
+.portal-line-num{font-size:12px;font-weight:800;color:var(--accent);background:var(--accent-wash);padding:7px 8px;border-radius:7px}
+.portal-situation-list b{font-size:12px;display:block;font-weight:700}
+.portal-situation-list small{font-size:11px;display:block;color:var(--muted);padding-top:4px}
+.portal-line-arrow{color:var(--accent);margin-left:auto}
+.portal-doc-list button{justify-content:space-between;gap:15px;min-height:67px}
+.portal-doc-list b{font-size:12px;font-weight:680;max-width:350px}
+.portal-doc-list span{color:var(--accent-strong);font-size:11px;font-weight:710;white-space:nowrap}
+.portal-footer{border-top:1px solid var(--line);padding-top:20px;margin-top:50px;display:flex;gap:20px;justify-content:space-between;align-items:center;color:var(--faint);font-size:11px}
+.portal-footer a{color:var(--muted);text-decoration:none;white-space:nowrap}.portal-footer a:hover{color:var(--accent-strong)}
+@media(max-width:1200px){.portal-home .portal-hero{grid-template-columns:1.3fr 1fr;gap:18px;padding:28px}.portal-hero h1{font-size:50px}.portal-important-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.portal-section-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:900px){.portal-home .portal-hero{grid-template-columns:1fr}.portal-hero-side{padding:19px}.portal-hero-side h2 br{display:none}.portal-hero-button{margin-top:0}.portal-lower-grid{grid-template-columns:1fr}.portal-module{margin-top:30px}}
+@media(max-width:600px){.portal-home{padding-top:18px}.portal-home .portal-hero{padding:24px 19px;border-radius:17px;gap:23px}.portal-hero h1{font-size:clamp(34px,8vw,48px)}.portal-hero-content>p{font-size:12px}.portal-facts{margin-top:20px;gap:6px}.portal-facts span{font-size:10px}.portal-search-section{padding:20px 17px;border-radius:16px;margin-top:14px}.portal-search-form{min-height:56px}.portal-search-form input{font-size:12px}.portal-query-suggestions{gap:6px}.portal-query-suggestions button{font-size:10px}.portal-section-heading{align-items:flex-start}.portal-section-heading h2{font-size:24px}.portal-shortcut{display:none}.portal-important-grid,.portal-section-grid{grid-template-columns:1fr}.portal-topic{min-height:138px}.portal-topic b{margin-top:14px}.portal-section-card{min-height:145px}.portal-search-section .portal-search-results{grid-template-columns:1fr}.portal-footer{align-items:flex-start;flex-direction:column;gap:9px}.portal-link{font-size:11px}}
+
+
+/* V5: heavily darkened illustrations, strictly on homepage. */
+.portal-home .portal-hero {
+ background:#05080d;
+ isolation:isolate;
+ box-shadow:inset 0 1px 0 rgba(170,205,235,.04),0 20px 80px rgba(0,0,0,.15);
+}
+.portal-home .portal-hero::before {
+ content:"";
+ position:absolute;z-index:0;inset:0;pointer-events:none;
+ background-image:
+  linear-gradient(90deg,rgba(0,0,0,.94) 0%,rgba(0,0,0,.87) 29%,rgba(0,0,0,.63) 55%,rgba(0,0,0,.51) 100%),
+  linear-gradient(0deg,rgba(0,0,0,.37),rgba(0,0,0,.09) 48%,rgba(0,0,0,.26)),
+  url('./assets/senate-palace.webp');
+ background-repeat:no-repeat;
+ background-position:center,center,center 44%;
+ background-size:cover;
+}
+.portal-home .portal-hero::after {
+ content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+ background:linear-gradient(180deg,transparent 60%,rgba(0,0,0,.25));
+}
+.portal-home .portal-hero-content,.portal-home .portal-hero-side {z-index:1}
+.portal-home .portal-hero-side {
+ background:rgba(4,8,12,.83);
+ border-color:rgba(113,151,179,.22);
+ backdrop-filter:blur(6px);
+ -webkit-backdrop-filter:blur(6px);
+}
+.portal-home .portal-facts span{background:rgba(5,13,21,.77);border-color:rgba(135,169,202,.22)}
+.portal-home .portal-section-card {position:relative;overflow:hidden;isolation:isolate;background:var(--surface)}
+.portal-home .portal-section-card::before {content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:0}
+/* Only three homepage cards get art; detention stays completely text-only. */
+.portal-home .portal-section-card[data-page="situations"]::before,
+.portal-home .portal-section-card[data-page="reference"]::before,
+.portal-home .portal-section-card[data-page="laws"]::before{
+ opacity:1;
+ background-size:cover;
+ background-position:center;
+ background-repeat:no-repeat;
+}
+.portal-home .portal-section-card[data-page="situations"]::before{
+ background-image:linear-gradient(90deg,rgba(2,5,9,.93),rgba(2,5,9,.78)),url('./assets/checkpoint.webp');
+}
+.portal-home .portal-section-card[data-page="reference"]::before{
+ background-image:linear-gradient(90deg,rgba(2,5,9,.94),rgba(2,5,9,.80)),url('./assets/legal.webp');
+}
+.portal-home .portal-section-card[data-page="laws"]::before{
+ background-image:linear-gradient(90deg,rgba(2,5,9,.94),rgba(2,5,9,.78)),url('./assets/books.webp');
+}
+.portal-home .portal-section-card[data-page="situations"]:hover::before,
+.portal-home .portal-section-card[data-page="reference"]:hover::before,
+.portal-home .portal-section-card[data-page="laws"]:hover::before{
+ filter:brightness(1.07);
+}
+.portal-home .portal-section-card[data-page="detention"]::before{display:none!important}
+@media(max-width:720px){
+ .portal-home .portal-hero::before{background-position:center,center,62% center;background-image:
+ linear-gradient(90deg,rgba(0,0,0,.94),rgba(0,0,0,.77)),
+ linear-gradient(0deg,rgba(0,0,0,.72),transparent 60%,rgba(0,0,0,.12)),
+ url('./assets/senate-palace.webp');}
+}
+
 </style>
 </head>
 <body>
@@ -492,36 +632,87 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
   <div class="brand"><span class="brand-mark" id="brand-mark" aria-hidden="true"><svg class="icon"><use href="#i-shield"/></svg></span><span class="brand-title">ФСО / RMRP — Тверской</span></div>
  </header>
  <main class="container">
-  <section class="home-screen" id="home-screen" aria-labelledby="home-title">
-   <div class="home-grid">
-    <div class="intro">
-     <div class="eyebrow">Служебная памятка</div>
-     <h1 id="home-title">Памятка<br><strong>сотрудника.</strong></h1>
-     <p class="intro-desc">Законодательство и правовые основания RMRP «Тверской».</p>
-     <form class="search" id="section-search-form" role="search">
-      <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
-      <label class="visually-hidden" for="section-search">Поиск раздела</label>
-      <input id="section-search" autocomplete="off" placeholder="Название раздела…">
-      <button type="submit">Найти</button>
-     </form>
-     <div class="search-hint" id="search-hint" aria-live="polite">Поиск по разделам памятки.</div>
-     <div class="search-results" id="search-results" hidden></div>
-     <a class="admin-link" href="./admin.html"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><span>Админ-панель</span><svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+  <section class="home-screen portal-home" id="home-screen" aria-labelledby="home-title">
+    <div class="portal-hero">
+      <div class="portal-hero-content">
+        <div class="portal-overline"><span class="portal-signal"></span> ФСО · RMRP · Тверской</div>
+        <h1 id="home-title">Памятка <strong>сотрудника ФСО.</strong></h1>
+        <p>Правовые основания, действия в типовых ситуациях и законодательство проекта. Нужная информация без лишних переходов.</p>
+        <div class="portal-facts" aria-label="Содержание памятки">
+          <span><b id="portal-ref-count">105</b> правовых оснований</span>
+          <span><b id="portal-sit-count">10</b> практических материалов</span>
+          <span><b id="portal-law-count">31</b> документ</span>
+        </div>
+      </div>
+      <aside class="portal-hero-side" aria-label="Начало работы">
+        <span class="portal-side-label">БЫСТРЫЙ ОРИЕНТИР</span>
+        <h2>Сначала основание. Потом действие.</h2>
+        <p>Проверь полномочие, правовую норму и применимость к конкретной ситуации. Текст закона всегда важнее краткой подсказки.</p>
+        <button type="button" class="portal-hero-button" data-page="reference">Открыть правовой справочник <svg class="icon"><use href="#i-arrow"/></svg></button>
+      </aside>
     </div>
-    <div class="features" aria-label="Основные разделы">
-     <button class="feature feature-situations" data-page="situations"><span class="number">01</span><h2>Ситуации</h2><p>Действия сотрудника в различных ситуациях.</p><span class="arrow">Открыть <svg class="icon"><use href="#i-arrow"/></svg></span><span class="ghost-number" aria-hidden="true">01</span></button>
-     <button class="feature feature-reference" data-page="reference"><span class="number">02</span><h2>Правовой<br>справочник</h2><p>Краткая суть на карточке, текст нормы при открытии.</p><span class="arrow">Открыть <svg class="icon"><use href="#i-arrow"/></svg></span></button>
-     <button class="feature feature-detention" data-page="detention"><span class="number">03</span><h2>Порядок<br>задержания</h2><p>Последовательность действий.</p><span class="arrow">Открыть <svg class="icon"><use href="#i-arrow"/></svg></span></button>
+
+    <section class="portal-search-section" aria-label="Поиск по памятке">
+      <div class="portal-section-heading portal-search-heading"><div><span class="portal-kicker">НАЙТИ НУЖНОЕ</span><h2>Поиск по всей памятке</h2></div><span class="portal-shortcut">Ctrl + K</span></div>
+      <form class="search portal-search-form" id="section-search-form" role="search">
+        <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
+        <label class="visually-hidden" for="section-search">Поиск по материалам, нормам и документам</label>
+        <input id="section-search" type="search" autocomplete="off" placeholder="Например: документы, задержание, пропуск, ст. 10...">
+        <button type="submit">Найти</button>
+      </form>
+      <div class="portal-query-suggestions" aria-label="Примеры запросов">
+        <span>Часто ищут</span>
+        <button type="button" data-search-query="задержание">задержание</button>
+        <button type="button" data-search-query="проверка документов">проверка документов</button>
+        <button type="button" data-search-query="КПП">КПП</button>
+        <button type="button" data-search-query="досмотр">досмотр</button>
+        <button type="button" data-search-query="территория">территория</button>
+      </div>
+      <div class="search-hint" id="search-hint" aria-live="polite">Поиск по статьям, ситуациям, понятиям, названиям законов и разделам.</div>
+      <div class="search-results portal-search-results" id="search-results" hidden></div>
+    </section>
+
+    <section class="portal-module" aria-labelledby="portal-important-title">
+      <div class="portal-section-heading"><div><span class="portal-kicker">ЧТО НУЖНО В СЛУЖБЕ</span><h2 id="portal-important-title">Частые правовые основания</h2><p>Сразу открывается точный текст нормы, не отдельная страница с поиском.</p></div><button class="portal-link" type="button" data-page="reference">Все основания <svg class="icon"><use href="#i-arrow"/></svg></button></div>
+      <div class="portal-important-grid">
+        <button class="portal-topic" type="button" data-reference-id="ref-exact-fso-10-1-2"><span class="portal-topic-index">01 / ПОЛНОМОЧИЯ</span><b>Проверка документов</b><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 2</small><span class="portal-topic-arrow">↗</span></button>
+        <button class="portal-topic" type="button" data-reference-id="ref-exact-fso-10-1-4"><span class="portal-topic-index">02 / ДОСТУП</span><b>Ограничение доступа</b><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 4</small><span class="portal-topic-arrow">↗</span></button>
+        <button class="portal-topic" type="button" data-reference-id="ref-exact-fso-10-1-6"><span class="portal-topic-index">03 / ЗАДЕРЖАНИЕ</span><b>Задержание при угрозе объекту</b><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 6</small><span class="portal-topic-arrow">↗</span></button>
+        <button class="portal-topic" type="button" data-reference-id="ref-exact-fso-11-1-5"><span class="portal-topic-index">04 / ТРЕБОВАНИЯ</span><b>Прекращение угрожающих действий</b><small>ФЗ о ФСО · ст. 11 · ч. 1 · п. 5</small><span class="portal-topic-arrow">↗</span></button>
+      </div>
+    </section>
+
+    <section class="portal-module" aria-labelledby="portal-sections-title">
+      <div class="portal-section-heading"><div><span class="portal-kicker">БИБЛИОТЕКА</span><h2 id="portal-sections-title">Разделы памятки</h2><p>Поиск нормы, последовательность действий или полный закон.</p></div></div>
+      <div class="portal-section-grid">
+        <button class="portal-section-card" type="button" data-page="situations"><span class="portal-section-icon"><svg class="icon"><use href="#i-message"/></svg></span><b>Ситуации</b><p>Что делать в типовых случаях. Пошаговые сценарии и правовые основания.</p><span>Перейти в раздел ↗</span></button>
+        <button class="portal-section-card" type="button" data-page="reference"><span class="portal-section-icon"><svg class="icon"><use href="#i-scale"/></svg></span><b>Правовой справочник</b><p>Краткая суть, точные формулировки и ссылки на нормы.</p><span>Перейти в раздел ↗</span></button>
+        <button class="portal-section-card" type="button" data-page="detention"><span class="portal-section-icon"><svg class="icon"><use href="#i-list"/></svg></span><b>Порядок задержания</b><p>Последовательность, ограничения полномочий и права задержанного.</p><span>Перейти в раздел ↗</span></button>
+        <button class="portal-section-card" type="button" data-page="laws"><span class="portal-section-icon"><svg class="icon"><use href="#i-book"/></svg></span><b>Законодательство</b><p>Полные тексты кодексов и законов с навигацией по статьям.</p><span>Перейти в раздел ↗</span></button>
+        <button class="portal-section-card" type="button" data-page="concepts"><span class="portal-section-icon"><svg class="icon"><use href="#i-file"/></svg></span><b>Понятия и термины</b><p>Определения из законодательства проекта простым языком.</p><span>Перейти в раздел ↗</span></button>
+      </div>
+    </section>
+
+    <div class="portal-lower-grid">
+      <section class="portal-module portal-practice" aria-labelledby="portal-practice-title">
+        <div class="portal-section-heading"><div><span class="portal-kicker">НА ПРАКТИКЕ</span><h2 id="portal-practice-title">Разбор ситуаций</h2></div><button class="portal-link" type="button" data-page="situations">Все ситуации ↗</button></div>
+        <div class="portal-situation-list">
+          <button type="button" data-situation-id="situation-1"><span class="portal-line-num">01</span><span><b>Человек возле охраняемого объекта</b><small>Первоначальные действия сотрудника</small></span><span class="portal-line-arrow">↗</span></button>
+          <button type="button" data-situation-id="situation-3"><span class="portal-line-num">02</span><span><b>Не пропускают через КПП</b><small>Проверка основания для прохода</small></span><span class="portal-line-arrow">↗</span></button>
+          <button type="button" data-situation-id="situation-6"><span class="portal-line-num">03</span><span><b>Подозрение в нарушении и задержание</b><small>Основание и пределы полномочий</small></span><span class="portal-line-arrow">↗</span></button>
+        </div>
+      </section>
+      <section class="portal-module portal-docs" aria-labelledby="portal-docs-title">
+        <div class="portal-section-heading"><div><span class="portal-kicker">НОРМАТИВНАЯ БАЗА</span><h2 id="portal-docs-title">Основные документы</h2></div><button class="portal-link" type="button" data-page="laws">Все документы ↗</button></div>
+        <div class="portal-doc-list">
+          <button type="button" data-law-id="law-25069"><b>ФЗ «О Федеральной службе охраны»</b><span>№ 22-ФЗ ↗</span></button>
+          <button type="button" data-law-id="law-58424"><b>Процессуальный кодекс</b><span>ПК ↗</span></button>
+          <button type="button" data-law-id="law-26625"><b>ФЗ «О государственной собственности, закрытых и охраняемых территориях»</b><span>№ 86-ФЗ ↗</span></button>
+          <button type="button" data-law-id="law-58209"><b>Уголовный кодекс</b><span>УК ↗</span></button>
+        </div>
+      </section>
     </div>
-   </div>
-   <div class="home-quicklinks" aria-label="Быстрые переходы">
-    <strong>Быстрый доступ</strong>
-    <div class="home-quicklinks-grid">
-     <button type="button" data-det-step="0">Основания задержания ↗</button>
-     <button type="button" data-det-step="3">Права задержанного ↗</button>
-     <button type="button" data-page="laws">Тексты законов ↗</button>
-    </div>
-   </div>
+    <div class="portal-footer"><span>Неофициальная памятка для проекта RMRP · Тверской. Приоритет у действующих нормативных актов сервера.</span><a href="./admin.html">Управление содержимым ↗</a></div>
   </section>
   <section class="subpage" id="section-screen" hidden aria-live="polite">
    <button class="back" data-page="home">← На главную</button>
@@ -813,6 +1004,7 @@ async function loadPublic(){
    ...remoteItems.filter(x=>!localIds.has(x.id)&&(x.sectionId!=='reference'||(getExactQuote(x)&&!localCitations.has(getReferenceCitation(x).toLocaleLowerCase('ru-RU')))))];
   renderReference();
   renderLawList();
+  updatePortalStats();
   const allowed=new Set(), homeButton=nav.querySelector('[data-page="home"]');
   const sorted=[...(info.sections||[])].filter(s=>s.visible).sort((a,b)=>a.order-b.order);
   for(const item of sorted){
@@ -870,19 +1062,73 @@ function matchingSections(query){
  if(!q)return[];
  return Object.keys(sections).filter(id=>id!=='home'&&[sections[id].title,...sections[id].keys].some(x=>x.toLocaleLowerCase('ru-RU').includes(q)));
 }
+// Search not only menu headings but the exact norm, title of an actual law and scenario.
+function portalSearchIndex(){
+ const result=[];
+ for(const id of Object.keys(sections))if(id!=='home')result.push({type:'section',title:sections[id].title,subtitle:'Раздел памятки',terms:[sections[id].title,...sections[id].keys].join(' '),id});
+ for(const it of publicMaterials){
+  const type=it.sectionId==='reference'?'reference':(it.sectionId==='situations'?'situation':(it.sectionId==='concepts'?'concept':'other'));
+  if(type==='other')continue;
+  const text=type==='reference'?getExactQuote(it):String(it.body||'')+(Array.isArray(it.steps)?it.steps.map(x=>[x.title,x.action].join(' ')).join(' '):'');
+  result.push({type,id:it.id,title:it.title,subtitle:type==='reference'?getReferenceCitation(it):sections[it.sectionId]?.title||'',terms:[it.title,it.summary||'',type==='reference'?getReferenceCitation(it):'',text].join(' ').slice(0,20000)});
+ }
+ for(const doc of lawRecords())result.push({type:'law',id:doc.id,title:doc.title,subtitle:'Полный текст документа',terms:doc.title+' '+(doc.title.includes('Процессуальн')?'ПК ':doc.title.includes('Уголовн')?'УК ':'')});
+ return result;
+}
+function portalSearchHits(query){
+ const terms=query.trim().toLocaleLowerCase('ru-RU').split(/\s+/).filter(Boolean);
+ if(!terms.length)return[];
+ return portalSearchIndex().map(it=>{
+  const head=(it.title+' '+it.subtitle).toLocaleLowerCase('ru-RU');
+  const hay=it.terms.toLocaleLowerCase('ru-RU');
+  if(!terms.every(term=>hay.includes(term)))return null;
+  const score=terms.reduce((sum,term)=>sum+(head.includes(term)?5:1),0)+(it.type==='reference'?1:0);
+  return {...it,score};
+ }).filter(Boolean).sort((a,b)=>b.score-a.score||a.title.localeCompare(b.title,'ru')).slice(0,18);
+}
+function openPortalHit(it){
+ if(it.type==='section'){go(it.id);return}
+ if(it.type==='reference'){go('reference');const item=publicMaterials.find(x=>x.id===it.id);if(item)openReference(item);return}
+ if(it.type==='law'){go('laws');openLaw(it.id);return}
+ if(it.type==='situation'||it.type==='concept'){
+  const section=it.type==='situation'?'situations':'concepts';go(section);
+  const group=publicMaterials.filter(x=>x.sectionId===section),idx=group.findIndex(x=>x.id===it.id);
+  const box=$('material-list').querySelectorAll('.material-card')[idx];if(box){box.open=true;box.scrollIntoView({block:'start',behavior:'smooth'})}
+ }
+}
 function showSearchResults(){
- const items=matchingSections($('section-search').value),panel=$('search-results');
+ const query=$('section-search').value,items=portalSearchHits(query),panel=$('search-results');
  panel.replaceChildren();
- if(!items.length){panel.hidden=true;$('search-hint').textContent=$('section-search').value.trim()?'Раздел не найден.':'Поиск по разделам памятки.';return}
- if(items.length===1){$('search-hint').textContent='Найден 1 раздел.'}else{$('search-hint').textContent=`Найдено разделов: ${items.length}.`}
- items.forEach(id=>{const b=document.createElement('button');b.type='button';b.dataset.page=id;b.textContent=sections[id].title;panel.append(b)});
+ if(!query.trim()){panel.hidden=true;$('search-hint').textContent='Поиск по статьям, ситуациям, понятиям, названиям законов и разделам.';return}
+ if(!items.length){panel.hidden=true;$('search-hint').textContent='Ничего не найдено. Уточните запрос или попробуйте другое слово.';return}
+ $('search-hint').textContent=items.length===18?'Показаны первые 18 результатов. Уточните запрос для более точного поиска.':'Найдено материалов: '+items.length;
+ for(const it of items){
+  const b=document.createElement('button');b.type='button';
+  const head=document.createElement('b');head.textContent=it.title;
+  const sub=document.createElement('small');sub.textContent=it.subtitle;
+  b.append(head,sub);b.addEventListener('click',()=>openPortalHit(it));panel.append(b);
+ }
  panel.hidden=false;
 }
 $('section-search').addEventListener('input',showSearchResults);
 $('section-search-form').addEventListener('submit',event=>{
- event.preventDefault();const items=matchingSections($('section-search').value);
- if(items.length===1)go(items[0]);else{showSearchResults();if(!items.length)$('section-search').focus()}
+ event.preventDefault();const items=portalSearchHits($('section-search').value);
+ if(items.length===1)openPortalHit(items[0]);else{showSearchResults();if(!items.length)$('section-search').focus()}
 });
+for(const chip of document.querySelectorAll('[data-search-query]'))chip.addEventListener('click',()=>{
+ $('section-search').value=chip.dataset.searchQuery;showSearchResults();$('section-search').focus({preventScroll:true});$('section-search').scrollIntoView({block:'center',behavior:'smooth'});
+});
+for(const card of document.querySelectorAll('[data-reference-id]'))card.addEventListener('click',()=>{
+ const item=publicMaterials.find(x=>x.id===card.dataset.referenceId);if(!item)return;
+ go('reference');openReference(item,card);
+});
+for(const card of document.querySelectorAll('[data-situation-id]'))card.addEventListener('click',()=>openPortalHit({type:'situation',id:card.dataset.situationId}));
+for(const card of document.querySelectorAll('[data-law-id]'))card.addEventListener('click',()=>{go('laws');openLaw(card.dataset.lawId)});
+function updatePortalStats(){
+ $('portal-ref-count').textContent=referenceItems().length;
+ $('portal-sit-count').textContent=publicMaterials.filter(it=>it.sectionId==='situations').length;
+ $('portal-law-count').textContent=lawRecords().length;
+}
 document.addEventListener('keydown',event=>{
  if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='k'){
   event.preventDefault();go('home');$('section-search').focus();$('section-search').scrollIntoView({block:'center',behavior:'smooth'});
@@ -1045,6 +1291,7 @@ $('law-clear-search').addEventListener('click',()=>{$('law-text-search').value='
 
 window.addEventListener('hashchange',()=>go(decodeURIComponent(location.hash.slice(1))));
 go(decodeURIComponent(location.hash.slice(1))||'home');
+updatePortalStats();
 loadPublic();
 // Законы встроены в текущий HTML: импорт и manifest не нужны.
 
