@@ -977,10 +977,6 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
 .ref-mode{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 4px}
 .ref-mode button{border:1px solid var(--line);padding:10px 16px;border-radius:11px;background:var(--surface);font-size:12px;color:var(--muted);font-weight:650}
 .ref-mode button.active{background:var(--accent-wash);color:var(--accent-strong);border-color:var(--line-hover)}
-.reference-entry .ref-condition{display:block;font-size:12px;margin-top:8px;color:var(--text);line-height:1.55}
-.reference-entry .ref-restriction{display:block;font-size:12px;margin-top:3px;color:var(--muted);line-height:1.55}
-.reference-modal .ref-editor-note{margin:16px 0 2px;border:1px solid var(--line);background:var(--surface2);border-radius:12px;padding:15px;font-size:13px;line-height:1.65}
-.reference-modal .ref-editor-note b{color:var(--accent-strong)}
 .scenario-screen{padding:45px 0 110px}
 .scenario-heading{display:flex;justify-content:space-between;align-items:end;gap:18px;margin-bottom:29px}
 .scenario-eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-strong);font-weight:750}
@@ -1473,8 +1469,6 @@ function renderReference(){
   const heading=document.createElement('b');heading.textContent=item.title||'Основание';
   const desc=document.createElement('span');desc.className='ref-summary';desc.textContent=item.summary||'';
   left.append(heading,desc);
-  if(item.useWhen){const w=document.createElement('span');w.className='ref-condition';w.textContent='Когда применяется. '+item.useWhen;left.append(w)}
-  if(item.limitNote){const lim=document.createElement('span');lim.className='ref-restriction';lim.textContent='Ограничение. '+item.limitNote;left.append(lim)}
   const citation=document.createElement('span');citation.className='reference-citation';citation.textContent=getReferenceCitation(item);
   button.append(left,citation);button.addEventListener('click',()=>openReference(item,button));list.append(button);
  }
@@ -1483,9 +1477,6 @@ function renderReferenceModal(item){
  const wrap=document.createElement('div');
  const title=document.createElement('h2');title.id='reference-modal-title';title.textContent=item.title;wrap.append(title);
  const citation=document.createElement('div');citation.className='ref-citation-line';citation.textContent=item.fullCitation||getReferenceCitation(item);wrap.append(citation);wrap.append(bookmarkButton('ref',item.id,'reference-fav'));
-  if(item.useWhen||item.limitNote){const note=document.createElement('div');note.className='ref-editor-note';
-  if(item.useWhen){const p=document.createElement('div');p.textContent='Когда применяется. '+item.useWhen;note.append(p)}
-  if(item.limitNote){const p=document.createElement('div');p.textContent='Ограничение. '+item.limitNote;note.append(p)}wrap.append(note)}
   const norm=document.createElement('div');norm.className='ref-law-text';
   const exact=getExactQuote(item);
   if(exact){norm.textContent=exact;}
