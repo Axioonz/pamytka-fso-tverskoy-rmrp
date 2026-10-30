@@ -1,3 +1,2 @@
-// После создания НОВОЙ функции Yandex Cloud Functions впишите сюда её URL.
-// Пример: window.FSO_API_URL = 'https://functions.yandexcloud.net/ВАШ_ID';
-window.FSO_API_URL = 'https://functions.yandexcloud.net/d4eun1d2cak00cqm3n8s';
+/* Подключение сервера необязательно. Для самостоятельной работы ничего настраивать не требуется. */
+window.FSO_API_URL = window.FSO_API_URL || "";
