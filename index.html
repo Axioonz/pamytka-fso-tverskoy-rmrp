@@ -19,35 +19,83 @@
   без замены файла css/основной-стиль.css.
 -->
 <style id="fso-ui-fixes">
-/* Иконки бокового меню: один ровный фон у всей кнопки, без дополнительной подложки под SVG. */
+/* Боковое меню: иконки по центру кнопки, без второй подложки. */
 .rail-button > svg.icon,
 .theme-toggle > svg.icon,
 .rail-button.active > svg.icon {
-  display: block !important;
-  box-sizing: border-box !important;
-  width: 22px !important;
-  height: 22px !important;
-  flex: 0 0 22px !important;
-  align-self: center;
-  padding: 0 !important;
-  margin: 0 !important;
-  border: 0 !important;
-  border-radius: 0 !important;
-  outline: 0 !important;
-  background: transparent !important;
-  box-shadow: none !important;
+  display:block !important;
+  width:22px !important;
+  height:22px !important;
+  flex:0 0 22px !important;
+  box-sizing:border-box !important;
+  padding:0 !important;
+  margin:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
 }
-/* Цвет наследуется от состояния кнопки, без второго квадрата. */
-.rail-button > svg.icon { color: inherit !important; }
-/* Надпись в кнопке поиска располагается строго по центру. */
+.rail-button > svg.icon {color:inherit !important;}
+/* Компьютер: первая колонка шириной как свёрнутое меню, вторая для подписи. */
+@media (min-width:721px) {
+  .rail .rail-button,
+  .rail .theme-toggle {
+    display:grid !important;
+    grid-template-columns:52px minmax(0,1fr) !important;
+    gap:0 !important;
+    align-items:center !important;
+    padding:0 !important;
+    text-align:left !important;
+  }
+  .rail .rail-button > svg.icon,
+  .rail .theme-toggle > svg.icon {
+    justify-self:center !important;
+    align-self:center !important;
+  }
+  .rail .rail-button > span,
+  .rail .theme-toggle > span {
+    min-width:0;
+  }
+}
+/* Телефон: иконки строго по центру над подписями. */
+@media (max-width:720px) {
+  .rail .rail-button {
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:2px !important;
+    padding:6px 3px 4px !important;
+    text-align:center !important;
+  }
+  .rail .rail-button > svg.icon {
+    align-self:center !important;
+    width:20px !important;
+    height:20px !important;
+    flex:0 0 20px !important;
+  }
+  .rail .theme-toggle {
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    padding:0 !important;
+  }
+  .rail .theme-toggle > svg.icon {align-self:center !important;}
+}
+/* Показываем только одну иконку переключателя темы. */
+html[data-theme="dark"] .rail-theme > svg.icon.moon,
+html[data-theme="light"] .rail-theme > svg.icon.sun {display:none !important;}
+html[data-theme="dark"] .rail-theme > svg.icon.sun,
+html[data-theme="light"] .rail-theme > svg.icon.moon {display:block !important;}
+/* Кнопка поиска: надпись по центру */
 .portal-search-form > button[type="submit"] {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  min-width: 92px;
-  line-height: 1.2;
-  padding: 11px 16px;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  min-width:92px;
+  line-height:1.2;
+  padding:11px 16px;
 }
 </style>
 </head>
