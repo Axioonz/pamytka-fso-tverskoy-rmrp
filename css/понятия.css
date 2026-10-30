@@ -4,16 +4,16 @@
   display: grid;
   gap: 0;
   border-top: 1px solid var(--line);
-  max-width: 900px;
+  max-width: 1100px;
 }
 .concept-entry {
-  padding: 25px 0 27px;
+  padding: 28px 0 30px;
   border-bottom: 1px solid var(--line);
   scroll-margin-top: 25px;
 }
 .concept-title {
   margin: 0 0 10px;
-  font-size: clamp(19px, 2vw, 23px);
+  font-size: clamp(21px, 2vw, 25px);
   font-weight: 720;
   line-height: 1.35;
   color: var(--text);
@@ -21,8 +21,8 @@
 }
 .concept-text {
   margin: 0;
-  line-height: 1.78;
-  font-size: 14px;
+  line-height: 1.8;
+  font-size: 16px;
   color: var(--text);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -36,8 +36,8 @@
   margin-top: 14px;
 }
 .concept-source {
-  font-size: 11px;
-  line-height: 1.5;
+  font-size: 12px;
+  line-height: 1.55;
   color: var(--faint);
   overflow-wrap: anywhere;
   max-width: 650px;
@@ -48,4 +48,14 @@
 @media (max-width: 620px) {
   .concept-list { margin-top: 24px; }
   .concept-entry { padding: 21px 0; }
+}
+
+/* Раздел понятий использует полноценную ширину страницы.
+   Изменение касается только понятий, другие разделы не затрагивает. */
+.subpage:has(.concept-list) {
+  max-width: 1250px;
+}
+@media (max-width: 620px) {
+  .concept-text { font-size: 15px; line-height: 1.78; }
+  .concept-title { font-size: 21px; }
 }

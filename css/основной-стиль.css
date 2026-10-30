@@ -60,14 +60,14 @@ html[data-theme="dark"] .rail-theme .sun,html[data-theme="light"] .rail-theme .m
 .container{max-width:1640px;margin:0 auto;padding-right:clamp(26px,3.5vw,58px);padding-left:clamp(26px,3.5vw,58px)}
 .topbar{min-height:112px;display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:1px solid var(--line)}
 .brand{display:flex;align-items:center;gap:13px;min-width:0}
-.brand-mark{width:37px;height:37px;flex:none;border:1px solid var(--line);border-radius:11px;background:var(--surface2) url('./assets/logo.png') center/contain no-repeat;display:grid;place-items:center;color:var(--accent)}
+.brand-mark{width:37px;height:37px;flex:none;border:1px solid var(--line);border-radius:11px;background:var(--surface2) url('../assets/logo.png') center/contain no-repeat;display:grid;place-items:center;color:var(--accent)}
 .brand-mark.has-image .icon{display:none}
 .brand-title{font-size:15px;letter-spacing:.02em;font-weight:760;white-space:nowrap}
 .top-hint{color:var(--faint);font-size:12px;text-align:right;white-space:nowrap}
 .home-screen{padding-top:54px;padding-bottom:52px}
 .home-grid{display:grid;grid-template-columns:minmax(370px,.98fr) minmax(560px,1.25fr);gap:clamp(38px,5vw,90px)}
 .intro{min-height:525px;position:relative;isolation:isolate;padding-top:12px}
-.intro::before{content:"";position:absolute;z-index:-1;inset:8px -4px 38px -24px;border-radius:10px;background-image:var(--intro-image-shade),url('./assets/hero-bg.png');background-position:center,center right;background-repeat:no-repeat;background-size:cover;pointer-events:none}
+.intro::before{content:"";position:absolute;z-index:-1;inset:8px -4px 38px -24px;border-radius:10px;background-image:var(--intro-image-shade),url('../assets/hero-bg.png');background-position:center,center right;background-repeat:no-repeat;background-size:cover;pointer-events:none}
 .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.21em;font-weight:770;color:var(--accent)}
 .intro h1{font-size:clamp(58px,5.1vw,82px);letter-spacing:-.075em;line-height:1.04;font-weight:775;margin:29px 0 21px}
 .intro h1 strong{font-weight:inherit;color:var(--accent)}
@@ -89,9 +89,9 @@ html[data-theme="dark"] .rail-theme .sun,html[data-theme="light"] .rail-theme .m
 .feature::before{content:"";position:absolute;z-index:-2;inset:0;background-position:center;background-repeat:no-repeat;background-size:cover;opacity:.49}
 .feature::after{content:"";position:absolute;z-index:-1;inset:0;background:var(--card-shade)}
 .feature-situations{grid-row:span 2}
-.feature-situations::before{background-image:url('./assets/situations.png')}
-.feature-reference::before{background-image:url('./assets/reference.png')}
-.feature-detention::before{background-image:url('./assets/detention.png')}
+.feature-situations::before{background-image:url('../assets/situations.png')}
+.feature-reference::before{background-image:url('../assets/reference.png')}
+.feature-detention::before{background-image:url('../assets/detention.png')}
 .feature-situations::after{background:var(--card-shade-tall)}
 .feature .number{color:var(--accent);font-size:12px;font-weight:800;letter-spacing:.15em}
 .feature h2{font-size:clamp(28px,2.55vw,39px);line-height:1.17;font-weight:740;letter-spacing:-.053em;margin:22px 0 11px}
@@ -531,7 +531,7 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
  background-image:
   linear-gradient(90deg,rgba(0,0,0,.94) 0%,rgba(0,0,0,.87) 29%,rgba(0,0,0,.63) 55%,rgba(0,0,0,.51) 100%),
   linear-gradient(0deg,rgba(0,0,0,.37),rgba(0,0,0,.09) 48%,rgba(0,0,0,.26)),
-  url('./assets/senate-palace.webp');
+  url('../assets/senate-palace.webp');
  background-repeat:no-repeat;
  background-position:center,center,center 44%;
  background-size:cover;
@@ -560,13 +560,13 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
  background-repeat:no-repeat;
 }
 .portal-home .portal-section-card[data-page="situations"]::before{
- background-image:linear-gradient(90deg,rgba(2,5,9,.93),rgba(2,5,9,.78)),url('./assets/checkpoint.webp');
+ background-image:linear-gradient(90deg,rgba(2,5,9,.93),rgba(2,5,9,.78)),url('../assets/checkpoint.webp');
 }
 .portal-home .portal-section-card[data-page="reference"]::before{
- background-image:linear-gradient(90deg,rgba(2,5,9,.94),rgba(2,5,9,.80)),url('./assets/legal.webp');
+ background-image:linear-gradient(90deg,rgba(2,5,9,.94),rgba(2,5,9,.80)),url('../assets/legal.webp');
 }
 .portal-home .portal-section-card[data-page="laws"]::before{
- background-image:linear-gradient(90deg,rgba(2,5,9,.94),rgba(2,5,9,.78)),url('./assets/books.webp');
+ background-image:linear-gradient(90deg,rgba(2,5,9,.94),rgba(2,5,9,.78)),url('../assets/books.webp');
 }
 .portal-home .portal-section-card[data-page="situations"]:hover::before,
 .portal-home .portal-section-card[data-page="reference"]:hover::before,
@@ -578,7 +578,7 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
  .portal-home .portal-hero::before{background-position:center,center,62% center;background-image:
  linear-gradient(90deg,rgba(0,0,0,.94),rgba(0,0,0,.77)),
  linear-gradient(0deg,rgba(0,0,0,.72),transparent 60%,rgba(0,0,0,.12)),
- url('./assets/senate-palace.webp');}
+ url('../assets/senate-palace.webp');}
 }
 
 
