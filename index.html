@@ -595,6 +595,68 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
 }
 
 
+
+/* Личная шпаргалка v2: самостоятельный блокнот без переходов к другим разделам */
+.cheat-workspace{max-width:1510px}
+.cheat-head{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;margin-bottom:23px}
+.cheat-head h1{font-size:clamp(37px,4.5vw,62px);line-height:1.08;letter-spacing:-.06em;margin:0 0 13px}
+.cheat-head p{font-size:14px;line-height:1.7;max-width:690px;color:var(--muted);margin:0}
+.cheat-stats{display:flex;gap:8px;flex-shrink:0}
+.cheat-stats>div{min-width:90px;padding:12px 14px;background:var(--surface);border:1px solid var(--line);border-radius:13px;display:flex;flex-direction:column;gap:4px}
+.cheat-stats b{font-size:23px;font-weight:780;letter-spacing:-.04em}.cheat-stats small{color:var(--muted);font-size:10px}
+.cheat-alert{font-size:12px;color:var(--muted);background:var(--surface);border-left:2px solid var(--accent-strong);border-radius:0 12px 12px 0;padding:13px 17px;margin-bottom:24px;line-height:1.65}
+.cheat-alert b{color:var(--text)}
+.cheat-layout{display:grid;grid-template-columns:minmax(0,1fr) 282px;gap:24px;align-items:start}
+.cheat-main{min-width:0}.cheat-tools{display:flex;gap:10px;margin-bottom:20px}
+.cheat-tools input{min-width:0;flex:1;color:var(--text);background:var(--input-bg);border:1px solid var(--line);border-radius:12px;padding:12px 15px;font-size:13px}
+.cheat-tools .work-primary{white-space:nowrap}
+.cheat-view-bar,.cheat-group-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.cheat-view-bar{margin:0 0 12px}.cheat-filter-title{font-size:19px;font-weight:750;letter-spacing:-.035em}
+.cheat-view-switch{display:flex;padding:3px;border:1px solid var(--line);border-radius:10px;background:var(--surface);gap:3px}
+.cheat-view-switch button{background:transparent;border:0;border-radius:7px;color:var(--muted);font-size:11px;padding:8px 12px}
+.cheat-view-switch button[aria-pressed="true"]{color:var(--accent-strong);background:var(--accent-wash)}
+.cheat-group-heading{margin:28px 0 11px}.cheat-group-heading span{font-size:12px;font-weight:750;color:var(--text)}.cheat-group-heading small{font-size:11px;color:var(--muted)}
+.cheat-list{display:grid;gap:10px}
+.cheat-item{min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:16px 19px;transition:border-color .18s}
+.cheat-item:hover,.cheat-item.is-open{border-color:var(--line-hover)}.cheat-item-head{display:flex;align-items:start;justify-content:space-between;gap:12px}
+.cheat-card-main{min-width:0;flex:1}.cheat-type{font-size:10px;color:var(--accent-strong);font-weight:700;line-height:1.5}
+.cheat-item h3{font-size:17px;line-height:1.4;letter-spacing:-.025em;margin:5px 0 4px;font-weight:720;overflow-wrap:anywhere}
+.cheat-card-desc{color:var(--muted);font-size:12px;line-height:1.6;margin:6px 0;overflow-wrap:anywhere}
+.cheat-note-peek{margin:10px 0 0;color:var(--text);font-size:12px;line-height:1.6;border-left:2px solid var(--line-hover);padding-left:11px;white-space:pre-wrap;overflow-wrap:anywhere}
+.cheat-card-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.cheat-card-actions button,.cheat-manage button,.cheat-inline-actions button{background:var(--surface2);border:1px solid var(--line);border-radius:9px;color:var(--muted);font-size:11px;padding:8px 10px;font-weight:650}
+.cheat-card-actions button:hover,.cheat-manage button:hover,.cheat-inline-actions button:hover{color:var(--accent-strong);border-color:var(--line-hover)}
+.cheat-card-actions .cheat-open{background:var(--accent-wash);color:var(--accent-strong)}
+.cheat-card-actions .cheat-pin[aria-pressed="true"]{border-color:var(--line-hover);color:var(--accent-strong)}
+.cheat-preview{margin-top:15px;padding-top:15px;border-top:1px solid var(--line)}
+.cheat-preview-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;font-size:11px;color:var(--accent-strong);font-weight:730}
+.cheat-legal-text{max-height:390px;overflow:auto;padding:16px 17px;background:var(--surface2);border:1px solid var(--line);border-radius:12px;color:var(--text);font-size:13px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere;scrollbar-width:thin}
+.cheat-legal-text.short{max-height:210px}.cheat-note-field{display:grid;gap:8px;margin-top:15px;color:var(--muted);font-size:12px}
+.cheat-note-field textarea,.cheat-editor textarea,.cheat-editor input,.cheat-side input{width:100%;border:1px solid var(--line);border-radius:10px;background:var(--input-bg);padding:11px;color:var(--text);font:inherit;resize:vertical}
+.cheat-note-field textarea{min-height:86px;font-size:12px}.cheat-inline-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
+.cheat-hint{font-size:11px;color:var(--muted);line-height:1.6}.cheat-warning{font-size:11px;color:#d8b884;border-left:2px solid #a98143;padding-left:10px;margin:12px 0}
+.cheat-manage{border-top:1px solid var(--line);margin-top:12px;padding-top:12px}.cheat-manage h4{font-size:12px;margin:0 0 10px}
+.cheat-memberships{display:flex;gap:8px;flex-wrap:wrap}.cheat-memberships label{display:inline-flex;align-items:center;gap:5px;padding:7px 9px;border:1px solid var(--line);border-radius:9px;color:var(--muted);font-size:11px;cursor:pointer}
+.cheat-memberships input{accent-color:var(--accent-strong);width:15px;height:15px;margin:0}
+.cheat-manage-rows{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}
+.cheat-side{position:sticky;top:16px;display:grid;gap:12px}.cheat-side-panel{padding:19px;border:1px solid var(--line);background:var(--surface);border-radius:15px}
+.cheat-side-panel h2{font-size:15px;letter-spacing:-.025em;margin:0 0 12px}.cheat-side-panel p,.cheat-side-panel small{color:var(--muted);font-size:11px;line-height:1.7;margin:0 0 11px;display:block}
+.cheat-side-panel small{margin:10px 0 0}.cheat-collections{display:grid;gap:4px}
+.cheat-collection-row{display:flex;align-items:center;gap:5px}.cheat-collection-row .cheat-collection-select{flex:1;min-width:0;text-align:left;border:1px solid transparent;border-radius:9px;background:transparent;padding:10px 9px;color:var(--muted);font-size:12px}
+.cheat-collection-row .cheat-collection-select[aria-current="true"],.cheat-collection-row .cheat-collection-select:hover{background:var(--accent-wash);color:var(--accent-strong);border-color:var(--line)}
+.cheat-collection-row .cheat-collection-ops{border:0;background:transparent;color:var(--muted);font-size:15px;padding:5px 8px}
+.cheat-side-action{width:100%;display:block;border:1px solid var(--line);background:var(--surface2);color:var(--accent-strong);border-radius:10px;padding:11px 13px;text-align:left;font-size:12px;font-weight:650;margin-top:8px}
+.cheat-side-action:hover{border-color:var(--line-hover)}
+.cheat-small-actions{display:flex;gap:7px;margin-top:8px}.cheat-small-actions button{font-size:11px;padding:8px 10px}
+.cheat-export-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.cheat-export-grid button{border:1px solid var(--line);background:var(--surface2);color:var(--text);border-radius:9px;font-size:11px;padding:10px 8px}
+.cheat-export-grid button:hover{border-color:var(--line-hover);color:var(--accent-strong)}
+.cheat-editor{border:1px solid var(--line-hover);border-radius:16px;background:var(--surface);padding:20px;margin-bottom:17px}
+.cheat-editor h2{font-size:18px;margin:0 0 15px}.cheat-editor label{display:grid;gap:7px;color:var(--muted);font-size:12px;margin-bottom:12px}
+.cheat-editor-actions{display:flex;gap:8px}.cheat-form-error{font-size:12px;color:#eab0ad;margin:7px 0 0}
+.cheat-status{font-size:12px;color:var(--muted);margin:14px 0}.cheat-clip{border-left:2px solid var(--accent-strong);padding:11px 14px;background:var(--accent-wash);white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;line-height:1.7;margin:10px 0}
+@media(max-width:1030px){.cheat-layout{grid-template-columns:minmax(0,1fr) 235px;gap:14px}.cheat-stats>div{min-width:72px}}
+@media(max-width:820px){.cheat-layout{grid-template-columns:1fr}.cheat-side{position:static;grid-template-columns:repeat(2,minmax(0,1fr))}.cheat-head{align-items:start;flex-direction:column}.cheat-stats{width:100%}.cheat-stats>div{flex:1}}
+@media(max-width:560px){.cheat-side{grid-template-columns:1fr}.cheat-tools{flex-wrap:wrap}.cheat-tools input{flex:1 0 100%}.cheat-tools .work-primary{width:100%;text-align:center}.cheat-item{padding:14px}.cheat-view-switch button{padding:7px}.cheat-head h1{font-size:36px}}
 /* Новые разделы: без иллюстраций. Фоновые изображения остаются только на главной. */
 .work-screen{padding:43px 0 110px;animation:fade-rise .3s var(--ease-ui) both;max-width:1460px}
 .work-header{margin-bottom:29px;max-width:890px}
@@ -1113,11 +1175,29 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
   </section>
   <footer class="escort-disclaimer"><span>§</span><p><b>Примечание.</b> Сейчас раздел содержит правовые основания сопровождения. Схемы кортежей и пешего патруля появятся здесь после добавления проверенных материалов.</p></footer>
 </section>
-<section class="work-screen" id="favorites-screen" hidden aria-labelledby="favorites-title">
-  <header class="work-header"><span class="work-overline">Мои материалы</span><h1 id="favorites-title">Личная шпаргалка</h1><p>Сохраняйте нужные статьи, ситуации и документы. Они останутся в этом браузере.</p></header>
-  <div class="work-notice">Список хранится только на этом устройстве. Для переноса или резервной копии скачайте его в текстовом файле. Данные не отправляются на сервер.</div>
-  <div class="fav-controls"><input id="fav-search" type="search" placeholder="Найти в сохранённом…" aria-label="Поиск по сохранённым материалам"><span id="fav-total" class="work-counter"></span><button type="button" id="fav-export" class="work-ghost">Скачать список</button></div>
-  <div class="work-norm-grid" id="favorites-list"></div>
+<section class="work-screen cheat-workspace" id="favorites-screen" hidden aria-labelledby="favorites-title">
+  <header class="cheat-head">
+    <div><span class="work-overline">Личные материалы</span><h1 id="favorites-title">Личная шпаргалка</h1><p>Статьи, ситуации и свои записи в одном месте. Материалы открываются здесь, не уводя в другой раздел.</p></div>
+    <div class="cheat-stats" aria-label="Статистика шпаргалки"><div><b id="fav-total">0</b><small>материалов</small></div><div><b id="fav-pin-count">0</b><small>закреплено</small></div><div><b id="fav-collection-count">0</b><small>подборок</small></div></div>
+  </header>
+  <div class="cheat-alert"><b>Хранение на устройстве.</b> Шпаргалка сохраняется в этом браузере. Для переноса материалов и восстановления записей используйте резервную копию JSON.</div>
+  <div class="cheat-layout">
+    <div class="cheat-main">
+      <div class="cheat-tools"><label class="visually-hidden" for="fav-search">Поиск по шпаргалке</label><input id="fav-search" type="search" placeholder="Поиск по статьям, заметкам и подборкам…"><button type="button" id="cheat-add-note" class="work-primary">+ Своя запись</button></div>
+      <div class="cheat-view-bar"><div class="cheat-filter-title" id="cheat-current-title">Все материалы</div><div class="cheat-view-switch" aria-label="Вид списка"><button id="cheat-compact" type="button" aria-pressed="true">Компактно</button><button id="cheat-detailed" type="button" aria-pressed="false">Подробно</button></div></div>
+      <section id="cheat-edit-panel" class="cheat-editor" hidden aria-label="Редактор записи"><h2 id="cheat-edit-heading">Новая запись</h2><label>Название<input id="cheat-note-title" maxlength="180" placeholder="Например, порядок работы на КПП"></label><label>Текст<textarea id="cheat-note-body" maxlength="12000" rows="6" placeholder="Собственная заметка…"></textarea></label><div class="cheat-editor-actions"><button id="cheat-note-save" type="button" class="work-primary">Сохранить</button><button id="cheat-note-cancel" type="button" class="work-ghost">Отмена</button></div><p id="cheat-edit-error" class="cheat-form-error" role="status"></p></section>
+      <div id="cheat-pinned-block"><div class="cheat-group-heading"><span>Закреплённые</span><small>Всегда под рукой</small></div><div id="cheat-pinned-list" class="cheat-list"></div></div>
+      <div class="cheat-group-heading" id="cheat-list-heading"><span>Все материалы</span><small id="cheat-list-count"></small></div>
+      <div id="favorites-list" class="cheat-list"></div>
+    </div>
+    <aside class="cheat-side" aria-label="Управление шпаргалкой">
+      <section class="cheat-side-panel"><h2>Подборки</h2><div id="cheat-collections" class="cheat-collections"></div><button type="button" id="cheat-new-collection" class="cheat-side-action">+ Новая подборка</button>
+        <form id="cheat-collection-form" hidden><label class="visually-hidden" for="cheat-collection-name">Название подборки</label><input id="cheat-collection-name" maxlength="65" placeholder="Название подборки" required><div class="cheat-small-actions"><button type="submit" class="work-primary">Сохранить</button><button type="button" id="cheat-collection-cancel" class="work-ghost">Отмена</button></div></form></section>
+      <section class="cheat-side-panel"><h2>Скачать</h2><p>Сохраните шпаргалку в удобном формате.</p><div class="cheat-export-grid"><button type="button" data-cheat-export="pdf">PDF</button><button type="button" data-cheat-export="compactpdf">Таблица PDF</button><button type="button" data-cheat-export="html">HTML</button><button type="button" data-cheat-export="txt">TXT</button><button type="button" data-cheat-export="md">MD</button></div><small>Для PDF откроется окно печати. Выберите «Сохранить как PDF».</small></section>
+      <section class="cheat-side-panel"><h2>Резервная копия</h2><p>Переносит подборки, заметки, закрепления и сохранённые статьи.</p><button id="cheat-backup" type="button" class="cheat-side-action">Скачать JSON</button><button id="cheat-import" type="button" class="cheat-side-action">Загрузить JSON</button><input id="cheat-import-file" type="file" accept=".json,application/json" hidden><small>При восстановлении текущая шпаргалка заменяется импортированной.</small></section>
+    </aside>
+  </div>
+  <p class="cheat-status" id="cheat-status" role="status" aria-live="polite"></p>
 </section>
 <section class="work-screen" id="quiz-screen" hidden aria-labelledby="quiz-title">
   <header class="work-header"><span class="work-overline">Тренировка</span><h1 id="quiz-title">Проверка знаний</h1><p>Вопросы составлены по нормам законодательства, сохранённым в памятке. После ответа можно открыть статью и проверить формулировку.</p></header>
@@ -1802,48 +1882,211 @@ function renderEscort(){
  showEscortTopic(escortSelected);showEscortCase(escortCaseSelected);
 }
 
-// Локальные закладки: никакой серверной записи и синхронизации.
+// Личная шпаргалка: индивидуальные подборки, заметки и открытие на месте.
 const favoriteKey='fso-rmrp-bookmarks-v1';
-function readFavorites(){try{const raw=JSON.parse(localStorage.getItem(favoriteKey)||'[]');return Array.isArray(raw)?raw.filter(x=>x&&['ref','law','situation','concept'].includes(x.type)&&typeof x.id==='string').slice(0,500):[]}catch{return []}}
+const cheatStateKey='fso-rmrp-cheat-workspace-v2';
+const CHEAT_TYPES=['ref','law','situation','concept'];
 let favoriteFallback=[];
-function favorites(){const v=readFavorites();return v.length?v:favoriteFallback}
-function storeFavorites(value){favoriteFallback=value;try{localStorage.setItem(favoriteKey,JSON.stringify(value))}catch{}}
+function readFavorites(){try{const value=JSON.parse(localStorage.getItem(favoriteKey)||'[]');return Array.isArray(value)?value.filter(x=>x&&CHEAT_TYPES.includes(x.type)&&typeof x.id==='string').slice(0,500):[]}catch{return favoriteFallback}}
+function favorites(){return readFavorites()}
+function storeFavorites(value){favoriteFallback=value;try{localStorage.setItem(favoriteKey,JSON.stringify(value))}catch{cheatMessage('Браузер не разрешает сохранять изменения. Скачайте резервную копию.',true)}}
+function safeCheatState(raw){
+ const data=raw&&typeof raw==='object'?raw:{};
+ const collections=Array.isArray(data.collections)?data.collections.slice(0,100).filter(x=>x&&typeof x.id==='string'&&typeof x.title==='string').map(x=>({id:x.id.slice(0,80),title:x.title.slice(0,65)})):[];
+ const custom=Array.isArray(data.custom)?data.custom.slice(0,500).filter(x=>x&&typeof x.id==='string'&&typeof x.title==='string').map(x=>({id:x.id.slice(0,80),title:x.title.slice(0,180),body:String(x.body||'').slice(0,12000)})):[];
+ const meta={};if(data.meta&&typeof data.meta==='object'&&!Array.isArray(data.meta))for(const [key,val] of Object.entries(data.meta).slice(0,1000)){
+  if(!val||typeof val!=='object')continue;
+  meta[key.slice(0,200)]={pinned:!!val.pinned,note:String(val.note||'').slice(0,12000),clip:String(val.clip||'').slice(0,3000),snapshot:String(val.snapshot||'').slice(0,48),order:Number.isFinite(val.order)?val.order:0,collections:Array.isArray(val.collections)?val.collections.filter(x=>typeof x==='string').slice(0,100):[]};
+ }
+ return {version:2,collections,custom,meta,mode:data.mode==='detailed'?'detailed':'compact'};
+}
+let cheatState;
+try{cheatState=safeCheatState(JSON.parse(localStorage.getItem(cheatStateKey)||'{}'))}catch{cheatState=safeCheatState({})}
+let cheatFilter='all',cheatEditing=null,cheatExpanded='',cheatManaging='',cheatSourceForClip='';
+function saveCheat(){try{localStorage.setItem(cheatStateKey,JSON.stringify(cheatState))}catch{cheatMessage('Не удалось сохранить данные в браузере. Скачайте резервную копию.',true)}}
+function cheatMessage(value,problem=false){const p=$('cheat-status');if(p){p.textContent=value;p.style.color=problem?'#e2a7a7':'var(--muted)'}}
+function cheatUid(){return 'u'+Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+function cheatKey(item){return item.type+':'+item.id}
+function cheatMeta(item){const key=cheatKey(item);if(!cheatState.meta[key])cheatState.meta[key]={pinned:false,note:'',clip:'',snapshot:'',order:Date.now(),collections:[]};return cheatState.meta[key]}
+function cheatExistingMeta(item){return cheatState.meta[cheatKey(item)]||{pinned:false,note:'',clip:'',snapshot:'',order:0,collections:[]}}
+function cheatHash(text){let result=2166136261;for(const ch of String(text||'')){result^=ch.charCodeAt(0);result=Math.imul(result,16777619)}return String(result>>>0)}
+function cheatSource(item){
+ if(item.type==='ref'){const r=findRef(item.id);return r&&{title:r.title,subtitle:getReferenceCitation(r),summary:r.summary||'',text:getExactQuote(r),sourceUrl:r.sourceUrl||''}}
+ if(item.type==='law'){const law=lawRecords().find(x=>x.id===item.id)||lawCatalog.find(x=>x.id===item.id);return law&&{title:law.title,subtitle:'Законодательство',summary:'Текст документа',text:referenceLawCache.get(item.id)||'',sourceUrl:law.sourceUrl||'',law:true}}
+ if(item.type==='note'){const n=cheatState.custom.find(x=>x.id===item.id);return n&&{title:n.title,subtitle:'Своя запись',summary:n.body.slice(0,220),text:n.body,sourceUrl:''}}
+ const r=publicMaterials.find(x=>x.id===item.id&&x.sectionId===(item.type==='situation'?'situations':'concepts'));
+ if(!r)return null;
+ let body=String(r.body||'');if(Array.isArray(r.steps))body=r.steps.map((step,i)=>[String(i+1)+'. '+step.title,step.action,step.explain||'',...(step.norms||[]).map(n=>n.citation+'\n'+n.text)].filter(Boolean).join('\n')).join('\n\n');
+ return {title:r.title,subtitle:item.type==='situation'?'Ситуация':'Понятие',summary:r.summary||'',text:body||r.summary||'',sourceUrl:r.sourceUrl||''};
+}
+function cheatItems(){return [...favorites(),...cheatState.custom.map(x=>({type:'note',id:x.id}))]}
 function isFavorite(type,id){return favorites().some(x=>x.type===type&&x.id===id)}
-function toggleFavorite(type,id){const before=favorites(),have=isFavorite(type,id);storeFavorites(have?before.filter(x=>!(x.type===type&&x.id===id)):[...before,{type,id}]);
- document.querySelectorAll('[data-bookmark]').forEach(x=>{if(x.dataset.bookmark===type+':'+id){x.setAttribute('aria-pressed',String(!have));x.textContent=!have?'✓ Сохранено':'☆ В шпаргалку'}});
+function toggleFavorite(type,id){
+ const before=favorites(),had=before.some(x=>x.type===type&&x.id===id);
+ storeFavorites(had?before.filter(x=>!(x.type===type&&x.id===id)):[...before,{type,id}]);
+ if(had)delete cheatState.meta[type+':'+id];
+ else {const m=cheatMeta({type,id});const source=cheatSource({type,id});if(source?.text)m.snapshot=cheatHash(source.text)}
+ saveCheat();
+ document.querySelectorAll('[data-bookmark]').forEach(x=>{if(x.dataset.bookmark===type+':'+id){x.setAttribute('aria-pressed',String(!had));x.textContent=!had?'✓ Сохранено':'☆ В шпаргалку'}});
  if(!$('favorites-screen').hidden)renderFavorites();
 }
 function bookmarkButton(type,id,cls=''){
- const saved=isFavorite(type,id);const b=btn(saved?'✓ Сохранено':'☆ В шпаргалку','fav-button '+cls,()=>toggleFavorite(type,id));
+ const saved=isFavorite(type,id),b=btn(saved?'✓ Сохранено':'☆ В шпаргалку','fav-button '+cls,()=>toggleFavorite(type,id));
  b.dataset.bookmark=type+':'+id;b.setAttribute('aria-pressed',String(saved));b.setAttribute('aria-label',saved?'Удалить из личной шпаргалки':'Сохранить в личную шпаргалку');return b;
 }
-function favoriteTarget(f){
- if(f.type==='ref'){const item=findRef(f.id);return item&&{title:item.title,subtitle:getReferenceCitation(item),summary:item.summary||'',open:()=>{go('reference');openReference(item)}}}
- if(f.type==='law'){const item=lawRecords().find(x=>x.id===f.id);return item&&{title:item.title,subtitle:'Законодательство',summary:'Полный текст документа',open:()=>{go('laws');openLaw(item.id)}}}
- const item=publicMaterials.find(x=>x.id===f.id&&x.sectionId===(f.type==='situation'?'situations':'concepts'));
- if(item)return{title:item.title,subtitle:f.type==='situation'?'Ситуация':'Понятие',summary:item.summary||'',open:()=>openPortalHit({type:f.type,id:item.id})};
- return null;
+function favoriteTarget(item){const src=cheatSource(item);return src&&{...src,open:()=>{go('favorites');cheatExpanded=cheatKey(item);renderFavorites()}}}
+function cheatNode(tag,cls,value){const n=document.createElement(tag);if(cls)n.className=cls;if(value!==undefined)n.textContent=value;return n}
+function cheatCollectionTitle(id){return cheatState.collections.find(c=>c.id===id)?.title||'Подборка'}
+function renderCheatCollections(){
+ const root=$('cheat-collections');root.replaceChildren();const items=cheatItems();
+ const add=(id,title,count,rename)=>{
+  const row=cheatNode('div','cheat-collection-row'),b=btn(title+'  · '+count,'cheat-collection-select',()=>{cheatFilter=id;renderFavorites()});b.setAttribute('aria-current',String(cheatFilter===id));row.append(b);
+  if(rename){const menu=btn('⋯','cheat-collection-ops',()=>{
+   const name=prompt('Новое название подборки',title);if(name===null)return;
+   const val=name.trim().slice(0,65);if(!val){alert('Введите название.');return}if(cheatState.collections.some(x=>x.id!==id&&x.title.toLowerCase()===val.toLowerCase())){alert('Подборка с таким названием существует.');return}
+   const col=cheatState.collections.find(x=>x.id===id);if(col){col.title=val;saveCheat();renderFavorites()}
+  });menu.title='Переименовать подборку';row.append(menu);
+  const del=btn('×','cheat-collection-ops',()=>{if(!confirm('Удалить подборку «'+title+'»? Сохранённые материалы останутся в шпаргалке.'))return;
+   cheatState.collections=cheatState.collections.filter(c=>c.id!==id);for(const meta of Object.values(cheatState.meta))meta.collections=meta.collections.filter(c=>c!==id);
+   if(cheatFilter===id)cheatFilter='all';saveCheat();renderFavorites()});del.title='Удалить подборку';row.append(del)}
+  root.append(row);
+ };
+ add('all','Все материалы',items.length);add('pinned','Закреплённые',items.filter(x=>cheatExistingMeta(x).pinned).length);
+ for(const col of cheatState.collections)add(col.id,col.title,items.filter(x=>cheatExistingMeta(x).collections.includes(col.id)).length,true);
+ add('none','Без подборки',items.filter(x=>cheatExistingMeta(x).collections.length===0).length);
 }
 function renderFavorites(){
- const list=$('favorites-list'),query=$('fav-search').value.trim().toLowerCase();list.replaceChildren();const stored=favorites();$('fav-total').textContent='Сохранено: '+stored.length;
- let hits=0;
- for(const f of stored){const item=favoriteTarget(f);if(!item)continue;
-  if(query&&!([item.title,item.subtitle,item.summary].join(' ').toLowerCase().includes(query)))continue;
-  const card=document.createElement('article');card.className='work-norm';
-  const subtitle=document.createElement('small');subtitle.textContent=item.subtitle;
-  const heading=document.createElement('h3');heading.textContent=item.title;
-  const desc=document.createElement('p');desc.textContent=item.summary;
-  const buttons=document.createElement('div');buttons.className='work-norm-actions';buttons.append(btn('Открыть ↗','work-primary',item.open),bookmarkButton(f.type,f.id));
-  card.append(subtitle,heading,desc,buttons);list.append(card);hits++;
- }
- if(!hits){const note=document.createElement('div');note.className='work-empty';note.textContent=stored.length?'По запросу ничего не найдено.':'Пока ничего не сохранено. Откройте статью или документ и нажмите «В шпаргалку». После этого материал появится здесь.';list.append(note)}
+ const query=$('fav-search').value.trim().toLocaleLowerCase('ru-RU');const items=cheatItems(),sort=(a,b)=>(cheatExistingMeta(a).order||0)-(cheatExistingMeta(b).order||0);
+ const visible=items.filter(item=>{
+  const m=cheatExistingMeta(item),src=cheatSource(item),searchable=[src?.title,src?.subtitle,src?.summary,m.note,m.clip,...m.collections.map(cheatCollectionTitle)].join(' ').toLocaleLowerCase('ru-RU');
+  return (cheatFilter==='all'||(cheatFilter==='pinned'&&m.pinned)||(cheatFilter==='none'&&!m.collections.length)||m.collections.includes(cheatFilter))&&(!query||searchable.includes(query));
+ }).sort(sort);
+ $('fav-total').textContent=String(items.length);$('fav-pin-count').textContent=String(items.filter(i=>cheatExistingMeta(i).pinned).length);$('fav-collection-count').textContent=String(cheatState.collections.length);
+ $('cheat-current-title').textContent=cheatFilter==='all'?'Все материалы':cheatFilter==='pinned'?'Закреплённые':cheatFilter==='none'?'Без подборки':cheatCollectionTitle(cheatFilter);
+ $('cheat-list-heading').querySelector('span').textContent=query?'Результаты поиска':cheatFilter==='all'?'Остальные материалы':'Материалы подборки';
+ $('cheat-list-count').textContent='Найдено: '+visible.length;
+ $('cheat-compact').setAttribute('aria-pressed',String(cheatState.mode==='compact'));$('cheat-detailed').setAttribute('aria-pressed',String(cheatState.mode==='detailed'));
+ renderCheatCollections();const pins=$('cheat-pinned-list'),list=$('favorites-list');pins.replaceChildren();list.replaceChildren();
+ const pinned=cheatFilter==='all'&&!query?visible.filter(i=>cheatExistingMeta(i).pinned):[];
+ $('cheat-pinned-block').hidden=pinned.length===0;
+ for(const item of pinned)pins.append(renderCheatCard(item));
+ for(const item of visible.filter(i=>!pinned.some(p=>cheatKey(p)===cheatKey(i))))list.append(renderCheatCard(item));
+ if(!visible.length){list.append(cheatNode('div','work-empty',query?'По запросу ничего не найдено.':items.length?'В этой подборке пока ничего нет.':'Материалов пока нет. Сохраняйте статьи кнопкой «В шпаргалку» или создайте свою запись.'))}
 }
-$('fav-search').addEventListener('input',renderFavorites);
-$('fav-export').addEventListener('click',()=>{
- const lines=['Личная шпаргалка ФСО RMRP · Тверской','Создана '+new Date().toLocaleString('ru-RU'),''];
- for(const f of favorites()){const v=favoriteTarget(f);if(v){lines.push(v.title+'\n'+v.subtitle+'\n'+v.summary+'\n')}}
- const url=URL.createObjectURL(new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='FSO_RMRP_шпаргалка.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+function renderCheatCard(item){
+ const meta=cheatExistingMeta(item),src=cheatSource(item),id=cheatKey(item),card=cheatNode('article','cheat-item'+(cheatExpanded===id?' is-open':''));card.dataset.cheatId=id;
+ if(!src){const missing=cheatNode('p','cheat-warning','Исходный материал отсутствует в этой версии памятки. Закладка сохранена для восстановления.');card.append(missing,btn('Удалить','work-ghost',()=>toggleFavorite(item.type,item.id)));return card}
+ const top=cheatNode('div','cheat-item-head'),main=cheatNode('div','cheat-card-main'),sub=cheatNode('small','cheat-type',src.subtitle);main.append(sub);
+ const head=cheatNode('h3','',src.title);head.tabIndex=0;head.setAttribute('role','button');head.setAttribute('aria-label','Открыть материал здесь');head.addEventListener('click',()=>toggleCheatOpen(id));head.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleCheatOpen(id)}});main.append(head);
+ if(cheatState.mode==='detailed'){main.append(cheatNode('p','cheat-card-desc',src.summary));if(src.text&&item.type!=='law')main.append(cheatNode('p','cheat-card-desc',src.text.slice(0,360)+(src.text.length>360?'…':'')))}
+ if(meta.note)main.append(cheatNode('p','cheat-note-peek',meta.note.slice(0,250)+(meta.note.length>250?'…':'')));
+ top.append(main);card.append(top);
+ const actions=cheatNode('div','cheat-card-actions');actions.append(btn(cheatExpanded===id?'Свернуть':'Открыть текст','cheat-open',()=>toggleCheatOpen(id)));
+ const pin=btn(meta.pinned?'★ Закреплено':'☆ Закрепить','cheat-pin',()=>{const m=cheatMeta(item);m.pinned=!m.pinned;saveCheat();renderFavorites()});pin.setAttribute('aria-pressed',String(meta.pinned));actions.append(pin);
+ actions.append(btn(cheatManaging===id?'Скрыть настройки':'Управление','',()=>{cheatManaging=cheatManaging===id?'':id;renderFavorites()}));card.append(actions);
+ if(cheatManaging===id){
+  const manage=cheatNode('div','cheat-manage');manage.append(cheatNode('h4','', 'Подборки'));
+  const groups=cheatNode('div','cheat-memberships');for(const c of cheatState.collections){const label=document.createElement('label'),box=document.createElement('input');box.type='checkbox';box.checked=meta.collections.includes(c.id);box.addEventListener('change',()=>{const m=cheatMeta(item);m.collections=box.checked?[...new Set([...m.collections,c.id])]:m.collections.filter(x=>x!==c.id);saveCheat();renderFavorites()});label.append(box,document.createTextNode(c.title));groups.append(label)}
+  if(!cheatState.collections.length)groups.append(cheatNode('p','cheat-hint','Сначала создайте подборку справа. Материал можно включить в несколько подборок.'));
+  manage.append(groups);
+  const rows=cheatNode('div','cheat-manage-rows');rows.append(btn('↑ Выше','',()=>moveCheat(item,-1)),btn('↓ Ниже','',()=>moveCheat(item,1)));
+  if(item.type==='note')rows.append(btn('Редактировать запись','',()=>showCheatEditor(item.id)));
+  rows.append(btn('Удалить из шпаргалки','',()=>removeCheatItem(item)));manage.append(rows);card.append(manage);
+ }
+ if(cheatExpanded===id){const preview=cheatNode('div','cheat-preview');card.append(preview);renderCheatPreview(item,preview,src)}
+ return card;
+}
+function toggleCheatOpen(id){cheatExpanded=cheatExpanded===id?'':id;renderFavorites();if(cheatExpanded){const node=[...document.querySelectorAll('.cheat-item')].find(x=>x.dataset.cheatId===id);node?.scrollIntoView({block:'nearest',behavior:'smooth'})}}
+function renderCheatPreview(item,preview,src){
+ const info=cheatNode('div','cheat-preview-title');info.append(cheatNode('span','',src.subtitle),cheatNode('span','',item.type==='law'?'Документ':'Материал'));preview.append(info);
+ const legal=cheatNode('div','cheat-legal-text');legal.tabIndex=0;legal.textContent=src.text||'Текст отсутствует в локальной копии.';preview.append(legal);
+ if(item.type==='law'){
+  if(referenceLawCache.has(item.id)){legal.textContent=referenceLawCache.get(item.id)||'Текст не найден.'}
+  else {legal.textContent='Загрузка текста документа…';fetchStaticLaw(item.id).then(body=>{if(legal.isConnected)legal.textContent=body||'Текст документа пока не внесён.'}).catch(()=>{if(legal.isConnected)legal.textContent='Полный текст этого документа недоступен в текущей копии памятки.'})}
+ }
+ const meta=cheatExistingMeta(item);if(meta.snapshot&&item.type==='ref'&&src.text&&cheatHash(src.text)!==meta.snapshot)preview.append(cheatNode('p','cheat-warning','Текст нормы изменился после сохранения. Проверьте актуальную редакцию.'));
+ if(meta.clip){preview.append(cheatNode('div','cheat-clip',meta.clip));preview.append(btn('Убрать сохранённый фрагмент','work-ghost',()=>{cheatMeta(item).clip='';saveCheat();renderFavorites()}))}
+ if(item.type==='ref'||item.type==='law'){
+  const clipInfo=cheatNode('p','cheat-hint','Чтобы сохранить часть нормы, выделите текст выше и нажмите «Сохранить фрагмент». Это копия выбранного текста, не изменяющая оригинал.');preview.append(clipInfo);
+  preview.append(btn('Сохранить фрагмент','work-ghost',()=>{
+   const selected=String(window.getSelection()?.toString()||'').trim();const origin=legal.textContent||'';
+   const norm=t=>String(t).replace(/\s+/g,' ').trim();
+   if(selected.length<3||!norm(origin).includes(norm(selected))){cheatMessage('Сначала выделите фрагмент в открытом тексте статьи.',true);return}
+   cheatMeta(item).clip=selected.slice(0,3000);cheatMeta(item).snapshot=cheatHash(origin);saveCheat();cheatMessage('Фрагмент сохранён.');renderFavorites();
+  }));
+ }
+ if(src.sourceUrl&&/^https:\/\//.test(src.sourceUrl)){const link=document.createElement('a');link.href=src.sourceUrl;link.target='_blank';link.rel='noopener noreferrer';link.className='law-source';link.textContent='Первоисточник на форуме ↗';preview.append(link)}
+ const label=cheatNode('label','cheat-note-field');label.append(cheatNode('span','',item.type==='note'?'Личный комментарий':'Моя заметка к материалу'));const area=document.createElement('textarea');area.rows=3;area.maxLength=12000;area.value=meta.note||'';area.placeholder='Личная пометка (не является текстом закона)';label.append(area);preview.append(label);
+ const row=cheatNode('div','cheat-inline-actions');row.append(btn('Сохранить заметку','',()=>{cheatMeta(item).note=area.value.trim().slice(0,12000);saveCheat();cheatMessage('Заметка сохранена.');renderFavorites()}));if(item.type==='note')row.append(btn('Изменить основную запись','',()=>showCheatEditor(item.id)));preview.append(row);
+}
+function removeCheatItem(item){if(!confirm('Убрать материал из шпаргалки?'))return;if(item.type==='note'){cheatState.custom=cheatState.custom.filter(x=>x.id!==item.id);delete cheatState.meta[cheatKey(item)];saveCheat();renderFavorites()}else toggleFavorite(item.type,item.id);cheatExpanded='';cheatManaging=''}
+function moveCheat(item,direction){const list=cheatItems();const index=list.findIndex(x=>cheatKey(x)===cheatKey(item));const neighbor=list[index+direction];if(!neighbor)return;
+ list.forEach((it,i)=>cheatMeta(it).order=i);const a=cheatMeta(item),b=cheatMeta(neighbor);const t=a.order;a.order=b.order;b.order=t;saveCheat();renderFavorites()}
+function showCheatEditor(id=null){cheatEditing=id;const src=cheatState.custom.find(x=>x.id===id);$('cheat-edit-panel').hidden=false;$('cheat-edit-heading').textContent=src?'Редактировать запись':'Новая запись';$('cheat-note-title').value=src?.title||'';$('cheat-note-body').value=src?.body||'';$('cheat-edit-error').textContent='';$('cheat-edit-panel').scrollIntoView({block:'nearest',behavior:'smooth'});$('cheat-note-title').focus()}
+$('cheat-add-note').addEventListener('click',()=>showCheatEditor());$('cheat-note-cancel').addEventListener('click',()=>{$('cheat-edit-panel').hidden=true;cheatEditing=null});
+$('cheat-note-save').addEventListener('click',()=>{
+ const title=$('cheat-note-title').value.trim(),body=$('cheat-note-body').value.trim();if(!title||!body){$('cheat-edit-error').textContent='Введите название и текст записи.';return}
+ if(cheatEditing){const item=cheatState.custom.find(x=>x.id===cheatEditing);if(item){item.title=title;item.body=body}}
+ else{const id=cheatUid();cheatState.custom.push({id,title,body});cheatMeta({type:'note',id});cheatExpanded='note:'+id}
+ cheatEditing=null;$('cheat-edit-panel').hidden=true;saveCheat();renderFavorites();cheatMessage('Запись сохранена.');
 });
+$('fav-search').addEventListener('input',renderFavorites);
+$('cheat-compact').addEventListener('click',()=>{cheatState.mode='compact';saveCheat();renderFavorites()});
+$('cheat-detailed').addEventListener('click',()=>{cheatState.mode='detailed';saveCheat();renderFavorites()});
+$('cheat-new-collection').addEventListener('click',()=>{$('cheat-collection-form').hidden=false;$('cheat-collection-name').value='';$('cheat-collection-name').focus()});
+$('cheat-collection-cancel').addEventListener('click',()=>{$('cheat-collection-form').hidden=true});
+$('cheat-collection-form').addEventListener('submit',e=>{e.preventDefault();const title=$('cheat-collection-name').value.trim();if(!title)return;
+ if(cheatState.collections.some(x=>x.title.toLowerCase()===title.toLowerCase())){alert('Подборка с таким названием существует.');return}
+ const id=cheatUid();cheatState.collections.push({id,title});cheatFilter=id;$('cheat-collection-form').hidden=true;saveCheat();renderFavorites();
+});
+function cheatDownload(name,content,mime){const blob=new Blob([content],{type:mime});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),3000)}
+function cheatEscape(s){return String(s??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;')}
+function cheatExportEntries(){return cheatItems().map(i=>({item:i,source:cheatSource(i),meta:cheatExistingMeta(i)}))}
+function cheatExportHtml(compact=false){const entries=cheatExportEntries(),list=entries.map(({item,source,meta})=>{
+ const title=cheatEscape(source?.title||'Недоступный материал'),cit=cheatEscape(source?.subtitle||''),note=cheatEscape(meta.note||''),clip=cheatEscape(meta.clip||''),text=cheatEscape(source?.text||'');
+ const groups=cheatEscape(meta.collections.map(cheatCollectionTitle).join(' · '));const main=compact?'':(clip||text.slice(0,12000));return `<article><small>${cit}${groups?' · '+groups:''}</small><h2>${title}</h2>${note?`<p class="note">${note}</p>`:''}${main?`<div class="body">${main}</div>`:''}${source?.sourceUrl?`<a href="${cheatEscape(source.sourceUrl)}">Источник</a>`:''}</article>`}).join('');
+ return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Личная шпаргалка ФСО RMRP</title><style>body{margin:0;background:#f5f7fa;color:#172638;font:14px/1.6 Arial,sans-serif}.page{max-width:870px;margin:26px auto;padding:0 22px}h1{font-size:27px}article{background:#fff;border:1px solid #cbd5e1;border-radius:12px;margin:12px 0;padding:18px;break-inside:avoid}small{color:#3e7197}h2{font-size:17px;margin:7px 0}.body{white-space:pre-wrap;max-height:${compact?'0':'none'};overflow-wrap:anywhere}.note{white-space:pre-wrap;border-left:2px solid #6793b0;padding-left:11px}.subtitle{color:#617489}@media print{body{background:#fff}.page{margin:0 auto}article{border-color:#ddd}}</style></head><body><main class="page"><h1>Личная шпаргалка ФСО RMRP</h1><p class="subtitle">Сформировано ${new Date().toLocaleString('ru-RU')}. Материалов: ${entries.length}. Личные пометки отделены от текста нормативных документов.</p>${list||'<p>Нет материалов.</p>'}</main></body></html>`;
+}
+function cheatExportTableHtml(){
+ const groups=new Map();for(const entry of cheatExportEntries()){
+  const key=entry.source?.subtitle?.replace(/\s*·\s*ст\..*$/,'')||'Личные записи';if(!groups.has(key))groups.set(key,[]);groups.get(key).push(entry);
+ }
+ const rows=[...groups].map(([name,list])=>`<tbody><tr class="group"><th colspan="3">${cheatEscape(name)}</th></tr>${list.map(({source,meta})=>`<tr><td>${cheatEscape(source?.title||'Материал отсутствует')}</td><td>${cheatEscape(source?.subtitle||'')}</td><td>${cheatEscape(meta.note||meta.clip||'')}</td></tr>`).join('')}</tbody>`).join('');
+ return `<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>Таблица шпаргалки ФСО</title><style>body{font:11px/1.5 Arial,sans-serif;color:#1a2633;margin:24px}h1{font-size:20px}.meta{color:#697b8b}table{border-collapse:collapse;width:100%;table-layout:fixed}th,td{border:1px solid #bac6d0;padding:8px;vertical-align:top;overflow-wrap:anywhere;white-space:pre-wrap}thead th{background:#e9eff4;text-align:left}.group th{background:#dce7ef;color:#23394d;text-align:left}tr{break-inside:avoid}th:nth-child(1){width:38%}th:nth-child(2){width:26%}th:nth-child(3){width:36%}@page{size:A4 portrait;margin:13mm}</style></head><body><h1>Личная шпаргалка ФСО RMRP</h1><p class="meta">${new Date().toLocaleString('ru-RU')} · Материалов: ${cheatItems().length} · Тексты личных заметок не являются нормами закона.</p><table><thead><tr><th>Материал</th><th>Статья / источник</th><th>Личная пометка или фрагмент</th></tr></thead>${rows}</table></body></html>`;
+}
+function cheatExport(kind){
+ const entries=cheatExportEntries();if(!entries.length){cheatMessage('Нет материалов для экспорта.',true);return}
+ if(kind==='html'){cheatDownload('ФСО_личная_шпаргалка.html',cheatExportHtml(), 'text/html;charset=utf-8');return}
+ if(kind==='pdf'||kind==='compactpdf'){
+  const doc=kind==='compactpdf'?cheatExportTableHtml():cheatExportHtml();const win=window.open('','_blank');if(!win){cheatMessage('Браузер заблокировал окно печати. Разрешите всплывающие окна или скачайте HTML.',true);return}
+  win.document.open();win.document.write(doc);win.document.close();win.focus();setTimeout(()=>win.print(),350);cheatMessage('В окне печати выберите «Сохранить как PDF».');return;
+ }
+ const md=kind==='md';const output=[md?'# Личная шпаргалка ФСО RMRP':'Личная шпаргалка ФСО RMRP',''];
+ for(const {source,meta} of entries){output.push(md?'## '+(source?.title||'Материал отсутствует'):(source?.title||'Материал отсутствует'),source?.subtitle||'');
+ if(meta.collections.length)output.push('Подборки: '+meta.collections.map(cheatCollectionTitle).join(', '));
+ if(meta.note)output.push('Моя заметка: '+meta.note);
+ if(meta.clip)output.push('Сохранённый фрагмент: '+meta.clip);
+ if(source?.text)output.push(source.text.slice(0,12000));if(source?.sourceUrl)output.push('Источник: '+source.sourceUrl);output.push('');}
+ cheatDownload('ФСО_личная_шпаргалка.'+(md?'md':'txt'),output.join('\n'),'text/plain;charset=utf-8');
+}
+document.querySelectorAll('[data-cheat-export]').forEach(b=>b.addEventListener('click',()=>cheatExport(b.dataset.cheatExport)));
+$('cheat-backup').addEventListener('click',()=>{
+ const payload={kind:'fso-rmrp-cheat-backup',version:2,createdAt:new Date().toISOString(),bookmarks:favorites(),workspace:cheatState};
+ cheatDownload('ФСО_RMRP_шпаргалка_резервная_копия.json',JSON.stringify(payload,null,2),'application/json;charset=utf-8');cheatMessage('Резервная копия скачана.');
+});
+$('cheat-import').addEventListener('click',()=>$('cheat-import-file').click());
+$('cheat-import-file').addEventListener('change',async e=>{
+ const file=e.target.files?.[0];if(!file)return;
+ try{
+  if(file.size>2_000_000)throw new Error('Файл слишком большой. Максимальный размер 2 МБ.');
+  const data=JSON.parse(await file.text());if(data?.kind!=='fso-rmrp-cheat-backup'||data?.version!==2||!Array.isArray(data.bookmarks)||!data.workspace||typeof data.workspace!=='object')throw new Error('Это не резервная копия шпаргалки версии 2.');
+  if(!confirm('Заменить текущую шпаргалку данными из файла? Текущие заметки и подборки будут перезаписаны.'))return;
+  const bookmarks=data.bookmarks.filter(x=>x&&CHEAT_TYPES.includes(x.type)&&typeof x.id==='string').slice(0,500);
+  cheatState=safeCheatState(data.workspace);storeFavorites(bookmarks);favoriteFallback=bookmarks;saveCheat();cheatFilter='all';cheatExpanded='';cheatManaging='';renderFavorites();cheatMessage('Шпаргалка восстановлена из резервной копии.');
+ }catch(err){cheatMessage('Не удалось импортировать файл: '+err.message,true)}finally{e.target.value=''}
+});
+// Совместимость с прежней кнопкой экспорта, если она присутствует в старой разметке.
+if($('fav-export'))$('fav-export').addEventListener('click',()=>cheatExport('txt'));
 
 // Проверка знаний по существующим цитатам. Правильные ответы соответствуют указанным цитатам.
 const quizBank={
