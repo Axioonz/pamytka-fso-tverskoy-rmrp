@@ -997,3 +997,77 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
 .scenario-result{padding:16px 18px;background:color-mix(in srgb,var(--accent-strong) 7%,var(--surface2));border:1px solid var(--line);border-radius:13px;font-size:13px;line-height:1.7;margin-top:16px}.scenario-result b{color:var(--accent)}
 .scenario-footer{font-size:12px;color:var(--faint);line-height:1.7;padding-top:22px}
 @media(max-width:700px){.scenario-screen{padding-top:25px}.scenario-heading{align-items:flex-start}.scenario-badge{display:none}.scenario-case>summary{grid-template-columns:32px minmax(0,1fr) 18px;gap:10px;padding:17px 14px}.scenario-tag{display:none}.scenario-title{font-size:15px}.scenario-body{padding:0 15px 19px}.scenario-info-grid{grid-template-columns:1fr}.scenario-tools{padding:15px}.scenario-stage{padding:14px 12px}}
+
+/* 30.10.2026 · небольшая ревизия интерфейса */
+/* Ситуации и памятки отделов используют нейтральный экран «В разработке». */
+#situations-screen.quiz-coming,#departments-screen.quiz-coming{min-height:65vh;display:flex;align-items:center;justify-content:center}
+#situations-screen.quiz-coming[hidden],#departments-screen.quiz-coming[hidden]{display:none!important}
+#situations-screen.quiz-coming h1,#departments-screen.quiz-coming h1{font-size:clamp(34px,5vw,58px);letter-spacing:-.045em;text-align:center;margin:0}
+/* У задержания остались только две карточки, с объяснением сроков. */
+.det-quick{grid-template-columns:repeat(2,minmax(0,1fr))}
+.det-quick .det-stat{min-height:155px}
+.det-quick .det-stat span{font-size:13px;line-height:1.65}
+@media(max-width:670px){.det-quick{grid-template-columns:1fr}.det-quick .det-stat{min-height:0}}
+/* После удаления правой колонки карта сопровождения занимает всё доступное место. */
+.escort-dashboard{grid-template-columns:minmax(0,1fr)}
+/* Документы на главной после удаления пустого списка ситуаций. */
+.portal-lower-grid{grid-template-columns:minmax(0,1fr)}
+/* Чтение полной статьи территорий внутри раздела. */
+.tg-law-overlay[hidden]{display:none!important}
+.tg-law-overlay{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.83);backdrop-filter:blur(8px);display:flex;justify-content:center;align-items:center;padding:20px}
+.tg-law-dialog{width:min(100%,1000px);max-height:94dvh;display:flex;flex-direction:column;overflow:hidden;background:var(--surface);border:1px solid var(--line-hover);border-radius:19px;color:var(--text);box-shadow:0 26px 75px rgba(0,0,0,.65)}
+.tg-law-toolbar{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;border-bottom:1px solid var(--line);padding:22px 25px}
+.tg-law-toolbar small{color:var(--accent-strong);font-size:11px;letter-spacing:.05em}
+.tg-law-toolbar h2{font-size:clamp(23px,2.8vw,33px);letter-spacing:-.045em;line-height:1.25;margin:8px 0 0}
+#tg-law-close{flex:0 0 42px;width:42px;height:42px;background:var(--surface2);border:1px solid var(--line);color:var(--text);font-size:29px;line-height:1;display:grid;place-items:center;border-radius:10px}
+.tg-law-content{overflow:auto;min-height:120px;padding:19px 25px 25px;scrollbar-width:thin}
+.tg-law-content h3{font-size:16px;font-weight:700;margin:0 0 20px;color:var(--accent-strong)}
+.tg-law-content p{font-size:14px;line-height:1.72;margin:0 0 8px;white-space:pre-wrap;overflow-wrap:anywhere}
+.tg-law-highlight{background:var(--accent-wash);border-left:3px solid var(--accent-strong);border-radius:0 9px 9px 0;padding:13px 15px;margin:14px 0;scroll-margin:18px}
+.tg-law-highlight p{color:var(--text)}
+body.tg-law-open{overflow:hidden}
+@media(max-width:620px){.tg-law-overlay{padding:9px}.tg-law-dialog{max-height:96dvh;border-radius:15px}.tg-law-toolbar{padding:17px}.tg-law-content{padding:15px 17px}.tg-law-content p{font-size:13px}}
+/* Все кнопки закладок занимают собственное место, не наезжая на текст. */
+.fav-button{position:static!important;float:none!important;transform:none;display:inline-flex!important;justify-content:center;align-items:center;vertical-align:middle;flex:0 0 auto;max-width:100%;min-height:38px;line-height:1.25;text-align:center;white-space:normal;overflow-wrap:anywhere;isolation:isolate}
+.concept-footer{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.concept-footer .fav-button{margin:0 0 0 auto}
+.reference-modal>.fav-button,.reference-fav{display:flex!important;width:max-content;max-width:100%;margin:13px 0 17px}
+.law-fav{margin:0}
+.law-meta,.escort-law-actions,.work-norm-actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px}
+.escort-law-card blockquote{clear:both}
+.escort-law-actions{margin-top:18px}
+@media(max-width:650px){.concept-footer .fav-button{margin-left:0}.law-meta .fav-button{margin-top:8px}}
+
+
+/* ЗАКОНОДАТЕЛЬСТВО · удобное чтение после очистки переносов PDF.
+   Эти стили касаются только документа в разделе «Законодательство». */
+.law-reader{padding:clamp(22px,3.2vw,44px);}
+.law-document{max-width:930px;margin:0 auto;padding-top:25px;
+  font-size:16px;line-height:1.8;color:var(--text);overflow-wrap:break-word;}
+.law-document .law-chapter,.law-document .law-part{font-size:clamp(20px,2.25vw,25px);
+  letter-spacing:-.035em;line-height:1.35;font-weight:760;color:var(--text);
+  margin:42px 0 23px;padding:0 0 14px;border-bottom:1px solid var(--line);}
+.law-document .law-part{font-size:clamp(22px,2.4vw,28px);color:var(--accent-strong);
+  border-bottom-color:color-mix(in srgb,var(--accent-strong) 36%,var(--line));}
+.law-document .law-chapter:first-child,.law-document .law-part:first-child{margin-top:8px}
+.law-document .law-article-block{margin:0 0 30px;padding:1px 0 6px;}
+.law-document .law-article{color:var(--accent-strong);font-size:18px;line-height:1.42;
+  font-weight:750;letter-spacing:-.012em;margin:24px 0 14px;scroll-margin-top:22px;}
+.law-document .law-paragraph{font-size:15px;line-height:1.82;color:var(--text);
+  margin:0 0 15px;white-space:normal;overflow-wrap:break-word;}
+.law-document .law-paragraph.law-point{padding:0 0 0 17px;margin:10px 0 16px;
+  border-left:2px solid color-mix(in srgb,var(--accent-strong) 32%,var(--line));}
+.law-document .law-paragraph.law-preamble{font-size:16px;line-height:1.85;
+  color:var(--text);margin:0 0 22px;}
+.law-document .law-paragraph.law-annotation{font-weight:650;color:var(--accent-strong);}
+.law-article-nav{max-height:145px;gap:7px;margin:0 0 22px;}
+.law-article-nav button{font-size:11px;line-height:1.4;padding:7px 11px;
+  border:1px solid var(--line);background:var(--surface2);border-radius:8px;}
+.law-article-nav button:hover{background:var(--accent-wash);border-color:var(--line-hover);color:var(--accent-strong);}
+@media(max-width:820px){.law-document{font-size:15px}}
+@media(max-width:620px){.law-reader{padding:19px 17px}
+ .law-document{padding-top:18px}.law-document .law-article{font-size:16px}
+ .law-document .law-paragraph{font-size:14px;line-height:1.8}
+ .law-document .law-paragraph.law-point{padding-left:11px;margin-bottom:13px}
+ .law-document .law-paragraph.law-preamble{font-size:15px;line-height:1.78}
+ .law-document .law-chapter,.law-document .law-part{margin:29px 0 18px}}
