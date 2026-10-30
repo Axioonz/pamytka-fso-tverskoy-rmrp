@@ -751,6 +751,82 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
 @media(max-width:620px){.territory-guide{padding-top:25px}.tg-header-main{flex-direction:column;gap:14px}.tg-header h1{font-size:clamp(36px,10vw,46px)}.tg-header-main p{font-size:13px}.tg-toc{flex-wrap:nowrap;overflow-x:auto;padding-bottom:5px;scrollbar-width:thin}.tg-toc a{white-space:nowrap;flex:none}.tg-keynote{grid-template-columns:30px minmax(0,1fr);padding:15px;gap:11px}.tg-keynote-symbol{width:29px;height:29px;font-size:17px}.tg-keynote button{grid-column:2;justify-self:start}.tg-part{padding-top:41px}.tg-part-head{align-items:start;gap:8px}.tg-part-head h2{font-size:26px}.tg-part-head p{font-size:12px}.tg-part-head .tg-article-link{padding:8px 9px;font-size:10px!important}.tg-regime{min-height:0;padding:19px}.tg-object-group,.tg-kremlin-zone{padding:19px}.tg-object-tools{align-items:start}.tg-object-count{font-size:10px}.tg-example{grid-template-columns:28px 1fr;gap:8px;padding:15px}.tg-example button{grid-column:2;justify-self:start}.tg-access-row{grid-template-columns:26px 1fr;gap:9px;padding:15px}.tg-access-row button{grid-column:2;justify-self:start}.tg-pass-grid{grid-template-columns:1fr 1fr;gap:8px}.tg-pass-grid article{padding:15px;min-height:160px}.tg-pass-grid h3{font-size:14px}.tg-procedure{grid-template-columns:1fr;gap:5px;padding:18px}.tg-footer{align-items:start;flex-direction:column}}
 @media(max-width:400px){.tg-pass-grid{grid-template-columns:1fr}.tg-part-head{flex-direction:column}.tg-object-tools{flex-direction:column}.tg-object-count{margin-left:2px}}
 
+
+/* Сопровождение и кортежи: тематический маршрут полномочий, без изображений. */
+.escort-studio{padding:36px 0 100px;max-width:1490px;animation:fade-rise .32s var(--ease-ui) both}
+.escort-banner{position:relative;overflow:hidden;display:flex;justify-content:space-between;align-items:end;gap:38px;padding:clamp(26px,4vw,55px);min-height:330px;border:1px solid var(--line);border-radius:23px;background:radial-gradient(ellipse at 83% -20%,rgba(87,148,194,.16),transparent 56%),linear-gradient(125deg,var(--surface2),var(--surface) 68%,var(--bg))}
+.escort-banner:after{content:"";position:absolute;pointer-events:none;inset:-45% -8% -90% 44%;border:1px solid color-mix(in srgb,var(--accent-strong) 15%,transparent);border-radius:50%;box-shadow:0 0 0 58px color-mix(in srgb,var(--accent-strong) 2%,transparent),0 0 0 118px color-mix(in srgb,var(--accent-strong) 2%,transparent),0 0 0 182px color-mix(in srgb,var(--accent-strong) 2%,transparent)}
+.escort-banner-copy,.escort-banner-caption{position:relative;z-index:1}
+.escort-eyebrow{display:flex;align-items:center;gap:10px;color:var(--accent-strong);font-size:11px;letter-spacing:.11em;font-weight:750;text-transform:uppercase}
+.escort-pulse{display:inline-block;width:7px;height:7px;background:var(--accent-strong);border-radius:50%;box-shadow:0 0 0 4px var(--accent-wash)}
+.escort-banner h1{font-size:clamp(41px,4.6vw,70px);line-height:1.06;letter-spacing:-.075em;margin:25px 0 16px;font-weight:750}
+.escort-banner h1 strong{font-weight:750;color:var(--accent)}
+.escort-banner-copy>p{color:var(--muted);line-height:1.7;max-width:610px;margin:0;font-size:15px}
+.escort-banner-caption{display:grid;gap:7px;min-width:180px;border-left:2px solid var(--accent-strong);padding:6px 0 6px 17px;background:color-mix(in srgb,var(--surface2) 25%,transparent)}
+.escort-banner-caption span,.escort-banner-caption small{color:var(--muted);font-size:11px;letter-spacing:.04em}
+.escort-banner-caption b{font-size:24px;letter-spacing:-.04em}
+.escort-section-heading{display:flex;justify-content:space-between;gap:15px;align-items:end;margin:38px 0 18px}
+.escort-micro{font-weight:760;color:var(--accent-strong);font-size:10px;letter-spacing:.12em}
+.escort-section-heading h2{font-size:clamp(25px,2.6vw,37px);font-weight:730;letter-spacing:-.055em;margin:6px 0 5px}
+.escort-section-heading p{margin:0;color:var(--muted);line-height:1.6;font-size:13px}
+.escort-heading-note{font-size:12px;color:var(--faint);white-space:nowrap}
+.escort-track{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;position:relative;padding:16px 0 20px}
+.escort-track:before{content:"";position:absolute;height:2px;top:46px;left:9%;right:9%;background:linear-gradient(90deg,var(--line),var(--accent-strong) 50%,var(--line));opacity:.35;pointer-events:none}
+.escort-stop{isolation:isolate;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:18px 15px 15px;min-height:158px;display:flex;flex-direction:column;align-items:start;gap:11px;color:var(--text);transition:background .17s,border-color .17s,transform .17s}
+.escort-stop:hover{border-color:var(--line-hover);transform:translateY(-2px)}
+.escort-stop[aria-pressed="true"]{background:var(--accent-wash);border-color:var(--accent-strong)}
+.escort-stop-dot{display:grid;place-items:center;width:27px;height:27px;border:1px solid var(--line-hover);border-radius:50%;background:var(--surface2);color:var(--accent-strong);font-size:10px;font-weight:800;z-index:1}
+.escort-stop[aria-pressed="true"] .escort-stop-dot{background:var(--accent);color:var(--accent-text);border-color:var(--accent)}
+.escort-stop b{font-size:15px;line-height:1.3;letter-spacing:-.018em}
+.escort-stop small{font-size:11px;color:var(--muted);line-height:1.45}
+.escort-dashboard{display:grid;grid-template-columns:minmax(0,1fr) minmax(235px,300px);gap:15px;margin-top:8px;align-items:start}
+.escort-briefing{min-width:0;border:1px solid var(--line);border-radius:19px;background:var(--surface);padding:clamp(22px,2.7vw,36px)}
+.escort-brief-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.escort-brief-tag{color:var(--accent-strong);font-size:11px;font-weight:750;letter-spacing:.1em}
+.escort-brief-count{color:var(--faint);font-size:11px}
+.escort-briefing h3{font-size:clamp(25px,2.6vw,37px);line-height:1.22;letter-spacing:-.055em;margin:0 0 14px}
+.escort-brief-summary{font-size:14px;line-height:1.72;color:var(--muted);margin:0;max-width:790px}
+.escort-focus{margin:21px 0 25px;display:flex;gap:13px;padding:15px 17px;background:var(--accent-wash);border-left:2px solid var(--accent-strong);border-radius:0 11px 11px 0}
+.escort-focus span{font-size:15px;color:var(--accent-strong);font-weight:800}
+.escort-focus p{margin:0;font-size:13px;line-height:1.65;color:var(--text)}
+.escort-reference-head{font-size:10px;font-weight:750;letter-spacing:.12em;color:var(--faint);margin:0 0 12px;text-transform:uppercase}
+.escort-law-list{display:grid;gap:11px}
+.escort-law-card{padding:18px 19px;border:1px solid var(--line);border-radius:13px;background:var(--surface2)}
+.escort-law-title{display:flex;justify-content:space-between;gap:15px;align-items:flex-start}
+.escort-law-title b{font-size:14px;line-height:1.4}
+.escort-law-title small{font-size:11px;color:var(--accent-strong);max-width:220px;text-align:right;line-height:1.45}
+.escort-law-card blockquote{margin:13px 0 0;color:var(--muted);font-size:12px;line-height:1.75;white-space:pre-wrap}
+.escort-law-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.escort-law-actions button{font-size:11px}
+.escort-sidebox{background:var(--surface);border:1px solid var(--line);border-radius:19px;padding:24px;display:grid;gap:18px}
+.escort-side-label{font-weight:750;font-size:11px;color:var(--accent-strong);letter-spacing:.11em}
+.escort-side-item{border-top:1px solid var(--line);padding-top:17px}
+.escort-side-item b{font-size:13px}
+.escort-side-item p{font-size:12px;line-height:1.7;color:var(--muted);margin:6px 0}
+.escort-side-item small{font-size:10px;color:var(--accent-strong);line-height:1.5}
+.escort-cases{margin-top:40px}
+.escort-cases .escort-section-heading{margin-bottom:20px}
+.escort-case-layout{display:grid;grid-template-columns:minmax(210px,320px) minmax(0,1fr);gap:15px}
+.escort-case-tabs{display:grid;gap:8px;align-content:start}
+.escort-case-tabs button{width:100%;display:flex;justify-content:space-between;gap:14px;text-align:left;align-items:center;min-height:67px;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:14px 17px;font-weight:650;font-size:13px;line-height:1.4}
+.escort-case-tabs button:hover,.escort-case-tabs button[aria-pressed="true"]{color:var(--accent-strong);border-color:var(--line-hover);background:var(--accent-wash)}
+.escort-case-tabs button span{font-size:11px;color:var(--faint);font-weight:750;flex:none}
+.escort-case-result{border:1px solid var(--line);border-radius:17px;background:var(--surface);padding:clamp(20px,2.5vw,33px)}
+.escort-case-result>small{font-size:10px;letter-spacing:.12em;color:var(--accent-strong);font-weight:750}
+.escort-case-result h3{font-size:clamp(21px,2.3vw,29px);letter-spacing:-.043em;margin:12px 0 14px}
+.escort-case-line{display:grid;grid-template-columns:125px minmax(0,1fr);gap:14px;border-top:1px solid var(--line);padding:15px 0}
+.escort-case-line strong{font-size:11px;color:var(--accent-strong)}
+.escort-case-line p{margin:0;color:var(--muted);font-size:13px;line-height:1.7}
+.escort-case-source{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.escort-disclaimer{display:flex;gap:16px;margin-top:35px;padding:19px 23px;border:1px dashed var(--line);border-radius:13px;background:var(--surface)}
+.escort-disclaimer span{font-size:25px;color:var(--accent-strong);line-height:1}
+.escort-disclaimer p{font-size:12px;color:var(--muted);margin:0;line-height:1.8}
+.escort-disclaimer b{color:var(--text)}
+@media(max-width:1110px){.escort-track{grid-template-columns:repeat(3,minmax(0,1fr))}.escort-track:before{display:none}.escort-dashboard{grid-template-columns:minmax(0,1fr) 250px}}
+@media(max-width:850px){.escort-dashboard{grid-template-columns:1fr}.escort-sidebox{grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.escort-side-label{grid-column:1/-1}.escort-side-item{padding-top:13px}}
+@media(max-width:680px){.escort-studio{padding:22px 0 100px}.escort-banner{padding:24px;min-height:285px;display:block}.escort-banner h1{font-size:clamp(40px,9vw,53px)}.escort-banner-copy>p{font-size:13px}.escort-banner-caption{margin-top:24px}.escort-track{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.escort-stop{min-height:138px;padding:14px 12px}.escort-stop b{font-size:13px}.escort-stop small{font-size:10px}.escort-case-layout{grid-template-columns:1fr}.escort-case-tabs{grid-template-columns:1fr 1fr}.escort-case-tabs button{font-size:12px;min-height:72px}.escort-sidebox{grid-template-columns:1fr}.escort-law-title{display:block}.escort-law-title small{display:block;text-align:left;margin-top:4px}.escort-briefing{padding:20px}.escort-case-line{grid-template-columns:1fr;gap:5px}.escort-heading-note{display:none}}
+@media(max-width:390px){.escort-track,.escort-case-tabs{grid-template-columns:1fr 1fr}.escort-stop{min-height:142px}}
+
 </style>
 </head>
 <body>
@@ -984,10 +1060,31 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
  </section>
  <footer class="tg-footer"><div><strong>Первичный источник</strong><p>Федеральный закон № 86-ФЗ. Пересказ и группировка на этой странице предназначены для быстрого чтения; точные формулировки смотри в тексте закона.</p></div><button type="button" data-territory-law="1">Перейти к закону ↗</button></footer>
 </section>
-<section class="work-screen" id="escort-screen" hidden aria-labelledby="escort-title">
-  <header class="work-header"><span class="work-overline">Справочник</span><h1 id="escort-title">Сопровождение и кортежи</h1><p>Полномочия ФСО на маршруте, при сопровождении охраняемых лиц и при возникновении угрозы.</p></header>
-  <div class="work-notice">Здесь собраны выдержки из законов RMRP. Схемы построения кортежей и конкретные маршруты не приведены, поскольку подтверждённых схем в памятке нет.</div>
-  <div class="work-steps" id="escort-content"></div>
+<section class="escort-studio" id="escort-screen" hidden aria-labelledby="escort-title">
+  <header class="escort-banner">
+    <div class="escort-banner-copy">
+      <div class="escort-eyebrow"><span class="escort-pulse"></span> ФСО / Тверской · Сопровождение</div>
+      <h1 id="escort-title">Сопровождение<br><strong>и кортежи</strong></h1>
+      <p>Полномочия ФСО на маршруте, при проходе на территорию и обеспечении безопасности охраняемого лица.</p>
+    </div>
+    <div class="escort-banner-caption"><span>ПРАВОВАЯ ОСНОВА</span><b>ФЗ № 22-ФЗ</b><small>Статьи 7, 10 и 11</small></div>
+  </header>
+  <div class="escort-section-heading"><div><span class="escort-micro">01 / НАВИГАЦИЯ</span><h2>Карта полномочий</h2><p>Выберите тему на схеме. Ниже откроются условия и текст правовых норм.</p></div><span class="escort-heading-note">5 тем</span></div>
+  <nav class="escort-track" id="escort-track" aria-label="Темы полномочий при сопровождении"></nav>
+  <div class="escort-dashboard">
+    <article class="escort-briefing" id="escort-briefing" aria-live="polite"></article>
+    <aside class="escort-sidebox">
+      <div class="escort-side-label">НЕ ПУТАТЬ</div>
+      <div class="escort-side-item"><b>Кортеж и дорога</b><p>Ограничение движения привязано к трассе проезда объекта государственной охраны.</p><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 7</small></div>
+      <div class="escort-side-item"><b>Доступ и сопровождение</b><p>Право прохода связано с выполнением полномочий при сопровождении охраняемого лица.</p><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 8</small></div>
+      <div class="escort-side-item"><b>Специальные меры</b><p>В законе они связаны с возникновением угрозы. Само сопровождение не означает автоматического основания для их применения.</p><small>ФЗ о ФСО · ст. 7 · ч. 6 · п. 5</small></div>
+    </aside>
+  </div>
+  <section class="escort-cases" aria-labelledby="escort-cases-title">
+    <div class="escort-section-heading"><div><span class="escort-micro">02 / ПРАКТИКА</span><h2 id="escort-cases-title">Разбор ситуации</h2><p>Выберите вопрос. Откроется применимая норма и условие её использования.</p></div></div>
+    <div class="escort-case-layout"><div class="escort-case-tabs" id="escort-case-tabs" role="group" aria-label="Выбор ситуации"></div><article class="escort-case-result" id="escort-case-result" aria-live="polite"></article></div>
+  </section>
+  <footer class="escort-disclaimer"><span>§</span><p><b>О схемах кортежей.</b> Здесь показаны правовые полномочия, а не схема расстановки автомобилей или утверждённый порядок движения. В материалах текущей памятки нет подтверждённых правил о составе, интервалах и построении кортежа.</p></footer>
 </section>
 <section class="work-screen" id="favorites-screen" hidden aria-labelledby="favorites-title">
   <header class="work-header"><span class="work-overline">Мои материалы</span><h1 id="favorites-title">Личная шпаргалка</h1><p>Сохраняйте нужные статьи, ситуации и документы. Они останутся в этом браузере.</p></header>
@@ -1604,28 +1701,80 @@ function renderTerritories(){
   else $('law-title').scrollIntoView({behavior:'smooth',block:'start'});
  });
 }
-const escortGroups=[
- {title:'Маршрут и движение',description:'Временные ограничения движения и требования изменить маршрут в пределах полномочий ФСО.',refs:['ref-exact-fso-10-1-7','ref-exact-fso-11-1-3']},
- {title:'Проход при сопровождении',description:'Условия прохода на территории для выполнения полномочий при сопровождении охраняемого лица.',refs:['ref-exact-fso-10-1-8','ref-exact-fso-10-1-22']},
- {title:'Охранная зона и доступ',description:'Ограничения доступа, предусмотренные для обеспечения безопасности охраняемого лица.',refs:['ref-exact-fso-7-6-3','ref-exact-fso-10-1-17']},
- {title:'Действия при угрозе',description:'Специальные меры применяются только при условиях, указанных в законе. Само движение кортежа не является таким основанием.',refs:['ref-exact-fso-7-6-5']},
- {title:'Материалы о правонарушении',description:'Передача материалов уполномоченным органам для процессуального решения.',refs:['ref-exact-fso-7-8-all']}
+const escortTopics=[
+ {name:'Маршрут',short:'Движение и ограничения',title:'Маршрут и движение',summary:'Закон допускает временные ограничения для транспорта и пешеходов на трассах проезда объектов государственной охраны. Отдельно предусмотрено требование остановиться или изменить маршрут.',focus:'Основание связано с трассой проезда объекта государственной охраны. Это не общее разрешение перекрывать любую дорогу.',refs:['ref-exact-fso-10-1-7','ref-exact-fso-11-1-3']},
+ {name:'Проход',short:'Доступ при сопровождении',title:'Проход на территорию',summary:'Для исполнения полномочий при сопровождении охраняемого лица закон предусматривает проход на закрытые, охраняемые и частные территории.',focus:'Формулировка закона содержит условие: «в целях выполнения своих полномочий при сопровождении охраняемых лиц».',refs:['ref-exact-fso-10-1-8','ref-exact-fso-10-1-22']},
+ {name:'Зона охраны',short:'Ограничение доступа',title:'Охранная зона',summary:'Вокруг охраняемого лица действует охранная зона. Закон определяет её минимальный радиус и отдельные условия временного ограничения доступа.',focus:'Охранная зона устанавливается в радиусе не менее 20 метров. Дополнительные ограничения доступа при угрозе связаны с предусмотренными законом основаниями.',refs:['ref-exact-fso-7-1-all','ref-exact-fso-7-6-3','ref-exact-fso-10-1-17']},
+ {name:'Угроза',short:'Условия специальных мер',title:'Действия при угрозе',summary:'Специальные меры при движении кортежа и сопровождении предусмотрены при возникновении угрозы жизни и здоровью охраняемого лица или сотрудников органов государственной охраны.',focus:'Наличие самого кортежа не заменяет установленное законом условие угрозы. Применение силы регулируется законодательством.',refs:['ref-exact-fso-7-6-5','ref-exact-fso-17-1-all']},
+ {name:'Материалы',short:'Передача компетентным органам',title:'Материалы о правонарушении',summary:'Если при обеспечении безопасности охраняемого лица выявлено правонарушение, закон разрешает передавать материалы уполномоченным органам для процессуального решения.',focus:'Передача материалов и самостоятельное принятие процессуального решения — разные действия.',refs:['ref-exact-fso-7-8-all']}
 ];
-function renderEscort(){
- const content=$('escort-content');content.replaceChildren();
- escortGroups.forEach((group,i)=>{
-  const step=document.createElement('section');step.className='work-step';
-  const number=document.createElement('div');number.className='work-step-num';number.textContent=String(i+1).padStart(2,'0');
-  const body=document.createElement('div');body.className='work-step-body';const title=document.createElement('h2');title.textContent=group.title;
-  const text=document.createElement('p');text.textContent=group.description;const refs=document.createElement('div');refs.className='work-step-refs';
-  for(const id of group.refs){const item=findRef(id);if(!item)continue;
-   const button=btn('', 'work-mini',()=>openReference(item));
-   const name=document.createElement('b');name.textContent=item.title;
-   const law=document.createElement('small');law.textContent=getReferenceCitation(item)+' ↗';button.append(name,law);refs.append(button)
-  }
-  body.append(title,text,refs);step.append(number,body);content.append(step)
- });
+const escortCases=[
+ {title:'Ограничение движения',question:'На трассе проезда нужно временно ограничить движение.',condition:'Речь должна идти именно о трассе проезда объекта государственной охраны.',point:'ФЗ о ФСО предусматривает ограничение движения транспорта и пешеходов, а также требование прекратить движение или изменить маршрут на такой трассе.',limit:'За пределами указанного основания схема не даёт общего права перекрывать дороги.',refs:['ref-exact-fso-10-1-7','ref-exact-fso-11-1-3']},
+ {title:'Проход на объект',question:'Во время сопровождения нужно пройти на закрытую территорию.',condition:'Проход необходим для выполнения полномочий при сопровождении охраняемого лица.',point:'ФЗ о ФСО прямо предусматривает проход и нахождение на закрытых, охраняемых и частных территориях при этом условии.',limit:'Право прохода не следует представлять как самостоятельное право беспрепятственного посещения любых объектов вне сопровождения.',refs:['ref-exact-fso-10-1-8']},
+ {title:'Охранная зона',question:'Требуется ограничить доступ к охраняемому лицу.',condition:'Закон устанавливает охранную зону. Дополнительное временное ограничение доступа по приведённой норме связано с угрозой безопасности охраняемого лица.',point:'Сопоставьте нормы об охранной зоне и об ограничении доступа при угрозе.',limit:'Не путайте автоматическое существование охранной зоны с основаниями дополнительных ограничений.',refs:['ref-exact-fso-7-1-all','ref-exact-fso-7-6-3']},
+ {title:'Угроза при движении',question:'Во время сопровождения возникла угроза охраняемому лицу.',condition:'Применимость специальных мер определяется условиями угрозы, указанными в законе.',point:'ФЗ о ФСО предусматривает специальные средства и специальные манёвры транспорта при возникновении угрозы жизни и здоровью охраняемого лица или сотрудников ФСО.',limit:'Визуальная схема не является инструкцией по применению силы или манёврам; для действий применяются полные нормы законодательства.',refs:['ref-exact-fso-7-6-5','ref-exact-fso-17-1-all']},
+ {title:'Выявлено нарушение',question:'При охране лица зафиксировано правонарушение.',condition:'Правонарушение выявлено при исполнении обязанностей по обеспечению безопасности охраняемого лица.',point:'Закон разрешает передать материалы, в том числе видеофиксацию, уполномоченному органу.',limit:'Передача материалов не подменяет процессуальные решения компетентного органа.',refs:['ref-exact-fso-7-8-all']}
+];
+let escortSelected=0,escortCaseSelected=0;
+function escortLawButton(item){
+ const b=btn('Открыть статью ↗','work-primary',()=>openReference(item,b));
+ b.type='button';return b;
 }
+function showEscortTopic(index){
+ escortSelected=index;
+ document.querySelectorAll('#escort-track .escort-stop').forEach((b,i)=>b.setAttribute('aria-pressed',String(i===index)));
+ const topic=escortTopics[index],root=$('escort-briefing');root.replaceChildren();
+ const top=document.createElement('div');top.className='escort-brief-top';
+ const tag=document.createElement('span');tag.className='escort-brief-tag';tag.textContent='ТЕМА '+String(index+1).padStart(2,'0');
+ const count=document.createElement('span');count.className='escort-brief-count';count.textContent='ФЗ о ФСО · № 22-ФЗ';top.append(tag,count);
+ const title=document.createElement('h3');title.textContent=topic.title;
+ const summary=document.createElement('p');summary.className='escort-brief-summary';summary.textContent=topic.summary;
+ const focus=document.createElement('div');focus.className='escort-focus';const mark=document.createElement('span');mark.textContent='!';
+ const focusText=document.createElement('p');focusText.textContent=topic.focus;focus.append(mark,focusText);
+ const heading=document.createElement('div');heading.className='escort-reference-head';heading.textContent='Точные нормы';
+ const refs=document.createElement('div');refs.className='escort-law-list';
+ for(const id of topic.refs){const item=findRef(id);if(!item)continue;
+  const box=document.createElement('div');box.className='escort-law-card';
+  const header=document.createElement('div');header.className='escort-law-title';
+  const title=document.createElement('b');title.textContent=item.title;
+  const cite=document.createElement('small');cite.textContent=getReferenceCitation(item);header.append(title,cite);
+  const quote=document.createElement('blockquote');quote.textContent=getExactQuote(item)||'Дословный текст не включён в памятку.';
+  const actions=document.createElement('div');actions.className='escort-law-actions';actions.append(escortLawButton(item),bookmarkButton('ref',item.id));
+  box.append(header,quote,actions);refs.append(box);
+ }
+ root.append(top,title,summary,focus,heading,refs);
+}
+function showEscortCase(index){
+ escortCaseSelected=index;
+ document.querySelectorAll('#escort-case-tabs button').forEach((b,i)=>b.setAttribute('aria-pressed',String(i===index)));
+ const scenario=escortCases[index],root=$('escort-case-result');root.replaceChildren();
+ const micro=document.createElement('small');micro.textContent='СИТУАЦИЯ '+String(index+1).padStart(2,'0');
+ const title=document.createElement('h3');title.textContent=scenario.question;root.append(micro,title);
+ for(const [label,value] of [['Условие',scenario.condition],['Основание',scenario.point],['Ограничение',scenario.limit]]){
+  const row=document.createElement('div');row.className='escort-case-line';
+  const name=document.createElement('strong');name.textContent=label;const p=document.createElement('p');p.textContent=value;
+  row.append(name,p);root.append(row);
+ }
+ const sources=document.createElement('div');sources.className='escort-case-source';
+ for(const id of scenario.refs){const item=findRef(id);if(!item)continue;const b=escortLawButton(item);b.textContent=getReferenceCitation(item)+' ↗';sources.append(b)}root.append(sources);
+}
+function renderEscort(){
+ const track=$('escort-track'),tabs=$('escort-case-tabs');
+ if(track.children.length===0){escortTopics.forEach((item,index)=>{
+  const b=document.createElement('button');b.type='button';b.className='escort-stop';b.setAttribute('aria-pressed','false');
+  const num=document.createElement('span');num.className='escort-stop-dot';num.textContent=String(index+1).padStart(2,'0');
+  const title=document.createElement('b');title.textContent=item.name;
+  const sub=document.createElement('small');sub.textContent=item.short;b.append(num,title,sub);
+  b.addEventListener('click',()=>showEscortTopic(index));track.append(b);
+ });}
+ if(tabs.children.length===0){escortCases.forEach((item,index)=>{
+  const b=document.createElement('button');b.type='button';b.setAttribute('aria-pressed','false');
+  const label=document.createElement('span');label.textContent=String(index+1).padStart(2,'0');
+  b.append(document.createTextNode(item.title),label);b.addEventListener('click',()=>showEscortCase(index));tabs.append(b);
+ });}
+ showEscortTopic(escortSelected);showEscortCase(escortCaseSelected);
+}
+
 // Локальные закладки: никакой серверной записи и синхронизации.
 const favoriteKey='fso-rmrp-bookmarks-v1';
 function readFavorites(){try{const raw=JSON.parse(localStorage.getItem(favoriteKey)||'[]');return Array.isArray(raw)?raw.filter(x=>x&&['ref','law','situation','concept'].includes(x.type)&&typeof x.id==='string').slice(0,500):[]}catch{return []}}
