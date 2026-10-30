@@ -13,7 +13,8 @@ const sections={
  escort:{title:'Сопровождение и кортежи',description:'Полномочия на маршруте.',keys:['кортеж','маршрут','сопровождение']},
  posts:{title:'Посты и патрули',description:'Расположение постов, маршруты и доклады.',keys:['посты','патрули','маршруты','дежурство','доклады']},
  favorites:{title:'Личная шпаргалка',description:'Сохранённые материалы.',keys:['избранное','закладки','шпаргалка']},
- quiz:{title:'Проверка знаний',description:'В разработке.',keys:['тест','экзамен','вопросы','аттестация']}
+ quiz:{title:'Проверка знаний',description:'В разработке.',keys:['тест','экзамен','вопросы','аттестация']},
+ departments:{title:'Памятки отделов',description:'В разработке.',keys:['отделы','памятки отделов','инструкции подразделений']}
 };
 const $=id=>document.getElementById(id);
 function currentApiUrl(){
@@ -66,7 +67,13 @@ function matchingReferences(items){
 function renderReference(){
  const everything=referenceItems();
  const query=$('reference-search').value.trim();
- const all=referenceAllMode||query?everything:everything.filter(x=>x.editorialPriority==='core').sort((a,b)=>referencePriorityOrder.indexOf(a.id)-referencePriorityOrder.indexOf(b.id));
+ // Вкладки оснований: core показывается в «Основных» и во «Всех», additional только во «Всех».
+ // Поиск сейчас проверяет все статьи, независимо от выбранной вкладки.
+ // Если вручную перевести новую статью в core, она попадёт в конец списка, а не на первое место.
+ const all=referenceAllMode||query?everything:everything.filter(x=>x.editorialPriority==='core').sort((a,b)=>{
+  const ai=referencePriorityOrder.indexOf(a.id),bi=referencePriorityOrder.indexOf(b.id);
+  return (ai<0?Infinity:ai)-(bi<0?Infinity:bi);
+ });
  const filtered=matchingReferences(all),filters=$('reference-filters'),list=$('reference-list');
  $('ref-core').classList.toggle('active',!referenceAllMode);$('ref-all').classList.toggle('active',referenceAllMode);
  filters.replaceChildren();list.replaceChildren();
@@ -178,7 +185,8 @@ function renderDetention(){
  const guide=detItems.find(x=>Array.isArray(x.steps)&&x.steps.length);
  if(!guide){const empty=document.createElement('p');empty.className='det-step-card';empty.textContent='Этапы задержания пока не добавлены.';list.append(empty);return;}
  const buttons=[];
- (guide.steps||[]).forEach((step,i)=>{
+ const shownSteps=(guide.steps||[]).filter(step=>!['Основание','Проверить вид задержания'].includes(step.title));
+ shownSteps.forEach((step,i)=>{
   const section=document.createElement('section');section.className='det-step';section.id='det-step-'+(i+1);
   const number=document.createElement('div');number.className='det-step-index';number.setAttribute('aria-hidden','true');number.textContent=String(i+1).padStart(2,'0');section.append(number);
   const card=document.createElement('article');card.className='det-step-card';
@@ -197,7 +205,7 @@ function renderDetention(){
   const num=document.createElement('span');num.className='det-nav-num';num.textContent=String(i+1).padStart(2,'0');const text=document.createElement('span');text.textContent=step.title;btn.append(num,text);
   btn.addEventListener('click',()=>{section.scrollIntoView({behavior:'smooth',block:'start'});buttons.forEach(b=>b.classList.remove('active'));btn.classList.add('active')});nav.append(btn);buttons.push(btn);
  });
- if('IntersectionObserver' in window){detentionObserver=new IntersectionObserver((entries)=>{for(const entry of entries){if(entry.isIntersecting){const ix=(guide.steps||[]).findIndex((_,i)=>entry.target.id==='det-step-'+(i+1));if(ix>=0)buttons.forEach((b,j)=>b.classList.toggle('active',j===ix))}}},{rootMargin:'-5% 0px -70% 0px',threshold:0});list.querySelectorAll('.det-step').forEach(x=>detentionObserver.observe(x));}
+ if('IntersectionObserver' in window){detentionObserver=new IntersectionObserver((entries)=>{for(const entry of entries){if(entry.isIntersecting){const ix=shownSteps.findIndex((_,i)=>entry.target.id==='det-step-'+(i+1));if(ix>=0)buttons.forEach((b,j)=>b.classList.toggle('active',j===ix))}}},{rootMargin:'-5% 0px -70% 0px',threshold:0});list.querySelectorAll('.det-step').forEach(x=>detentionObserver.observe(x));}
  const other=detItems.filter(x=>x!==guide);extra.hidden=!other.length;
  for(const item of other){const article=document.createElement('article');const h=document.createElement('h3');h.textContent=item.title;article.append(h);if(item.summary){const p=document.createElement('p');p.textContent=item.summary;article.append(p)}if(Array.isArray(item.steps)){
    for(const stage of item.steps){const title=document.createElement('h4');title.textContent=stage.title;article.append(title);const action=document.createElement('p');action.textContent=stage.action||'';article.append(action);if(stage.explain){const reason=document.createElement('p');reason.textContent=stage.explain;article.append(reason)}for(const n of stage.norms||[]){const norm=document.createElement('div');norm.className='det-norm';const citation=document.createElement('cite');citation.textContent=n.citation||'';const txt=document.createElement('p');txt.className='det-norm-text';txt.textContent=n.text||'';norm.append(citation,txt);article.append(norm)}}
@@ -275,12 +283,12 @@ async function loadPublic(){
   publicMaterials=[...embeddedReferences,...localExtraMaterials,
    ...remoteItems.filter(x=>!localIds.has(x.id)&&(x.sectionId!=='reference'||(getExactQuote(x)&&!localCitations.has(getReferenceCitation(x).toLocaleLowerCase('ru-RU')))))];
   renderReference();
-  if(location.hash==='#situations')renderScenarioCatalog();
+  // Ситуации временно скрыты и не загружаются как каталог.
   renderLawList();
   updatePortalStats();
   const allowed=new Set(), homeButton=nav.querySelector('[data-page="home"]');
   // Локальные разделы не должны исчезать, когда сервер возвращает только разделы API.
-  const builtInPages=new Set(['home','situations','reference','concepts','detention','territories','escort','favorites','quiz','posts','laws']);
+  const builtInPages=new Set(['home','situations','reference','concepts','detention','territories','escort','favorites','quiz','departments','posts','laws']);
   const sorted=[...(info.sections||[])].filter(s=>s.visible).sort((a,b)=>a.order-b.order);
   for(const item of sorted){
    if(!item.id || !/^[a-z0-9-]{1,80}$/.test(item.id))continue;
@@ -353,17 +361,17 @@ function renderScenarioCatalog(){
   body.append(bookmarkButton('situation',x.id));item.append(body);list.append(item);
  }
 }
-$('scenario-find').addEventListener('input',renderScenarioCatalog);
+// Поля поиска ситуаций временно нет, раздел находится в разработке.
 
 function go(page){
  closeReference();
  if(!Object.prototype.hasOwnProperty.call(sections,page))page='home';
  const home=page==='home',isLaws=page==='laws',isReference=page==='reference',isDetention=page==='detention';
-  const custom=['territories','escort','posts','favorites','quiz','situations'];
+  const custom=['territories','escort','posts','favorites','quiz','departments','situations'];
   $('home-screen').hidden=!home;$('section-screen').hidden=home||isLaws||isReference||isDetention||custom.includes(page);$('law-screen').hidden=!isLaws;$('reference-screen').hidden=!isReference;$('detention-screen').hidden=!isDetention;
   custom.forEach(id=>$(id+'-screen').hidden=page!==id);
   if(isReference){renderReference()}
-  else if(page==='situations'){renderScenarioCatalog()}
+  else if(page==='situations'){/* Раздел в разработке. */}
   else if(isLaws){renderLawList();if(!selectedLaw&&lawCatalog.length)openLaw(lawCatalog[0].id)}
   else if(isDetention){renderDetention()}
   else if(page==='territories'){renderTerritories()}
@@ -392,7 +400,7 @@ function portalSearchIndex(){
  const result=[];
  for(const id of Object.keys(sections))if(id!=='home')result.push({type:'section',title:sections[id].title,subtitle:'Раздел памятки',terms:[sections[id].title,...sections[id].keys].join(' '),id});
  for(const it of publicMaterials){
-  const type=it.sectionId==='reference'?'reference':(it.sectionId==='situations'?'situation':(it.sectionId==='concepts'?'concept':'other'));
+  const type=it.sectionId==='reference'?'reference':(it.sectionId==='concepts'?'concept':'other');
   if(type==='other')continue;
   const text=type==='reference'?getExactQuote(it):String(it.body||'')+(Array.isArray(it.steps)?it.steps.map(x=>[x.title,x.action].join(' ')).join(' '):'');
   result.push({type,id:it.id,title:it.title,subtitle:type==='reference'?getReferenceCitation(it):sections[it.sectionId]?.title||'',terms:[it.title,it.summary||'',type==='reference'?getReferenceCitation(it):'',text].join(' ').slice(0,20000)});
@@ -447,11 +455,11 @@ for(const card of document.querySelectorAll('[data-reference-id]'))card.addEvent
  const item=publicMaterials.find(x=>x.id===card.dataset.referenceId);if(!item)return;
  go('reference');openReference(item,card);
 });
-for(const card of document.querySelectorAll('[data-situation-id]'))card.addEventListener('click',()=>openPortalHit({type:'situation',id:card.dataset.situationId}));
+// Карточки старых ситуаций удалены с главной.
 for(const card of document.querySelectorAll('[data-law-id]'))card.addEventListener('click',()=>{go('laws');openLaw(card.dataset.lawId)});
 function updatePortalStats(){
  $('portal-ref-count').textContent=referenceItems().length;
- $('portal-sit-count').textContent=publicMaterials.filter(it=>it.sectionId==='situations').length;
+ // Количество старых ситуаций на главной больше не показывается.
  $('portal-law-count').textContent=lawRecords().length;
 }
 document.addEventListener('keydown',event=>{
@@ -541,26 +549,33 @@ function drawLawText(){
  nav.replaceChildren();wrap.replaceChildren();
  if(!lawBody)return;
  const lines=lawBody.replace(/\r\n?/g,'\n').split('\n');
- let hits=0,serial=0;
+ let hits=0,serial=0,hasArticle=false;
  const frag=document.createDocumentFragment();
  let article=null;
  for(const raw of lines){
   const line=raw.trim();
   if(!line)continue;
-  const chapter=/^(?:Глава\s+[IVXLC\d]+|Раздел\s+[IVXLC\d]+)(?:[.\s:–—-]|$)/iu.test(line);
+  // Номер статьи, заголовок главы и пункт уже отделены при подготовке файлов.
+  // Юридические формулировки остаются текстом, а не вставляются через innerHTML.
+  const chapter=/^(?:Глава|Раздел)\s+[IVXLC\d]+(?:[.\s:–—-]|$)/iu.test(line);
+  const part=/^(?:Часть|Параграф)\s+[IVXLC\d]+(?:[.\s:–—-]|$)/iu.test(line);
   const heading=/^Статья\s+\d+(?:[.\-]\d+)*(?:[.\s:–—-]|$)/iu.test(line);
-  if(chapter)article=null;
+  const note=/^(?:Примечани[ея]|Преамбула|Приложение\s+(?:№\s*)?\d+)\b/iu.test(line);
+  if(chapter||part)article=null;
   let el;
-  if(chapter||heading){
-   if(heading){article=document.createElement('section');article.className='law-article-block';frag.append(article)}
-   el=document.createElement(chapter?'h2':'h3');
-   el.className=chapter?'law-chapter':'law-article';
+  if(chapter||part||heading){
+   if(heading){article=document.createElement('section');article.className='law-article-block';frag.append(article);hasArticle=true}
+   el=document.createElement(heading?'h3':'h2');
+   el.className=heading?'law-article':(part?'law-part':'law-chapter');
    el.id='law-heading-'+(++serial);
    const btn=document.createElement('button');btn.type='button';btn.textContent=line.slice(0,90);
    btn.title=line;btn.addEventListener('click',()=>el.scrollIntoView({behavior:'smooth',block:'start'}));nav.append(btn);
   }else{
-   el=document.createElement('p');el.className='law-paragraph';
-   if(/^(?:\d+(?:\.\d+)*[.)]|[а-яё][)])\s+/iu.test(line))el.classList.add('law-point');
+   el=document.createElement('p');
+   const point=/^(?:\d+(?:[-.]\d+)*[.)]|[а-яё][)]|[•–—-])\s+/iu.test(line);
+   const definition=/^[А-ЯЁ][а-яё-]+(?: [А-Яа-яё-]+){0,7}\s+[–—-]\s+/u.test(line);
+   el.className='law-paragraph'+(point||definition?' law-point':'')+(note?' law-annotation':'');
+   if(!hasArticle&&!note&&!point)el.classList.add('law-preamble');
   }
   if(term)hits+=line.toLocaleLowerCase('ru-RU').split(term.toLocaleLowerCase('ru-RU')).length-1;
   textMark(el,line,term);
@@ -571,7 +586,7 @@ function drawLawText(){
  const q=lawTextQuality(lawBody),note=$('law-note');
  if(!q.ok){
   note.hidden=false;
-  note.textContent='Неполная копия: у отдельных статей отсутствует текст. Такой документ нельзя считать полным законом.';
+  note.textContent='В этой копии некоторые статьи могут быть неполными. Сверяйте текст с первоисточником.';
   note.classList.add('law-warning');
  }else{
   note.hidden=true;note.classList.remove('law-warning');
@@ -634,37 +649,98 @@ function normCard(item){
  actions.append(btn('Читать норму ↗','work-primary',()=>openReference(item)),bookmarkButton('ref',item.id));
  card.append(citation,head,desc,actions);return card;
 }
+// ТЕРРИТОРИИ: статьи показываются прямо здесь, без переключения на «Законодательство».
+// Используется исходный полный текст ФЗ № 86-ФЗ из data/законы/.
+let territoryPreviousFocus = null;
+function closeTerritoryArticle(){
+ const overlay=$('tg-law-overlay');
+ if(!overlay || overlay.hidden)return;
+ overlay.hidden=true;
+ document.body.classList.remove('tg-law-open');
+ if(territoryPreviousFocus?.isConnected)territoryPreviousFocus.focus({preventScroll:true});
+ territoryPreviousFocus=null;
+}
+async function openTerritoryArticle(button){
+ const overlay=$('tg-law-overlay'),content=$('tg-law-content'),title=$('tg-law-title');
+ const articleNumber=String(button.dataset.territoryLaw||'1');
+ const original=String(button.textContent||'').trim();
+ territoryPreviousFocus=button;
+ title.textContent='Статья '+articleNumber;
+ content.replaceChildren();
+ overlay.hidden=false;
+ document.body.classList.add('tg-law-open');
+ $('tg-law-close').focus({preventScroll:true});
+ const loading=document.createElement('p');loading.textContent='Загрузка текста статьи…';content.append(loading);
+ try{
+  // Основной источник уже загружен из отдельных JS-файлов закона.
+  const law=await fetchStaticLaw('law-26625');
+  const lines=law.replace(/\r\n?/g,'\n').split('\n');
+  const indices=[];
+  lines.forEach((raw,i)=>{const match=raw.trim().match(/^Статья\s+(\d+)(?![\d-])(?:[.\s:–—-]|$)/iu);if(match?.[1]===articleNumber)indices.push(i)});
+  // В PDF сначала бывает оглавление. Последнее вхождение статьи является самим текстом.
+  const start=indices.at(-1);
+  if(start===undefined)throw new Error('Статья '+articleNumber+' не найдена во встроенном документе.');
+  let stop=lines.length;
+  for(let i=start+1;i<lines.length;i++){
+   if(/^Статья\s+\d+(?:[.\-]\d+)*(?:[.\s:–—-]|$)/iu.test(lines[i].trim())){stop=i;break}
+  }
+  title.textContent=lines[start].trim();
+  const section=lines.slice(start,stop);
+  content.replaceChildren();
+  const label=original.match(/п\.\s*((?:\d+\s*,\s*)*\d+)/iu);
+  const points=label?label[1].split(',').map(x=>x.trim()):[];
+  const parts=[...original.matchAll(/\b(?:ст\.?\s*)?(\d+)\.(\d+)\b/giu)].map(x=>x[1]+'.'+x[2]);
+  const highlightedPoints=new Set();
+  const startMatch=line=>{
+   const matchedPart=parts.some(x=>line.startsWith(x+'.')||line===x);
+   const point=points.find(x=>line.startsWith(x+')'));
+   if(point && !highlightedPoints.has(point)){highlightedPoints.add(point);return true}
+   return matchedPart;
+  };
+  const isNewItem=line=>/^\d+(?:\.\d+)*\.\s|^\d+\)\s|^Статья\s+\d+/iu.test(line);
+  // Текст PDF физически разбит по коротким строкам. Объединяем переносы
+  // внутри одного пункта для чтения, не переписывая его слова.
+  const paragraphs=[];
+  let current=null;
+  const flush=()=>{if(current&&current.parts.length){paragraphs.push(current)}current=null};
+  section.forEach((raw,i)=>{
+   const line=raw.trim();
+   if(!line){flush();return}
+   if(i===0){flush();paragraphs.push({parts:[line],heading:true});return}
+   if(isNewItem(line))flush();
+   if(!current)current={parts:[],heading:false};
+   current.parts.push(line);
+  });
+  flush();
+  let highlighted=false;
+  for(const paragraph of paragraphs){
+   const line=paragraph.parts.join(' ');
+   if(paragraph.heading){const h=document.createElement('h3');h.textContent=line;content.append(h);continue}
+   const p=document.createElement('p');p.textContent=line;
+   if(startMatch(line)){
+    const wrap=document.createElement('div');wrap.className='tg-law-highlight';wrap.append(p);content.append(wrap);highlighted=true;
+   }else content.append(p);
+  }
+  if(highlighted){const marker=content.querySelector('.tg-law-highlight');marker?.scrollIntoView({block:'center',behavior:'instant'})}
+  else content.scrollTop=0;
+ }catch(error){content.replaceChildren();const p=document.createElement('p');p.textContent='Не удалось показать статью: '+error.message;content.append(p)}
+}
 function renderTerritories(){
  const root=$('territories-screen');
  if(root.dataset.ready==='true')return;
  root.dataset.ready='true';
- const search=$('tg-object-query'),counter=$('tg-object-count'),groups=[...root.querySelectorAll('.tg-object-group')];
- const filterObjects=()=>{
-  const q=search.value.trim().toLocaleLowerCase('ru-RU');let num=0;
-  for(const group of groups){let visible=0;
-   for(const li of group.querySelectorAll('[data-tg-object]')){
-    const match=!q||(li.textContent+' '+li.dataset.tgObject).toLocaleLowerCase('ru-RU').includes(q);
-    li.hidden=!match;if(match){num++;visible++}
-   }
-   group.hidden=visible===0;
-  }
-  counter.textContent=num+' из 13';
- };
- search.addEventListener('input',filterObjects);
- // Открываем именно встроенный в RMRP закон, без ссылок на статьи из РО.
- root.addEventListener('click',async event=>{
-  const refButton=event.target.closest('button[data-territory-ref]');
-  if(refButton){const norm=findRef(refButton.dataset.territoryRef);if(norm)openReference(norm,refButton);return}
-  const button=event.target.closest('button[data-territory-law]');if(!button)return;
-  const article=String(button.dataset.territoryLaw||'1');
-  go('laws');await openLaw('law-26625');
-  const heads=[...$('law-document').querySelectorAll('.law-article')];
-  // В исходном документе перед основным текстом встречается оглавление. Выбираем последнюю подходящую статью.
-  const found=heads.filter(x=>new RegExp('^Статья\\s+'+article+'(?![\\d-])(?:\\.|\\s|$)','iu').test(x.textContent.trim())).at(-1);
-  if(found)found.scrollIntoView({behavior:'smooth',block:'start'});
-  else $('law-title').scrollIntoView({behavior:'smooth',block:'start'});
+ root.addEventListener('click',event=>{
+  const button=event.target.closest('button[data-territory-law]');
+  if(button)openTerritoryArticle(button);
+ });
+ $('tg-law-close').addEventListener('click',closeTerritoryArticle);
+ $('tg-law-overlay').addEventListener('click',event=>{if(event.target.id==='tg-law-overlay')closeTerritoryArticle()});
+ document.addEventListener('keydown',event=>{
+  if($('tg-law-overlay').hidden)return;
+  if(event.key==='Escape'){event.preventDefault();closeTerritoryArticle()}
  });
 }
+
 const escortTopics=[
  {name:'Маршрут',short:'Движение и ограничения',title:'Маршрут и движение',summary:'Закон допускает временные ограничения для транспорта и пешеходов на трассах проезда объектов государственной охраны. Отдельно предусмотрено требование остановиться или изменить маршрут.',focus:'Основание связано с трассой проезда объекта государственной охраны. Это не общее разрешение перекрывать любую дорогу.',refs:['ref-exact-fso-10-1-7','ref-exact-fso-11-1-3']},
  {name:'Проход',short:'Доступ при сопровождении',title:'Проход на территорию',summary:'Для исполнения полномочий при сопровождении охраняемого лица закон предусматривает проход на закрытые, охраняемые и частные территории.',focus:'Формулировка закона содержит условие: «в целях выполнения своих полномочий при сопровождении охраняемых лиц».',refs:['ref-exact-fso-10-1-8','ref-exact-fso-10-1-22']},
@@ -723,7 +799,7 @@ function showEscortCase(index){
  for(const id of scenario.refs){const item=findRef(id);if(!item)continue;const b=escortLawButton(item);b.textContent=getReferenceCitation(item)+' ↗';sources.append(b)}root.append(sources);
 }
 function renderEscort(){
- const track=$('escort-track'),tabs=$('escort-case-tabs');
+ const track=$('escort-track');
  if(track.children.length===0){escortTopics.forEach((item,index)=>{
   const b=document.createElement('button');b.type='button';b.className='escort-stop';b.setAttribute('aria-pressed','false');
   const num=document.createElement('span');num.className='escort-stop-dot';num.textContent=String(index+1).padStart(2,'0');
@@ -731,12 +807,7 @@ function renderEscort(){
   const sub=document.createElement('small');sub.textContent=item.short;b.append(num,title,sub);
   b.addEventListener('click',()=>showEscortTopic(index));track.append(b);
  });}
- if(tabs.children.length===0){escortCases.forEach((item,index)=>{
-  const b=document.createElement('button');b.type='button';b.setAttribute('aria-pressed','false');
-  const label=document.createElement('span');label.textContent=String(index+1).padStart(2,'0');
-  b.append(document.createTextNode(item.title),label);b.addEventListener('click',()=>showEscortCase(index));tabs.append(b);
- });}
- showEscortTopic(escortSelected);showEscortCase(escortCaseSelected);
+ showEscortTopic(escortSelected);
 }
 
 // Личная шпаргалка: индивидуальные подборки, заметки и открытие на месте.
