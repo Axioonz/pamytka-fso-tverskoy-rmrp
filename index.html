@@ -166,6 +166,154 @@ html[data-theme="dark"]{--bg:#000;--rail-bg:#050505;--surface:#0b0b0b;--surface2
 }
 </style>
 
+<style id="fso-decor-all-sections">
+/* ЖИВОЙ ДЕКОР V2. Рабочая структура страницы не изменяется. */
+/* Монохромная графика размещается позади заголовков, без изображений в юридических разделах. */
+html[data-theme="dark"]{--fso-ink:rgba(236,244,253,.83);--fso-mid:rgba(225,237,252,.34);--fso-hair:rgba(224,236,250,.13)}
+.fso-scene{position:relative;isolation:isolate}
+.fso-scene>.fso-section-art{position:absolute;pointer-events:none;z-index:-1;top:8px;right:-12px;width:min(54%,700px);height:390px;opacity:.88;overflow:hidden;contain:paint;
+ mask-image:linear-gradient(90deg,transparent,#000 11%,#000 80%,transparent 100%);-webkit-mask-image:linear-gradient(90deg,transparent,#000 11%,#000 80%,transparent 100%)}
+.fso-section-art>span{position:absolute;display:block;box-sizing:border-box;pointer-events:none}
+/* Мягкий световой фон заметен на чёрном, но не подменяет существующие цвета и сетку. */
+.fso-section-art::before{content:"";position:absolute;inset:0;pointer-events:none;background:
+ radial-gradient(ellipse 70% 68% at 69% 31%,rgba(180,207,240,.12),transparent 72%),
+ radial-gradient(ellipse 43% 30% at 93% 95%,rgba(235,241,252,.095),transparent 70%)}
+/* Общий акцент. Линия движется только в правой декоративной зоне. */
+.fso-art-d{height:1px;width:260px;top:56px;right:-14%;opacity:.7;
+ background:linear-gradient(90deg,transparent,rgba(245,249,255,.85),transparent);transform:rotate(-14deg);animation:fso-section-beam 16s ease-in-out infinite alternate}
+.fso-art-e{height:5px;width:5px;top:38px;right:19%;border-radius:50%;background:rgba(250,253,255,.9);box-shadow:0 0 0 6px rgba(215,230,250,.12),0 0 25px rgba(221,237,251,.5);animation:fso-section-blink 6s ease-in-out infinite}
+
+/* ЗАКОНОДАТЕЛЬСТВО: световые дуги и вращающаяся шкала. */
+.fso-scene-laws .fso-art-a,.fso-scene-reference .fso-art-a{width:326px;height:326px;top:-105px;right:2%;border-radius:50%;
+ border:1px solid rgba(226,240,255,.30);box-shadow:0 0 0 27px rgba(224,238,252,.032),0 0 0 56px rgba(224,238,252,.018),inset 0 0 32px rgba(200,226,255,.025);
+ animation:fso-section-orbit 30s ease-in-out infinite alternate}
+.fso-scene-laws .fso-art-a::before,.fso-scene-reference .fso-art-a::before{content:"";position:absolute;inset:39px;border-radius:50%;border:1px dashed rgba(226,240,255,.41);animation:fso-section-spin 58s linear infinite}
+.fso-scene-laws .fso-art-a::after,.fso-scene-reference .fso-art-a::after{content:"";position:absolute;inset:106px;border-radius:50%;border:1px solid rgba(235,245,255,.19)}
+.fso-scene-laws .fso-art-b{width:415px;height:112px;top:179px;right:-80px;transform:rotate(-22deg);background:repeating-linear-gradient(0deg,transparent 0 19px,rgba(225,240,255,.14) 20px,transparent 21px)}
+.fso-scene-laws .fso-art-c{width:160px;height:160px;top:23px;right:125px;border:1px solid rgba(230,243,255,.22);border-radius:50%;border-right-color:transparent;border-bottom-color:transparent;transform:rotate(40deg);animation:fso-section-spin 37s linear infinite reverse}
+
+/* СПРАВОЧНИК: сетка с перспективным перекрестием и концентрическими окружностями. */
+.fso-scene-reference .fso-art-a{width:260px;height:260px;top:-36px;right:13%;border-color:rgba(226,240,255,.23)}
+.fso-scene-reference .fso-art-b{width:430px;height:320px;top:23px;right:-12%;opacity:.5;
+ background:repeating-linear-gradient(90deg,transparent 0 49px,rgba(219,237,253,.18) 50px,transparent 51px),repeating-linear-gradient(0deg,transparent 0 49px,rgba(219,237,253,.18) 50px,transparent 51px);
+ transform:perspective(530px) rotateX(38deg) rotateZ(-11deg);animation:fso-section-grid 23s ease-in-out infinite alternate}
+.fso-scene-reference .fso-art-c{width:185px;height:1px;top:137px;right:15%;background:linear-gradient(90deg,transparent,rgba(241,249,255,.8),transparent);transform:rotate(90deg)}
+
+/* ЗАДЕРЖАНИЕ: ступенчатая схема, идущие вниз пунктирные линии. */
+.fso-scene-detention .fso-art-a{width:390px;height:244px;top:17px;right:3%;opacity:.78;
+ background:repeating-linear-gradient(0deg,transparent 0 52px,rgba(234,243,255,.17) 53px,transparent 54px)}
+.fso-scene-detention .fso-art-a::before{content:"";position:absolute;inset:24px 46px;border-left:1px dashed rgba(245,248,255,.44);border-right:1px dashed rgba(245,248,255,.21)}
+.fso-scene-detention .fso-art-b{width:190px;height:190px;right:13%;top:-58px;border:1px solid rgba(244,249,255,.35);border-radius:50%;box-shadow:0 0 0 17px rgba(242,248,255,.03);animation:fso-section-orbit 20s ease-in-out infinite alternate}
+.fso-scene-detention .fso-art-c{right:17%;top:15px;width:115px;height:115px;border:1px dashed rgba(246,250,255,.42);border-radius:50%;animation:fso-section-spin 44s linear infinite}
+
+/* ТЕРРИТОРИИ: радиальная карта, кольца и медленный «сканер». */
+.fso-scene-territories .fso-art-a{width:350px;height:350px;top:-79px;right:1%;border-radius:50%;
+ border:1px solid rgba(234,241,255,.32);
+ background:repeating-radial-gradient(circle at center,transparent 0 35px,rgba(236,242,255,.16) 36px,transparent 37px),
+ linear-gradient(90deg,transparent calc(50% - .5px),rgba(244,249,255,.30) 50%,transparent calc(50% + .5px)),
+ linear-gradient(0deg,transparent calc(50% - .5px),rgba(244,249,255,.25) 50%,transparent calc(50% + .5px))}
+.fso-scene-territories .fso-art-b{width:350px;height:350px;top:-79px;right:1%;border-radius:50%;
+ background:conic-gradient(from 12deg,rgba(234,244,255,.19),rgba(234,244,255,.04) 13%,transparent 22% 100%);
+ animation:fso-section-spin 19s linear infinite}
+.fso-scene-territories .fso-art-c{width:7px;height:7px;top:151px;right:24%;border-radius:50%;background:rgba(245,249,255,.95);box-shadow:0 0 0 9px rgba(236,245,255,.10),0 0 40px rgba(246,251,255,.45)}
+
+/* СОПРОВОЖДЕНИЕ: параллельные маршруты с бегущими световыми следами. */
+.fso-scene-escort .fso-art-a{width:480px;height:360px;top:-64px;right:-6%;opacity:.7;
+ background:repeating-linear-gradient(145deg,transparent 0 45px,rgba(226,241,255,.21) 46px,transparent 47px);
+ transform:skewY(-9deg);animation:fso-section-grid 26s ease-in-out infinite alternate}
+.fso-scene-escort .fso-art-b{width:290px;height:220px;right:9%;top:22px;border-top:1px solid rgba(244,250,255,.5);border-right:1px solid rgba(244,250,255,.3);border-radius:50%;transform:rotate(-25deg)}
+.fso-scene-escort .fso-art-c{width:14px;height:14px;right:31%;top:86px;border:1px solid rgba(247,249,255,.92);transform:rotate(45deg);box-shadow:0 0 0 6px rgba(249,253,255,.06)}
+
+/* ПОСТЫ: тактическая сетка без дополнительных фотографий или схем. */
+.fso-scene-posts .fso-art-a{width:440px;height:330px;top:-20px;right:-8%;opacity:.72;
+ background:radial-gradient(circle,rgba(226,239,255,.34) 1.25px,transparent 1.8px) 0 0/28px 28px;
+ mask-image:radial-gradient(ellipse,#000 33%,transparent 79%)}
+.fso-scene-posts .fso-art-b{width:242px;height:242px;top:-60px;right:5%;border:1px solid rgba(243,248,255,.28);border-radius:50%;box-shadow:0 0 0 21px rgba(236,245,255,.03);animation:fso-section-orbit 24s ease-in-out infinite alternate}
+.fso-scene-posts .fso-art-c{width:135px;height:1px;top:163px;right:15%;background:rgba(235,247,255,.5);transform:rotate(-34deg)}
+
+/* ЛИЧНОЕ: слои бумаги, появляющиеся из темноты. */
+.fso-scene-favorites .fso-art-a,.fso-scene-favorites .fso-art-b,.fso-scene-favorites .fso-art-c{
+ width:190px;height:238px;top:6px;right:12%;border:1px solid rgba(233,244,255,.29);border-radius:12px;
+ background:linear-gradient(180deg,rgba(238,244,255,.045),transparent 68%)}
+.fso-scene-favorites .fso-art-a{transform:rotate(-15deg) translate(-38px,11px);animation:fso-notes-left 16s ease-in-out infinite alternate}
+.fso-scene-favorites .fso-art-b{transform:rotate(11deg) translate(20px,-1px);animation:fso-notes-right 20s ease-in-out infinite alternate}
+.fso-scene-favorites .fso-art-c{transform:rotate(-1deg) translate(-6px,3px);border-color:rgba(242,249,255,.42)}
+.fso-scene-favorites .fso-art-c::after{content:"";position:absolute;inset:40px 30px;background:repeating-linear-gradient(180deg,rgba(236,245,255,.3) 0 1px,transparent 1px 30px)}
+
+/* ПОНЯТИЯ: § как типографский орнамент. */
+.fso-scene-glossary .fso-art-a{right:10%;top:-92px;font-size:390px;line-height:1;font-family:Georgia,serif;font-weight:400;color:rgba(239,244,254,.13);transform:rotate(-15deg);animation:fso-section-orbit 24s ease-in-out infinite alternate}
+.fso-scene-glossary .fso-art-a::before{content:"§"}
+.fso-scene-glossary .fso-art-b{width:360px;height:200px;right:0;top:91px;background:repeating-linear-gradient(180deg,transparent 0 34px,rgba(235,245,255,.15) 35px,transparent 36px);transform:rotate(-9deg)}
+.fso-scene-glossary .fso-art-c{width:180px;height:180px;right:28%;top:-75px;border-radius:50%;border:1px dashed rgba(236,248,255,.33);animation:fso-section-spin 46s linear infinite}
+
+/* Пустые разделы: спокойный акцент без ложных статусов. */
+.fso-scene-future .fso-art-a{width:270px;height:270px;right:6%;top:-92px;border-radius:50%;border:1px dashed rgba(235,244,255,.38);animation:fso-section-spin 56s linear infinite}
+.fso-scene-future .fso-art-b{width:215px;height:215px;right:11%;top:-64px;border-radius:50%;border:1px solid rgba(235,244,255,.23)}
+.fso-scene-future .fso-art-c{width:156px;height:156px;right:16%;top:-35px;border:1px solid rgba(235,244,255,.15);transform:rotate(45deg);animation:fso-section-orbit 22s ease-in-out infinite alternate}
+
+/* Явные акценты на заголовках всех разделов. */
+.fso-scene :is(.det-head h1,.tg-head h1,.escort-head h1,.service-head h1,.cheat-head h1,.reference-head h1,.law-top h1,.subpage h1,.quiz-coming h1){position:relative}
+.fso-scene :is(.det-head h1,.tg-head h1,.escort-head h1,.service-head h1,.cheat-head h1,.reference-head h1,.law-top h1,.subpage h1,.quiz-coming h1)::after{
+ content:"";display:block;width:82px;height:2px;margin-top:11px;border-radius:3px;
+ background:linear-gradient(90deg,rgba(232,243,255,.92),rgba(200,225,248,.42),transparent);box-shadow:0 0 20px rgba(211,233,252,.26)}
+/* Украшаем панели, не меняя их размеры и содержимое. */
+.fso-scene :is(.law-sidebar,.law-reader,.reference-list,.reference-reader,.det-step-card,.det-aside-box,.tg-object-card,.escort-law-card,.escort-future-item,.service-panel,.cheat-side-panel,.concept-card){
+ border-color:rgba(194,218,240,.22);box-shadow:0 0 0 1px rgba(206,229,250,.025),inset 0 1px 0 rgba(235,245,255,.035)}
+.fso-scene :is(.law-sidebar,.law-reader,.reference-entry,.det-step-card,.tg-object-card,.escort-law-card,.service-tab,.cheat-side-panel,.concept-card){transition:border-color .3s ease,box-shadow .3s ease,transform .3s ease}
+.fso-scene :is(.law-sidebar,.law-reader,.reference-entry,.det-step-card,.tg-object-card,.escort-law-card,.service-tab,.cheat-side-panel,.concept-card):hover{border-color:rgba(220,237,252,.38);box-shadow:0 0 0 1px rgba(220,237,252,.055),0 0 36px rgba(179,214,250,.035)}
+/* Основной экран: световые дуги и маркеры стали хорошо различимы. */
+.fso-hero-art .fso-orbit{border-color:rgba(221,238,253,.39);box-shadow:0 0 0 23px rgba(223,242,254,.045),0 0 0 49px rgba(211,235,254,.032),0 0 0 82px rgba(213,238,255,.020)}
+.fso-hero-art .fso-orbit::before{border-color:rgba(228,240,252,.38)}
+.fso-hero-art .fso-arc{border-color:rgba(214,233,250,.29)}
+.fso-hero-art .fso-cross{opacity:.9}
+.fso-hero-art .fso-dot{background:#eef8ff;box-shadow:0 0 0 7px rgba(225,239,255,.10),0 0 30px rgba(240,250,255,.45)}
+.fso-hero-art .fso-glow{background:radial-gradient(circle,rgba(199,223,251,.23),rgba(191,218,245,.10) 36%,transparent 73%);filter:blur(21px)}
+.portal-home::before{opacity:1;background:
+ radial-gradient(ellipse 550px 340px at 17% 8%,rgba(164,199,238,.10),transparent 70%),
+ radial-gradient(ellipse 520px 390px at 83% 31%,rgba(203,222,246,.11),transparent 72%),
+ radial-gradient(ellipse 450px 290px at 30% 88%,rgba(211,221,243,.08),transparent 75%)}
+
+/* Фоновое движение продолжается при прокрутке, но не влияет на интерактивные элементы. */
+body{isolation:isolate}
+html[data-theme="dark"] body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+ background:
+ radial-gradient(ellipse 420px 510px at 88% 85%,rgba(212,232,255,.075),transparent 70%),
+ radial-gradient(ellipse 580px 320px at 33% -5%,rgba(206,225,250,.07),transparent 70%),
+ linear-gradient(105deg,transparent 70%,rgba(232,242,255,.025) 83%,transparent 95%);
+ animation:fso-all-page-drift 28s ease-in-out infinite alternate}
+html[data-theme="dark"] body::after{content:"";position:fixed;right:clamp(26px,5vw,100px);bottom:0;height:210px;width:1px;pointer-events:none;z-index:0;
+ background:linear-gradient(0deg,transparent,rgba(235,246,255,.22),transparent);opacity:.65;
+ animation:fso-edge-lift 19s ease-in-out infinite alternate}
+.app{position:relative;z-index:1}
+html[data-theme="light"] .fso-section-art{opacity:.14!important;filter:grayscale(1)}
+.fso-scene>.fso-section-art{opacity:1}
+.fso-scene .fso-art-a{filter:drop-shadow(0 0 14px rgba(220,236,250,.09))}
+@keyframes fso-all-page-drift{0%{opacity:.5;transform:translate3d(-3vw,1vh,0)}100%{opacity:1;transform:translate3d(2vw,-2vh,0)}}
+@keyframes fso-edge-lift{0%{opacity:.15;transform:translateY(22px)}100%{opacity:.65;transform:translateY(-22px)}}
+@media(max-width:620px){html[data-theme="dark"] body::before{opacity:.45}html[data-theme="dark"] body::after{display:none}}
+@media(prefers-reduced-motion:reduce){html[data-theme="dark"] body::before,html[data-theme="dark"] body::after{animation:none!important}}
+@keyframes fso-section-orbit{from{transform:translate3d(-12px,8px,0) scale(.97)}to{transform:translate3d(14px,-12px,0) scale(1.04)}}
+@keyframes fso-section-spin{to{transform:rotate(360deg)}}
+@keyframes fso-section-grid{from{background-position:0 0,0 0;opacity:.4}to{background-position:-50px 20px,0 45px;opacity:.79}}
+@keyframes fso-section-beam{from{transform:translate3d(-160px,22px,0) rotate(-14deg);opacity:.15}to{transform:translate3d(56px,-14px,0) rotate(-14deg);opacity:.84}}
+@keyframes fso-section-blink{0%,100%{opacity:.22}50%{opacity:1}}
+@keyframes fso-notes-left{from{transform:rotate(-15deg) translate(-38px,11px)}to{transform:rotate(-10deg) translate(-47px,-5px)}}
+@keyframes fso-notes-right{from{transform:rotate(11deg) translate(20px,-1px)}to{transform:rotate(17deg) translate(35px,11px)}}
+@media(max-width:900px){
+ .fso-scene>.fso-section-art{width:62%;height:320px;opacity:.64}
+ .fso-scene .fso-section-art{transform:scale(.8);transform-origin:top right;right:-27px}
+}
+@media(max-width:620px){
+ .fso-scene>.fso-section-art{height:210px;width:78%;right:-38px;top:8px;opacity:.53;transform:scale(.69);transform-origin:top right}
+ .fso-section-art .fso-art-e{display:none}
+ .fso-scene :is(.det-head h1,.tg-head h1,.escort-head h1,.service-head h1,.cheat-head h1,.reference-head h1,.law-top h1,.subpage h1,.quiz-coming h1)::after{width:60px;margin-top:7px}
+}
+@media(prefers-reduced-motion:reduce){
+ .fso-section-art *, .fso-section-art *::before,.fso-section-art *::after {animation:none!important;transition:none!important}
+ .fso-scene :is(.law-sidebar,.law-reader,.reference-entry,.det-step-card,.tg-object-card,.escort-law-card,.service-tab,.cheat-side-panel,.concept-card){transition:none!important}
+}
+
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
@@ -273,18 +421,21 @@ html[data-theme="dark"]{--bg:#000;--rail-bg:#050505;--surface:#0b0b0b;--surface2
 </div>
 <div class="portal-footer"><span>Неофициальная памятка для проекта RMRP · Тверской. Приоритет у действующих нормативных актов сервера.</span></div>
 </section>
-<section class="subpage" id="section-screen" hidden aria-live="polite">
+<section class="fso-scene fso-scene-glossary subpage" id="section-screen" hidden aria-live="polite">
+<div class="fso-section-art" aria-hidden="true"><span class="fso-art-a"></span><span class="fso-art-b"></span><span class="fso-art-c"></span><span class="fso-art-d"></span><span class="fso-art-e"></span></div>
    <button class="back" data-page="home">← На главную</button>
    <h1 id="section-title">Раздел</h1>
    <p class="subpage-desc" id="section-description"></p>
    <div class="material-list" id="material-list" hidden></div><div class="empty-panel" id="empty-panel"><svg class="icon"><use href="#i-file"/></svg><b>Материалы пока не добавлены</b></div>
   </section>
 
-<section class="work-screen quiz-coming" id="situations-screen" hidden aria-label="Ситуации">
+<section class="fso-scene fso-scene-future work-screen quiz-coming" id="situations-screen" hidden aria-label="Ситуации">
+<div class="fso-section-art" aria-hidden="true"><span class="fso-art-a"></span><span class="fso-art-b"></span><span class="fso-art-c"></span><span class="fso-art-d"></span><span class="fso-art-e"></span></div>
  <h1>В разработке</h1>
 </section>
 
-  <section class="det-screen" id="detention-screen" hidden aria-label="Порядок задержания">
+  <section class="fso-scene fso-scene-detention det-screen" id="detention-screen" hidden aria-label="Порядок задержания">
+<div class="fso-section-art" aria-hidden="true"><span class="fso-art-a"></span><span class="fso-art-b"></span><span class="fso-art-c"></span><span class="fso-art-d"></span><span class="fso-art-e"></span></div>
    <header class="det-head">
     <h1>Порядок задержания</h1>
     <p>Здесь собраны основные действия при задержании, права задержанного и статьи, на которые нужно опираться.</p>
@@ -307,7 +458,8 @@ html[data-theme="dark"]{--bg:#000;--rail-bg:#050505;--surface:#0b0b0b;--surface2
   </section>
 
   
-<section class="work-screen territory-guide" id="territories-screen" hidden aria-labelledby="territories-title">
+<section class="fso-scene fso-scene-territories work-screen territory-guide" id="territories-screen" hidden aria-labelledby="territories-title">
+<div class="fso-section-art" aria-hidden="true"><span class="fso-art-a"></span><span class="fso-art-b"></span><span class="fso-art-c"></span><span class="fso-art-d"></span><span class="fso-art-e"></span></div>
  <header class="tg-header">
   <div class="tg-breadcrumb">ФЗ № 86-ФЗ <span>•</span> Территории</div>
   <div class="tg-header-main"><div>
@@ -394,7 +546,8 @@ html[data-theme="dark"]{--bg:#000;--rail-bg:#050505;--surface:#0b0b0b;--surface2
   <div id="tg-law-content" class="tg-law-content" tabindex="0"></div>
  </section>
 </div>
-<section class="escort-studio" id="escort-screen" hidden aria-labelledby="escort-title">
+<section class="fso-scene fso-scene-escort escort-studio" id="escort-screen" hidden aria-labelledby="escort-title">
+<div class="fso-section-art" aria-hidden="true"><span class="fso-art-a"></span><span class="fso-art-b"></span><span class="fso-art-c"></span><span class="fso-art-d"></span><span class="fso-art-e"></span></div>
   <header class="escort-banner">
     <div class="escort-banner-copy">
       <h1 id="escort-title">Сопровождение<br><strong>и кортежи</strong></h1>
@@ -425,7 +578,8 @@ html[data-theme="dark"]{--bg:#000;--rail-bg:#050505;--surface:#0b0b0b;--surface2
   </section>
   <footer class="escort-disclaimer"><span>§</span><p><b>Примечание.</b> Сейчас раздел содержит правовые основания сопровождения. Схемы кортежей и пешего патруля появятся здесь после добавления проверенных материалов.</p></footer>
 </section>
-<section class="service-screen" id="posts-screen" hidden aria-labelledby="service-title">
+<section class="fso-scene fso-scene-posts service-screen" id="posts-screen" hidden aria-labelledby="service-title">
+<div class="fso-section-art" aria-hidden="true"><span class="fso-art-a"></span><span class="fso-art-b"></span><span class="fso-art-c"></span><span class="fso-art-d"></span><span class="fso-art-e"></span></div>
   <header class="service-header">
     <div class="service-header-copy">
       <span class="service-eyebrow">ФСО / RMRP · Тверской</span>
@@ -457,7 +611,8 @@ html[data-theme="dark"]{--bg:#000;--rail-bg:#050505;--surface:#0b0b0b;--surface2
 <!-- Данные постов и патрулей. Каждый объект: id, title, location, image, report, details.
      Фотографии помещаются в папку assets/. Пустые массивы показывают заготовки. -->
 <script src="./data/07-посты-и-патрули.js"></script>
-<section class="work-screen cheat-workspace" id="favorites-screen" hidden aria-labelledby="favorites-title">
+<section class="fso-scene fso-scene-favorites work-screen cheat-workspace" id="favorites-screen" hidden aria-labelledby="favorites-title">
+<div class="fso-section-art" aria-hidden="true"><span class="fso-art-a"></span><span class="fso-art-b"></span><span class="fso-art-c"></span><span class="fso-art-d"></span><span class="fso-art-e"></span></div>
   <header class="cheat-head">
     <div><span class="work-overline">Личные материалы</span><h1 id="favorites-title">Личная шпаргалка</h1><p>Статьи и свои записи в одном месте. Материалы открываются здесь, не уводя в другой раздел.</p></div>
     <div class="cheat-stats" aria-label="Статистика шпаргалки"><div><b id="fav-total">0</b><small>материалов</small></div><div><b id="fav-pin-count">0</b><small>закреплено</small></div><div><b id="fav-collection-count">0</b><small>подборок</small></div></div>
@@ -481,17 +636,21 @@ html[data-theme="dark"]{--bg:#000;--rail-bg:#050505;--surface:#0b0b0b;--surface2
   </div>
   <p class="cheat-status" id="cheat-status" role="status" aria-live="polite"></p>
 </section>
-<section class="work-screen quiz-coming" id="departments-screen" hidden aria-label="Памятки отделов"><h1>В разработке</h1></section>
-<section class="work-screen quiz-coming" id="quiz-screen" hidden aria-label="Проверка знаний">
+<section class="fso-scene fso-scene-future work-screen quiz-coming" id="departments-screen" hidden aria-label="Памятки отделов">
+<div class="fso-section-art" aria-hidden="true"><span class="fso-art-a"></span><span class="fso-art-b"></span><span class="fso-art-c"></span><span class="fso-art-d"></span><span class="fso-art-e"></span></div><h1>В разработке</h1></section>
+<section class="fso-scene fso-scene-future work-screen quiz-coming" id="quiz-screen" hidden aria-label="Проверка знаний">
+<div class="fso-section-art" aria-hidden="true"><span class="fso-art-a"></span><span class="fso-art-b"></span><span class="fso-art-c"></span><span class="fso-art-d"></span><span class="fso-art-e"></span></div>
   <h1>В разработке</h1>
 </section>
-<section class="reference-screen" id="reference-screen" hidden aria-label="Правовой справочник">
+<section class="fso-scene fso-scene-reference reference-screen" id="reference-screen" hidden aria-label="Правовой справочник">
+<div class="fso-section-art" aria-hidden="true"><span class="fso-art-a"></span><span class="fso-art-b"></span><span class="fso-art-c"></span><span class="fso-art-d"></span><span class="fso-art-e"></span></div>
    <div class="reference-head"><div><h1>Правовой справочник</h1><p>Нажмите на основание, чтобы прочитать точную формулировку.</p></div><span class="reference-count" id="reference-count"></span></div>
    <div class="ref-mode" id="reference-mode"><button id="ref-core" type="button" class="active">Основные для службы</button><button id="ref-all" type="button">Все правовые нормы</button></div><div class="reference-controls"><input class="reference-search" id="reference-search" type="search" aria-label="Поиск по правовому справочнику" placeholder="Поиск по названию, статье или закону…"><div class="reference-filters" id="reference-filters" aria-label="Подразделы справочника"></div></div>
    <div class="reference-layout"><div class="reference-list" id="reference-list" aria-label="Список правовых оснований"></div><article class="reference-reader" id="reference-reader" aria-live="polite"></article></div>
 
   </section>
-  <section class="law-screen" id="law-screen" hidden aria-label="Законодательство">
+  <section class="fso-scene fso-scene-laws law-screen" id="law-screen" hidden aria-label="Законодательство">
+<div class="fso-section-art" aria-hidden="true"><span class="fso-art-a"></span><span class="fso-art-b"></span><span class="fso-art-c"></span><span class="fso-art-d"></span><span class="fso-art-e"></span></div>
    <div class="law-top"><div><h1>Законодательство</h1><p>RMRP · Тверской</p></div><a class="law-source" href="https://forum.rmrp.ru/forums/laws/" target="_blank" rel="noopener noreferrer">Форум RMRP ↗</a></div>
    <div class="law-layout">
     <aside class="law-sidebar" aria-label="Документы"><div class="law-sidebar-head"><input class="law-search" id="law-search" type="search" placeholder="Поиск документа…" aria-label="Поиск по названиям документов"><div class="law-filters" id="law-filters"></div><p class="law-count" id="law-count"></p></div><div class="law-list" id="law-list"></div></aside>
