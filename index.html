@@ -822,6 +822,16 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
 .escort-disclaimer span{font-size:25px;color:var(--accent-strong);line-height:1}
 .escort-disclaimer p{font-size:12px;color:var(--muted);margin:0;line-height:1.8}
 .escort-disclaimer b{color:var(--text)}
+/* Места для схем. Заполняются только после получения подтверждённых материалов. */
+.escort-future{margin-top:42px}
+.escort-future-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin-top:19px}
+.escort-future-item{position:relative;min-height:204px;padding:25px 26px;background:var(--surface);border:1px dashed color-mix(in srgb,var(--accent-strong) 27%,var(--line));border-radius:17px;display:flex;flex-direction:column;align-items:flex-start;gap:11px;overflow:hidden}
+.escort-future-item:before{content:'';position:absolute;right:-36px;bottom:-75px;width:188px;height:188px;border:1px solid color-mix(in srgb,var(--accent-strong) 14%,transparent);border-radius:50%;pointer-events:none}
+.escort-future-tag{font-size:10px;font-weight:750;letter-spacing:.10em;color:var(--accent-strong)}
+.escort-future-item h3{font-size:22px;line-height:1.23;letter-spacing:-.035em;margin:1px 0 0}
+.escort-future-item p{font-size:13px;line-height:1.65;color:var(--muted);margin:0;max-width:430px}
+.escort-future-status{margin-top:auto;font-size:11px;color:var(--faint);border:1px solid var(--line);padding:5px 9px;border-radius:8px}
+@media(max-width:650px){.escort-future-grid{grid-template-columns:1fr}.escort-future-item{min-height:175px;padding:21px}}
 @media(max-width:1110px){.escort-track{grid-template-columns:repeat(3,minmax(0,1fr))}.escort-track:before{display:none}.escort-dashboard{grid-template-columns:minmax(0,1fr) 250px}}
 @media(max-width:850px){.escort-dashboard{grid-template-columns:1fr}.escort-sidebox{grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.escort-side-label{grid-column:1/-1}.escort-side-item{padding-top:13px}}
 @media(max-width:680px){.escort-studio{padding:22px 0 100px}.escort-banner{padding:24px;min-height:285px;display:block}.escort-banner h1{font-size:clamp(40px,9vw,53px)}.escort-banner-copy>p{font-size:13px}.escort-banner-caption{margin-top:24px}.escort-track{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.escort-stop{min-height:138px;padding:14px 12px}.escort-stop b{font-size:13px}.escort-stop small{font-size:10px}.escort-case-layout{grid-template-columns:1fr}.escort-case-tabs{grid-template-columns:1fr 1fr}.escort-case-tabs button{font-size:12px;min-height:72px}.escort-sidebox{grid-template-columns:1fr}.escort-law-title{display:block}.escort-law-title small{display:block;text-align:left;margin-top:4px}.escort-briefing{padding:20px}.escort-case-line{grid-template-columns:1fr;gap:5px}.escort-heading-note{display:none}}
@@ -1084,7 +1094,24 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
     <div class="escort-section-heading"><div><span class="escort-micro">02 / ПРАКТИКА</span><h2 id="escort-cases-title">Разбор ситуации</h2><p>Выберите вопрос. Откроется применимая норма и условие её использования.</p></div></div>
     <div class="escort-case-layout"><div class="escort-case-tabs" id="escort-case-tabs" role="group" aria-label="Выбор ситуации"></div><article class="escort-case-result" id="escort-case-result" aria-live="polite"></article></div>
   </section>
-  <footer class="escort-disclaimer"><span>§</span><p><b>О схемах кортежей.</b> Здесь показаны правовые полномочия, а не схема расстановки автомобилей или утверждённый порядок движения. В материалах текущей памятки нет подтверждённых правил о составе, интервалах и построении кортежа.</p></footer>
+  <section class="escort-future" aria-labelledby="escort-future-title">
+    <div class="escort-section-heading"><div><span class="escort-micro">03 / СХЕМЫ</span><h2 id="escort-future-title">Схемы сопровождения</h2><p>Здесь будут размещены схемы после согласования их содержания.</p></div></div>
+    <div class="escort-future-grid">
+      <article class="escort-future-item" id="escort-convoy-schemes">
+        <span class="escort-future-tag">01 / КОРТЕЖИ</span>
+        <h3>Схемы кортежей</h3>
+        <p>Место для будущих схем. Состав, расположение автомобилей и пояснения добавим позже.</p>
+        <span class="escort-future-status">Пока не добавлено</span>
+      </article>
+      <article class="escort-future-item" id="escort-foot-patrol-schemes">
+        <span class="escort-future-tag">02 / ПЕШИЙ ПАТРУЛЬ</span>
+        <h3>Схемы пешего патруля</h3>
+        <p>Место для будущих схем построения и сопровождающих пояснений.</p>
+        <span class="escort-future-status">Пока не добавлено</span>
+      </article>
+    </div>
+  </section>
+  <footer class="escort-disclaimer"><span>§</span><p><b>Примечание.</b> Сейчас раздел содержит правовые основания сопровождения. Схемы кортежей и пешего патруля появятся здесь после добавления проверенных материалов.</p></footer>
 </section>
 <section class="work-screen" id="favorites-screen" hidden aria-labelledby="favorites-title">
   <header class="work-header"><span class="work-overline">Мои материалы</span><h1 id="favorites-title">Личная шпаргалка</h1><p>Сохраняйте нужные статьи, ситуации и документы. Они останутся в этом браузере.</p></header>
