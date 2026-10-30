@@ -899,6 +899,44 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
 @media(max-width:680px){.escort-studio{padding:22px 0 100px}.escort-banner{padding:24px;min-height:285px;display:block}.escort-banner h1{font-size:clamp(40px,9vw,53px)}.escort-banner-copy>p{font-size:13px}.escort-banner-caption{margin-top:24px}.escort-track{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.escort-stop{min-height:138px;padding:14px 12px}.escort-stop b{font-size:13px}.escort-stop small{font-size:10px}.escort-case-layout{grid-template-columns:1fr}.escort-case-tabs{grid-template-columns:1fr 1fr}.escort-case-tabs button{font-size:12px;min-height:72px}.escort-sidebox{grid-template-columns:1fr}.escort-law-title{display:block}.escort-law-title small{display:block;text-align:left;margin-top:4px}.escort-briefing{padding:20px}.escort-case-line{grid-template-columns:1fr;gap:5px}.escort-heading-note{display:none}}
 @media(max-width:390px){.escort-track,.escort-case-tabs{grid-template-columns:1fr 1fr}.escort-stop{min-height:142px}}
 
+
+/* Посты и патрули: отдельный справочник по организации службы. */
+.service-screen{padding:44px 0 105px;max-width:1510px;animation:fade-rise .34s var(--ease-ui) both}
+.service-header{position:relative;overflow:hidden;min-height:248px;padding:clamp(26px,4vw,54px);display:flex;align-items:center;background:linear-gradient(110deg,var(--surface) 20%,color-mix(in srgb,var(--accent-wash) 45%,var(--surface2)));border:1px solid var(--line);border-radius:21px}
+.service-header-copy{position:relative;z-index:1}.service-eyebrow{font-size:11px;color:var(--accent-strong);font-weight:760;letter-spacing:.13em;text-transform:uppercase}
+.service-header h1{font-weight:750;font-size:clamp(42px,5vw,69px);letter-spacing:-.065em;line-height:1.09;margin:18px 0 14px}.service-header h1 span{color:var(--accent)}
+.service-header p{color:var(--muted);font-size:15px;max-width:610px;line-height:1.7;margin:0}
+.service-header-mark{position:absolute;right:4%;bottom:-85px;font-size:250px;letter-spacing:-.1em;line-height:1;font-weight:800;color:var(--accent-wash);white-space:nowrap;user-select:none}
+.service-layout{display:grid;grid-template-columns:286px minmax(0,1fr);gap:21px;margin-top:22px;align-items:start}
+.service-tabs{display:grid;gap:7px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:15px;position:sticky;top:20px}
+.service-tabs-label{margin:9px 10px 11px;font-size:10px;letter-spacing:.12em;color:var(--faint);font-weight:770;text-transform:uppercase}
+.service-tab{display:flex;align-items:center;text-align:left;gap:11px;width:100%;min-height:74px;padding:13px 12px;border:1px solid transparent;background:transparent;border-radius:12px;color:var(--muted);transition:background .2s,border-color .2s,color .2s}
+.service-tab:hover,.service-tab.is-active{background:var(--accent-wash);border-color:color-mix(in srgb,var(--accent-strong) 32%,var(--line));color:var(--text)}
+.service-tab-index{font-weight:800;flex:0 0 27px;color:var(--accent-strong);font-size:12px}
+.service-tab b{display:block;font-size:14px;font-weight:730}.service-tab small{display:block;color:var(--faint);font-size:11px;margin-top:5px}.service-tab .icon{width:16px;height:16px;margin-left:auto;color:var(--accent-strong);opacity:.6}
+.service-tabs-foot{border-top:1px solid var(--line);padding:15px 10px 6px;margin-top:11px;color:var(--faint);font-size:11px;line-height:1.65}
+.service-panels{min-width:0}.service-panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:clamp(20px,3vw,38px);min-height:480px;animation:fade-rise .24s ease-out both}
+.service-panel-top{padding-bottom:26px;border-bottom:1px solid var(--line)}.service-counter{font-size:10px;font-weight:770;color:var(--accent-strong);letter-spacing:.14em}
+.service-panel h2{font-size:clamp(26px,3vw,40px);letter-spacing:-.05em;line-height:1.18;margin:13px 0 11px}.service-panel-top p{color:var(--muted);font-size:13px;line-height:1.7;max-width:680px;margin:0}
+.service-placeholder-table{margin-top:24px;border:1px solid var(--line);border-radius:15px;overflow:hidden}
+.service-table-columns{background:var(--surface2);padding:15px 22px;display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:10px;font-size:11px;color:var(--faint);font-weight:750}
+.service-placeholder-empty{text-align:center;min-height:220px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:30px}
+.service-empty-mark{font-size:23px;width:48px;height:48px;line-height:46px;border:1px dashed var(--line-hover);border-radius:13px;color:var(--accent-strong);margin-bottom:17px}
+.service-placeholder-empty b,.service-route-placeholder b,.service-reports-placeholder b{font-size:16px;font-weight:750;letter-spacing:-.015em}
+.service-placeholder-empty p,.service-route-placeholder p,.service-reports-placeholder p{font-size:12px;line-height:1.65;color:var(--muted);margin:7px 0 0;max-width:420px}
+.service-route-placeholder,.service-reports-placeholder{display:flex;align-items:center;gap:27px;margin-top:28px;padding:32px;border:1px dashed var(--line-hover);border-radius:15px;min-height:190px}
+.service-route-line{display:flex;align-items:center;min-width:166px;justify-content:space-between;position:relative}
+.service-route-line::before{content:'';position:absolute;left:0;right:0;top:50%;border-top:2px dashed var(--line-hover)}
+.service-route-line i{width:15px;height:15px;border-radius:50%;border:3px solid var(--accent-strong);background:var(--surface2);position:relative;z-index:1}
+.service-route-line i:nth-child(2){width:25px;height:25px;border:6px solid var(--accent-wash);outline:2px solid var(--accent-strong)}
+.service-report-paper{width:91px;flex:0 0 91px;height:105px;border:1px solid var(--line-hover);border-radius:10px;display:flex;flex-direction:column;gap:12px;padding:23px 15px}
+.service-report-paper span{height:3px;border-radius:9px;background:var(--line-hover)}.service-report-paper span:nth-child(2){width:78%}.service-report-paper span:nth-child(3){width:55%}
+.service-note{padding:16px 18px;margin:16px 0 0;border-left:2px solid var(--line-hover);color:var(--faint);font-size:12px;line-height:1.65;background:var(--surface2);border-radius:0 12px 12px 0}
+.quiz-coming{min-height:calc(100vh - 200px);display:flex;justify-content:center;align-items:center;padding:40px 15px 120px}
+.quiz-coming[hidden]{display:none!important}.quiz-coming h1{font-size:clamp(35px,5vw,62px);font-weight:720;letter-spacing:-.065em;color:var(--text);text-align:center;margin:0}
+@media(min-width:721px) and (max-height:790px){.rail-nav{overflow-y:auto;scrollbar-width:thin;min-height:0}.rail-bottom{flex:none}}
+@media(max-width:980px){.service-layout{grid-template-columns:1fr}.service-tabs{position:static;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.service-tabs-label,.service-tabs-foot{grid-column:1/-1}.service-tab{min-height:85px}.service-header-mark{font-size:160px;bottom:-49px}}
+@media(max-width:650px){.service-screen{padding:29px 0 95px}.service-header{min-height:218px;padding:25px}.service-header h1{font-size:clamp(38px,9.1vw,54px)}.service-header p{font-size:13px}.service-header-mark{font-size:110px;bottom:-29px;opacity:.6}.service-tabs{grid-template-columns:1fr;gap:4px;padding:10px}.service-tab{min-height:59px}.service-tabs-label{margin:5px 7px}.service-tabs-foot{margin-top:3px}.service-panel{min-height:360px;padding:20px}.service-table-columns{grid-template-columns:1fr 1fr;gap:12px}.service-table-columns span:last-child{display:none}.service-placeholder-empty{min-height:190px}.service-route-placeholder,.service-reports-placeholder{flex-direction:column;align-items:flex-start;padding:23px}.service-route-line{width:100%}.service-panel h2{font-size:29px}}
 </style>
 </head>
 <body>
@@ -928,6 +966,7 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
 <button class="rail-button" data-page="detention" aria-label="Порядок задержания" title="Порядок задержания"><svg class="icon"><use href="#i-list"/></svg><span>Про задержания</span></button>
   <button class="rail-button" data-page="territories" aria-label="Территории и объекты" title="Территории и объекты"><svg class="icon"><use href="#i-pin"/></svg><span>Территории и объекты</span></button>
 <button class="rail-button" data-page="escort" aria-label="Сопровождение и кортежи" title="Сопровождение и кортежи"><svg class="icon"><use href="#i-users"/></svg><span>Сопровождение и кортежи</span></button>
+<button class="rail-button" data-page="posts" aria-label="Посты и патрули" title="Посты и патрули"><svg class="icon"><use href="#i-list"/></svg><span>Посты и патрули</span></button>
 <button class="rail-button" data-page="favorites" aria-label="Личная шпаргалка" title="Личная шпаргалка"><svg class="icon"><use href="#i-file"/></svg><span>Личная шпаргалка</span></button>
 <button class="rail-button" data-page="quiz" aria-label="Проверка знаний" title="Проверка знаний"><svg class="icon"><use href="#i-shield"/></svg><span>Проверка знаний</span></button>
 <button class="rail-button" data-page="laws" aria-label="Законодательство" title="Законодательство"><svg class="icon"><use href="#i-book"/></svg><span>Законодательство</span></button>
@@ -1175,6 +1214,40 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
   </section>
   <footer class="escort-disclaimer"><span>§</span><p><b>Примечание.</b> Сейчас раздел содержит правовые основания сопровождения. Схемы кортежей и пешего патруля появятся здесь после добавления проверенных материалов.</p></footer>
 </section>
+<section class="service-screen" id="posts-screen" hidden aria-labelledby="service-title">
+  <header class="service-header">
+    <div class="service-header-copy">
+      <span class="service-eyebrow">ФСО / RMRP · Тверской</span>
+      <h1 id="service-title">Посты <span>и патрули</span></h1>
+      <p>Расположение постов, маршруты патрулирования и служебные доклады.</p>
+    </div>
+    <div class="service-header-mark" aria-hidden="true">П / П</div>
+  </header>
+  <div class="service-layout">
+    <nav class="service-tabs" aria-label="Разделы постов и патрулей">
+      <div class="service-tabs-label">Содержание</div>
+      <button type="button" class="service-tab is-active" data-service-tab="posts" aria-current="true"><span class="service-tab-index">01</span><span><b>Посты</b><small>Расположение и информация</small></span><svg class="icon"><use href="#i-arrow"/></svg></button>
+      <button type="button" class="service-tab" data-service-tab="patrols"><span class="service-tab-index">02</span><span><b>Патрули</b><small>Маршруты и участки</small></span><svg class="icon"><use href="#i-arrow"/></svg></button>
+      <button type="button" class="service-tab" data-service-tab="reports"><span class="service-tab-index">03</span><span><b>Доклады</b><small>Служебные формулировки</small></span><svg class="icon"><use href="#i-arrow"/></svg></button>
+      <div class="service-tabs-foot">Данные будут добавляться по мере подготовки материалов.</div>
+    </nav>
+    <div class="service-panels">
+      <section class="service-panel" id="service-panel-posts" aria-label="Посты">
+        <div class="service-panel-top"><span class="service-counter">01 / ПОСТЫ</span><h2>Расположение постов</h2><p>Здесь будет список постов с их названиями и местоположением. Для каждого поста предусмотрена отдельная карточка.</p></div>
+        <div class="service-placeholder-table" aria-label="Будущий список постов"><div class="service-table-columns"><span>Пост</span><span>Расположение</span><span>Информация</span></div><div class="service-placeholder-empty"><span class="service-empty-mark" aria-hidden="true">+</span><b>Список постов пока не добавлен</b><p>Названия и расположение заполним после получения сведений.</p></div></div>
+      </section>
+      <section class="service-panel" id="service-panel-patrols" aria-label="Патрули" hidden>
+        <div class="service-panel-top"><span class="service-counter">02 / ПАТРУЛИ</span><h2>Маршруты патрулирования</h2><p>Здесь появятся маршруты, участки и сведения о патрулировании, если такие материалы будут добавлены.</p></div>
+        <div class="service-route-placeholder"><div class="service-route-line" aria-hidden="true"><i></i><i></i><i></i></div><div><b>Маршруты пока не добавлены</b><p>Когда определим маршруты, разместим их здесь в виде отдельных схем и описаний.</p></div></div>
+      </section>
+      <section class="service-panel" id="service-panel-reports" aria-label="Доклады" hidden>
+        <div class="service-panel-top"><span class="service-counter">03 / ДОКЛАДЫ</span><h2>Доклады</h2><p>В этом разделе будут собраны готовые формулировки служебных докладов для разных ситуаций.</p></div>
+        <div class="service-reports-placeholder"><div class="service-report-paper" aria-hidden="true"><span></span><span></span><span></span></div><div><b>Шаблоны докладов пока не добавлены</b><p>После добавления текстов здесь появятся карточки с возможностью скопировать нужный доклад.</p></div></div>
+      </section>
+      <p class="service-note">Раздел подготовлен для заполнения. Порядок несения службы, расположение постов и тексты докладов не определяются этой страницей.</p>
+    </div>
+  </div>
+</section>
 <section class="work-screen cheat-workspace" id="favorites-screen" hidden aria-labelledby="favorites-title">
   <header class="cheat-head">
     <div><span class="work-overline">Личные материалы</span><h1 id="favorites-title">Личная шпаргалка</h1><p>Статьи, ситуации и свои записи в одном месте. Материалы открываются здесь, не уводя в другой раздел.</p></div>
@@ -1199,14 +1272,8 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
   </div>
   <p class="cheat-status" id="cheat-status" role="status" aria-live="polite"></p>
 </section>
-<section class="work-screen" id="quiz-screen" hidden aria-labelledby="quiz-title">
-  <header class="work-header"><span class="work-overline">Тренировка</span><h1 id="quiz-title">Проверка знаний</h1><p>Вопросы составлены по нормам законодательства, сохранённым в памятке. После ответа можно открыть статью и проверить формулировку.</p></header>
-  <div class="quiz-levels" id="quiz-levels" aria-label="Уровень сложности">
-    <button data-quiz-level="easy" type="button"><strong>Начальный</strong><span>Основные полномочия и сроки</span><small id="quiz-best-easy"></small></button>
-    <button data-quiz-level="medium" type="button"><strong>Средний</strong><span>Территории, доступ и сопровождение</span><small id="quiz-best-medium"></small></button>
-    <button data-quiz-level="hard" type="button"><strong>Сложный</strong><span>Ситуации с ограничениями полномочий</span><small id="quiz-best-hard"></small></button>
-  </div>
-  <div class="quiz-panel" id="quiz-panel" hidden aria-live="polite"></div>
+<section class="work-screen quiz-coming" id="quiz-screen" hidden aria-label="Проверка знаний">
+  <h1>В разработке</h1>
 </section>
 <section class="reference-screen" id="reference-screen" hidden aria-label="Правовой справочник">
    <div class="reference-head"><div><h1>Правовой справочник</h1><p>Нажмите на основание, чтобы прочитать точную формулировку.</p></div><span class="reference-count" id="reference-count"></span></div>
@@ -1247,8 +1314,9 @@ const sections={
  laws:{title:'Законодательство',description:'Законы и кодексы проекта.',keys:['законы','кодексы']},
  territories:{title:'Территории и объекты',description:'Режимы территорий и доступ.',keys:['территории','кремль','зот','кпп','доступ']},
  escort:{title:'Сопровождение и кортежи',description:'Полномочия на маршруте.',keys:['кортеж','маршрут','сопровождение']},
+ posts:{title:'Посты и патрули',description:'Расположение постов, маршруты и доклады.',keys:['посты','патрули','маршруты','дежурство','доклады']},
  favorites:{title:'Личная шпаргалка',description:'Сохранённые материалы.',keys:['избранное','закладки','шпаргалка']},
- quiz:{title:'Проверка знаний',description:'Вопросы по законодательству RMRP.',keys:['тест','экзамен','вопросы','аттестация']}
+ quiz:{title:'Проверка знаний',description:'В разработке.',keys:['тест','экзамен','вопросы','аттестация']}
 };
 const $=id=>document.getElementById(id);
 function currentApiUrl(){
@@ -1467,7 +1535,7 @@ async function loadPublic(){
   updatePortalStats();
   const allowed=new Set(), homeButton=nav.querySelector('[data-page="home"]');
   // Локальные разделы не должны исчезать, когда сервер возвращает только разделы API.
-  const builtInPages=new Set(['home','situations','reference','concepts','detention','territories','escort','favorites','quiz','laws']);
+  const builtInPages=new Set(['home','situations','reference','concepts','detention','territories','escort','favorites','quiz','posts','laws']);
   const sorted=[...(info.sections||[])].filter(s=>s.visible).sort((a,b)=>a.order-b.order);
   for(const item of sorted){
    if(!item.id || !/^[a-z0-9-]{1,80}$/.test(item.id))continue;
@@ -1503,7 +1571,7 @@ function go(page){
  closeReference();
  if(!Object.prototype.hasOwnProperty.call(sections,page))page='home';
  const home=page==='home',isLaws=page==='laws',isReference=page==='reference',isDetention=page==='detention';
-  const custom=['territories','escort','favorites','quiz'];
+  const custom=['territories','escort','posts','favorites','quiz'];
   $('home-screen').hidden=!home;$('section-screen').hidden=home||isLaws||isReference||isDetention||custom.includes(page);$('law-screen').hidden=!isLaws;$('reference-screen').hidden=!isReference;$('detention-screen').hidden=!isDetention;
   custom.forEach(id=>$(id+'-screen').hidden=page!==id);
   if(isReference){renderReference()}
@@ -1512,7 +1580,7 @@ function go(page){
   else if(page==='territories'){renderTerritories()}
   else if(page==='escort'){renderEscort()}
   else if(page==='favorites'){renderFavorites()}
-  else if(page==='quiz'){renderQuizLevels()}
+  else if(page==='posts'){renderServiceTab('posts')}
   else if(!home){$('section-title').textContent=sections[page].title;$('section-description').textContent=sections[page].description;renderMaterials(page)}
  document.querySelectorAll('[data-page]').forEach(el=>{
   const active=el.dataset.page===page;
@@ -2088,88 +2156,23 @@ $('cheat-import-file').addEventListener('change',async e=>{
 // Совместимость с прежней кнопкой экспорта, если она присутствует в старой разметке.
 if($('fav-export'))$('fav-export').addEventListener('click',()=>cheatExport('txt'));
 
-// Проверка знаний по существующим цитатам. Правильные ответы соответствуют указанным цитатам.
-const quizBank={
- easy:[
-  {q:'Где ФСО может проверять документы граждан на основании п. 2 ч. 1 ст. 10?',options:['На любой улице без связи с охраной','В районе охраны объектов','Только в здании суда','Только в помещениях полиции'],correct:1,ref:'ref-exact-fso-10-1-2',why:'Норма прямо указывает район охраны объектов.'},
-  {q:'Какой максимальный срок предварительного задержания по ПК?',options:['5 минут','15 минут','30 минут','60 минут'],correct:1,ref:'verified-58424-6-3-all',why:'В ч. 3 ст. 6 ПК указан срок не более 15 минут с фактического задержания.'},
-  {q:'Какой срок указан для задержания сотрудником правоохранительного органа по ПК?',options:['15 минут','30 минут','60 минут','120 минут'],correct:2,ref:'verified-58424-6-1-all',why:'В ч. 1 ст. 6 ПК установлен срок не более 60 минут.'},
-  {q:'Что имеет право определить ФСО по п. 3 ч. 1 ст. 10?',options:['Перечень запрещённых к проносу и провозу вещей','Уголовное наказание для гражданина','Срок лишения свободы','Состав суда'],correct:0,ref:'ref-exact-fso-10-1-3',why:'Пункт относится именно к перечню вещей для охраняемых объектов.'},
-  {q:'Может ли гражданин посещать охраняемую территорию Московского Кремля по ст. 9.1?',options:['Нет, никогда','Только после задержания','Да, при соблюдении правил, если не введены ограничения','Только с разрешения адвоката'],correct:2,ref:'ref-exact-territories-9-1-all',why:'Правило допускает посещение при соблюдении правил с оговоркой об ограничениях.'},
-  {q:'Какое действие предусматривает закон при отказе от проверки в рамках пропускного режима?',options:['Обязательный арест','Отказ в посещении либо требование покинуть территорию','Автоматический штраф','Лишение водительских прав'],correct:1,ref:'verified-26625-31-3-3',why:'Ст. 31.3.3 предусматривает отказ в посещении либо требование покинуть территорию.'},
-  {q:'Кому ФСО должна незамедлительно передать задержанного согласно специальному полномочию?',options:['Любому знакомому сотруднику','Сотруднику охраны соседнего объекта','В органы внутренних дел или Следственный комитет','Администратору сайта'],correct:2,ref:'ref-exact-fso-10-1-6',why:'Норма прямо называет органы внутренних дел и Следственный комитет.'}
- ],
- medium:[
-  {q:'Что характеризует закрытую территорию по ФЗ о территориях?',options:['Доступ открыт всем гражданам','Ограничен только проезд транспорта','Закрыт доступ гражданским и частично ограничен доступ государственных сотрудников','Вход свободен при любой ситуации'],correct:2,ref:'ref-exact-territories-1-1-2',why:'Ст. 1.1.2 различает доступ граждан и государственных сотрудников.'},
-  {q:'Когда допускается временно ограничивать движение по п. 7 ч. 1 ст. 10 ФЗ о ФСО?',options:['На трассах проезда объектов государственной охраны','Всегда в любом районе города','Для личного удобства сотрудника','Только в выходные'],correct:0,ref:'ref-exact-fso-10-1-7',why:'Норма привязывает меру к трассам проезда объектов государственной охраны.'},
-  {q:'В какой цели ст. 10.1.8 позволяет ФСО проходить на закрытые и частные территории?',options:['Для личного посещения','Для выполнения полномочий при сопровождении охраняемых лиц','Для проведения публичных мероприятий','Для осмотра недвижимости на продажу'],correct:1,ref:'ref-exact-fso-10-1-8',why:'Право связано с исполнением полномочий именно при сопровождении.'},
-  {q:'В каком случае сотрудник при сопровождении всё же должен предъявлять удостоверение по ст. 10.1.22?',options:['При предъявлении законного требования','При каждом шаге','Только если есть видеокамера','Никогда'],correct:0,ref:'ref-exact-fso-10-1-22',why:'Исключение из правила прямо касается предъявления законного требования.'},
-  {q:'Кто по ст. 9.2 может вводить и отменять ограничения посещения Московского Кремля?',options:['Любой охранник','Любой посетитель','Только адвокат','Губернатор, Правительство округа, комендант Кремля или его заместитель'],correct:3,ref:'ref-exact-territories-9-2-all',why:'Все перечисленные должностные лица и органы названы в статье.'},
-  {q:'Что ФСО вправе передавать уполномоченным органам при выявлении правонарушений в ходе охраны лица?',options:['Только устное сообщение','Материалы, включая данные видеофиксации','Только личное оружие','Только пропуска'],correct:1,ref:'ref-exact-fso-7-8-all',why:'Ч. 8 ст. 7 прямо допускает передачу материалов, включая видео.'},
-  {q:'Сколько длится предусмотренный ПК телефонный звонок задержанного?',options:['До 2 минут','До 10 минут','Без ограничения времени','Ровно 15 минут'],correct:0,ref:'verified-58424-8-1-all',why:'В ч. 1 ст. 8 ПК указано не более двух минут.'}
- ],
- hard:[
-  {q:'ФСО задерживает лицо за пределами закреплённой ЗОТ по ст. 10.1.6. Какое условие прямо названо?',options:['Любой отказ показать документы','Только непосредственное преследование лица, совершившего посягательство на объект госохраны','Любое административное правонарушение','Общее распоряжение старшего смены'],correct:1,ref:'ref-exact-fso-10-1-6',why:'За пределами указанных территорий специальное задержание ограничено непосредственным преследованием лица, совершившего посягательство.'},
-  {q:'При движении кортежа сотрудник хочет применить специальный манёвр. Какое условие указано в ст. 7.6.5?',options:['Сам факт движения кортежа','Опоздание на мероприятие','Угроза жизни и здоровью охраняемого лица или сотрудников госохраны','Любое неудобство на дороге'],correct:2,ref:'ref-exact-fso-7-6-5',why:'Норма допускает перечисленные меры при возникновении угрозы, а не просто из-за движения кортежа.'},
-  {q:'Как соотносятся сроки 15 и 60 минут в ст. 6 ПК?',options:['Это сроки одной и той же меры для всех','15 минут относится к предварительному задержанию госслужащим, 60 к задержанию правоохранительным органом','Оба срока отсчитываются с предъявления обвинения','Срок выбирает задержанный'],correct:1,ref:'verified-58424-6-3-all',why:'Ст. 6 различает предварительное и обычное задержание по субъекту и сроку. Сравните также ч. 1 этой статьи.'},
-  {q:'Кто прямо назван среди уполномоченных на задержание госслужащего при исполнении по ПК ст. 12.1?',options:['Любой сотрудник любой госорганизации','Любой гражданин по просьбе администрации','Только сотрудники ФСО','СК, ФСБ, прокуратура или правоохранительные органы по решению прокурора'],correct:3,ref:'verified-58424-12-1-all',why:'Перечень субъектов дан в ч. 1 ст. 12 ПК, с дополнительным условием о преступлениях из ч. 2.'},
-  {q:'Гражданин отказывается от процедуры пропускного режима. Что прямо допускает ст. 31.3.3?',options:['Запретить посещение либо потребовать покинуть территорию','Автоматически признать его преступником','Назначить суд без разбирательства','Применить любое наказание по усмотрению'],correct:0,ref:'verified-26625-31-3-3',why:'Отказ в допуске и требование покинуть территорию не равнозначны уголовному наказанию.'},
-  {q:'Какова максимальная продолжительность конфиденциальной беседы с адвокатом по ст. 8.1 ПК?',options:['2 минуты','3 минуты','5 минут','15 минут'],correct:2,ref:'verified-58424-8-1-all',why:'В ч. 1 ст. 8 ПК названа конфиденциальная беседа не более 5 минут.'},
-  {q:'Какую информацию сотрудник обязан огласить в процедуре задержания по п. 3 ч. 1 ст. 10 ПК?',options:['Личный телефон старшего','Время следующей смены','Перечень статей, инкриминируемых задержанному','Список сотрудников объекта'],correct:2,ref:'verified-58424-10-1-3',why:'Пункт 3 требует оглашения перечня инкриминируемых статей.'},
-  {q:'Кто по ст. 9.2 может ограничивать посещение Кремля помимо Губернатора и Правительства округа?',options:['Любой сотрудник КПП','Комендант Московского Кремля или его заместитель','Любой посетитель по требованию','Только сотрудник адвокатуры'],correct:1,ref:'ref-exact-territories-9-2-all',why:'Статья отдельно называет коменданта Московского Кремля и его заместителя.'}
- ]
-};
-let quizState=null;
-function renderQuizLevels(){
- for(const key of Object.keys(quizBank)){
-  const b=document.querySelector('[data-quiz-level="'+key+'"]');b.setAttribute('aria-pressed',String(quizState?.level===key));
-  let best='';try{best=localStorage.getItem('fso-quiz-best-'+key)||''}catch{}
-  $('quiz-best-'+key).textContent=best?'Лучший результат: '+best:'Вопросов: '+quizBank[key].length;
- }
+// Навигация внутри раздела «Посты и патрули».
+const serviceTabIds=['posts','patrols','reports'];
+function renderServiceTab(id){
+ const current=serviceTabIds.includes(id)?id:'posts';
+ document.querySelectorAll('[data-service-tab]').forEach(b=>{
+  const active=b.dataset.serviceTab===current;
+  b.classList.toggle('is-active',active);
+  if(active)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current');
+ });
+ serviceTabIds.forEach(name=>{$('service-panel-'+name).hidden=name!==current});
 }
-document.querySelectorAll('[data-quiz-level]').forEach(b=>b.addEventListener('click',()=>startQuiz(b.dataset.quizLevel)));
-function startQuiz(level){
- if(!quizBank[level])return;
- quizState={level,index:0,score:0,answered:false};$('quiz-panel').hidden=false;renderQuizLevels();renderQuizQuestion();
- $('quiz-panel').scrollIntoView({block:'start',behavior:'smooth'});
-}
-function renderQuizQuestion(){
- const panel=$('quiz-panel');panel.replaceChildren();const state=quizState;
- if(!state)return;
- const questions=quizBank[state.level];
- if(state.index>=questions.length){
-  const end=document.createElement('div');end.className='quiz-final';
-  const title=document.createElement('h2');title.textContent='Тест завершён';
-  const score=document.createElement('strong');score.textContent=state.score+' / '+questions.length;
-  const note=document.createElement('p');note.textContent='Правильных ответов: '+Math.round(state.score/questions.length*100)+'%. При повторном прохождении результат обновится.';
-  end.append(title,score,note,btn('Пройти ещё раз','work-primary',()=>startQuiz(state.level)),btn('Выбрать другой уровень','work-ghost',()=>{$('quiz-panel').hidden=true;quizState=null;renderQuizLevels()}));panel.append(end);
-  try{const old=parseInt(localStorage.getItem('fso-quiz-best-'+state.level)||'0',10);if(state.score>old)localStorage.setItem('fso-quiz-best-'+state.level,String(state.score)+' / '+questions.length)}catch{}
-  renderQuizLevels();return;
- }
- const q=questions[state.index];const progress=document.createElement('div');progress.className='quiz-progress';progress.textContent='Вопрос '+(state.index+1)+' из '+questions.length+' · Верных ответов '+state.score;
- const meter=document.createElement('div');meter.className='quiz-meter';const fill=document.createElement('div');fill.style.width=(state.index/questions.length*100)+'%';meter.append(fill);
- const title=document.createElement('h2');title.textContent=q.q;const answers=document.createElement('div');answers.className='quiz-answers';
- q.options.forEach((option,i)=>answers.append(btn(option,'quiz-answer',()=>answerQuiz(i))));
- panel.append(progress,meter,title,answers);
-}
-function answerQuiz(choice){
- if(!quizState||quizState.answered)return;
- const state=quizState,q=quizBank[state.level][state.index];state.answered=true;
- const correct=choice===q.correct;if(correct)state.score++;
- const options=$('quiz-panel').querySelectorAll('.quiz-answer');options.forEach((b,i)=>{b.disabled=true;if(i===q.correct)b.classList.add('correct');if(i===choice&&!correct)b.classList.add('incorrect')});
- const result=document.createElement('div');result.className='quiz-result';const heading=document.createElement('b');heading.textContent=correct?'Верно.':'Неверно.';
- const explanation=document.createElement('p');explanation.textContent=q.why;result.append(heading,explanation);
- const item=findRef(q.ref);
- if(item){const source=document.createElement('p');source.textContent='Основание: '+getReferenceCitation(item);result.append(source);
-  result.append(btn('Открыть норму ↗','work-ghost',()=>openReference(item)));}
- result.append(btn(state.index===quizBank[state.level].length-1?'Показать результат':'Следующий вопрос →','work-primary',()=>{state.index++;state.answered=false;renderQuizQuestion()}));
- $('quiz-panel').append(result);
-}
+document.querySelectorAll('[data-service-tab]').forEach(b=>b.addEventListener('click',()=>renderServiceTab(b.dataset.serviceTab)));
 
 window.addEventListener('hashchange',()=>go(decodeURIComponent(location.hash.slice(1))));
 go(decodeURIComponent(location.hash.slice(1))||'home');
 updatePortalStats();
-renderQuizLevels();
+
 loadPublic();
 // Законы встроены в текущий HTML: импорт и manifest не нужны.
 
