@@ -11,6 +11,45 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="./css/основной-стиль.css">
 <link rel="stylesheet" href="./css/понятия.css">
+
+<!--
+  ИСПРАВЛЕНИЯ ВНЕШНЕГО ВИДА
+  Этот блок находится прямо в index.html.
+  Если заменить только index.html на хостинге, изменения применятся
+  без замены файла css/основной-стиль.css.
+-->
+<style id="fso-ui-fixes">
+/* Иконки бокового меню: один ровный фон у всей кнопки, без дополнительной подложки под SVG. */
+.rail-button > svg.icon,
+.theme-toggle > svg.icon,
+.rail-button.active > svg.icon {
+  display: block !important;
+  box-sizing: border-box !important;
+  width: 22px !important;
+  height: 22px !important;
+  flex: 0 0 22px !important;
+  align-self: center;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+/* Цвет наследуется от состояния кнопки, без второго квадрата. */
+.rail-button > svg.icon { color: inherit !important; }
+/* Надпись в кнопке поиска располагается строго по центру. */
+.portal-search-form > button[type="submit"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  min-width: 92px;
+  line-height: 1.2;
+  padding: 11px 16px;
+}
+</style>
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
