@@ -128,6 +128,7 @@ html[data-theme="light"] .rail-theme > svg.icon.moon {display:block !important;}
 <button class="rail-button" data-page="escort" aria-label="Сопровождение и кортежи" title="Сопровождение и кортежи"><svg class="icon"><use href="#i-users"/></svg><span>Сопровождение и кортежи</span></button>
 <button class="rail-button" data-page="posts" aria-label="Посты и патрули" title="Посты и патрули"><svg class="icon"><use href="#i-list"/></svg><span>Посты и патрули</span></button>
 <button class="rail-button" data-page="favorites" aria-label="Личная шпаргалка" title="Личная шпаргалка"><svg class="icon"><use href="#i-file"/></svg><span>Личная шпаргалка</span></button>
+<button class="rail-button" data-page="departments" aria-label="Памятки отделов" title="Памятки отделов"><svg class="icon"><use href="#i-book"/></svg><span>Памятки отделов</span></button>
 <button class="rail-button" data-page="quiz" aria-label="Проверка знаний" title="Проверка знаний"><svg class="icon"><use href="#i-shield"/></svg><span>Проверка знаний</span></button>
 <button class="rail-button" data-page="laws" aria-label="Законодательство" title="Законодательство"><svg class="icon"><use href="#i-book"/></svg><span>Законодательство</span></button>
  </nav>
@@ -144,10 +145,10 @@ html[data-theme="light"] .rail-theme > svg.icon.moon {display:block !important;}
 <div class="portal-hero">
 <div class="portal-hero-content">
 <h1 id="home-title">Памятка <strong>сотрудника ФСО</strong></h1>
-<p>Правовые основания, действия в типовых ситуациях и законодательство проекта. Нужная и быстрая информация без заморочек.</p>
+<p>Правовые основания и законодательство проекта. Нужная и быстрая информация без заморочек.</p>
 <div aria-label="Содержание памятки" class="portal-facts">
 <span><b id="portal-ref-count">105</b> правовых оснований</span>
-<span><b id="portal-sit-count">10</b> ситуаций</span>
+
 <span><b id="portal-law-count">31</b> документ</span>
 </div>
 </div>
@@ -178,7 +179,7 @@ html[data-theme="light"] .rail-theme > svg.icon.moon {display:block !important;}
 <section aria-labelledby="portal-sections-title" class="portal-module">
 <div class="portal-section-heading"><div><span class="portal-kicker">БИБЛИОТЕКА</span><h2 id="portal-sections-title">Разделы памятки</h2><p>Поиск нормы, последовательность действий или полный закон.</p></div></div>
 <div class="portal-section-grid">
-<button class="portal-section-card" data-page="situations" type="button"><span class="portal-section-icon"><svg class="icon"><use href="#i-message"></use></svg></span><b>Ситуации</b><p>Что делать в частых случаях.</p><span></span></button>
+<button class="portal-section-card" data-page="situations" type="button"><span class="portal-section-icon"><svg class="icon"><use href="#i-message"></use></svg></span><b>Ситуации</b><p>Раздел пока в разработке.</p><span></span></button>
 <button class="portal-section-card" data-page="reference" type="button"><span class="portal-section-icon"><svg class="icon"><use href="#i-scale"></use></svg></span><b>Правовой справочник</b><p>Краткая суть и точные формулировки статей</p><span></span></button>
 <button class="portal-section-card" data-page="detention" type="button"><span class="portal-section-icon"><svg class="icon"><use href="#i-list"></use></svg></span><b>Порядок задержания</b><p>Последовательность и полезные подсказки при задержании.</p><span></span></button>
 <button class="portal-section-card" data-page="laws" type="button"><span class="portal-section-icon"><svg class="icon"><use href="#i-book"></use></svg></span><b>Законодательство</b><p>Полные тексты законов не переходя на форум.</p><span></span></button>
@@ -186,14 +187,7 @@ html[data-theme="light"] .rail-theme > svg.icon.moon {display:block !important;}
 </div>
 </section>
 <div class="portal-lower-grid">
-<section aria-labelledby="portal-practice-title" class="portal-module portal-practice">
-<div class="portal-section-heading"><div><span class="portal-kicker"></span><h2 id="portal-practice-title">Разбор ситуаций</h2></div></div>
-<div class="portal-situation-list">
-<button data-situation-id="situation-1" type="button"><span class="portal-line-num">01</span><span><b>Человек возле охраняемого объекта</b><small>Первоначальные действия сотрудника</small></span><span class="portal-line-arrow">↗</span></button>
-<button data-situation-id="situation-3" type="button"><span class="portal-line-num">02</span><span><b>Действия на КПП</b><small>Проверка документов, досмотр и действия на КПП</small></span><span class="portal-line-arrow">↗</span></button>
 
-</div>
-</section>
 <section aria-labelledby="portal-docs-title" class="portal-module portal-docs">
 <div class="portal-section-heading"><div><span class="portal-kicker"></span><h2 id="portal-docs-title">Основные документы</h2></div></div>
 <div class="portal-doc-list">
@@ -213,40 +207,28 @@ html[data-theme="light"] .rail-theme > svg.icon.moon {display:block !important;}
    <div class="material-list" id="material-list" hidden></div><div class="empty-panel" id="empty-panel"><svg class="icon"><use href="#i-file"/></svg><b>Материалы пока не добавлены</b></div>
   </section>
 
-<section class="scenario-screen" id="situations-screen" hidden aria-label="Служебные ситуации">
- <div class="scenario-heading"><div><div class="scenario-eyebrow">ФСО / RMRP · Разбор практики</div><h1>Ситуации</h1><p>Выберите конкретный случай. Для каждого указаны условия, действия, ограничения и соответствующие нормы.</p></div><div class="scenario-badge"><strong id="scenario-total">8</strong><span>разобранных случаев</span></div></div>
- <div class="scenario-tools"><input type="search" id="scenario-find" placeholder="Найти ситуацию, объект или статью…" aria-label="Поиск ситуации"><div id="scenario-categories" class="scenario-categories"></div></div>
- <div class="scenario-list" id="scenario-list"></div>
- <div class="scenario-footer">Разборы составлены по законодательству проекта RMRP. Точный текст нормы и её условия имеют приоритет перед кратким пояснением. При изменении законодательства сверяйте источник на форуме.</div>
+<section class="work-screen quiz-coming" id="situations-screen" hidden aria-label="Ситуации">
+ <h1>В разработке</h1>
 </section>
 
   <section class="det-screen" id="detention-screen" hidden aria-label="Порядок задержания">
    <header class="det-head">
-    <div class="det-crumb">Практический алгоритм · ФСО RMRP</div>
     <h1>Порядок задержания</h1>
-    <p>Последовательность действий, ограничения полномочий и точные выдержки из законодательства сервера «Тверской». Весь порядок открыт сразу, без дополнительных нажатий.</p>
+    <p>Здесь собраны основные действия при задержании, права задержанного и статьи, на которые нужно опираться.</p>
    </header>
-   <div class="det-quick" aria-label="Ключевые ориентиры">
-    <div class="det-stat"><b>15 мин</b><span>Только предварительное задержание при условиях ПК 6.3–6.4; для ФСО нельзя применять автоматически</span><small>ПК · ст. 6.3–6.4</small></div>
-    <div class="det-stat"><b>60 мин</b><span>Задержание сотрудником правоохранительного органа</span><small>ПК · ст. 6.1</small></div>
-    <div class="det-stat"><b>ЗОТ</b><span>Специальные условия задержания сотрудником ФСО</span><small>ФЗ о ФСО · ст. 10.1.6</small></div>
-    <div class="det-stat"><b>Передача</b><span>Задержанного незамедлительно передают уполномоченным органам</span><small>ФЗ о ФСО · ст. 10.1.6</small></div>
+   <div class="det-quick" aria-label="Сроки задержания">
+    <div class="det-stat"><b>60 минут</b><span>Максимальный срок задержания подозреваемого сотрудником правоохранительного органа. Отсчитывается с момента фактического задержания.</span><small>Процессуальный кодекс · ст. 6.1</small></div>
+    <div class="det-stat"><b>15 минут</b><span>Максимальный срок предварительного задержания государственным служащим с последующей передачей правоохранителям. Для сотрудников, обладающих правоохранительными полномочиями, действуют ограничения статьи 6.4. Это не дополнительный срок к 60 минутам.</span><small>Процессуальный кодекс · ст. 6.3–6.4</small></div>
    </div>
    <div class="det-grid">
     <div class="det-main">
-     <div class="det-lead"><div class="det-lead-mark">!</div><div><strong>Главный принцип</strong><p>Прежде чем ограничивать свободу человека, установить фактическое основание, пределы полномочий ФСО и вид задержания. Охрана объекта сама по себе не даёт общего права задерживать любого нарушителя.</p></div></div>
+
      <div id="detention-steps" class="det-steps" aria-label="Этапы задержания"></div>
      <div id="detention-extra" class="det-extra" hidden></div>
      <div class="det-footnote">Материалы основаны на нормах, сохранённых в памятке RMRP. При изменении правил сервера сверяйте текст с разделом <button type="button" data-page="laws">«Законодательство»</button>. Подсказки поясняют порядок, но не заменяют правовую норму.</div>
     </div>
     <aside class="det-aside" aria-label="Ориентиры и проверка">
      <section class="det-aside-box"><h2 class="det-aside-title">Содержание</h2><nav id="detention-nav" class="det-nav" aria-label="Этапы задержания"></nav></section>
-     <section class="det-aside-box"><h2 class="det-aside-title">Перед задержанием проверь</h2><div class="det-checklist">
-      <label class="det-check"><input type="checkbox"><span>Есть конкретные факты и основание</span></label>
-      <label class="det-check"><input type="checkbox"><span>Проверены территория и полномочия ФСО</span></label>
-      <label class="det-check"><input type="checkbox"><span>Определён вид задержания и срок</span></label>
-      <label class="det-check"><input type="checkbox"><span>Понятен порядок передачи задержанного</span></label>
-     </div><p class="det-check-note">Чек-лист для самопроверки. Отметки не сохраняются и не являются процессуальным документом.</p></section>
     </aside>
    </div>
   </section>
@@ -259,14 +241,10 @@ html[data-theme="light"] .rail-theme > svg.icon.moon {display:block !important;}
     <h1 id="territories-title">Территории и объекты</h1>
     <p>Виды территорий, режимы доступа и перечень государственных объектов. Основные положения ФЗ «О государственной собственности, закрытых и охраняемых территориях».</p>
   </div><button type="button" class="tg-all-law" data-territory-law="1">Читать закон <span>↗</span></button></div>
-  <nav class="tg-toc" aria-label="Навигация по разделу">
-   <a href="#tg-regimes">Режимы</a><a href="#tg-objects">Объекты</a><a href="#tg-kremlin">Московский Кремль</a><a href="#tg-access">Доступ</a><a href="#tg-passes">Пропуска</a>
-  </nav>
  </header>
- <div class="tg-keynote"><div class="tg-keynote-symbol">!</div><div><b>Режим территории и полномочия сотрудника не одно и то же</b><p>Перед ограничением доступа необходимо определить статус участка и применимую норму. Сам по себе цвет зоны не является самостоятельным основанием для задержания.</p></div><button type="button" data-territory-ref="ref-exact-fso-10-1-6">ФЗ о ФСО, ст. 10 ↗</button></div>
 
  <section class="tg-part" id="tg-regimes" aria-labelledby="tg-regimes-title">
-  <div class="tg-part-head"><div><span class="tg-eyebrow">01 / ЗОНЫ</span><h2 id="tg-regimes-title">Три обозначения территории</h2><p>Цветовая классификация из статьи 1.1 ФЗ № 86-ФЗ. Это обозначения из закона, а не карта конкретного объекта.</p></div><button class="tg-article-link" data-territory-law="1">ст. 1.1 ↗</button></div>
+  <div class="tg-part-head"><div><span class="tg-eyebrow">01 / ЗОНЫ</span><h2 id="tg-regimes-title">Три обозначения территории</h2><p>Цветовая классификация из статьи 1.1 ФЗ № 86-ФЗ.</p></div><button class="tg-article-link" data-territory-law="1">ст. 1.1 ↗</button></div>
   <div class="tg-regime-grid">
    <article class="tg-regime tg-green"><div class="tg-regime-top"><span class="tg-disc"></span><small>01 / ЗЕЛЁНАЯ</small></div><h3>Общего порядка</h3><p>Свободное передвижение граждан. Закон определяет зелёную зону как территорию общего порядка.</p><div class="tg-regime-bottom">Свободное передвижение <button data-territory-law="1">п. 4 ↗</button></div></article>
    <article class="tg-regime tg-yellow"><div class="tg-regime-top"><span class="tg-disc"></span><small>02 / ЖЁЛТАЯ</small></div><h3>Охраняемая</h3><p>Охраняемая территория с ограниченным доступом. Ограничения зависят от закона и режима конкретного места.</p><div class="tg-regime-bottom">Ограниченный доступ <button data-territory-law="1">п. 1, 5 ↗</button></div></article>
@@ -275,8 +253,7 @@ html[data-theme="light"] .rail-theme > svg.icon.moon {display:block !important;}
  </section>
 
  <section class="tg-part" id="tg-objects" aria-labelledby="tg-objects-title">
-  <div class="tg-part-head"><div><span class="tg-eyebrow">02 / ПЕРЕЧЕНЬ</span><h2 id="tg-objects-title">Государственные объекты</h2><p>13 позиций, перечисленных в статье 6.3. Для удобства поиска они сгруппированы по назначению, а не по цвету зоны.</p></div><button class="tg-article-link" data-territory-law="6">ст. 6.3 ↗</button></div>
-  <div class="tg-object-tools"><label class="tg-object-search"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg><span class="visually-hidden">Поиск по объектам</span><input type="search" id="tg-object-query" placeholder="Найти объект, например МВД, больница, Кремль…" autocomplete="off"></label><span class="tg-object-count" id="tg-object-count">13 объектов</span></div>
+  <div class="tg-part-head"><div><span class="tg-eyebrow">02 / ПЕРЕЧЕНЬ</span><h2 id="tg-objects-title">Государственные объекты</h2><p>13 позиций из статьи 6.3, сгруппированных по назначению.</p></div><button class="tg-article-link" data-territory-law="6">ст. 6.3 ↗</button></div>
   <div class="tg-object-grid" id="tg-object-grid">
     <article class="tg-object-group" data-tg-group="authority"><div class="tg-object-group-head"><span class="tg-object-group-index">А</span><div><h3>Органы власти</h3><small>4 позиции</small></div></div><ul>
       <li data-tg-object="правительство правительственные здания">Правительство Российской Федерации</li>
@@ -302,7 +279,7 @@ html[data-theme="light"] .rail-theme > svg.icon.moon {display:block !important;}
  </section>
 
  <section class="tg-part" id="tg-kremlin" aria-labelledby="tg-kremlin-title">
-  <div class="tg-part-head"><div><span class="tg-eyebrow">03 / РАЗБОР ОБЪЕКТА</span><h2 id="tg-kremlin-title">Московский Кремль</h2><p>На одной территории есть участки с разным режимом. Ниже приведён перечень из статьи 8, без переноса правил РО.</p></div><button class="tg-article-link" data-territory-law="8">ст. 8 ↗</button></div>
+  <div class="tg-part-head"><div><span class="tg-eyebrow">03 / РАЗБОР ОБЪЕКТА</span><h2 id="tg-kremlin-title">Московский Кремль</h2><p>Участки Кремля с охраняемым и закрытым режимом по статье 8.</p></div><button class="tg-article-link" data-territory-law="8">ст. 8 ↗</button></div>
   <div class="tg-kremlin-grid">
    <article class="tg-kremlin-zone tg-kremlin-open"><div class="tg-kremlin-zone-head"><span class="tg-small-dot"></span><h3>Охраняемые участки</h3><button data-territory-law="8">ст. 8.2 ↗</button></div><ul>
     <li>Общая территория Кремля</li><li>Контрольно-пропускные пункты</li><li>Красная площадь и прилегающие территории</li><li>Участки рядом с Кремлёвской стеной</li><li>Холл здания ФСО</li>
@@ -311,7 +288,6 @@ html[data-theme="light"] .rail-theme > svg.icon.moon {display:block !important;}
     <li>Кабинеты и помещения ФСО, кроме холла</li><li>Крыши зданий на территории Кремля и Красной площади</li><li>Кремлёвские стены</li><li>Комнаты совещаний судов</li><li>Залы совещаний законодательных органов во время заседаний</li>
    </ul></article>
   </div>
-  <div class="tg-example"><div class="tg-example-icon">↔</div><div><strong>Одно здание, разные правила</strong><p>Холл ФСО указан среди охраняемых территорий, но кабинеты и остальные помещения здания, кроме холла, относятся к закрытым. Статус всего объекта нельзя автоматически переносить на каждую комнату.</p></div><button data-territory-law="8">ст. 8 ↗</button></div>
  </section>
 
  <section class="tg-part" id="tg-access" aria-labelledby="tg-access-title">
@@ -322,11 +298,11 @@ html[data-theme="light"] .rail-theme > svg.icon.moon {display:block !important;}
    <article class="tg-access-row"><div class="tg-access-num">03</div><div><h3>Охраняемая территория Кремля</h3><p>Посещение допускается для любых лиц с соблюдением правил поведения, если не введены ограничения на свободный доступ.</p></div><button data-territory-law="9">ст. 9.1 ↗</button></article>
    <article class="tg-access-row"><div class="tg-access-num">04</div><div><h3>Закрытая территория Кремля</h3><p>Закон отдельно определяет круг лиц с правом доступа, включая сотрудников ФСО, и предусматривает вход по приглашению уполномоченных лиц.</p></div><button data-territory-law="9">ст. 9.3, 9.7 ↗</button></article>
   </div>
-  <aside class="tg-access-aside"><small>КОГДА КРЕМЛЬ МОГУТ ЗАКРЫТЬ</small><h3>Временное ограничение посещения</h3><p>По статье 9.2 вводить и отменять ограничения на свободное посещение охраняемой территории Кремля могут Губернатор округа, Правительство округа, комендант Кремля или его заместитель.</p><button data-territory-law="9">Открыть ст. 9.2 ↗</button><div class="tg-aside-bottom">Для конкретного прохода проверяй действующее ограничение, а не только общий статус территории.</div></aside></div>
+  <aside class="tg-access-aside"><small>КОГДА КРЕМЛЬ МОГУТ ЗАКРЫТЬ</small><h3>Временное ограничение посещения</h3><p>По статье 9.2 вводить и отменять ограничения на свободное посещение охраняемой территории Кремля могут Губернатор округа, Правительство округа, комендант Кремля или его заместитель.</p><button data-territory-law="9">Открыть ст. 9.2 ↗</button></aside></div>
  </section>
 
  <section class="tg-part" id="tg-passes" aria-labelledby="tg-passes-title">
-  <div class="tg-part-head"><div><span class="tg-eyebrow">05 / КПП</span><h2 id="tg-passes-title">Пропускной режим</h2><p>Виды пропусков по статье 31.1. Назначение и порядок выдачи различаются.</p></div><button class="tg-article-link" data-territory-law="31">ст. 30–31 ↗</button></div>
+  <div class="tg-part-head"><div><span class="tg-eyebrow">05 / КПП</span><h2 id="tg-passes-title">Пропускной режим</h2><p>Виды пропусков по статье 31.1.</p></div><button class="tg-article-link" data-territory-law="31">ст. 30–31 ↗</button></div>
   <div class="tg-pass-grid">
    <article><span>01</span><h3>Постоянный</h3><p>Многократный доступ на установленный срок для постоянной работы или службы.</p></article>
    <article><span>02</span><h3>Служебный</h3><p>Постоянный доступ в пределах должностных обязанностей, включая отдельные режимные помещения.</p></article>
@@ -334,34 +310,29 @@ html[data-theme="light"] .rail-theme > svg.icon.moon {display:block !important;}
    <article><span>04</span><h3>Разовый</h3><p>Один проход для посетителей и иных лиц, прибывших с конкретной целью.</p></article>
    <article><span>05</span><h3>Материальный</h3><p>Для ввоза, вывоза, внесения или выноса материальных ценностей.</p></article>
   </div>
-  <div class="tg-procedure"><div><small>ПОЛНОМОЧИЯ НА КПП</small><h3>Проверка документов и отказ в допуске</h3><p>Статья 31.3 определяет действия сотрудников органов государственной власти с пропускным режимом, охраняющих подведомственную территорию. При отказе лица от предусмотренных проверочных процедур допускается отказать в посещении или потребовать покинуть территорию.</p><p class="tg-procedure-caution">Это не универсальное разрешение любому сотруднику проводить такие действия на любой территории. Важны статус объекта и полномочия конкретного сотрудника.</p></div><button data-territory-law="31">ст. 31.3 ↗</button></div>
+  <div class="tg-procedure"><div><small>ПОЛНОМОЧИЯ НА КПП</small><h3>Проверка документов и отказ в допуске</h3><p>Статья 31.3 определяет действия сотрудников органов государственной власти с пропускным режимом, охраняющих подведомственную территорию. При отказе лица от предусмотренных проверочных процедур допускается отказать в посещении или потребовать покинуть территорию.</p></div><button data-territory-law="31">ст. 31.3 ↗</button></div>
  </section>
  <footer class="tg-footer"><div><strong>Первичный источник</strong><p>Федеральный закон № 86-ФЗ. Пересказ и группировка на этой странице предназначены для быстрого чтения; точные формулировки смотри в тексте закона.</p></div><button type="button" data-territory-law="1">Перейти к закону ↗</button></footer>
 </section>
+
+<div class="tg-law-overlay" id="tg-law-overlay" hidden role="presentation">
+ <section class="tg-law-dialog" role="dialog" aria-modal="true" aria-labelledby="tg-law-title" tabindex="-1">
+  <div class="tg-law-toolbar"><div><small>ФЗ № 86-ФЗ · Полный текст статьи</small><h2 id="tg-law-title">Статья</h2></div><button type="button" id="tg-law-close" aria-label="Закрыть статью">×</button></div>
+  <div id="tg-law-content" class="tg-law-content" tabindex="0"></div>
+ </section>
+</div>
 <section class="escort-studio" id="escort-screen" hidden aria-labelledby="escort-title">
   <header class="escort-banner">
     <div class="escort-banner-copy">
-      <div class="escort-eyebrow"><span class="escort-pulse"></span> ФСО / Тверской · Сопровождение</div>
       <h1 id="escort-title">Сопровождение<br><strong>и кортежи</strong></h1>
       <p>Полномочия ФСО на маршруте, при проходе на территорию и обеспечении безопасности охраняемого лица.</p>
     </div>
-    <div class="escort-banner-caption"><span>ПРАВОВАЯ ОСНОВА</span><b>ФЗ № 22-ФЗ</b><small>Статьи 7, 10 и 11</small></div>
   </header>
   <div class="escort-section-heading"><div><span class="escort-micro">01 / НАВИГАЦИЯ</span><h2>Карта полномочий</h2><p>Выберите тему на схеме. Ниже откроются условия и текст правовых норм.</p></div><span class="escort-heading-note">5 тем</span></div>
   <nav class="escort-track" id="escort-track" aria-label="Темы полномочий при сопровождении"></nav>
   <div class="escort-dashboard">
     <article class="escort-briefing" id="escort-briefing" aria-live="polite"></article>
-    <aside class="escort-sidebox">
-      <div class="escort-side-label">НЕ ПУТАТЬ</div>
-      <div class="escort-side-item"><b>Кортеж и дорога</b><p>Ограничение движения привязано к трассе проезда объекта государственной охраны.</p><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 7</small></div>
-      <div class="escort-side-item"><b>Доступ и сопровождение</b><p>Право прохода связано с выполнением полномочий при сопровождении охраняемого лица.</p><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 8</small></div>
-      <div class="escort-side-item"><b>Специальные меры</b><p>В законе они связаны с возникновением угрозы. Само сопровождение не означает автоматического основания для их применения.</p><small>ФЗ о ФСО · ст. 7 · ч. 6 · п. 5</small></div>
-    </aside>
   </div>
-  <section class="escort-cases" aria-labelledby="escort-cases-title">
-    <div class="escort-section-heading"><div><span class="escort-micro">02 / ПРАКТИКА</span><h2 id="escort-cases-title">Разбор ситуации</h2><p>Выберите вопрос. Откроется применимая норма и условие её использования.</p></div></div>
-    <div class="escort-case-layout"><div class="escort-case-tabs" id="escort-case-tabs" role="group" aria-label="Выбор ситуации"></div><article class="escort-case-result" id="escort-case-result" aria-live="polite"></article></div>
-  </section>
   <section class="escort-future" aria-labelledby="escort-future-title">
     <div class="escort-section-heading"><div><span class="escort-micro">03 / СХЕМЫ</span><h2 id="escort-future-title">Схемы сопровождения</h2><p>Здесь будут размещены схемы после согласования их содержания.</p></div></div>
     <div class="escort-future-grid">
@@ -415,7 +386,7 @@ html[data-theme="light"] .rail-theme > svg.icon.moon {display:block !important;}
 <script src="./data/07-посты-и-патрули.js"></script>
 <section class="work-screen cheat-workspace" id="favorites-screen" hidden aria-labelledby="favorites-title">
   <header class="cheat-head">
-    <div><span class="work-overline">Личные материалы</span><h1 id="favorites-title">Личная шпаргалка</h1><p>Статьи, ситуации и свои записи в одном месте. Материалы открываются здесь, не уводя в другой раздел.</p></div>
+    <div><span class="work-overline">Личные материалы</span><h1 id="favorites-title">Личная шпаргалка</h1><p>Статьи и свои записи в одном месте. Материалы открываются здесь, не уводя в другой раздел.</p></div>
     <div class="cheat-stats" aria-label="Статистика шпаргалки"><div><b id="fav-total">0</b><small>материалов</small></div><div><b id="fav-pin-count">0</b><small>закреплено</small></div><div><b id="fav-collection-count">0</b><small>подборок</small></div></div>
   </header>
   <div class="cheat-alert"><b>Хранение на устройстве.</b> Шпаргалка сохраняется в этом браузере. Для переноса материалов и восстановления записей используйте резервную копию JSON.</div>
@@ -437,6 +408,7 @@ html[data-theme="light"] .rail-theme > svg.icon.moon {display:block !important;}
   </div>
   <p class="cheat-status" id="cheat-status" role="status" aria-live="polite"></p>
 </section>
+<section class="work-screen quiz-coming" id="departments-screen" hidden aria-label="Памятки отделов"><h1>В разработке</h1></section>
 <section class="work-screen quiz-coming" id="quiz-screen" hidden aria-label="Проверка знаний">
   <h1>В разработке</h1>
 </section>
