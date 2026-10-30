@@ -99,8 +99,240 @@ html[data-theme="light"] .rail-theme > svg.icon.moon {display:block !important;}
   padding:11px 16px;
 }
 </style>
+
+<style id="fso-black-atmosphere">
+html[data-theme="dark"]{
+  --bg:#000000;
+  --surface:#050505;
+  --surface2:#0a0a0a;
+  --rail-bg:rgba(0,0,0,.94);
+  --text:#f1f1f1;
+  --muted:#c8c8c8;
+  --faint:#8f8f8f;
+  --line:rgba(255,255,255,.09);
+  --line-hover:rgba(255,255,255,.22);
+  --accent:#f5f5f5;
+  --accent-strong:#ffffff;
+  --accent-text:#000000;
+  --accent-wash:rgba(255,255,255,.075);
+  --input-bg:rgba(9,9,9,.95);
+  --shadow:0 28px 80px rgba(0,0,0,.65);
+}
+html[data-theme="light"] .ambient-shell{display:none}
+html[data-theme="dark"] body{background:#000;color:var(--text)}
+html[data-theme="dark"] body::before{display:none!important}
+html[data-theme="dark"] body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(circle at 18% 12%,rgba(255,255,255,.055),transparent 24%),
+    radial-gradient(circle at 88% 6%,rgba(255,255,255,.045),transparent 28%),
+    radial-gradient(circle at 50% 110%,rgba(255,255,255,.035),transparent 30%),
+    linear-gradient(180deg,rgba(255,255,255,.015),transparent 14%,transparent 86%,rgba(255,255,255,.02));}
+.ambient-shell{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.ambient-shell>div,.ambient-shards span{position:absolute}
+.ambient-grid{inset:-15%;opacity:.34;background:
+    linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px) 0 0/100% 108px,
+    linear-gradient(90deg,rgba(255,255,255,.024) 1px,transparent 1px) 0 0/108px 100%;
+  mask-image:radial-gradient(circle at 50% 35%,#000 20%,rgba(0,0,0,.6) 65%,transparent 88%);
+  animation:gridFloat 40s linear infinite}
+.ambient-vignette{inset:0;background:radial-gradient(circle at 50% 32%,transparent 0 44%,rgba(0,0,0,.25) 67%,rgba(0,0,0,.72) 100%)}
+.ambient-orb{border-radius:50%;filter:blur(16px);opacity:.32;background:radial-gradient(circle,rgba(255,255,255,.16),rgba(255,255,255,.05) 42%,transparent 72%)}
+.orb-a{width:38vw;height:38vw;left:-8vw;top:10vh;animation:orbDriftA 26s ease-in-out infinite alternate}
+.orb-b{width:26vw;height:26vw;right:-4vw;top:42vh;animation:orbDriftB 22s ease-in-out infinite alternate}
+.orb-c{width:18vw;height:18vw;left:46vw;top:-4vh;animation:orbDriftC 19s ease-in-out infinite alternate}
+.ambient-rings{width:42vw;height:42vw;right:-13vw;top:10vh;border-radius:50%;border:1px solid rgba(255,255,255,.05);
+  box-shadow:0 0 0 36px rgba(255,255,255,.02),0 0 0 72px rgba(255,255,255,.012),0 0 0 108px rgba(255,255,255,.008);
+  opacity:.55;animation:ringsSpin 48s linear infinite}
+.ambient-shards{inset:0}
+.ambient-shards span{width:1px;border-radius:999px;background:linear-gradient(180deg,transparent,rgba(255,255,255,.2),transparent);opacity:.45;animation:shardFloat var(--d,18s) ease-in-out infinite}
+.ambient-shards span:nth-child(1){left:12%;top:8%;height:130px;transform:rotate(18deg);--d:22s}
+.ambient-shards span:nth-child(2){left:32%;top:58%;height:180px;transform:rotate(-24deg);--d:28s}
+.ambient-shards span:nth-child(3){right:18%;top:14%;height:160px;transform:rotate(12deg);--d:20s}
+.ambient-shards span:nth-child(4){right:8%;top:56%;height:120px;transform:rotate(-18deg);--d:26s}
+.ambient-shards span:nth-child(5){left:58%;top:20%;height:96px;transform:rotate(36deg);--d:16s}
+.ambient-shards span:nth-child(6){left:72%;top:72%;height:150px;transform:rotate(6deg);--d:24s}
+.ambient-dots{inset:0;background:
+  radial-gradient(circle at 12% 18%,rgba(255,255,255,.75) 0 1.2px,transparent 1.8px),
+  radial-gradient(circle at 78% 28%,rgba(255,255,255,.45) 0 1px,transparent 1.8px),
+  radial-gradient(circle at 63% 74%,rgba(255,255,255,.55) 0 1px,transparent 2px),
+  radial-gradient(circle at 25% 82%,rgba(255,255,255,.4) 0 1px,transparent 1.8px);
+  opacity:.5;animation:dotsBlink 8s ease-in-out infinite}
+
+html[data-theme="dark"] .rail{backdrop-filter:blur(10px);background:linear-gradient(180deg,rgba(0,0,0,.96),rgba(3,3,3,.92));border-right-color:rgba(255,255,255,.08);box-shadow:20px 0 60px rgba(0,0,0,.5)}
+html[data-theme="dark"] .rail-seal,
+html[data-theme="dark"] .brand-mark,
+html[data-theme="dark"] .portal-section-icon,
+html[data-theme="dark"] .portal-search-form button[type="submit"],
+html[data-theme="dark"] .portal-hero-button,
+html[data-theme="dark"] .portal-facts span,
+html[data-theme="dark"] .portal-topic,
+html[data-theme="dark"] .portal-section-card,
+html[data-theme="dark"] .portal-search-section,
+html[data-theme="dark"] .portal-doc-list,
+html[data-theme="dark"] .law-sidebar,
+html[data-theme="dark"] .law-reader,
+html[data-theme="dark"] .reference-entry,
+html[data-theme="dark"] .concept-card,
+html[data-theme="dark"] .det-step-card,
+html[data-theme="dark"] .det-aside-box,
+html[data-theme="dark"] .escort-law-card,
+html[data-theme="dark"] .empty-panel,
+html[data-theme="dark"] .service-tab,
+html[data-theme="dark"] .work-card{box-shadow:inset 0 1px rgba(255,255,255,.05),0 14px 34px rgba(0,0,0,.28)}
+
+html[data-theme="dark"] .topbar{background:rgba(0,0,0,.3);backdrop-filter:blur(6px)}
+html[data-theme="dark"] .topbar::after{width:120px;background:linear-gradient(90deg,rgba(255,255,255,.65),transparent)}
+html[data-theme="dark"] .portal-header-detail::before{background:linear-gradient(90deg,rgba(255,255,255,.28),transparent)}
+html[data-theme="dark"] .portal-home .portal-hero{position:relative;border-color:rgba(255,255,255,.11)!important;background:#050505!important;box-shadow:0 35px 90px rgba(0,0,0,.72), inset 0 1px rgba(255,255,255,.05)}
+html[data-theme="dark"] .portal-home .portal-hero::before{background-image:
+  linear-gradient(90deg,rgba(0,0,0,.965) 0%,rgba(0,0,0,.88) 28%,rgba(0,0,0,.62) 58%,rgba(0,0,0,.46) 100%),
+  linear-gradient(0deg,rgba(0,0,0,.82),rgba(0,0,0,.2) 45%,rgba(0,0,0,.72) 100%),
+  url('../assets/senate-palace.webp');background-position:center,center,center 46%;background-size:cover;filter:grayscale(1) contrast(1.18) brightness(.74)}
+html[data-theme="dark"] .portal-home .portal-hero::after{inset:0;z-index:0;opacity:1;pointer-events:none;background:
+  linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px) 0 0/98px 100%,
+  linear-gradient(0deg,rgba(255,255,255,.03) 1px,transparent 1px) 0 0/100% 98px,
+  linear-gradient(120deg,transparent 22%,rgba(255,255,255,.05) 50%,transparent 78%);
+  mask-image:linear-gradient(90deg,#000,rgba(0,0,0,.92) 78%,transparent 100%);
+  animation:heroSweep 16s ease-in-out infinite}
+html[data-theme="dark"] .portal-hero-content::before{border-left-color:#fff;background:rgba(255,255,255,.08);color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,.06) inset}
+html[data-theme="dark"] .portal-hero h1{color:#fff;text-shadow:0 8px 40px rgba(255,255,255,.06)}
+html[data-theme="dark"] .portal-hero h1 strong{color:#fff}
+html[data-theme="dark"] .portal-hero-content>p{color:#d7d7d7}
+html[data-theme="dark"] .portal-facts span{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.12);backdrop-filter:blur(4px)}
+html[data-theme="dark"] .portal-facts b{color:#fff}
+html[data-theme="dark"] .portal-hero-content::after{border-left-color:rgba(255,255,255,.62);border-bottom-color:rgba(255,255,255,.62)}
+html[data-theme="dark"] .portal-hero-side{overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.015))!important;border-color:rgba(255,255,255,.14)!important;backdrop-filter:blur(10px)}
+html[data-theme="dark"] .portal-hero-side::before{color:#fff}
+html[data-theme="dark"] .portal-hero-side::after{border-color:rgba(255,255,255,.12);box-shadow:0 0 0 10px rgba(255,255,255,.018),0 0 0 20px rgba(255,255,255,.012);animation:pulseRing 6s ease-in-out infinite}
+html[data-theme="dark"] .portal-hero-button{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.16);color:#fff;backdrop-filter:blur(6px)}
+html[data-theme="dark"] .portal-hero-button:hover{background:rgba(255,255,255,.11)}
+
+html[data-theme="dark"] .portal-search-section,
+html[data-theme="dark"] .portal-topic,
+html[data-theme="dark"] .portal-section-card,
+html[data-theme="dark"] .portal-doc-list,
+html[data-theme="dark"] .portal-search-results,
+html[data-theme="dark"] .law-sidebar,
+html[data-theme="dark"] .law-reader,
+html[data-theme="dark"] .reference-entry,
+html[data-theme="dark"] .concept-card,
+html[data-theme="dark"] .det-step-card,
+html[data-theme="dark"] .det-aside-box,
+html[data-theme="dark"] .empty-panel,
+html[data-theme="dark"] .service-tab,
+html[data-theme="dark"] .work-card,
+html[data-theme="dark"] .tg-object-card,
+html[data-theme="dark"] .tg-law-dialog,
+html[data-theme="dark"] .escort-law-card,
+html[data-theme="dark"] .duty-card,
+html[data-theme="dark"] .duty-report,
+html[data-theme="dark"] .scenario-case,
+html[data-theme="dark"] .scenario-result{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015))!important;border-color:rgba(255,255,255,.09)!important;backdrop-filter:blur(8px)}
+html[data-theme="dark"] .portal-search-section::before,
+html[data-theme="dark"] .portal-topic::before,
+html[data-theme="dark"] .topbar::after{background:#fff}
+html[data-theme="dark"] .portal-topic::after{border-color:rgba(255,255,255,.07);box-shadow:0 0 0 25px rgba(255,255,255,.02)}
+html[data-theme="dark"] .portal-search-form{background:rgba(0,0,0,.76)!important;border-color:rgba(255,255,255,.13)!important;backdrop-filter:blur(9px)}
+html[data-theme="dark"] .portal-search-form .icon{color:#ffffffc7}
+html[data-theme="dark"] .portal-search-form input{color:#fff}
+html[data-theme="dark"] .portal-search-form input::placeholder{color:#9c9c9c}
+html[data-theme="dark"] .portal-search-form button[type="submit"]{background:#fff!important;color:#000!important;border:1px solid rgba(255,255,255,.3)!important;box-shadow:0 12px 30px rgba(255,255,255,.08)}
+html[data-theme="dark"] .portal-search-form button[type="submit"]:hover{filter:none;background:#e7e7e7!important}
+html[data-theme="dark"] .portal-kicker,
+html[data-theme="dark"] .portal-header-detail strong,
+html[data-theme="dark"] .law-kicker,
+html[data-theme="dark"] .scenario-eyebrow,
+html[data-theme="dark"] .det-step-topline,
+html[data-theme="dark"] .tg-law-toolbar small{color:#fff!important}
+html[data-theme="dark"] .portal-section-icon,
+html[data-theme="dark"] .rail-seal,
+html[data-theme="dark"] .brand-mark{background:rgba(255,255,255,.04)!important;border-color:rgba(255,255,255,.12)!important;color:#fff!important}
+html[data-theme="dark"] .portal-section-card:hover,
+html[data-theme="dark"] .portal-topic:hover,
+html[data-theme="dark"] .portal-doc-list button:hover,
+html[data-theme="dark"] .reference-entry:hover,
+html[data-theme="dark"] .law-entry:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.22)!important;background:rgba(255,255,255,.05)!important}
+html[data-theme="dark"] .rail-button:hover,html[data-theme="dark"] .theme-toggle:hover{background:rgba(255,255,255,.06)!important}
+html[data-theme="dark"] .rail-button.active{background:rgba(255,255,255,.09)!important;border-color:rgba(255,255,255,.18)!important;color:#fff!important}
+html[data-theme="dark"] .rail-button.active::after{background:#fff!important;box-shadow:0 0 18px rgba(255,255,255,.28)}
+html[data-theme="dark"] .law-document .law-article,
+html[data-theme="dark"] .law-source,
+html[data-theme="dark"] .reference-citation,
+html[data-theme="dark"] .reference-tags span,
+html[data-theme="dark"] .duty-meta,
+html[data-theme="dark"] .duty-report-status,
+html[data-theme="dark"] .scenario-tag{color:#fff}
+html[data-theme="dark"] .tg-law-highlight,
+html[data-theme="dark"] .scenario-context{background:rgba(255,255,255,.05)!important;border-left-color:#fff!important}
+html[data-theme="dark"] .law-filter.active,
+html[data-theme="dark"] .reference-filter.active,
+html[data-theme="dark"] .service-tab.active,
+html[data-theme="dark"] .ref-mode button.active{background:rgba(255,255,255,.08)!important;border-color:rgba(255,255,255,.22)!important;color:#fff!important}
+html[data-theme="dark"] .portal-footer{color:#999}
+
+/* Небольшие декоративные углы и живая подвижность на карточках */
+html[data-theme="dark"] .portal-topic,
+html[data-theme="dark"] .portal-section-card,
+html[data-theme="dark"] .law-sidebar,
+html[data-theme="dark"] .law-reader,
+html[data-theme="dark"] .reference-entry,
+html[data-theme="dark"] .concept-card,
+html[data-theme="dark"] .det-step-card,
+html[data-theme="dark"] .tg-object-card,
+html[data-theme="dark"] .escort-law-card,
+html[data-theme="dark"] .duty-card,
+html[data-theme="dark"] .work-card{position:relative;overflow:hidden}
+html[data-theme="dark"] .portal-topic::marker{display:none}
+html[data-theme="dark"] .portal-topic .portal-topic-arrow{color:#fff}
+html[data-theme="dark"] .portal-topic:before,
+html[data-theme="dark"] .portal-section-card:before,
+html[data-theme="dark"] .law-reader:before,
+html[data-theme="dark"] .reference-entry:before,
+html[data-theme="dark"] .concept-card:before,
+html[data-theme="dark"] .det-step-card:before,
+html[data-theme="dark"] .tg-object-card:before,
+html[data-theme="dark"] .escort-law-card:before,
+html[data-theme="dark"] .duty-card:before,
+html[data-theme="dark"] .work-card:before{content:"";position:absolute;right:14px;bottom:14px;width:24px;height:24px;border-right:1px solid rgba(255,255,255,.16);border-bottom:1px solid rgba(255,255,255,.16);pointer-events:none}
+html[data-theme="dark"] .portal-topic:after,
+html[data-theme="dark"] .portal-section-card:after,
+html[data-theme="dark"] .law-reader:after,
+html[data-theme="dark"] .reference-entry:after,
+html[data-theme="dark"] .concept-card:after,
+html[data-theme="dark"] .det-step-card:after,
+html[data-theme="dark"] .tg-object-card:after,
+html[data-theme="dark"] .escort-law-card:after,
+html[data-theme="dark"] .duty-card:after,
+html[data-theme="dark"] .work-card:after{content:"";position:absolute;left:14px;top:14px;width:24px;height:24px;border-left:1px solid rgba(255,255,255,.14);border-top:1px solid rgba(255,255,255,.14);pointer-events:none}
+
+@keyframes gridFloat{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,-108px,0)}}
+@keyframes orbDriftA{0%{transform:translate3d(0,0,0) scale(1)}100%{transform:translate3d(7vw,3vh,0) scale(1.08)}}
+@keyframes orbDriftB{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-8vw,-4vh,0) scale(1.12)}}
+@keyframes orbDriftC{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-4vw,6vh,0) scale(.92)}}
+@keyframes ringsSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes shardFloat{0%,100%{transform:translateY(0) rotate(var(--r,0deg));opacity:.18}50%{transform:translateY(-18px) rotate(var(--r,0deg));opacity:.48}}
+@keyframes dotsBlink{0%,100%{opacity:.28}50%{opacity:.62}}
+@keyframes heroSweep{0%,100%{background-position:0 0,0 0,-250px 0}50%{background-position:0 0,0 0,250px 0}}
+@keyframes pulseRing{0%,100%{transform:scale(1);opacity:.65}50%{transform:scale(1.08);opacity:1}}
+
+@media (prefers-reduced-motion:reduce){
+  .ambient-grid,.ambient-orb,.ambient-rings,.ambient-shards span,.ambient-dots,.portal-home .portal-hero::after,.portal-hero-side::after{animation:none!important}
+}
+</style>
+
 </head>
 <body>
+
+<div class="ambient-shell" aria-hidden="true">
+  <div class="ambient-grid"></div>
+  <div class="ambient-vignette"></div>
+  <div class="ambient-orb orb-a"></div>
+  <div class="ambient-orb orb-b"></div>
+  <div class="ambient-orb orb-c"></div>
+  <div class="ambient-rings"></div>
+  <div class="ambient-shards"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  <div class="ambient-dots"></div>
+</div>
+
 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5V21H5a1 1 0 0 1-1-1v-9.5Z"/></symbol>
  <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3v18M3 7h18M5 7l-3 7a5 5 0 0 0 6 0L5 7Zm14 0-3 7a5 5 0 0 0 6 0l-3-7ZM7 21h10"/></symbol>
