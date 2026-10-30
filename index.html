@@ -937,6 +937,41 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
 @media(min-width:721px) and (max-height:790px){.rail-nav{overflow-y:auto;scrollbar-width:thin;min-height:0}.rail-bottom{flex:none}}
 @media(max-width:980px){.service-layout{grid-template-columns:1fr}.service-tabs{position:static;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.service-tabs-label,.service-tabs-foot{grid-column:1/-1}.service-tab{min-height:85px}.service-header-mark{font-size:160px;bottom:-49px}}
 @media(max-width:650px){.service-screen{padding:29px 0 95px}.service-header{min-height:218px;padding:25px}.service-header h1{font-size:clamp(38px,9.1vw,54px)}.service-header p{font-size:13px}.service-header-mark{font-size:110px;bottom:-29px;opacity:.6}.service-tabs{grid-template-columns:1fr;gap:4px;padding:10px}.service-tab{min-height:59px}.service-tabs-label{margin:5px 7px}.service-tabs-foot{margin-top:3px}.service-panel{min-height:360px;padding:20px}.service-table-columns{grid-template-columns:1fr 1fr;gap:12px}.service-table-columns span:last-child{display:none}.service-placeholder-empty{min-height:190px}.service-route-placeholder,.service-reports-placeholder{flex-direction:column;align-items:flex-start;padding:23px}.service-route-line{width:100%}.service-panel h2{font-size:29px}}
+
+/* Карточки постов и патрулей: фотография + доклад в одной записи. */
+.service-tabs{align-content:start}
+.service-panel{min-height:380px}
+.duty-list{display:grid;gap:16px;margin-top:24px}
+.duty-card{border:1px solid var(--line);background:var(--surface2);border-radius:19px;overflow:hidden;display:grid;grid-template-columns:minmax(245px,.83fr) minmax(0,1.17fr);min-width:0;box-shadow:inset 0 1px rgba(255,255,255,.018)}
+.duty-visual{min-width:0;min-height:350px;position:relative;overflow:hidden;background:radial-gradient(circle at 70% 30%,rgba(89,141,183,.10),transparent 46%),linear-gradient(145deg,#111820,#090c10 72%);border-right:1px solid var(--line);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:13px;color:var(--muted);padding:26px}
+.duty-visual img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.duty-visual.is-placeholder{border:0}
+.duty-picture-icon{width:63px;height:56px;border:1px solid color-mix(in srgb,var(--accent-strong) 35%,var(--line));border-radius:12px;position:relative;opacity:.7}
+.duty-picture-icon:before{content:'';position:absolute;width:12px;height:12px;border-radius:50%;border:2px solid var(--accent-strong);right:12px;top:10px}
+.duty-picture-icon:after{content:'';position:absolute;inset:auto 8px 8px 8px;height:22px;background:linear-gradient(135deg,transparent 47%,var(--accent-strong) 49% 54%,transparent 56%) left / 50% 100% no-repeat,linear-gradient(45deg,transparent 43%,var(--accent-strong) 45% 52%,transparent 54%) right / 68% 100% no-repeat;opacity:.8}
+.duty-image-label{font-size:12px;font-weight:700;color:var(--muted)}
+.duty-image-meta{font-size:11px;color:var(--faint);text-align:center;max-width:250px;line-height:1.6}
+.duty-visual-bottom{position:absolute;left:14px;bottom:14px;display:inline-flex;padding:8px 11px;border-radius:9px;background:rgba(0,0,0,.75);border:1px solid rgba(255,255,255,.09);font-size:11px;color:#eaf2fa;backdrop-filter:blur(8px)}
+.duty-copy{padding:clamp(18px,2.2vw,29px);min-width:0;display:flex;flex-direction:column;gap:18px}
+.duty-meta{display:flex;align-items:center;gap:9px;flex-wrap:wrap;color:var(--accent-strong);font-weight:800;letter-spacing:.08em;font-size:10px}
+.duty-meta span{border:1px solid var(--line);padding:5px 9px;border-radius:8px}
+.duty-copy h3{font-size:clamp(20px,2vw,27px);line-height:1.25;font-weight:750;letter-spacing:-.045em;margin:5px 0 0;overflow-wrap:anywhere}
+.duty-location{display:grid;gap:4px;padding-left:12px;border-left:2px solid var(--line-hover);margin:0}
+.duty-location dt{color:var(--faint);text-transform:uppercase;letter-spacing:.08em;font-size:10px;font-weight:780}
+.duty-location dd{margin:0;color:var(--muted);font-size:13px;line-height:1.6;overflow-wrap:anywhere}
+.duty-details{font-size:12px;color:var(--muted);margin:0;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}
+.duty-report{padding:18px 19px;border-radius:14px;border:1px solid color-mix(in srgb,var(--accent-strong) 25%,var(--line));background:color-mix(in srgb,var(--accent-wash) 38%,var(--surface));margin-top:auto;min-width:0}
+.duty-report-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px}
+.duty-report h4{font-size:13px;margin:0;letter-spacing:-.01em;color:var(--text)}
+.duty-report-text{font-size:12px;line-height:1.7;white-space:pre-wrap;color:var(--muted);overflow-wrap:anywhere;margin:0 0 15px}
+.duty-copy-report{border:1px solid var(--line-hover);background:var(--accent-wash);color:var(--accent-strong);border-radius:10px;padding:9px 12px;font-size:12px;font-weight:750;transition:background .2s,border-color .2s}
+.duty-copy-report:hover:not(:disabled){background:color-mix(in srgb,var(--accent-strong) 17%,var(--surface))}
+.duty-copy-report:disabled{opacity:.48;cursor:not-allowed}
+.duty-report-status{min-height:16px;color:var(--accent-strong);font-size:11px;display:inline-block;margin-left:10px}
+.duty-example-tag{display:inline-flex;gap:6px;align-items:center;color:var(--faint);font-size:11px}
+@media(max-width:1190px){.duty-card{grid-template-columns:minmax(200px,.7fr) minmax(0,1fr)}.duty-visual{min-height:340px}}
+@media(max-width:740px){.duty-card{grid-template-columns:minmax(0,1fr)}.duty-visual{height:210px;min-height:210px;border-right:0;border-bottom:1px solid var(--line)}.duty-copy{padding:20px}.duty-report{padding:16px}.duty-report-status{margin-left:0;display:block;margin-top:9px}}
+@media(max-width:440px){.duty-visual{height:182px;min-height:182px}.duty-copy h3{font-size:23px}.service-panel{padding:17px}}
 </style>
 </head>
 <body>
@@ -1219,35 +1254,33 @@ a.reference-entry-external:focus-visible{outline:2px solid var(--accent-strong);
     <div class="service-header-copy">
       <span class="service-eyebrow">ФСО / RMRP · Тверской</span>
       <h1 id="service-title">Посты <span>и патрули</span></h1>
-      <p>Расположение постов, маршруты патрулирования и служебные доклады.</p>
+      <p>Фотографии постов, маршруты патрулирования и доклады по каждому месту.</p>
     </div>
     <div class="service-header-mark" aria-hidden="true">П / П</div>
   </header>
   <div class="service-layout">
     <nav class="service-tabs" aria-label="Разделы постов и патрулей">
       <div class="service-tabs-label">Содержание</div>
-      <button type="button" class="service-tab is-active" data-service-tab="posts" aria-current="true"><span class="service-tab-index">01</span><span><b>Посты</b><small>Расположение и информация</small></span><svg class="icon"><use href="#i-arrow"/></svg></button>
-      <button type="button" class="service-tab" data-service-tab="patrols"><span class="service-tab-index">02</span><span><b>Патрули</b><small>Маршруты и участки</small></span><svg class="icon"><use href="#i-arrow"/></svg></button>
-      <button type="button" class="service-tab" data-service-tab="reports"><span class="service-tab-index">03</span><span><b>Доклады</b><small>Служебные формулировки</small></span><svg class="icon"><use href="#i-arrow"/></svg></button>
-      <div class="service-tabs-foot">Данные будут добавляться по мере подготовки материалов.</div>
+      <button type="button" class="service-tab is-active" data-service-tab="posts" aria-current="true"><span class="service-tab-index">01</span><span><b>Посты</b><small>Фото, расположение, доклад</small></span><svg class="icon"><use href="#i-arrow"/></svg></button>
+      <button type="button" class="service-tab" data-service-tab="patrols"><span class="service-tab-index">02</span><span><b>Патрули</b><small>Маршрут, схема, доклад</small></span><svg class="icon"><use href="#i-arrow"/></svg></button>
+      <div class="service-tabs-foot">Каждое место или маршрут будет иметь свою карточку с докладом.</div>
     </nav>
     <div class="service-panels">
       <section class="service-panel" id="service-panel-posts" aria-label="Посты">
-        <div class="service-panel-top"><span class="service-counter">01 / ПОСТЫ</span><h2>Расположение постов</h2><p>Здесь будет список постов с их названиями и местоположением. Для каждого поста предусмотрена отдельная карточка.</p></div>
-        <div class="service-placeholder-table" aria-label="Будущий список постов"><div class="service-table-columns"><span>Пост</span><span>Расположение</span><span>Информация</span></div><div class="service-placeholder-empty"><span class="service-empty-mark" aria-hidden="true">+</span><b>Список постов пока не добавлен</b><p>Названия и расположение заполним после получения сведений.</p></div></div>
+        <div class="service-panel-top"><span class="service-counter">01 / ПОСТЫ</span><h2>Посты</h2><p>Фотография, название, расположение и доклад находятся в одной карточке. Доклад можно будет скопировать одной кнопкой.</p></div>
+        <div class="duty-list" id="service-list-posts" aria-live="polite"></div>
       </section>
       <section class="service-panel" id="service-panel-patrols" aria-label="Патрули" hidden>
-        <div class="service-panel-top"><span class="service-counter">02 / ПАТРУЛИ</span><h2>Маршруты патрулирования</h2><p>Здесь появятся маршруты, участки и сведения о патрулировании, если такие материалы будут добавлены.</p></div>
-        <div class="service-route-placeholder"><div class="service-route-line" aria-hidden="true"><i></i><i></i><i></i></div><div><b>Маршруты пока не добавлены</b><p>Когда определим маршруты, разместим их здесь в виде отдельных схем и описаний.</p></div></div>
+        <div class="service-panel-top"><span class="service-counter">02 / ПАТРУЛИ</span><h2>Патрули</h2><p>Для каждого маршрута будут указаны схема или фотография, участок патрулирования и соответствующий доклад.</p></div>
+        <div class="duty-list" id="service-list-patrols" aria-live="polite"></div>
       </section>
-      <section class="service-panel" id="service-panel-reports" aria-label="Доклады" hidden>
-        <div class="service-panel-top"><span class="service-counter">03 / ДОКЛАДЫ</span><h2>Доклады</h2><p>В этом разделе будут собраны готовые формулировки служебных докладов для разных ситуаций.</p></div>
-        <div class="service-reports-placeholder"><div class="service-report-paper" aria-hidden="true"><span></span><span></span><span></span></div><div><b>Шаблоны докладов пока не добавлены</b><p>После добавления текстов здесь появятся карточки с возможностью скопировать нужный доклад.</p></div></div>
-      </section>
-      <p class="service-note">Раздел подготовлен для заполнения. Порядок несения службы, расположение постов и тексты докладов не определяются этой страницей.</p>
+      <p class="service-note">Названия, расположения, маршруты и доклады добавим после получения материалов. Никаких постов или формулировок в памятку заранее не внесено.</p>
     </div>
   </div>
 </section>
+<!-- Данные постов и патрулей. Каждый объект: id, title, location, image, report, details.
+     Фотографии помещаются в папку assets/. Пустые массивы показывают заготовки. -->
+<script id="fso-duty-entries" type="application/json">{"posts":[],"patrols":[]}</script>
 <section class="work-screen cheat-workspace" id="favorites-screen" hidden aria-labelledby="favorites-title">
   <header class="cheat-head">
     <div><span class="work-overline">Личные материалы</span><h1 id="favorites-title">Личная шпаргалка</h1><p>Статьи, ситуации и свои записи в одном месте. Материалы открываются здесь, не уводя в другой раздел.</p></div>
@@ -2156,8 +2189,64 @@ $('cheat-import-file').addEventListener('change',async e=>{
 // Совместимость с прежней кнопкой экспорта, если она присутствует в старой разметке.
 if($('fav-export'))$('fav-export').addEventListener('click',()=>cheatExport('txt'));
 
-// Навигация внутри раздела «Посты и патрули».
-const serviceTabIds=['posts','patrols','reports'];
+// Посты и патрули: карточка содержит изображение и собственный доклад.
+const serviceTabIds=['posts','patrols'];
+let serviceEntries={posts:[],patrols:[]};
+try {
+ const loaded=JSON.parse(document.getElementById('fso-duty-entries').textContent);
+ for(const key of serviceTabIds)serviceEntries[key]=Array.isArray(loaded?.[key])?loaded[key]:[];
+} catch(error) { console.warn('Не удалось прочитать список постов и патрулей',error); }
+function dutyEl(tag,className,txt){
+ const node=document.createElement(tag);
+ if(className)node.className=className;
+ if(txt!==undefined)node.textContent=String(txt);
+ return node;
+}
+function dutyEntryCard(entry,type,isEmpty){
+ const card=dutyEl('article','duty-card'+(isEmpty?' duty-template':''));
+ const photo=dutyEl('div','duty-visual'+(isEmpty?' is-placeholder':''));
+ const label=type==='posts'?'Фото поста':'Фото или схема патруля';
+ if(entry.image&&!isEmpty){
+  const img=document.createElement('img');img.alt='Изображение: '+String(entry.title||label);
+  img.loading='lazy';img.src=entry.image;
+  img.addEventListener('error',()=>{img.remove();photo.classList.add('is-placeholder');photo.append(dutyEl('span','duty-image-label','Изображение пока недоступно'));});
+  photo.append(img);
+  photo.append(dutyEl('span','duty-visual-bottom',label));
+ }else{
+  photo.append(dutyEl('div','duty-picture-icon'),dutyEl('span','duty-image-label',label),dutyEl('span','duty-image-meta',isEmpty?'Здесь будет фотография или схема, которую ты добавишь позже.':'Изображение пока не добавлено'));
+ }
+ const body=dutyEl('div','duty-copy');
+ const meta=dutyEl('div','duty-meta');meta.append(dutyEl('span','',type==='posts'?'ПОСТ':'ПАТРУЛЬ'));
+ if(isEmpty)meta.append(dutyEl('span','','МЕСТО ДЛЯ МАТЕРИАЛА'));
+ const title=dutyEl('h3','',isEmpty?(type==='posts'?'Название поста':'Название маршрута'):entry.title||'Без названия');
+ const loc=dutyEl('dl','duty-location');loc.append(dutyEl('dt','',type==='posts'?'Расположение':'Маршрут / участок'),dutyEl('dd','',isEmpty?'Будет указано после добавления материалов.':entry.location||'Не указано'));
+ body.append(meta,title,loc);
+ if(entry.details&&!isEmpty)body.append(dutyEl('p','duty-details',entry.details));
+ const report=dutyEl('section','duty-report');
+ const reportHead=dutyEl('div','duty-report-head');reportHead.append(dutyEl('h4','',type==='posts'?'Доклад с поста':'Доклад патруля'));
+ const reportText=String(entry.report||'').trim();
+ report.append(reportHead,dutyEl('p','duty-report-text',reportText&&!isEmpty?reportText:'Текст доклада появится здесь вместе с материалом.'));
+ const control=dutyEl('div','');const button=dutyEl('button','duty-copy-report','Скопировать доклад');button.type='button';button.disabled=!reportText||isEmpty;
+ const state=dutyEl('span','duty-report-status','');state.setAttribute('role','status');
+ button.addEventListener('click',async()=>{
+  try {
+   if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(reportText)}
+   else {const ta=document.createElement('textarea');ta.value=reportText;ta.style.position='fixed';ta.style.opacity='0';document.body.append(ta);ta.select();const ok=document.execCommand('copy');ta.remove();if(!ok)throw Error('copy failed')}
+   state.textContent='Скопировано';
+  }catch(e){state.textContent='Не удалось скопировать';}
+ });
+ control.append(button,state);report.append(control);body.append(report);card.append(photo,body);
+ return card;
+}
+function renderServiceEntries(){
+ serviceTabIds.forEach(type=>{
+  const holder=$('service-list-'+type);if(!holder)return;
+  holder.replaceChildren();
+  const entries=serviceEntries[type];
+  if(!entries.length)holder.append(dutyEntryCard({},type,true));
+  else for(const entry of entries)holder.append(dutyEntryCard(entry,type,false));
+ });
+}
 function renderServiceTab(id){
  const current=serviceTabIds.includes(id)?id:'posts';
  document.querySelectorAll('[data-service-tab]').forEach(b=>{
@@ -2168,6 +2257,7 @@ function renderServiceTab(id){
  serviceTabIds.forEach(name=>{$('service-panel-'+name).hidden=name!==current});
 }
 document.querySelectorAll('[data-service-tab]').forEach(b=>b.addEventListener('click',()=>renderServiceTab(b.dataset.serviceTab)));
+renderServiceEntries();
 
 window.addEventListener('hashchange',()=>go(decodeURIComponent(location.hash.slice(1))));
 go(decodeURIComponent(location.hash.slice(1))||'home');
