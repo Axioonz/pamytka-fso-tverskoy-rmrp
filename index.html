@@ -101,223 +101,137 @@ html[data-theme="light"] .rail-theme > svg.icon.moon {display:block !important;}
 
 <!-- Декоративные элементы. Только оформление; не изменяют логику разделов. -->
 
-<!-- Лёгкая отделка интерфейса. Без огромных фигур, не трогает содержимое. -->
-<style id="fso-architectural-details">
-/* Внешнее оформление памятки. Все элементы ниже декоративны и не управляют страницами. */
-html[data-theme="dark"]{
- --bg:#000000;
- --surface:#090909;
- --surface2:#101010;
- --rail-bg:#030303;
- --line:#272727;
- --line-hover:#746e64;
- --input-bg:rgba(17,17,17,.97);
- --accent:#eee6d7;
- --accent-strong:#dfd1b9;
- --accent-text:#11100e;
- --accent-wash:rgba(226,215,194,.085);
- --text:#f2f1ee;
- --muted:#b2b0ac;
- --faint:#898783;
- --focus-ring:#e6dbc8;
- --shadow:0 24px 60px rgba(0,0,0,.7);
-}
-html[data-theme="dark"] body{background:#000;color:var(--text)}
-/* Глубина без градиентного окрашивания всего сайта. Три мягких перелива двигаются за контентом. */
-html[data-theme="dark"] body::before{
- content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+
+<style id="fso-visible-accents-2026">
+/*
+ * Декоративное оформление. ЦВЕТА ИСХОДНОЙ ПАМЯТКИ НЕ ПЕРЕОПРЕДЕЛЯЮТСЯ.
+ * #000 фон, исходные голубые акценты, старые кнопки, навигация и вёрстка.
+ * Декор находится в шапках и фоне и никогда не перехватывает клики.
+ */
+html[data-theme="dark"] body{background:#000}
+html[data-theme="dark"] .app{position:relative;isolation:isolate}
+/* Сдержанные переливы в свободной части страницы, не декоративные плавающие фигуры. */
+html[data-theme="dark"] .app::before{content:"";position:fixed;z-index:-1;pointer-events:none;
+ inset:0 0 0 76px;
  background:
-   radial-gradient(ellipse 560px 450px at 94% 11%,rgba(238,227,206,.085),transparent 75%),
-   radial-gradient(ellipse 420px 480px at 14% 82%,rgba(210,205,198,.047),transparent 77%),
-   radial-gradient(ellipse 720px 240px at 55% 0%,rgba(255,255,255,.028),transparent 78%);
- opacity:.95;animation:fso-light-breathe 24s ease-in-out infinite alternate;
+  radial-gradient(ellipse 430px 350px at 95% 8%,rgba(124,183,231,.098),transparent 75%),
+  radial-gradient(ellipse 320px 400px at 5% 85%,rgba(148,194,225,.060),transparent 75%),
+  linear-gradient(125deg,transparent 55%,rgba(122,172,218,.018) 65%,transparent 80%);
+ animation:fso-ambient-drift 27s ease-in-out infinite alternate;
 }
-html[data-theme="dark"] .app{position:relative;z-index:1}
-html[data-theme="dark"] .app::before{content:none}
-
-/* Тонкая металлическая обработка навигации. */
-html[data-theme="dark"] .rail{background:rgba(2,2,2,.97);border-right-color:#262626;box-shadow:1px 0 rgba(255,255,255,.03),16px 0 42px rgba(0,0,0,.3)}
-html[data-theme="dark"] .rail-nav{position:relative}
-html[data-theme="dark"] .rail-nav::before{content:"";position:absolute;left:26px;top:-19px;width:1px;height:13px;background:linear-gradient(transparent,rgba(237,219,187,.75));pointer-events:none}
-html[data-theme="dark"] .rail-button.active{border-color:rgba(231,215,185,.23);box-shadow:inset 0 1px rgba(255,255,255,.035);background:linear-gradient(95deg,rgba(229,210,175,.15),rgba(229,210,175,.025))}
-html[data-theme="dark"] .rail-button.active::after{background:#e7d2af!important;box-shadow:0 0 13px rgba(232,207,167,.36)}
-html[data-theme="dark"] .topbar{position:relative;border-bottom-color:rgba(224,210,185,.18)}
-html[data-theme="dark"] .topbar::after{content:"";position:absolute;bottom:-1px;left:clamp(26px,3.5vw,58px);width:132px;height:1px;background:linear-gradient(90deg,transparent,#d9c5a2,transparent);box-shadow:0 0 15px rgba(238,217,177,.35);pointer-events:none}
-html[data-theme="dark"] .brand-mark{border-color:#514a3e;background:linear-gradient(145deg,#1c1b18,#070707);box-shadow:inset 0 1px rgba(255,255,255,.08)}
-
-/* Главная, часть I. Сама архитектура Сенатского дворца остаётся реальным фоном. */
-html[data-theme="dark"] .portal-home .portal-hero{
- position:relative;isolation:isolate;overflow:hidden;
- border:1px solid rgba(210,193,159,.25);
- background:#050505;
- box-shadow:0 24px 75px rgba(0,0,0,.63),inset 0 1px rgba(255,255,255,.08);
+/* Главная. Сохраняем существующую фотографию, под ней световые арки и линии архитектоники. */
+.portal-home .portal-hero{position:relative;isolation:isolate;overflow:hidden;
+ box-shadow:inset 0 1px 0 rgba(228,244,255,.085),0 24px 75px rgba(0,0,0,.27)}
+.portal-home .portal-hero-content,.portal-home .portal-hero-side{position:relative;z-index:2}
+.fso-hero-finish{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none}
+.fso-hero-finish::before{content:"";position:absolute;right:-18%;top:-20%;width:75%;height:165%;
+ background:linear-gradient(103deg,transparent 37%,rgba(182,224,250,.10) 48%,rgba(219,240,255,.025) 52%,transparent 62%);
+ transform:translateX(-21%) skewX(-8deg);animation:fso-soft-wide-sweep 20s ease-in-out infinite;}
+/* Более заметная архитектурная подсветка справа, но позади фотографии и карточки. */
+.fso-hero-finish svg{position:absolute;width:min(670px,62%);height:100%;right:-4%;top:0;
+ opacity:.75;filter:drop-shadow(0 0 11px rgba(135,195,235,.15));
+ transform:translateY(0);animation:fso-architect-float 23s ease-in-out infinite alternate;}
+.fso-hero-finish .fso-hero-line{stroke:rgba(169,209,238,.41);fill:none;stroke-width:1.2}
+.fso-hero-finish .fso-hero-light{stroke:rgba(228,243,255,.60);fill:none;stroke-width:1.7;stroke-dasharray:130 700;animation:fso-line-travel 16s linear infinite}
+.fso-hero-finish .fso-hero-dots{fill:rgba(199,231,250,.55)}
+/* Два тонких торцевых акцента задают выразительный контур главного блока. */
+.fso-hero-finish .fso-hero-trace{position:absolute;top:0;left:0;width:42%;height:2px;
+ background:linear-gradient(90deg,transparent,rgba(148,207,247,.75),rgba(255,255,255,.85),transparent);
+ opacity:.78;filter:drop-shadow(0 0 8px rgba(130,194,231,.5));animation:fso-trace-slide 15s ease-in-out infinite alternate}
+.fso-hero-finish .fso-hero-corner{position:absolute;right:14px;bottom:14px;width:36px;height:36px;
+ border-right:1px solid rgba(174,221,248,.55);border-bottom:1px solid rgba(174,221,248,.55);opacity:.8}
+.portal-home .portal-hero-side{box-shadow:inset 0 1px rgba(206,233,250,.10),0 15px 40px rgba(0,0,0,.18)}
+/* Поиск. Видимая световая кромка, светится и движется без перекрытия поля. */
+.portal-home .portal-search-section{position:relative;isolation:isolate;overflow:hidden;
+ box-shadow:inset 0 1px rgba(218,241,255,.045),0 15px 50px rgba(0,0,0,.2)}
+.portal-home .portal-search-section::after{content:"";position:absolute;z-index:1;pointer-events:none;
+ top:0;left:18px;width:165px;height:2px;
+ background:linear-gradient(90deg,transparent,rgba(144,204,244,.65),rgba(239,250,255,.9),transparent);
+ filter:drop-shadow(0 0 7px rgba(135,201,249,.55));
+ animation:fso-search-walk 17s ease-in-out infinite alternate}
+.portal-home .portal-search-section>*{position:relative;z-index:2}
+.portal-home .portal-search-form{box-shadow:inset 0 1px rgba(255,255,255,.035)}
+.portal-home .portal-search-form:focus-within{box-shadow:0 0 0 3px rgba(124,183,231,.095),0 12px 45px rgba(0,0,0,.14)}
+/* Домашние карточки. Яркая, но узкая верхняя грань, без накладных символов. */
+.portal-home :is(.portal-topic,.portal-section-card){position:relative;overflow:hidden;isolation:isolate;
+ transition:box-shadow .28s,transform .28s,border-color .28s}
+.portal-home .portal-topic::before{content:"";position:absolute;left:18px;right:auto;top:0;width:66px;height:2px;
+ background:linear-gradient(90deg,rgba(148,208,246,.92),rgba(158,210,245,.11));opacity:.85;pointer-events:none}
+.portal-home .portal-section-card::after{content:"";position:absolute;z-index:0;pointer-events:none;
+ right:-20px;bottom:-26px;width:122px;height:122px;border-radius:50%;
+ background:radial-gradient(circle,rgba(115,181,230,.085),transparent 68%);}
+.portal-home :is(.portal-topic,.portal-section-card):hover{
+ box-shadow:0 18px 45px rgba(0,0,0,.35),inset 0 1px rgba(221,242,255,.085),0 0 24px rgba(122,179,220,.045)}
+/* Маленькая полоска у названия группы, подчёркивающая ритм, вместо огромных орнаментов. */
+.portal-home .portal-section-heading{position:relative}
+.portal-home .portal-section-heading::after{content:"";height:1px;flex:1;align-self:end;margin:0 0 8px 21px;
+ background:linear-gradient(90deg,rgba(153,198,231,.24),transparent 85%);pointer-events:none}
+/* Внутренние разделы. Украшения в шапках, читательские области остаются нетронутыми. */
+:is(.law-screen,.reference-screen,.det-screen,.territory-guide,.escort-studio,.service-screen,.cheat-workspace,.subpage,.quiz-coming){position:relative;isolation:isolate}
+:is(.law-top,.reference-head,.det-head,.tg-header,.escort-banner,.service-header,.cheat-head){position:relative;isolation:isolate}
+.fso-page-finish{position:absolute;right:0;top:0;width:min(360px,36%);height:180px;z-index:0;
+ pointer-events:none;overflow:hidden;opacity:1;
+ -webkit-mask-image:linear-gradient(90deg,transparent,#000 29%);mask-image:linear-gradient(90deg,transparent,#000 29%)}
+.fso-page-finish::before{content:"";position:absolute;inset:5px 0 0;
+ background:radial-gradient(ellipse 240px 120px at 90% 35%,rgba(130,194,239,.115),transparent 76%);
+ animation:fso-ornament-breathe 16s ease-in-out infinite alternate}
+.fso-page-finish svg{position:relative;z-index:1;width:100%;height:100%;overflow:visible;
+ filter:drop-shadow(0 0 7px rgba(120,187,230,.18));
+ animation:fso-architect-float 19s ease-in-out infinite alternate}
+.fso-page-finish .fso-outline{stroke:rgba(155,207,245,.50);stroke-width:1.45;fill:none}
+.fso-page-finish .fso-track{stroke:rgba(224,244,255,.64);stroke-width:1.2;fill:none;
+ stroke-dasharray:11 21;animation:fso-decor-dash 20s linear infinite}
+.fso-page-finish .fso-fine{stroke:rgba(140,184,219,.22);stroke-width:1;fill:none}
+.fso-page-finish .fso-point{fill:rgba(208,238,255,.65)}
+:is(.law-top,.reference-head,.det-head,.tg-header,.escort-banner,.service-header,.cheat-head) > :not(.fso-page-finish){position:relative;z-index:1}
+/* Под заголовком остаётся чёткий, но неширокий графический росчерк. */
+:is(.law-top,.reference-head,.det-head,.tg-header,.cheat-head){border-bottom:1px solid rgba(151,193,224,.19);padding-bottom:15px}
+:is(.law-top,.reference-head,.det-head,.tg-header,.cheat-head)::after{content:"";position:absolute;bottom:-1px;left:0;
+ width:min(150px,30%);height:2px;pointer-events:none;
+ background:linear-gradient(90deg,rgba(151,211,249,.85),rgba(175,219,248,.12));
+ box-shadow:0 0 13px rgba(105,183,234,.22);animation:fso-heading-shine 12s ease-in-out infinite alternate}
+/* Сохранение привычных цветов и функций, небольшое повышение глубины рамок. */
+:is(.law-sidebar,.law-reader,.reference-reader,.reference-entry,.concept-card,.det-step-card,.tg-object-group,.tg-regime,.service-tab,.work-card){
+ box-shadow:inset 0 1px rgba(220,237,249,.025)}
+html[data-theme="dark"] :is(.law-entry,.reference-entry,.concept-card,.service-tab,.tg-object-group,.work-card):hover{
+ border-color:var(--line-hover);box-shadow:inset 0 1px rgba(210,235,252,.075),0 13px 36px rgba(0,0,0,.26)}
+/* Заголовок без собственного контейнера: небольшой световой угол на правой стороне. */
+.fso-section-decor{position:absolute;pointer-events:none;z-index:0;right:5px;top:25px;width:122px;height:65px;
+ border-right:1px solid rgba(151,204,239,.34);border-top:1px solid rgba(151,204,239,.34);
+ background:linear-gradient(140deg,transparent 55%,rgba(143,199,234,.04));opacity:.78}
+/* Навигация после клика: меню закрывается, если курсор уже вне панели. Клавиатурный фокус остаётся доступным. */
+@media(min-width:721px){
+ .rail:focus-within:not(:hover):not(.expanded):not(:has(:focus-visible)){width:76px;box-shadow:none}
+ .rail:focus-within:not(:hover):not(.expanded):not(:has(:focus-visible)) .rail-button span,
+ .rail:focus-within:not(:hover):not(.expanded):not(:has(:focus-visible)) .theme-toggle span{opacity:0;transform:translateX(8px)}
 }
-html[data-theme="dark"] .portal-home .portal-hero::before{
- background-image:
-  linear-gradient(90deg,rgba(0,0,0,.97),rgba(0,0,0,.86) 42%,rgba(0,0,0,.59) 100%),
-  linear-gradient(180deg,rgba(0,0,0,.2),rgba(0,0,0,.55)),
-  url('./assets/senate-palace.webp');
- background-position:center,center,center 43%;background-size:cover;
- filter:grayscale(1) contrast(1.08);opacity:1;
-}
-/* Тонкая архитектурная штриховка только в свободной области фоновой фотографии. */
-.fso-hero-etching{
- position:absolute;z-index:0;pointer-events:none;
- inset:0 0 0 44%;opacity:.75;
- background:
- linear-gradient(125deg,transparent 0 42%,rgba(240,225,195,.10) 42.2%,transparent 42.4% 58%,rgba(240,225,195,.055) 58.2%,transparent 58.4%),
- repeating-linear-gradient(90deg,transparent 0 86px,rgba(255,255,255,.045) 87px,transparent 88px),
- radial-gradient(ellipse at 78% 43%,rgba(243,218,167,.10),transparent 68%);
- -webkit-mask-image:linear-gradient(90deg,transparent,#000 45%);mask-image:linear-gradient(90deg,transparent,#000 45%);
- animation:fso-etch-float 25s ease-in-out infinite alternate;
-}
-/* Верхняя световая риска читается даже на неподвижном скриншоте. */
-.fso-hero-sheen{
- position:absolute;z-index:2;pointer-events:none;
- left:8%;right:8%;top:0;height:2px;
- background:linear-gradient(90deg,transparent 0%,rgba(239,220,184,.2) 20%,#e6d0aa 50%,rgba(239,220,184,.2) 80%,transparent 100%);
- box-shadow:0 0 27px rgba(242,220,181,.35);transform:translateX(-22%);
- animation:fso-edge-flow 12s ease-in-out infinite alternate;
-}
-.fso-hero-corner{
- position:absolute;z-index:2;pointer-events:none;
- right:17px;bottom:17px;width:43px;height:43px;
- border-right:1px solid rgba(239,223,190,.46);
- border-bottom:1px solid rgba(239,223,190,.46);
-}
-html[data-theme="dark"] .portal-hero-content,html[data-theme="dark"] .portal-hero-side{position:relative;z-index:1}
-html[data-theme="dark"] .portal-hero h1 strong{color:#f1e6d4}
-html[data-theme="dark"] .portal-hero-content>p{color:#c8c5be}
-html[data-theme="dark"] .portal-hero-side{
- background:linear-gradient(155deg,rgba(33,28,21,.82),rgba(5,5,5,.93))!important;
- border-color:rgba(235,213,179,.25)!important;
- box-shadow:inset 0 1px rgba(255,255,255,.08),0 18px 38px rgba(0,0,0,.19);
- backdrop-filter:blur(8px);
-}
-html[data-theme="dark"] .portal-hero-side::before{
- content:"";position:absolute;pointer-events:none;top:15px;right:15px;
- height:15px;width:15px;border-top:1px solid rgba(225,205,167,.48);border-right:1px solid rgba(225,205,167,.48);
-}
-html[data-theme="dark"] .portal-hero-button{border-color:rgba(223,204,168,.4);background:rgba(234,211,176,.1);color:#f5e5cc}
-html[data-theme="dark"] .portal-hero-button:hover{background:rgba(234,211,176,.18)}
-html[data-theme="dark"] .portal-facts span{background:rgba(12,12,12,.8);border-color:rgba(217,201,173,.20);backdrop-filter:blur(4px)}
-
-/* Главная, часть II. Световая кромка у поиска и внутри интерактивных карточек. */
-html[data-theme="dark"] .portal-search-section{position:relative;overflow:hidden;background:linear-gradient(110deg,#10100f,#070707);border-color:rgba(221,204,173,.19);box-shadow:inset 0 1px rgba(245,230,200,.05)}
-html[data-theme="dark"] .portal-search-section::before{
- content:"";position:absolute;top:0;left:22px;width:145px;height:1px;
- background:linear-gradient(90deg,transparent,#e9d4af,transparent);
- opacity:.8;filter:drop-shadow(0 0 6px rgba(252,224,180,.4));pointer-events:none;
- animation:fso-search-ray 13s ease-in-out infinite alternate;
-}
-html[data-theme="dark"] .portal-search-form{background:#070707;border-color:rgba(213,198,171,.28);box-shadow:inset 0 1px rgba(255,255,255,.02)}
-html[data-theme="dark"] .portal-search-form:focus-within{box-shadow:0 0 0 3px rgba(226,209,176,.12),inset 0 1px rgba(255,255,255,.04)}
-html[data-theme="dark"] .portal-search-form button[type="submit"]{background:#e8ddca;color:#111;min-width:92px;display:inline-flex;align-items:center;justify-content:center;text-align:center;line-height:1.1}
-html[data-theme="dark"] .portal-search-form button[type="submit"]:hover{background:#fff1d8}
-
-/* Карточки поднимаются чуть-чуть; вдоль рамки виден мягкий локальный свет. */
-html[data-theme="dark"] :is(.portal-topic,.portal-section-card){
- background:linear-gradient(145deg,#14120f 0%,#090909 65%,#060606 100%);
- border-color:rgba(221,204,174,.18);
- box-shadow:inset 0 1px rgba(255,255,255,.045),0 12px 26px rgba(0,0,0,.22);
- transition:transform .28s ease,border-color .25s,box-shadow .25s,background-color .25s;
-}
-html[data-theme="dark"] :is(.portal-topic,.portal-section-card):hover{
- border-color:rgba(239,217,179,.53);
- box-shadow:0 17px 38px rgba(0,0,0,.44),0 0 27px rgba(232,211,174,.07),inset 0 1px rgba(255,255,255,.07);
- transform:translateY(-3px);
-}
-html[data-theme="dark"] .portal-section-icon{background:linear-gradient(145deg,rgba(228,205,169,.14),rgba(228,205,169,.02));border:1px solid rgba(225,205,170,.17);box-shadow:inset 0 1px rgba(255,255,255,.04)}
-html[data-theme="dark"] .portal-topic-arrow{color:#e9d2aa}
-html[data-theme="dark"] .portal-doc-list{background:linear-gradient(150deg,#11100e,#070707);border-color:rgba(225,209,177,.17);box-shadow:inset 0 1px rgba(255,255,255,.04)}
-html[data-theme="dark"] .portal-doc-list button:not(:last-child){border-bottom-color:rgba(221,211,192,.10)}
-html[data-theme="dark"] .portal-doc-list button:hover{background:rgba(234,213,181,.065)}
-
-/* Разделы: встроенный орнамент только в шапке, не поверх текста. */
-html[data-theme="dark"] :is(.law-top,.reference-head,.det-head,.tg-header,.escort-banner,.service-header,.cheat-head,.subpage){position:relative}
-html[data-theme="dark"] :is(.law-top,.reference-head,.det-head,.tg-header,.cheat-head){
- padding-bottom:23px;border-bottom:1px solid rgba(221,205,173,.19);
-}
-html[data-theme="dark"] :is(.law-top,.reference-head,.det-head,.tg-header,.cheat-head)::after{
- content:"";position:absolute;left:0;bottom:-1px;height:2px;width:190px;
- background:linear-gradient(90deg,rgba(222,198,155,.0),rgba(238,212,166,.88) 40%,rgba(222,198,155,.0));
- box-shadow:0 0 17px rgba(243,217,173,.22);
- transform:translateX(0);pointer-events:none;
- animation:fso-page-line 15s ease-in-out infinite alternate;
-}
-/* Декоративная кромка секций, не занимает место под контентом. */
-html[data-theme="dark"] :is(.law-screen,.reference-screen,.det-screen,.territory-guide,.escort-studio,.service-screen,.cheat-workspace,.subpage){
- background-image:radial-gradient(ellipse 460px 180px at 98% 0%,rgba(232,209,176,.07),transparent 80%);
- background-repeat:no-repeat;
-}
-/* Широкие служебные баннеры получают видимую рамку и едва заметные отражения. */
-html[data-theme="dark"] :is(.escort-banner,.service-header){border-color:rgba(224,204,171,.22);background:linear-gradient(135deg,#15120e,#090909 75%,#050505);box-shadow:inset 0 1px rgba(255,255,255,.05),0 18px 45px rgba(0,0,0,.25)}
-/* Убираем старый большой круг у сопровождения. */
-html[data-theme="dark"] .escort-banner::after{inset:0;border:0;border-radius:0;box-shadow:none;background:linear-gradient(112deg,transparent 58%,rgba(230,201,158,.065) 67%,transparent 76%);animation:fso-banner-glide 19s ease-in-out infinite alternate}
-html[data-theme="dark"] .service-header-mark{opacity:.28;filter:grayscale(1)}
-
-/* Оформление чтения и справочника. Область текста остаётся неподвижной. */
-html[data-theme="dark"] :is(.law-sidebar,.law-reader,.reference-reader,.det-step-card,.det-aside-box,.tg-object-card,.escort-law-card,.service-panel,.cheat-side-panel,.cheat-item,.work-card,.concept-card,.reference-entry){
- border-color:rgba(216,206,189,.15);
- box-shadow:inset 0 1px rgba(252,244,231,.036),0 7px 22px rgba(0,0,0,.14);
-}
-html[data-theme="dark"] :is(.law-sidebar,.law-reader,.reference-reader,.det-step-card,.det-aside-box,.tg-object-card,.escort-law-card,.service-panel,.cheat-side-panel,.work-card){background-color:#090909}
-html[data-theme="dark"] :is(.law-top h1,.reference-head h1,.det-head h1,.tg-header h1,.escort-banner h1,.service-header h1,.cheat-head h1,.subpage h1){text-shadow:0 2px 24px rgba(245,231,206,.07)}
-html[data-theme="dark"] :is(.reference-entry,.concept-card,.law-entry,.tg-object-card,.service-tab,.cheat-item){transition:border-color .23s ease,background-color .23s ease,box-shadow .23s ease,transform .23s ease}
-html[data-theme="dark"] :is(.reference-entry,.concept-card,.law-entry,.tg-object-card,.service-tab,.cheat-item):hover{border-color:rgba(229,209,175,.38);box-shadow:inset 0 1px rgba(255,255,255,.055),0 12px 26px rgba(0,0,0,.35)}
-html[data-theme="dark"] :is(.law-sidebar,.law-reader,.reference-reader,.det-step-card,.tg-law-dialog):hover{transform:none}
-html[data-theme="dark"] .law-document :is(.law-chapter,.law-part){color:#e9dac0}
-html[data-theme="dark"] .law-document .law-article{color:#e9d7b8}
-html[data-theme="dark"] .tg-law-highlight{border-left-color:#decaab;background:rgba(228,208,178,.055)}
-
-/* Гравировка на карточках. Короткие горизонтальные штрихи видны и без наведения. */
-html[data-theme="dark"] .portal-topic{position:relative;overflow:hidden}
-html[data-theme="dark"] .portal-topic::before{
- content:"";position:absolute;left:19px;top:0;width:69px;height:2px;
- background:linear-gradient(90deg,#d6bc90,rgba(235,216,186,.15),transparent);
- box-shadow:0 0 12px rgba(226,201,156,.18);pointer-events:none;
-}
-html[data-theme="dark"] .portal-section-card{position:relative;overflow:hidden;isolation:isolate}
-html[data-theme="dark"] .portal-section-card::after{
- content:"";position:absolute;right:13px;top:13px;width:23px;height:23px;
- border-top:1px solid rgba(230,210,172,.32);
- border-right:1px solid rgba(230,210,172,.32);pointer-events:none;
-}
-html[data-theme="dark"] .portal-section-card:hover::after{
- border-color:rgba(245,222,181,.7);
-}
-/* Тихий фрагмент световой линии в заголовках, чтобы большие пустоты оставались осмысленными. */
-html[data-theme="dark"] .portal-section-heading::after{
- content:"";flex:0 1 95px;max-width:95px;height:1px;margin-left:auto;
- background:linear-gradient(90deg,transparent,rgba(239,216,177,.35),transparent);
- pointer-events:none;
-}
-html[data-theme="dark"] .portal-search-heading::after{display:none}
-html[data-theme="dark"] .portal-hero-side h2{color:#f0e9dc}
-
-/* Мобильная читаемость и ограничение декоративных световых областей. */
+/* Уважение к темам и настройкам пользователя */
+html[data-theme="light"] .fso-page-finish,html[data-theme="light"] .fso-hero-finish,
+html[data-theme="light"] .fso-section-decor{opacity:.26}
+@keyframes fso-ambient-drift{0%{transform:translate3d(0,0,0);opacity:.7}100%{transform:translate3d(-22px,17px,0);opacity:1}}
+@keyframes fso-soft-wide-sweep{0%,12%{transform:translateX(-22%) skewX(-8deg);opacity:0}45%{opacity:.85}88%,100%{transform:translateX(26%) skewX(-8deg);opacity:0}}
+@keyframes fso-architect-float{0%{transform:translate3d(0,-5px,0)}100%{transform:translate3d(-9px,7px,0)}}
+@keyframes fso-line-travel{to{stroke-dashoffset:-830}}
+@keyframes fso-trace-slide{from{transform:translateX(-25%)}to{transform:translateX(185%)}}
+@keyframes fso-search-walk{from{transform:translateX(-45px)}to{transform:translateX(min(60vw,700px))}}
+@keyframes fso-ornament-breathe{from{opacity:.55;transform:translateX(0)}to{opacity:1;transform:translateX(-12px)}}
+@keyframes fso-decor-dash{to{stroke-dashoffset:-640}}
+@keyframes fso-heading-shine{from{opacity:.5;transform:scaleX(.65);transform-origin:left}to{opacity:1;transform:scaleX(1);transform-origin:left}}
 @media(max-width:720px){
- .fso-hero-etching{inset:0 0 10% 26%;opacity:.34}
- .fso-hero-corner{right:12px;bottom:12px;width:24px;height:24px}
- .fso-hero-sheen{left:14%;right:14%;opacity:.75}
- html[data-theme="dark"] body::before{opacity:.5}
- html[data-theme="dark"] :is(.law-top,.reference-head,.det-head,.tg-header,.cheat-head)::after{width:105px}
- html[data-theme="dark"] .portal-hero-side{backdrop-filter:none}
+ html[data-theme="dark"] .app::before{inset:0;opacity:.6}
+ .fso-page-finish{width:30%;height:120px;opacity:.48}
+ .fso-hero-finish svg{opacity:.43;width:80%}
+ .fso-hero-finish .fso-hero-trace{width:60%}
+ .portal-home .portal-section-heading::after{display:none}
 }
 @media(prefers-reduced-motion:reduce){
- html[data-theme="dark"] body::before,.fso-hero-etching,.fso-hero-sheen,
- html[data-theme="dark"] .portal-search-section::before,
- html[data-theme="dark"] :is(.law-top,.reference-head,.det-head,.tg-header,.cheat-head)::after,
- html[data-theme="dark"] .escort-banner::after{animation:none!important}
+ html[data-theme="dark"] .app::before,.fso-hero-finish::before,.fso-hero-finish svg,
+ .fso-hero-finish .fso-hero-light,.fso-hero-finish .fso-hero-trace,
+ .fso-page-finish::before,.fso-page-finish svg,.fso-page-finish .fso-track,
+ :is(.law-top,.reference-head,.det-head,.tg-header,.cheat-head)::after,
+ .portal-home .portal-search-section::after{animation:none!important}
 }
-@keyframes fso-light-breathe{0%{opacity:.65;transform:translateY(0)}100%{opacity:1;transform:translateY(-18px)}}
-@keyframes fso-etch-float{0%{transform:translate3d(-8px,0,0);opacity:.55}100%{transform:translate3d(8px,-7px,0);opacity:.88}}
-@keyframes fso-edge-flow{0%{transform:translateX(-21%);opacity:.35}50%{opacity:.9}100%{transform:translateX(21%);opacity:.58}}
-@keyframes fso-search-ray{0%{transform:translateX(0);opacity:.35}100%{transform:translateX(215px);opacity:.9}}
-@keyframes fso-page-line{0%{transform:translateX(0);opacity:.6}100%{transform:translateX(62px);opacity:1}}
-@keyframes fso-banner-glide{from{background-position:-130px 0}to{background-position:130px 0}}
 </style>
-
 </head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
@@ -363,7 +277,15 @@ html[data-theme="dark"] .portal-hero-side h2{color:#f0e9dc}
  <main class="container">
   <section aria-labelledby="home-title" class="home-screen portal-home" id="home-screen">
 <div class="portal-hero">
-<div class="fso-hero-etching" aria-hidden="true"></div><div class="fso-hero-sheen" aria-hidden="true"></div><div class="fso-hero-corner" aria-hidden="true"></div>
+<div class="fso-hero-finish" aria-hidden="true">
+ <span class="fso-hero-trace"></span><span class="fso-hero-corner"></span>
+ <svg viewBox="0 0 640 410" preserveAspectRatio="xMidYMid slice" focusable="false" aria-hidden="true">
+   <path class="fso-hero-line" d="M400 -45 Q260 120 400 455 M500 -45 Q365 120 500 455 M598 -45 Q455 120 598 455" />
+   <path class="fso-hero-line" d="M280 60 Q420 95 640 56 M265 308 Q435 280 640 310" />
+   <path class="fso-hero-light" d="M600 -48 Q455 120 598 455" />
+   <circle class="fso-hero-dots" cx="417" cy="94" r="2"/><circle class="fso-hero-dots" cx="537" cy="315" r="2"/>
+ </svg>
+</div>
 <div class="portal-hero-content">
 <h1 id="home-title">Памятка <strong>сотрудника ФСО</strong></h1>
 <p>Правовые основания и законодательство проекта. Нужная и быстрая информация без заморочек.</p>
@@ -422,6 +344,7 @@ html[data-theme="dark"] .portal-hero-side h2{color:#f0e9dc}
 <div class="portal-footer"><span>Неофициальная памятка для проекта RMRP · Тверской. Приоритет у действующих нормативных актов сервера.</span></div>
 </section>
 <section class="subpage" id="section-screen" hidden aria-live="polite">
+<div class="fso-section-decor" aria-hidden="true"></div>
    <button class="back" data-page="home">← На главную</button>
    <h1 id="section-title">Раздел</h1>
    <p class="subpage-desc" id="section-description"></p>
@@ -429,11 +352,13 @@ html[data-theme="dark"] .portal-hero-side h2{color:#f0e9dc}
   </section>
 
 <section class="work-screen quiz-coming" id="situations-screen" hidden aria-label="Ситуации">
+<div class="fso-section-decor" aria-hidden="true"></div>
  <h1>В разработке</h1>
 </section>
 
   <section class="det-screen" id="detention-screen" hidden aria-label="Порядок задержания">
    <header class="det-head">
+<div class="fso-page-finish" aria-hidden="true"><svg viewBox="0 0 640 195" preserveAspectRatio="xMidYMid meet" focusable="false"><path class="fso-outline" d="M95 164 H210 V131 H312 V98 H415 V66 H585"/><path class="fso-track" d="M140 183 H265 V151 H366 V120 H490 V90 H600"/><path class="fso-fine" d="M160 10 V183"/><circle class="fso-point" cx="560" cy="88" r="2.5"/></svg></div>
     <h1>Порядок задержания</h1>
     <p>Здесь собраны основные действия при задержании, права задержанного и статьи, на которые нужно опираться.</p>
    </header>
@@ -457,6 +382,7 @@ html[data-theme="dark"] .portal-hero-side h2{color:#f0e9dc}
   
 <section class="work-screen territory-guide" id="territories-screen" hidden aria-labelledby="territories-title">
  <header class="tg-header">
+<div class="fso-page-finish" aria-hidden="true"><svg viewBox="0 0 640 195" preserveAspectRatio="xMidYMid meet" focusable="false"><path class="fso-outline" d="M110 170 L190 95 L305 132 L415 45 L570 90 M110 85 L230 143 L325 58 L460 114 L605 45"/><path class="fso-track" d="M110 170 L415 45"/><path class="fso-fine" d="M230 0 V175 M470 0 V175"/><circle class="fso-point" cx="560" cy="88" r="2.5"/></svg></div>
   <div class="tg-breadcrumb">ФЗ № 86-ФЗ <span>•</span> Территории</div>
   <div class="tg-header-main"><div>
     <h1 id="territories-title">Территории и объекты</h1>
@@ -544,6 +470,7 @@ html[data-theme="dark"] .portal-hero-side h2{color:#f0e9dc}
 </div>
 <section class="escort-studio" id="escort-screen" hidden aria-labelledby="escort-title">
   <header class="escort-banner">
+<div class="fso-page-finish" aria-hidden="true"><svg viewBox="0 0 640 195" preserveAspectRatio="xMidYMid meet" focusable="false"><path class="fso-outline" d="M50 160 C185 40 250 40 385 160 M145 177 C250 75 325 75 480 160 M230 185 C340 110 410 100 605 175"/><path class="fso-track" d="M60 125 C170 30 250 25 405 123"/><path class="fso-fine" d="M450 0 V180"/><circle class="fso-point" cx="560" cy="88" r="2.5"/></svg></div>
     <div class="escort-banner-copy">
       <h1 id="escort-title">Сопровождение<br><strong>и кортежи</strong></h1>
       <p>Полномочия ФСО на маршруте, при проходе на территорию и обеспечении безопасности охраняемого лица.</p>
@@ -575,6 +502,7 @@ html[data-theme="dark"] .portal-hero-side h2{color:#f0e9dc}
 </section>
 <section class="service-screen" id="posts-screen" hidden aria-labelledby="service-title">
   <header class="service-header">
+<div class="fso-page-finish" aria-hidden="true"><svg viewBox="0 0 640 195" preserveAspectRatio="xMidYMid meet" focusable="false"><path class="fso-outline" d="M70 155 H215 Q260 155 265 112 H370 Q415 112 420 68 H580"/><path class="fso-track" d="M110 177 H230 Q280 177 285 134 H400 Q445 134 450 90 H600"/><path class="fso-fine" d="M175 0 V175"/><circle class="fso-point" cx="560" cy="88" r="2.5"/></svg></div>
     <div class="service-header-copy">
       <span class="service-eyebrow">ФСО / RMRP · Тверской</span>
       <h1 id="service-title">Посты <span>и патрули</span></h1>
@@ -607,6 +535,7 @@ html[data-theme="dark"] .portal-hero-side h2{color:#f0e9dc}
 <script src="./data/07-посты-и-патрули.js"></script>
 <section class="work-screen cheat-workspace" id="favorites-screen" hidden aria-labelledby="favorites-title">
   <header class="cheat-head">
+<div class="fso-page-finish" aria-hidden="true"><svg viewBox="0 0 640 195" preserveAspectRatio="xMidYMid meet" focusable="false"><path class="fso-outline" d="M85 145 H565 M125 110 H520 M165 75 H470"/><path class="fso-track" d="M90 165 H450"/><path class="fso-fine" d="M550 30 V170"/><circle class="fso-point" cx="560" cy="88" r="2.5"/></svg></div>
     <div><span class="work-overline">Личные материалы</span><h1 id="favorites-title">Личная шпаргалка</h1><p>Статьи и свои записи в одном месте. Материалы открываются здесь, не уводя в другой раздел.</p></div>
     <div class="cheat-stats" aria-label="Статистика шпаргалки"><div><b id="fav-total">0</b><small>материалов</small></div><div><b id="fav-pin-count">0</b><small>закреплено</small></div><div><b id="fav-collection-count">0</b><small>подборок</small></div></div>
   </header>
@@ -629,18 +558,22 @@ html[data-theme="dark"] .portal-hero-side h2{color:#f0e9dc}
   </div>
   <p class="cheat-status" id="cheat-status" role="status" aria-live="polite"></p>
 </section>
-<section class="work-screen quiz-coming" id="departments-screen" hidden aria-label="Памятки отделов"><h1>В разработке</h1></section>
+<section class="work-screen quiz-coming" id="departments-screen" hidden aria-label="Памятки отделов">
+<div class="fso-section-decor" aria-hidden="true"></div><h1>В разработке</h1></section>
 <section class="work-screen quiz-coming" id="quiz-screen" hidden aria-label="Проверка знаний">
+<div class="fso-section-decor" aria-hidden="true"></div>
   <h1>В разработке</h1>
 </section>
 <section class="reference-screen" id="reference-screen" hidden aria-label="Правовой справочник">
-   <div class="reference-head"><div><h1>Правовой справочник</h1><p>Нажмите на основание, чтобы прочитать точную формулировку.</p></div><span class="reference-count" id="reference-count"></span></div>
+   <div class="reference-head">
+<div class="fso-page-finish" aria-hidden="true"><svg viewBox="0 0 640 195" preserveAspectRatio="xMidYMid meet" focusable="false"><path class="fso-outline" d="M35 120 C180 120 180 43 320 43 S470 110 595 52 M55 150 C200 150 200 75 340 75 S500 142 605 86"/><path class="fso-track" d="M200 35 H605"/><path class="fso-fine" d="M510 0 V185"/><circle class="fso-point" cx="560" cy="88" r="2.5"/></svg></div><div><h1>Правовой справочник</h1><p>Нажмите на основание, чтобы прочитать точную формулировку.</p></div><span class="reference-count" id="reference-count"></span></div>
    <div class="ref-mode" id="reference-mode"><button id="ref-core" type="button" class="active">Основные для службы</button><button id="ref-all" type="button">Все правовые нормы</button></div><div class="reference-controls"><input class="reference-search" id="reference-search" type="search" aria-label="Поиск по правовому справочнику" placeholder="Поиск по названию, статье или закону…"><div class="reference-filters" id="reference-filters" aria-label="Подразделы справочника"></div></div>
    <div class="reference-layout"><div class="reference-list" id="reference-list" aria-label="Список правовых оснований"></div><article class="reference-reader" id="reference-reader" aria-live="polite"></article></div>
 
   </section>
   <section class="law-screen" id="law-screen" hidden aria-label="Законодательство">
-   <div class="law-top"><div><h1>Законодательство</h1><p>RMRP · Тверской</p></div><a class="law-source" href="https://forum.rmrp.ru/forums/laws/" target="_blank" rel="noopener noreferrer">Форум RMRP ↗</a></div>
+   <div class="law-top">
+<div class="fso-page-finish" aria-hidden="true"><svg viewBox="0 0 640 195" preserveAspectRatio="xMidYMid meet" focusable="false"><path class="fso-outline" d="M90 160 Q180 110 280 160 T480 160 M150 128 Q250 75 350 125 T580 118"/><path class="fso-track" d="M100 100 Q225 52 360 94 T590 70"/><path class="fso-fine" d="M340 0 V176 M380 0 V176"/><circle class="fso-point" cx="560" cy="88" r="2.5"/></svg></div><div><h1>Законодательство</h1><p>RMRP · Тверской</p></div><a class="law-source" href="https://forum.rmrp.ru/forums/laws/" target="_blank" rel="noopener noreferrer">Форум RMRP ↗</a></div>
    <div class="law-layout">
     <aside class="law-sidebar" aria-label="Документы"><div class="law-sidebar-head"><input class="law-search" id="law-search" type="search" placeholder="Поиск документа…" aria-label="Поиск по названиям документов"><div class="law-filters" id="law-filters"></div><p class="law-count" id="law-count"></p></div><div class="law-list" id="law-list"></div></aside>
     <article class="law-reader" id="law-reader" aria-live="polite"><div class="law-kicker">Документы</div><h2 id="law-title">Выберите документ</h2><div class="law-meta" id="law-meta"></div><div class="law-note" id="law-note">Тексты 31 документа перенесены из предоставленных PDF. Используйте поиск по статьям.</div><div id="law-document-tools" class="law-document-tools" hidden><input id="law-text-search" type="search" placeholder="Поиск по тексту и статьям…" aria-label="Поиск внутри документа"><button class="law-filter" id="law-clear-search" type="button">Сбросить</button><span class="law-count" id="law-match-count"></span></div><div class="law-article-nav" id="law-article-nav"></div><div class="law-document" id="law-document"></div></article>
