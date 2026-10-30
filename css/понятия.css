@@ -1,0 +1,51 @@
+/* ПОНЯТИЯ. Определения всегда открыты, без кнопок-аккордеонов. */
+.concept-list {
+  margin-top: 32px;
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--line);
+  max-width: 900px;
+}
+.concept-entry {
+  padding: 25px 0 27px;
+  border-bottom: 1px solid var(--line);
+  scroll-margin-top: 25px;
+}
+.concept-title {
+  margin: 0 0 10px;
+  font-size: clamp(19px, 2vw, 23px);
+  font-weight: 720;
+  line-height: 1.35;
+  color: var(--text);
+  letter-spacing: -.025em;
+}
+.concept-text {
+  margin: 0;
+  line-height: 1.78;
+  font-size: 14px;
+  color: var(--text);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.concept-footer {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+}
+.concept-source {
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--faint);
+  overflow-wrap: anywhere;
+  max-width: 650px;
+}
+.concept-source a { color: var(--accent-strong); text-decoration: none; }
+.concept-source a:hover { text-decoration: underline; }
+.concept-entry:target { border-color: var(--accent-strong); }
+@media (max-width: 620px) {
+  .concept-list { margin-top: 24px; }
+  .concept-entry { padding: 21px 0; }
+}
