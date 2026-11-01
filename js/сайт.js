@@ -13,7 +13,7 @@ const sections={
  escort:{title:'Сопровождение и кортежи',description:'Полномочия на маршруте.',keys:['кортеж','маршрут','сопровождение']},
  posts:{title:'Посты и патрули',description:'Расположение постов, маршруты и доклады.',keys:['посты','патрули','маршруты','дежурство','доклады']},
  favorites:{title:'Личная шпаргалка',description:'Сохранённые материалы.',keys:['избранное','закладки','шпаргалка']},
- quiz:{title:'Проверка знаний',description:'В разработке.',keys:['тест','экзамен','вопросы','аттестация']},
+ quiz:{title:'Проверка знаний',description:'Тренировка, экзамен и работа над ошибками.',keys:['тест','экзамен','вопросы','аттестация']},
  departments:{title:'Памятки отделов',description:'В разработке.',keys:['отделы','памятки отделов','инструкции подразделений']}
 };
 const $=id=>document.getElementById(id);
@@ -30,6 +30,37 @@ const embeddedReferences=window.FSO_CURATED_REFS || [];
 const localExtraMaterials=[...(window.FSO_CONCEPTS || []),...(window.FSO_DETENTION_MATERIALS || []),...(window.FSO_SITUATIONS || []),...(window.FSO_OTHER_MATERIALS || [])];
 let publicMaterials=[...embeddedReferences,...localExtraMaterials];
 const referenceLawCache=new Map();
+// Поисковые фразы хранятся отдельно от карточек и никогда не добавляются в HTML.
+const referenceMeta=window.FSO_REFERENCE_META||{};
+function searchFold(text){return String(text||'').toLocaleLowerCase('ru-RU').replace(/ё/g,'е').replace(/[«»“”„]/g,' ').replace(/[^a-zа-я0-9]+/giu,' ').replace(/\s+/g,' ').trim();}
+const searchIgnore=new Set(['как','где','когда','что','чтобы','делать','сделать','может','могут','можно','какие','какой','какая','почему','помогите','при','под','или','его','её','ее','это','мне','нам','могу','можно','нужно','надо','должен','должна','моя','мой','мои','если','есть','ли','на','по','от','до','во','за','для','из','в','и','а','не','но','со','к','с','у','о','об']);
+function searchWords(query){return searchFold(query).split(' ').filter(w=>w && (!searchIgnore.has(w)|| /^\d+$/.test(w)));}
+function wordMatch(text,word){
+ if(text.includes(word))return true;
+ // Поддержка типичных русских окончаний без изменения юридического текста.
+ if(word.length>=5){const p=word.slice(0,Math.max(4,word.length-2));return text.split(' ').some(t=>t.startsWith(p));}
+ return false;
+}
+function referenceSearchScore(item,terms){
+ if(!terms.length)return 0;
+ const head=searchFold(item.title),desc=searchFold(item.summary),cite=searchFold(getReferenceCitation(item)+' '+(item.fullCitation||''));
+ const kw=searchFold((referenceMeta[item.id]?.keywords||[]).join(' '));
+ // Цитату учитываем слабее названия и конкретных тематических формулировок.
+ const quote=searchFold(getExactQuote(item));
+ let score=0;
+ for(const t of terms){
+  if(wordMatch(head,t))score+=35;
+  else if(wordMatch(cite,t))score+=24;
+  else if(wordMatch(desc,t))score+=17;
+  else if(wordMatch(kw,t))score+=11;
+  else if(wordMatch(quote,t))score+=2;
+  else return -1;
+ }
+ if(head.includes(terms.join(' ')))score+=70;
+ if(kw.includes(terms.join(' ')))score+=20;
+ return score;
+}
+
 const referenceCategories=Array.isArray(window.FSO_REFERENCE_CATEGORIES)&&window.FSO_REFERENCE_CATEGORIES.length?window.FSO_REFERENCE_CATEGORIES:[{id:'territories',title:'Территории и объекты'},{id:'procedure',title:'Проц. действия'},{id:'escort',title:'Сопровождение'},{id:'criminal',title:'Статьи УК и КоАП'}];
 let referenceFilter='all';
 let referenceAllMode=false;
@@ -57,13 +88,14 @@ function getExactQuote(item){
 function referenceItems(){return publicMaterials.filter(x=>x.sectionId==='reference'&&hasUsableNorm(x))}
 function hasUsableNorm(item){const t=getExactQuote(item);if(t.length<28 || /^(?:справочн|пояснен|текст\s+статьи\s+пока)/iu.test(t))return false;const c=getReferenceCitation(item);const point=c.match(/п\.\s*(\d+)/i);if(point)return t.startsWith(point[1]+')');const article=c.match(/ст\.\s*(\d+(?:\.\d+)*)/i),part=c.match(/ч\.\s*(\d+)/i);if(article&&part)return t.startsWith(article[1]+'.'+part[1]+'.');return true}
 function matchingReferences(items){
- const needle=$('reference-search').value.trim().toLocaleLowerCase('ru-RU');
- return items.filter(item=>{
-  const cats=Array.isArray(item.categories)?item.categories:[];
-  if(referenceFilter!=='all'&&!cats.includes(referenceFilter))return false;
-  return !needle||[item.title,item.summary,getReferenceCitation(item),getExactQuote(item)].join(' ').toLocaleLowerCase('ru-RU').includes(needle);
- });
+ const terms=searchWords($('reference-search').value);
+ return items.map((item,ix)=>{
+  if(referenceFilter!=='all'&&!(item.categories||[]).includes(referenceFilter))return null;
+  const score=referenceSearchScore(item,terms);
+  return score<0?null:{item,score,ix};
+ }).filter(Boolean).sort((a,b)=>terms.length?(b.score-a.score||a.ix-b.ix):a.ix-b.ix).map(x=>x.item);
 }
+
 function renderReference(){
  const everything=referenceItems();
  const query=$('reference-search').value.trim();
@@ -99,6 +131,55 @@ function renderReference(){
   button.append(left,citation);button.addEventListener('click',()=>openReference(item,button));list.append(button);
  }
 }
+// Полная статья берётся из встроенного документа РМРП, а не из пересказа или базы РО.
+function referenceFullArticle(item){
+ const url=String(item.sourceUrl||'');
+ const match=url.match(/\.(\d+)\/?(?:[?#].*)?$/) || url.match(/\/threads\/(\d+)\/?(?:[?#].*)?$/);
+ if(!match)return null;
+ const body=referenceLawCache.get('law-'+match[1]);
+ if(typeof body!=='string')return null;
+ const article=String(getReferenceCitation(item)).match(/ст\.\s*(\d+(?:\.\d+)*)/i);
+ if(!article)return null;
+ const number=article[1].replace(/\./g,'\\.');
+ const start=new RegExp('^Статья\\s+'+number+'(?:[.\\s:–—-]|$)','iu');
+ const next=/^(?:Статья\s+\d+(?:\.\d+)*(?:[.\s:–—-]|$)|Глава\s+[IVXLC\d]+|Раздел\s+[IVXLC\d]+)/iu;
+ const lines=body.replace(/\r\n?/g,'\n').split('\n');
+ const i=lines.findIndex(line=>start.test(line.trim()));
+ if(i<0)return null;
+ const selected=[];
+ for(let j=i;j<lines.length;j++){
+  const line=lines[j].trim();
+  if(j>i&&next.test(line))break;
+  if(line)selected.push(line);
+ }
+ return selected.length>1?selected:null;
+}
+function appendFullArticle(wrap,item){
+ const lines=referenceFullArticle(item);
+ if(!lines)return;
+ const block=document.createElement('details');block.className='reference-full-article';
+ const toggle=document.createElement('summary');toggle.textContent='Читать статью целиком';block.append(toggle);
+ const article=document.createElement('div');article.className='reference-full-article-text';
+ const quote=searchFold(getExactQuote(item));
+ const exactPoint=String(getReferenceCitation(item)).match(/п\.\s*(\d+)/i)?.[1];
+ const articlePart=String(getReferenceCitation(item)).match(/ч\.\s*(\d+)/i)?.[1];
+ let highlighted=false;
+ for(let n=0;n<lines.length;n++){
+  const line=lines[n];
+  const para=document.createElement(n===0?'h4':'p');
+  if(n>0&&!highlighted){
+   const folded=searchFold(line);
+   // Точное сопоставление нужного пункта, если статья разбита на пункты.
+   const point=exactPoint&&new RegExp('^'+exactPoint+'\\s*[).]').test(line);
+   const part=articlePart&&!exactPoint&&line.startsWith(article[1]+'.'+articlePart+'.');
+   const quoteOverlap=quote.length>18&&folded.includes(quote.slice(0,Math.min(50,quote.length)));
+   if(point||part||quoteOverlap){para.classList.add('reference-full-focused');highlighted=true;}
+  }
+  para.textContent=line;article.append(para);
+ }
+ block.append(article);wrap.append(block);
+}
+
 function renderReferenceModal(item){
  const wrap=document.createElement('div');
  const title=document.createElement('h2');title.id='reference-modal-title';title.textContent=item.title;wrap.append(title);
@@ -112,6 +193,28 @@ function renderReferenceModal(item){
    norm.append(label,content);
   }
   wrap.append(norm);
+  appendFullArticle(wrap,item);
+ // Смысловые переходы: название, точная ссылка и краткое описание соседней нормы.
+ // Список составлен вручную по теме, а не по совпадению одного слова.
+ const related=(referenceMeta[item.id]?.seeAlso||[])
+  .map(id=>publicMaterials.find(x=>x.id===id&&x.sectionId==='reference'))
+  .filter(x=>x&&hasUsableNorm(x)&&x.id!==item.id).slice(0,4);
+ if(related.length){
+  const block=document.createElement('section');block.className='reference-context-links';
+  const head=document.createElement('h3');head.textContent='Что ещё проверить по этому вопросу';
+  const intro=document.createElement('p');intro.textContent='Статьи об условиях, порядке или ограничениях. Нажмите на нужную, чтобы прочитать её точный текст.';
+  const list=document.createElement('div');list.className='reference-context-grid';
+  for(const other of related){
+   const button=document.createElement('button');button.type='button';button.className='reference-context-link';
+   const name=document.createElement('b');name.textContent=other.title;
+   const short=document.createElement('span');short.textContent=other.summary||'';
+   const source=document.createElement('small');source.textContent=getReferenceCitation(other);
+   button.append(name,short,source);
+   button.addEventListener('click',()=>{$('reference-modal-body').replaceChildren(renderReferenceModal(other));$('reference-modal-body').parentElement.scrollTo({top:0,behavior:'instant'});});
+   list.append(button);
+  }
+  block.append(head,intro,list);wrap.append(block);
+ }
  if(/^https:\/\/forum\.rmrp\.ru\/threads\//.test(item.sourceUrl||'')){
   const a=document.createElement('a');a.className='ref-source';a.href=item.sourceUrl;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Первоисточник на форуме';wrap.append(a);
  }
@@ -403,22 +506,27 @@ function portalSearchIndex(){
   const type=it.sectionId==='reference'?'reference':(it.sectionId==='concepts'?'concept':'other');
   if(type==='other')continue;
   const text=type==='reference'?getExactQuote(it):String(it.body||'')+(Array.isArray(it.steps)?it.steps.map(x=>[x.title,x.action].join(' ')).join(' '):'');
-  result.push({type,id:it.id,title:it.title,subtitle:type==='reference'?getReferenceCitation(it):sections[it.sectionId]?.title||'',terms:[it.title,it.summary||'',type==='reference'?getReferenceCitation(it):'',text].join(' ').slice(0,20000)});
+  result.push({type,id:it.id,title:it.title,subtitle:type==='reference'?getReferenceCitation(it):sections[it.sectionId]?.title||'',terms:[it.title,it.summary||'',type==='reference'?getReferenceCitation(it):'',type==='reference'?(referenceMeta[it.id]?.keywords||[]).join(' '):'',text].join(' ').slice(0,24000)});
  }
  for(const doc of lawRecords())result.push({type:'law',id:doc.id,title:doc.title,subtitle:'Полный текст документа',terms:doc.title+' '+(doc.title.includes('Процессуальн')?'ПК ':doc.title.includes('Уголовн')?'УК ':'')});
  return result;
 }
 function portalSearchHits(query){
- const terms=query.trim().toLocaleLowerCase('ru-RU').split(/\s+/).filter(Boolean);
+ const terms=searchWords(query);
  if(!terms.length)return[];
  return portalSearchIndex().map(it=>{
-  const head=(it.title+' '+it.subtitle).toLocaleLowerCase('ru-RU');
-  const hay=it.terms.toLocaleLowerCase('ru-RU');
-  if(!terms.every(term=>hay.includes(term)))return null;
-  const score=terms.reduce((sum,term)=>sum+(head.includes(term)?5:1),0)+(it.type==='reference'?1:0);
-  return {...it,score};
+  if(it.type==='reference'){
+   const ref=publicMaterials.find(x=>x.id===it.id);
+   if(!ref)return null;
+   const score=referenceSearchScore(ref,terms);
+   return score<0?null:{...it,score:score+4};
+  }
+  const head=searchFold(it.title+' '+it.subtitle),hay=searchFold(it.terms);
+  if(!terms.every(term=>wordMatch(hay,term)))return null;
+  return {...it,score:terms.reduce((sum,t)=>sum+(wordMatch(head,t)?35:5),0)};
  }).filter(Boolean).sort((a,b)=>b.score-a.score||a.title.localeCompare(b.title,'ru')).slice(0,18);
 }
+
 function openPortalHit(it){
  if(it.type==='section'){go(it.id);return}
  if(it.type==='reference'){go('reference');const item=publicMaterials.find(x=>x.id===it.id);if(item)openReference(item);return}
