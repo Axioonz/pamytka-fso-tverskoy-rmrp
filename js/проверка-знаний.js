@@ -4,7 +4,7 @@
  const node=document.getElementById('quiz-screen');
  const bank=Array.isArray(window.FSO_QUIZ_QUESTIONS)?window.FSO_QUIZ_QUESTIONS:[];
  if(!node)return;
- const STORE='fso-rmrp-quiz-progress-v1';
+ const STORE='fso-rmrp-quiz-progress-v2';
  const TITLE={1:'Основы',2:'Применение',3:'Сложные ситуации'};
  let data=load(),session=null;
  function load(){try{const x=JSON.parse(localStorage.getItem(STORE)||'{}');return {history:Array.isArray(x.history)?x.history.slice(-40):[],missed:Array.isArray(x.missed)?x.missed:[],attempts:Number(x.attempts)||0}}catch{return {history:[],missed:[],attempts:0}}}
@@ -12,8 +12,12 @@
  function shuffled(list){const a=list.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a}
  function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
  function el(html){node.innerHTML=html}
- function source(q){return q.source.document==='concept'?'Понятия · '+q.source.article:(q.source.document==='law-25069'?'ФЗ «О ФСО»':'Процессуальный кодекс')+' · ст. '+q.source.article}
- function sourceButton(q){return `<button type="button" class="qz-secondary" data-qz-law="${esc(q.source.document)}" data-qz-article="${esc(q.source.article)}">Читать статью здесь ↗</button>`}
+ function sourceName(s){if(s.document==='concept')return 'Понятия · '+s.article;const labels={'law-25069':'ФЗ «О ФСО»','law-58424':'Процессуальный кодекс','law-26625':'ФЗ «О территориях»'};return (labels[s.document]||(window.FSO_PDF_LAW_CATALOG||[]).find(x=>x.id===s.document)?.title||'Нормативный документ')+' · ст. '+s.article}
+ function source(q){return sourceName(q.source)}
+ function sourceButton(q){
+  const all=[q.source,...(q.relatedSources||[])];
+  return '<div class="qz-source-links">'+all.map((src,i)=>`<button type="button" class="qz-secondary" data-qz-law="${esc(src.document)}" data-qz-article="${esc(src.article)}">${i?'Дополнительно: '+esc(sourceName(src)):'Читать основную статью здесь ↗'}</button>`).join('')+'</div>';
+ }
  // Источник открывается поверх тренажёра, не переключая раздел и не сбрасывая ответ.
  const viewer=document.createElement('div');
  viewer.className='qz-source-overlay';viewer.id='qz-source-overlay';
