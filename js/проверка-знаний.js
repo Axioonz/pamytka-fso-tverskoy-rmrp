@@ -6,7 +6,6 @@
  if(!node)return;
  const STORE='fso-rmrp-quiz-progress-v1';
  const TITLE={1:'Основы',2:'Применение',3:'Сложные ситуации'};
- const DESCR={1:'Термины, назначения и прямые правила.',2:'Применение одной нормы на практике.',3:'Несколько норм, исключения и границы полномочий.'};
  let data=load(),session=null;
  function load(){try{const x=JSON.parse(localStorage.getItem(STORE)||'{}');return {history:Array.isArray(x.history)?x.history.slice(-40):[],missed:Array.isArray(x.missed)?x.missed:[],attempts:Number(x.attempts)||0}}catch{return {history:[],missed:[],attempts:0}}}
  function save(){try{localStorage.setItem(STORE,JSON.stringify(data))}catch{}}
@@ -14,14 +13,91 @@
  function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
  function el(html){node.innerHTML=html}
  function source(q){return q.source.document==='concept'?'Понятия · '+q.source.article:(q.source.document==='law-25069'?'ФЗ «О ФСО»':'Процессуальный кодекс')+' · ст. '+q.source.article}
- function sourceButton(q){return `<button type="button" class="qz-secondary" data-qz-law="${esc(q.source.document)}" data-qz-article="${esc(q.source.article)}">Открыть источник ↗</button>`}
+ function sourceButton(q){return `<button type="button" class="qz-secondary" data-qz-law="${esc(q.source.document)}" data-qz-article="${esc(q.source.article)}">Читать статью здесь ↗</button>`}
+ // Источник открывается поверх тренажёра, не переключая раздел и не сбрасывая ответ.
+ const viewer=document.createElement('div');
+ viewer.className='qz-source-overlay';viewer.id='qz-source-overlay';
+ viewer.hidden=true;viewer.setAttribute('aria-hidden','true');
+ viewer.innerHTML=`<div class="qz-source-backdrop" data-qz-close></div>
+   <section class="qz-source-dialog" role="dialog" aria-modal="true" aria-labelledby="qz-source-title" tabindex="-1">
+     <header class="qz-source-head"><div><small id="qz-source-type"></small><h2 id="qz-source-title"></h2><p id="qz-source-meta"></p></div>
+     <button type="button" class="qz-source-close" data-qz-close aria-label="Закрыть статью">×</button></header>
+     <div class="qz-source-content" id="qz-source-content"></div>
+     <footer class="qz-source-footer"><span>Текст из законодательства памятки</span><button type="button" class="qz-secondary" data-qz-close>Вернуться к проверке</button></footer>
+   </section>`;
+ document.body.append(viewer);
+ let sourceReturnFocus=null,oldBodyOverflow='';
+ function sourceOpen(doc,article,origin){
+  const container=viewer.querySelector('#qz-source-content');container.replaceChildren();
+  const heading=viewer.querySelector('#qz-source-title');
+  const type=viewer.querySelector('#qz-source-type');
+  const meta=viewer.querySelector('#qz-source-meta');
+  if(doc==='concept'){
+   const item=(window.FSO_CONCEPTS||[]).find(c=>c.title===article);
+   type.textContent='ПОНЯТИЕ';heading.textContent=article;meta.textContent='Объяснение простыми словами';
+   const p=document.createElement('p');p.className='qz-source-paragraph';
+   p.textContent=item?.body||'Определение отсутствует в базе памятки.';container.append(p);
+   viewer.querySelector('.qz-source-footer span').textContent='Определение из раздела «Понятия»';
+  }else{
+   const catalog=[...(window.FSO_PDF_LAW_CATALOG||[]),...(window.FSO_LAW_CATALOG||[])];
+   const item=catalog.find(x=>x.id===doc);
+   const title=item?.title||'Нормативный документ';
+   const docText=window.FSO_FULL_LAW_DOCS?.[doc];
+   const lines=Array.isArray(docText)?docText:String(docText||'').split(/\r?\n/);
+   type.textContent='ЗАКОНОДАТЕЛЬСТВО';heading.textContent='Статья '+article;
+   meta.textContent=title;
+   viewer.querySelector('.qz-source-footer span').textContent='Точный текст из базы законодательства';
+   const expected=String(article).trim();
+   const isArticle=x=>/^Статья\s+(\d+(?:[.-]\d+)*)\s*(?:[.\s:–—-]|$)/iu.test(x);
+   const number=x=>x.match(/^Статья\s+(\d+(?:[.-]\d+)*)\s*(?:[.\s:–—-]|$)/iu)?.[1]||'';
+   let active=false,found=false;
+   for(const raw of lines){
+    for(const part of String(raw).split(/\r?\n/)){
+     const line=part.trim();if(!line)continue;
+     if(isArticle(line)){
+      if(active){active=false;break}
+      if(number(line)===expected){active=true;found=true}
+     }
+     if(!active)continue;
+     // Буквальная формулировка без дополнительных пересказов.
+     const el=document.createElement(isArticle(line)?'h3':'p');
+     el.className=isArticle(line)?'qz-source-article-title':'qz-source-paragraph';
+     el.textContent=line;container.append(el);
+    }
+    if(found&&!active)break;
+   }
+   if(!found){
+    const p=document.createElement('p');p.className='qz-source-error';
+    p.textContent='Статья не найдена в сохранённом тексте документа.';container.append(p);
+   }
+  }
+  sourceReturnFocus=origin||document.activeElement;
+  oldBodyOverflow=document.body.style.overflow;
+  document.body.style.overflow='hidden';
+  viewer.hidden=false;viewer.setAttribute('aria-hidden','false');
+  viewer.querySelector('.qz-source-content').scrollTop=0;
+  viewer.querySelector('.qz-source-close').focus({preventScroll:true});
+ }
+ function sourceClose(){
+  if(viewer.hidden)return;
+  viewer.hidden=true;viewer.setAttribute('aria-hidden','true');
+  document.body.style.overflow=oldBodyOverflow;
+  if(sourceReturnFocus?.isConnected)sourceReturnFocus.focus({preventScroll:true});
+ }
+ viewer.addEventListener('click',ev=>{if(ev.target.closest('[data-qz-close]'))sourceClose()});
+ document.addEventListener('keydown',ev=>{
+  if(viewer.hidden)return;
+  if(ev.key==='Escape'){ev.preventDefault();sourceClose();return}
+  if(ev.key!=='Tab')return;
+  const els=[...viewer.querySelectorAll('button:not([disabled]),a[href]')].filter(e=>e.getClientRects().length);
+  if(!els.length){ev.preventDefault();return}
+  if(ev.shiftKey&&document.activeElement===els[0]){ev.preventDefault();els.at(-1).focus()}
+  else if(!ev.shiftKey&&document.activeElement===els.at(-1)){ev.preventDefault();els[0].focus()}
+ });
  function home(){session=null;
    let last=data.history.at(-1);
-   el(`<div class="qz-heading"><div class="qz-kicker">ФСО / СЛУЖЕБНАЯ ПОДГОТОВКА <span>01 / KNOWLEDGE</span></div><h1>Проверка <em>знаний</em></h1><p>Не заучивание номеров статей, а проверка того, понимаете ли вы полномочия, ограничения и порядок действий. Сложность растёт от простых правил до ситуаций, где нужно учитывать несколько условий.</p></div>
-   <div class="qz-stages">${[1,2,3].map(n=>`<div class="qz-stage"><div class="qz-stage-idx">0${n}<span> / УРОВЕНЬ</span></div><b>${TITLE[n]}</b><p>${DESCR[n]}</p><span class="qz-stage-tag">${bank.filter(x=>x.level===n).length} вопросов в базе</span></div>`).join('')}</div>
-   <div class="qz-maincard"><div class="qz-label">ВЫБЕРИТЕ ФОРМАТ</div><div class="qz-modes"><button data-qz-start="train" class="qz-mode"><span class="qz-mode-no">01</span><strong>Тренировка</strong><small>9 вопросов. После каждого ответа сразу объяснение и ссылка на закон. По 3 задания каждого уровня.</small><span>Начать тренировку ↗</span></button><button data-qz-start="exam" class="qz-mode"><span class="qz-mode-no">02</span><strong>Экзамен</strong><small>15 вопросов. По 5 заданий на каждый уровень. Правильные ответы раскрываются только в итогах.</small><span>Начать экзамен ↗</span></button><button data-qz-start="mistakes" class="qz-mode" ${data.missed.length?'':'disabled'}><span class="qz-mode-no">03</span><strong>Работа над ошибками</strong><small>${data.missed.length?'Неправильные ответы из прошлых прохождений. От простого к сложному.':'Появится после первого неверного ответа.'}</small><span>${data.missed.length?'Повторить ошибки ↗':'Пока нет ошибок'}</span></button></div></div>
-   <div class="qz-foot"><div>Банк заданий <b>${bank.length}</b> · Генерация вопросов <b>не используется</b></div><div>Пройдено проверок <b>${data.attempts}</b>${last?' · Последний результат <b>'+last.score+'/'+last.total+'</b>':''}</div></div>
-   <div class="qz-disclaimer">Вопросы подготовлены по текстам законов, включённым в памятку. Перед применением нормы в службе сверяйте её действующую редакцию.</div>`);
+   el(`   <div class="qz-maincard"><div class="qz-label">ВЫБЕРИТЕ ФОРМАТ</div><div class="qz-modes"><button data-qz-start="train" class="qz-mode"><span class="qz-mode-no">01</span><strong>Тренировка</strong><small>9 вопросов. После каждого ответа сразу объяснение и ссылка на закон. По 3 задания каждого уровня.</small><span>Начать тренировку ↗</span></button><button data-qz-start="exam" class="qz-mode"><span class="qz-mode-no">02</span><strong>Экзамен</strong><small>15 вопросов. По 5 заданий на каждый уровень. Правильные ответы раскрываются только в итогах.</small><span>Начать экзамен ↗</span></button><button data-qz-start="mistakes" class="qz-mode" ${data.missed.length?'':'disabled'}><span class="qz-mode-no">03</span><strong>Работа над ошибками</strong><small>${data.missed.length?'Неправильные ответы из прошлых прохождений. От простого к сложному.':'Появится после первого неверного ответа.'}</small><span>${data.missed.length?'Повторить ошибки ↗':'Пока нет ошибок'}</span></button></div></div>
+`);
  }
  function start(mode){
   let list;
@@ -59,14 +135,7 @@
   if(btn.hasAttribute('data-qz-answer')){answer(Number(btn.dataset.qzAnswer));return}
   if(btn.hasAttribute('data-qz-next')){next();return}
   if(btn.hasAttribute('data-qz-law')){
-   const doc=btn.dataset.qzLaw;
-   if(doc==='concept'){go('concepts');return}
-   go('laws');
-   if(typeof openLaw==='function')Promise.resolve(openLaw(doc)).then(()=>{
-    const n=btn.dataset.qzArticle;
-    const h=[...document.querySelectorAll('#law-document .law-article')].find(e=>e.textContent.trim().startsWith('Статья '+n+'.')||e.textContent.trim().startsWith('Статья '+n+' '));
-    if(h)h.scrollIntoView({behavior:'smooth',block:'start'});
-   }).catch(()=>{});
+   sourceOpen(btn.dataset.qzLaw,btn.dataset.qzArticle,btn);return;
   }
  });
  // draw only when the section is first opened, keep current test when switching to laws
