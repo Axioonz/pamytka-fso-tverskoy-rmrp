@@ -1,0 +1,21 @@
+name: Check published portal
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  live-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check public Pages site
+        run: |
+          set -e
+          ROOT='https://axioonz.github.io/pamytka-fso-tverskoy-rmrp/'
+          CABINET="${ROOT}%D0%BA%D0%B0%D0%B1%D0%B8%D0%BD%D0%B5%D1%82.html"
+          for url in "$ROOT" "$CABINET" "${ROOT}js/%D0%BA%D0%B0%D0%B1%D0%B8%D0%BD%D0%B5%D1%82-supabase.js"; do
+            echo "Checking $url"
+            code=$(curl -L -sS -o /tmp/fso_page_body -w '%{http_code}' --max-time 25 "$url")
+            echo "HTTP $code"
+            test "$code" = '200'
+            test -s /tmp/fso_page_body
+          done
