@@ -20,6 +20,7 @@ jobs:
           node --check js/кабинет-supabase.js
           node --check js/курсант-supabase.js
           node --check tests/portal-smoke.cjs
+          node --check tests/reference-modal.cjs
       - name: Verify candidate API refuses invalid access codes
         run: |
           status=$(curl -sS -o /tmp/cadet-response.json -w '%{http_code}' \
@@ -42,6 +43,7 @@ jobs:
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/fso-test-http.log 2>&1 &
           sleep 2
           node tests/portal-smoke.cjs
+          node tests/reference-modal.cjs
       - name: Save browser screenshots
         if: always()
         uses: actions/upload-artifact@v4
