@@ -349,3 +349,7 @@ html.v2-preview .about-launch{display:none}
  html.v2-preview .v2-footer{font-size:10px}
  html.v2-preview .det-head h1{font-size:35px!important}
 }
+
+/* The legacy navigation buttons had width:100%; reset it in horizontal mode. */
+html.v2-preview .v2-navigation > .rail-button{width:auto!important;flex:0 0 auto!important}
+html.v2-preview .v2-home{opacity:1!important;animation:none!important;transform:none!important}
