@@ -91,7 +91,7 @@ async function launchWithRole(browser,role){
  await page.locator('#issue-reason').fill('Нарушение служебного регламента');
  await page.locator('#issue-proof').fill('https://example.com/evidence');
  await page.locator('#issue-form button[type="submit"]').click();
- await page.getByText('Предупреждение',{exact:false}).first().waitFor();
+ await page.locator('.record strong').filter({hasText:'Предупреждение'}).first().waitFor();
  const capture=await page.evaluate(()=>({people:window.__fsoMock.db.fso_members.length,rpcs:window.__fsoMock.rpcs.map(x=>x.name)}));
  assert.equal(capture.people,2);
  assert.ok(capture.rpcs.includes('fso_issue_discipline'));
