@@ -6,7 +6,11 @@ const mockSupabase=String.raw`(()=>{'use strict';
 const role=window.__role||'anonymous';
 const seed=[{id:'member-1',employee_number:'0007',first_name:'Иван',last_name:'Тестовый',position:'Сотрудник',rank:'Сержант',discord:'ivan.test',status:'active',joined_on:'2026-10-10',dismissed_on:null,created_at:'2026-10-10',updated_at:'2026-10-10'}];
 const db={fso_profiles:[{user_id:'user-1',role,display_name:''}],fso_members:seed,fso_disciplinary_actions:[],fso_disciplinary_audit:[],fso_activity_audit:[{id:1,entity_type:'member',entity_id:'member-1',member_id:'member-1',actor_id:'user-1',action:'member.updated',occurred_at:'2026-11-03T10:00:00Z',before_data:{rank:'Рядовой'},after_data:{rank:'Сержант'}}],fso_questions:[{id:'q1',source_key:'quiz2-001',difficulty:1,prompt:'Проверочный вопрос?',is_published:true}],fso_exams:[],fso_exam_assignments:[],fso_exam_attempts:[]};
-const state={db,rpcs:[],signedOut:false};window.__fsoMock=state;
+const accounts=[
+ {user_id:'user-1',email:'admin@example.test',role,display_name:'Администратор',confirmed:true,created_at:'2026-10-01',last_sign_in_at:'2026-11-03T10:00:00Z'},
+ {user_id:'user-2',email:'editor@example.test',role:'employee',display_name:'Редактор без роли',confirmed:true,created_at:'2026-10-20',last_sign_in_at:null}
+];
+const state={db,rpcs:[],accounts,signedOut:false};window.__fsoMock=state;
 const user={id:'user-1',email:'admin@example.test'};
 function make(table){const q={table,where:[],action:'read',payload:null,
 select(){return this},eq(k,v){this.where.push([k,v]);return this},order(){return this},limit(){return this},
@@ -27,6 +31,18 @@ then(res,rej){return this.run().then(res,rej)}
 };return q}
 function rpc(name,args){
  state.rpcs.push({name,args});
+ if(name==='fso_access_list'){
+  if(role!=='admin')return Promise.resolve({data:null,error:{message:'Нет доступа',code:'42501'}});
+  return Promise.resolve({data:accounts.map(x=>({...x})),error:null});
+ }
+ if(name==='fso_access_set_role'){
+  if(role!=='admin')return Promise.resolve({data:null,error:{message:'Нет доступа',code:'42501'}});
+  const account=accounts.find(x=>x.user_id===args.p_user);
+  if(!account)return Promise.resolve({data:null,error:{message:'Нет аккаунта'}});
+  if(account.user_id==='user-1'&&args.p_role!=='admin')return Promise.resolve({data:null,error:{message:'Нельзя отозвать доступ у последнего администратора'}});
+  account.role=args.p_role;account.display_name=args.p_display_name;
+  return Promise.resolve({data:{user_id:account.user_id,role:account.role},error:null});
+ }
  if(name==='fso_issue_discipline'){
   db.fso_disciplinary_actions.push({id:'act-'+state.rpcs.length,member_id:args.p_member,kind:args.p_kind,status:'active',reason:args.p_reason,evidence:args.p_evidence,issued_at:new Date().toISOString()});
   return Promise.resolve({data:{issued_id:'act-1'},error:null});
@@ -128,6 +144,25 @@ async function launchWithRole(browser,role){
  await page.locator('#exam-assign-member').selectOption('member-2');
  await page.locator('#exam-assign button[type="submit"]').click();
  await page.getByText('FSO-'+('A'.repeat(32))).waitFor();
+ await page.getByRole('button',{name:'Управление доступом'}).click();
+ await page.getByRole('heading',{name:'Центр управления доступом'}).waitFor();
+ assert.equal(await page.locator('#access-users tr').count(),2);
+ await page.locator('#access-grant-email').fill('editor@example.test');
+ await page.locator('#access-grant-role').selectOption('hr');
+ await page.locator('#access-grant-name').fill('Кадровый редактор');
+ await page.locator('#access-grant-form button[type="submit"]').click();
+ await page.locator('#access-users tr').filter({hasText:'editor@example.test'}).getByText('Редактор',{exact:true}).waitFor();
+ await page.locator('#access-users tr').filter({hasText:'editor@example.test'}).getByRole('button',{name:'Настроить'}).click();
+ await page.locator('#access-role').selectOption('examiner');
+ await page.locator('#access-edit-form button[type="submit"]').click();
+ await page.locator('#access-users tr').filter({hasText:'editor@example.test'}).getByText('Экзаменатор',{exact:true}).waitFor();
+ await page.locator('#access-users tr').filter({hasText:'editor@example.test'}).getByRole('button',{name:'Настроить'}).click();
+ page.once('dialog',dialog=>dialog.accept());
+ await page.getByRole('button',{name:'Отозвать доступ'}).click();
+ await page.locator('#access-users tr').filter({hasText:'editor@example.test'}).getByText('Нет доступа',{exact:true}).first().waitFor();
+ assert.ok((await page.evaluate(()=>window.__fsoMock.rpcs)).some(x=>x.name==='fso_access_set_role'&&x.args.p_role==='employee'));
+ await page.getByRole('button',{name:'История выдачи и изменения прав в журнале аудита'}).click();
+ await page.getByRole('heading',{name:'Журнал аудита'}).waitFor();
  assert.deepEqual(errors,[]);
  await page.screenshot({path:'/tmp/portal-admin.png',fullPage:true});
  await page.close();
@@ -137,6 +172,7 @@ async function launchWithRole(browser,role){
  const {page,errors}=await launchWithRole(browser,'hr');
  await page.getByRole('heading',{name:'Сотрудники'}).waitFor();
  assert.equal(await page.getByRole('button',{name:'Журнал аудита'}).count(),0);
+ assert.equal(await page.getByRole('button',{name:'Управление доступом'}).count(),0);
  assert.equal(await page.locator('#roster-rows .status-label').first().innerText(),'Сотрудник');
  await page.locator('#new-member').click();
  assert.deepEqual(await page.locator('#member-status option').allTextContents(),['Курсант','Сотрудник']);
@@ -148,6 +184,7 @@ async function launchWithRole(browser,role){
  const {page,errors}=await launchWithRole(browser,'employee');
  await page.getByRole('heading',{name:'Недостаточно прав'}).waitFor();
  assert.equal(await page.locator('#new-member').count(),0);
+ assert.equal(await page.getByRole('button',{name:'Управление доступом'}).count(),0);
  assert.deepEqual(errors,[]);
  await page.close();
  }
