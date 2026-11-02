@@ -109,3 +109,5 @@ h2{font-size:19px;letter-spacing:-.025em}
  .head-subtitle{margin-bottom:22px}
  .member-form-section .fields{grid-template-columns:1fr}
 }
+
+.detail-rank{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:9px 0 15px}.detail-rank .rank-badge{font-size:12px;padding:7px 11px}.member-profile-section .section-heading{margin-bottom:14px}.member-profile-section .member-details{gap:12px}.member-profile-section .card-muted{min-height:78px}
