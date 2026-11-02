@@ -28,12 +28,15 @@ try{
  // Primary navigation works with existing JS and content.
  await page.locator('.v2-navigation [data-page="reference"]').click();
  await page.locator('#reference-list .reference-entry').first().waitFor();
+ await page.screenshot({path:'/tmp/fso-v2-reference.png',fullPage:false});
  await page.locator('#v2-nav-dropdown summary').click();
  await page.locator('.v2-dropdown-content [data-page="detention"]').click();
  await page.locator('#detention-steps .det-step').first().waitFor();
+ await page.screenshot({path:'/tmp/fso-v2-detention.png',fullPage:false});
  // Documentation library is still functional.
  await page.locator('.v2-navigation [data-page="laws"]').click();
  await page.locator('#law-list').waitFor({state:'visible'});
+ await page.screenshot({path:'/tmp/fso-v2-laws.png',fullPage:false});
  await page.locator('.v2-navigation [data-page="home"]').click();
  await page.locator('#section-search').fill('паспорт');
  await page.locator('#section-search-form button[type=submit]').click();
