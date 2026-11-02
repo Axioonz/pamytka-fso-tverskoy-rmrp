@@ -62,6 +62,7 @@ const BASE='http://127.0.0.1:8765/';
 
   // Detention content must be concise: no repeated advice blocks, no empty explanations.
   await page.locator('#reference-close').click();
+  await page.setViewportSize({width:1280,height:900});
   await page.locator('.rail-button[data-page="detention"]').click();
   await page.locator('#detention-screen').waitFor({state:'visible'});
   const detSteps=page.locator('#detention-steps .det-step');
