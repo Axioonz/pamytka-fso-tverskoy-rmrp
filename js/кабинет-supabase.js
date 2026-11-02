@@ -135,7 +135,7 @@ return hero('Экзамены и аттестация','Серверная си�
 (newlyIssuedCode?'<div class="notice"><strong>Сохраните новый код, он показывается только сейчас</strong><p style="font-size:20px;font-weight:850;word-break:break-all">'+e(newlyIssuedCode)+'</p><button class="btn small" id="code-copy" type="button">Скопировать код</button></div>':'')+'</section>'+
 '<section class="section"><h2>Результаты назначенных экзаменов</h2><div class="table-wrap"><table><thead><tr><th>Сотрудник</th><th>Экзамен</th><th>Результат</th><th>Попыток</th><th>Назначено</th></tr></thead><tbody>'+(reports||'<tr><td colspan="5" class="subtle">Назначений пока нет.</td></tr>')+'</tbody></table></div></section>';
 }
-function bindScreen(){if(screen==='access'){window.FSO_ACCESS.bind(api,profile.role,user.id,{refresh,render,audit:async()=>{screen='audit';selected=null;loading();await window.FSO_AUDIT.load(api,profile.role);render()}});return}if(screen==='audit'){window.FSO_AUDIT.bind(api,profile.role,members,async()=>{loading();await window.FSO_AUDIT.load(api,profile.role);render()});return}
+function bindScreen(){if(screen==='access'){window.FSO_ACCESS.bind(api,profile.role,user.id,{refresh,render,audit:async()=>{screen='audit';selected=null;loading();await window.FSO_AUDIT.load(api,profile.role);render();const filter=document.getElementById('audit-category');if(filter){filter.value='profile';filter.dispatchEvent(new Event('change'))}}});return}if(screen==='audit'){window.FSO_AUDIT.bind(api,profile.role,members,async()=>{loading();await window.FSO_AUDIT.load(api,profile.role);render()});return}
  if(['roster','home','archive','blacklist'].includes(screen)){
   const search=document.getElementById('search'),rank=document.getElementById('rank-filter');
   function updateRoster(){
