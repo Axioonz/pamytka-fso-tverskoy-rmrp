@@ -61,7 +61,7 @@ const BASE='http://127.0.0.1:8765/';
   assert.notEqual(await page.locator('#reference-modal-title').innerText(),'Проверка документов');
 
   // Detention content must be concise: no repeated advice blocks, no empty explanations.
-  await page.locator('#reference-modal-close').click();
+  await page.locator('#reference-close').click();
   await page.locator('.rail-button[data-page="detention"]').click();
   await page.locator('#detention-screen').waitFor({state:'visible'});
   const detSteps=page.locator('#detention-steps .det-step');
