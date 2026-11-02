@@ -59,8 +59,34 @@ const BASE='http://127.0.0.1:8765/';
   await page.screenshot({path:'/tmp/portal-reference-mobile.png',fullPage:false});
   await cards.first().click();
   assert.notEqual(await page.locator('#reference-modal-title').innerText(),'Проверка документов');
+
+  // Detention content must be concise: no repeated advice blocks, no empty explanations.
+  await page.locator('#reference-modal-close').click();
+  await page.locator('.rail-button[data-page="detention"]').click();
+  await page.locator('#detention-screen').waitFor({state:'visible'});
+  const detSteps=page.locator('#detention-steps .det-step');
+  assert.equal(await detSteps.count(),4);
+  assert.deepEqual(await detSteps.locator('h2').allTextContents(),[
+   'Представиться и назвать статьи',
+   'Соблюдать права задержанного',
+   'Учитывать особый порядок',
+   'Передать задержанного'
+  ]);
+  assert.equal(await page.locator('#detention-screen .det-hint').count(),0);
+  assert.equal(await page.locator('#detention-screen .det-step-reason').count(),0);
+  assert.equal(await page.getByText('Подсказка',{exact:true}).count(),0);
+  assert.ok((await detSteps.first().locator('.det-step-action').innerText()).includes('удостоверение'));
+  assert.ok((await detSteps.last().locator('.det-step-action').innerText()).includes('МВД или СК'));
+  assert.ok((await detSteps.last().locator('.det-norm-text').first().innerText()).includes('Задержанные лица незамедлительно передаются'));
+  const quotes=await page.locator('#detention-steps .det-norm-text').count();
+  assert.equal(quotes,8,'Exact legal extracts should remain for every step');
+  assert.equal(await page.locator('#detention-steps .det-norms-heading').first().innerText(),'ТЕКСТ ЗАКОНА');
+  const detText=await page.locator('#detention-screen').innerText();
+  assert.ok(!detText.includes('undefined'));
+  assert.ok(!detText.includes('Основание и смысл'));
+  await page.screenshot({path:'/tmp/portal-detention-mobile.png',fullPage:true});
   assert.deepEqual(errors,[],'Unexpected JavaScript errors');
-  console.log('PASS: reference modal layout desktop/mobile, related navigation, article expansion');
+  console.log('PASS: legal references and detention plain-language steps, without hints or duplication');
  }finally{
   await browser.close();
  }
