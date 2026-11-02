@@ -11,6 +11,21 @@ const v=id=>document.getElementById(id)?.value?.trim()||'';
 const date=x=>x?new Date(String(x).slice(0,10)+'T12:00:00').toLocaleDateString('ru-RU'):'Не указана';
 const roleTitle={admin:'Администратор',hr:'Кадровый сотрудник',examiner:'Экзаменатор',employee:'Сотрудник',cadet:'Курсант'};
 const statusTitle={active:'В составе',cadet:'Курсант',dismissed:'Уволен',archived:'Архив'};
+const rankGroups=[
+ {group:'Высшие офицеры',level:'general',ranks:['Генерал-майор']},
+ {group:'Старшие офицеры',level:'senior',ranks:['Полковник','Подполковник','Майор']},
+ {group:'Младшие офицеры',level:'junior',ranks:['Капитан','Старший лейтенант','Лейтенант','Младший лейтенант']},
+ {group:'Прапорщики',level:'warrant',ranks:['Старший прапорщик','Прапорщик']},
+ {group:'Солдаты и сержанты',level:'enlisted',ranks:['Старшина','Старший сержант','Сержант','Младший сержант','Ефрейтор','Рядовой']}
+];
+const rankNames=rankGroups.flatMap(g=>g.ranks);
+const rankKey=s=>String(s||'').trim().toLocaleLowerCase('ru-RU').replace(/ё/g,'е').replace(/[–—]/g,'-');
+const rankIndex=s=>{const n=rankNames.findIndex(x=>rankKey(x)===rankKey(s));return n<0?rankNames.length:n};
+const rankLevel=s=>(rankGroups.find(g=>g.ranks.some(x=>rankKey(x)===rankKey(s)))||{level:'unknown'}).level;
+const rankOptions=selected=>rankGroups.map(g=>'<optgroup label="'+e(g.group)+'">'+g.ranks.map(x=>'<option value="'+e(x)+'" '+(rankKey(selected)===rankKey(x)?'selected':'')+'>'+e(x)+'</option>').join('')+'</optgroup>').join('');
+const rankFilter=()=>'<label class="rank-filter">Звание<select id="rank-filter" aria-label="Фильтр по званию"><option value="">Все звания</option>'+rankOptions('')+'</select></label>';
+const sortMembers=arr=>[...arr].sort((a,b)=>rankIndex(a.rank)-rankIndex(b.rank)||String(a.last_name||'').localeCompare(String(b.last_name||''),'ru')||String(a.first_name||'').localeCompare(String(b.first_name||''),'ru')||String(a.employee_number||'').localeCompare(String(b.employee_number||''),'ru',{numeric:true}));
+
 function flash(msg,bad=false){toast.textContent=msg;toast.style.background=bad?'#502129':'#15354b';toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),4200)}
 function msg(text,bad=false){return '<div class="message '+(bad?'error':'')+'">'+e(text)+'</div>'}
 function loading(){root.innerHTML='<div class="section">Загрузка данных...</div>'}
@@ -32,11 +47,23 @@ api.from('fso_exam_attempts').select('id,assignment_id,correct_count,total_count
 questions=q.data||[];examsList=ex.data||[];assignments=as.data||[];examAttempts=at.data||[];
 }
 render()}
-function nav(active){return '<div class="row between" style="margin-bottom:20px"><div class="row"><span class="badge">'+e(roleTitle[profile.role])+'</span><span class="subtle">'+e(user.email)+'</span></div><button class="btn small" id="logout">Выйти</button></div><nav class="tabs" aria-label="Разделы"><button data-tab="roster" class="'+(active==='roster'?'active':'')+'">Личный состав</button>'+(rosterRoles.includes(profile.role)?'<button data-tab="archive" class="'+(active==='archive'?'active':'')+'">Архив</button><button data-tab="blacklist" class="'+(active==='blacklist'?'active':'')+'">Чёрный список</button>':'')+'<button data-tab="exams" class="'+(active==='exams'?'active':'')+'">Экзамены</button></nav>'}
+function nav(active){return '<div class="row between" style="margin-bottom:20px"><div class="row"><span class="badge">'+e(roleTitle[profile.role])+'</span><span class="subtle">'+e(user.email)+'</span></div><button class="btn small" id="logout">Выйти</button></div><nav class="tabs" aria-label="Разделы"><button data-tab="roster" class="'+(active==='roster'?'active':'')+'">Сотрудники</button>'+(rosterRoles.includes(profile.role)?'<button data-tab="archive" class="'+(active==='archive'?'active':'')+'">Архив</button><button data-tab="blacklist" class="'+(active==='blacklist'?'active':'')+'">Чёрный список</button>':'')+'<button data-tab="exams" class="'+(active==='exams'?'active':'')+'">Экзамены</button></nav>'}
 function bindNav(){document.getElementById('logout').onclick=logout;document.querySelectorAll('[data-tab]').forEach(x=>x.onclick=()=>{screen=x.dataset.tab;selected=null;render()})}
 function render(){if(!profile||!allowed.includes(profile.role))return;let content='';if(screen==='exams')content=exams();else if(screen==='archive')content=archivePage();else if(screen==='blacklist')content=blacklistPage();else if(screen==='detail')content=detail();else if(screen==='add')content=editor();else if(screen==='edit')content=editor(selected);else content=roster();root.innerHTML=nav(['exams','archive','blacklist'].includes(screen)?screen:'roster')+content;bindNav();bindScreen()}
 function roster(){const current=members.filter(m=>['active','cadet'].includes(m.status));const n=current.filter(m=>m.status==='active').length;const c=current.filter(m=>m.status==='cadet').length;return hero('Личный состав','Единый реестр сотрудников. Изменения сохраняются в Supabase и доступны уполномоченному руководству.')+'<div class="cards"><div class="metric"><b>'+current.length+'</b><span>Всего личных дел</span></div><div class="metric"><b>'+n+'</b><span>В составе</span></div><div class="metric"><b>'+c+'</b><span>Курсанты</span></div><div class="metric"><b>'+current.filter(m=>kindcounts(m).reprimands>=3).length+'</b><span>Основание для увольнения</span></div></div><section class="section"><div class="member-toolbar"><input id="search" type="search" placeholder="Поиск по имени, ID, должности, Discord" aria-label="Поиск сотрудников">'+(rosterRoles.includes(profile.role)?'<button class="btn primary" id="new-member">+ Добавить сотрудника</button>':'')+'</div><div class="table-wrap"><table><thead><tr><th>ID</th><th>Имя и фамилия</th><th>Должность</th><th>Звание</th><th>Взыскания</th><th>Статус</th><th></th></tr></thead><tbody id="roster-rows">'+rows(current)+'</tbody></table></div></section>'}
-function rows(data){if(!data.length)return '<tr><td colspan="7" class="subtle">Сотрудники не найдены.</td></tr>';return data.map(m=>{const z=kindcounts(m);return '<tr class="'+(z.reprimands>=3?'attention':'')+'"><td>'+e(m.employee_number)+'</td><td><b>'+e(m.first_name+' '+m.last_name)+'</b></td><td>'+e(m.position||'Не указана')+'</td><td>'+e(m.rank||'Не указано')+'</td><td><span class="tag '+(z.reprimands>=3?'bad':'')+'">'+z.warnings+'/3 · '+z.reprimands+'/3</span></td><td>'+e(statusTitle[m.status])+'</td><td><button class="btn small" data-person="'+e(m.id)+'">Открыть</button></td></tr>'}).join('')}
+function rows(data){
+ const people=sortMembers(data);
+ if(!people.length)return '<tr><td colspan="7" class="subtle">Записи не найдены.</td></tr>';
+ return people.map(m=>{const z=kindcounts(m),danger=z.reprimands>=3&&['active','cadet'].includes(m.status);
+ return '<tr class="'+(danger?'attention':'')+'"><td><span class="employee-id">'+e(m.employee_number)+'</span></td>'+
+ '<td><strong class="employee-name">'+e(m.first_name+' '+m.last_name)+'</strong><small class="table-subline">'+e(m.discord||'Discord не указан')+'</small></td>'+
+ '<td>'+e(m.position||'Не указана')+'</td>'+
+ '<td><span class="rank-badge rank-'+rankLevel(m.rank)+'">'+e(m.rank||'Не указано')+'</span></td>'+
+ '<td><span class="tag '+(danger?'bad':'')+'">'+z.warnings+'/3 · '+z.reprimands+'/3</span></td>'+
+ '<td><span class="status-label status-'+e(m.status)+'">'+e(statusTitle[m.status]||m.status)+'</span></td>'+
+ '<td><button class="btn small" data-person="'+e(m.id)+'">Открыть</button></td></tr>'
+ }).join('');
+}
 function detail(){
 const m=members.find(x=>x.id===selected);if(!m){screen='roster';return roster()}
 const c=kindcounts(m),list=actions.filter(x=>x.member_id===m.id),history=audits.filter(x=>x.member_id===m.id);
