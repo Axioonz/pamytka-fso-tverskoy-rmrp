@@ -100,7 +100,7 @@ async function launchWithRole(browser,role){
  await page.locator('#exam-title').fill('Первичная аттестация');
  await page.locator('.exam-choose').first().check();
  await page.locator('#exam-create button[type="submit"]').click();
- await page.getByText('Первичная аттестация').first().waitFor();
+ await page.locator('#exam-assign-exam option').filter({hasText:'Первичная аттестация'}).waitFor({state:'attached'});
  await page.locator('#exam-assign-exam').selectOption('exam-1');
  await page.locator('#exam-assign-member').selectOption('member-2');
  await page.locator('#exam-assign button[type="submit"]').click();
