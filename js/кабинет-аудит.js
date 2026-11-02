@@ -41,7 +41,7 @@ function events(rows,members){
  if(!rows.length)return '<div class="empty">Событий по выбранным условиям нет.</div>';
  return rows.map(log=>{
   const actor=profiles.find(p=>p.user_id===log.actor_id),member=members.find(m=>m.id===log.member_id);
-  const who=log.actor_id?(actor?.display_name?.trim()||'Пользователь '+String(log.actor_id).slice(0,8)):'Система / SQL';
+  const who=log.actor_id?(actor?.display_name?.trim()||'ID '+String(log.actor_id)):'Система / SQL';
   const subject=member?member.first_name+' '+member.last_name+' · № '+member.employee_number:
     log.target_user_id?'Учётная запись '+String(log.target_user_id).slice(0,8):'Объект '+String(log.entity_id).slice(0,12);
   const reason=log.after_data?.details?.reason||log.after_data?.reason||log.after_data?.removal_reason||'';
