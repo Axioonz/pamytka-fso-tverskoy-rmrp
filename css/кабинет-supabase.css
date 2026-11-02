@@ -141,3 +141,49 @@ h2{font-size:19px;letter-spacing:-.025em}
 @media(max-width:850px){.audit-list{grid-template-columns:1fr}}
 @media(max-width:650px){.roster-metrics{grid-template-columns:1fr 1fr}.audit-item{padding:14px}}
 @media(max-width:410px){.roster-metrics{grid-template-columns:1fr}}
+
+
+/* Access management: same restrained service styling as the personnel registry. */
+.access-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+.access-grant,.access-accounts{margin-top:18px}
+.access-grant .hint{margin:0 0 18px;max-width:75ch;font-size:12px;line-height:1.7;color:var(--muted)}
+.access-grant form .fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+.access-grant form .fields .wide{grid-column:1/-1}
+.access-grant form label,.access-editor label{font-size:11px;color:#b5c6d2}
+.access-grant input,.access-grant select,.access-editor input,.access-editor select{
+ display:block;width:100%;min-height:44px;background:#0c151e;border:1px solid #385061;color:var(--text);
+ border-radius:9px;padding:11px 12px;margin-top:7px;font-size:12px
+}
+.access-grant input:focus-visible,.access-grant select:focus-visible,.access-editor input:focus-visible,.access-editor select:focus-visible{
+ outline:2px solid #5daddf;outline-offset:2px
+}
+.access-grant .actions,.access-editor .actions{display:flex;align-items:center;gap:10px;margin-top:19px;flex-wrap:wrap}
+.access-grant a.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+.access-table{min-width:860px}
+.access-name{display:block;color:#ebf3f8;font-size:12px;font-weight:750}
+.access-subline{display:block;color:#8fa6b7;font-size:11px;margin-top:3px;overflow-wrap:anywhere}
+.access-date{color:#adbfcf;font-variant-numeric:tabular-nums;white-space:nowrap}
+.access-role,.access-state{display:inline-flex;align-items:center;gap:7px;border-radius:8px;padding:6px 9px;font-size:11px;white-space:nowrap}
+.access-role{color:#b4d7e9;background:#1c3040;border:1px solid #3b6078;font-weight:750}
+.access-role-admin{color:#f3caa5;background:#3c2b23;border-color:#805843}
+.access-role-hr{color:#bbd8f2;background:#182d42;border-color:#3b6383}
+.access-role-examiner{color:#c7c6ed;background:#28283d;border-color:#505277}
+.access-role-employee,.access-role-cadet{color:#abbac7;background:#232c36;border-color:#3c4b57}
+.access-state{color:#c7a8a7;background:#2a1d23}
+.access-state.access-allowed{color:#9bdfba;background:#142e24}
+.access-editor{max-width:860px;margin-top:18px;scroll-margin-top:26px}
+.access-editor .fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+.access-editor .hint{margin-top:17px;line-height:1.7;font-size:12px}
+.access-history-link{display:flex;justify-content:flex-end;margin:20px 0 0}
+.access-history-link .btn{font-size:12px}
+.access-accounts .member-toolbar>input[type=search]{flex:1 1 300px}
+.access-grant .message,.access-editor .message{margin-top:16px}
+@media(max-width:760px){
+ .access-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .access-grant form .fields,.access-editor .fields{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+ .access-metrics{grid-template-columns:1fr}
+ .access-grant .actions>*{width:100%}
+ .access-history-link .btn{width:100%;white-space:normal}
+}
