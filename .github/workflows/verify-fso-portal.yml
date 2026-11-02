@@ -54,7 +54,7 @@ jobs:
           node tests/redesign-smoke.cjs
           node tests/site-v2-smoke.cjs
           node tests/wiki-smoke.cjs
-          node tests/reference-design-capture.cjs
+          # Reference screenshots captured separately; no external site dependency in normal CI.
       - name: Save browser screenshots
         if: always()
         uses: actions/upload-artifact@v4
