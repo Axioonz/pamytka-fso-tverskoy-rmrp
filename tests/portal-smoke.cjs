@@ -2,7 +2,7 @@ const { chromium } = require('playwright');
 const assert = require('node:assert/strict');
 
 const BASE='http://127.0.0.1:8765/';
-const mockSupabase=String.raw\`(()=>{'use strict';
+const mockSupabase=String.raw`(()=>{'use strict';
 const role=window.__role||'anonymous';
 const seed=[{id:'member-1',employee_number:'0007',first_name:'Иван',last_name:'Тестовый',position:'Сотрудник',rank:'Сержант',discord:'ivan.test',status:'active',joined_on:'2026-10-10',dismissed_on:null,created_at:'2026-10-10',updated_at:'2026-10-10'}];
 const db={fso_profiles:[{user_id:'user-1',role,display_name:''}],fso_members:seed,fso_disciplinary_actions:[],fso_disciplinary_audit:[],fso_questions:[{id:'q1',source_key:'quiz2-001',difficulty:1,prompt:'Проверочный вопрос?'}],fso_exams:[],fso_exam_assignments:[],fso_exam_attempts:[]};
@@ -47,7 +47,7 @@ const client={auth:{
  onAuthStateChange:()=>({data:{subscription:{unsubscribe(){}}}})
  },from:make,rpc};
 window.supabase={createClient:()=>client};
-})();\`;
+})();`;
 async function launchWithRole(browser,role){
  const page=await browser.newPage({viewport:{width:1280,height:900}});
  const errors=[];
