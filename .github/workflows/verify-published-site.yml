@@ -19,3 +19,6 @@ jobs:
             test "$code" = '200'
             test -s /tmp/fso_page_body
           done
+          echo 'Checking external Supabase runtime'
+          curl -fsSL --max-time 25 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.js' -o /tmp/fso_supabase_runtime.js
+          test $(wc -c </tmp/fso_supabase_runtime.js) -gt 10000
