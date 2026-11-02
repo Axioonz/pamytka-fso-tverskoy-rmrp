@@ -260,8 +260,8 @@ function addStepContent(container,item){
  item.steps.forEach((stage,i)=>{
   const box=document.createElement('section');box.className='scenario-native-step';
   const h=document.createElement('h3');h.textContent=(i+1)+'. '+stage.title;box.append(h);
-  const a=document.createElement('p');a.className='scenario-native-action';a.textContent='Действие: '+stage.action;box.append(a);
-  const e=document.createElement('p');e.className='scenario-native-reason';e.textContent='Основание и смысл: '+stage.explain;box.append(e);
+  if(stage.action){const action=document.createElement('p');action.className='scenario-native-action';action.textContent=stage.action;box.append(action)}
+  if(stage.explain){const reason=document.createElement('p');reason.className='scenario-native-reason';reason.textContent=stage.explain;box.append(reason)}
   (stage.norms||[]).forEach(n=>{
    const details=document.createElement('details');details.className='scenario-native-law';
    const summary=document.createElement('summary');summary.textContent=n.citation+' · раскрыть норму';details.append(summary);
