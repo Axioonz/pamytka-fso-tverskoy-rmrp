@@ -18,6 +18,7 @@ jobs:
       - name: Check JavaScript syntax
         run: |
           node --check js/кабинет-supabase.js
+          node --check js/кабинет-аудит.js
           node --check js/курсант-supabase.js
           node --check tests/portal-smoke.cjs
           node --check tests/reference-modal.cjs
