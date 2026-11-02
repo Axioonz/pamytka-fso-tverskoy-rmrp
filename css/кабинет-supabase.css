@@ -111,3 +111,33 @@ h2{font-size:19px;letter-spacing:-.025em}
 }
 
 .detail-rank{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:9px 0 15px}.detail-rank .rank-badge{font-size:12px;padding:7px 11px}.member-profile-section .section-heading{margin-bottom:14px}.member-profile-section .member-details{gap:12px}.member-profile-section .card-muted{min-height:78px}
+
+
+/* Кадровый реестр: три показателя вместо четырёх. */
+.roster-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}
+.roster-section .section-heading{justify-content:flex-start}
+.audit-section{max-width:1220px}
+.audit-toolbar{align-items:end}
+.audit-toolbar>input{flex:1 1 310px}
+.audit-counter{color:var(--muted);font-size:11px;margin:3px 0 15px}
+.audit-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:13px}
+.audit-item{min-width:0;border:1px solid var(--border);background:#0c151d;border-radius:12px;padding:17px 18px;overflow-wrap:anywhere}
+.audit-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.audit-head time{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.audit-tag{display:inline-flex;border:1px solid #30546b;border-radius:7px;padding:5px 8px;background:#142a39;color:#9fcee9;font-size:10px;font-weight:750}
+.audit-item h3{margin:0 0 5px;font-size:15px;line-height:1.4;color:var(--text)}
+.audit-subject{font-size:12px;font-weight:720;color:#d5e4ee}
+.audit-person{margin-top:9px;color:var(--muted);font-size:11px;line-height:1.6}
+.audit-person strong{color:#c9dce8}
+.audit-reason{border-left:2px solid #587f9c;padding-left:12px;margin:12px 0 0;color:#c1d1db;font-size:11px;line-height:1.6}
+.audit-details{margin-top:15px;border-top:1px solid #263644;padding-top:11px}
+.audit-details>summary{cursor:pointer;font-size:11px;color:var(--accent);font-weight:750;user-select:none}
+.audit-details>summary:hover{color:#c8e9fa}
+.audit-changes{display:grid;gap:8px;margin-top:12px}
+.audit-change{display:grid;grid-template-columns:minmax(0,1fr) 16px minmax(0,1fr);gap:8px 10px;align-items:start;padding:10px;border:1px solid #283946;border-radius:9px;background:#121e28}
+.audit-change strong{grid-column:1/-1;font-size:11px;color:#e4f0f7}
+.audit-change span{font-size:11px;white-space:pre-wrap;overflow-wrap:anywhere;color:#afc2ce}
+.audit-change .audit-arrow{text-align:center;color:var(--accent)}
+@media(max-width:850px){.audit-list{grid-template-columns:1fr}}
+@media(max-width:650px){.roster-metrics{grid-template-columns:1fr 1fr}.audit-item{padding:14px}}
+@media(max-width:410px){.roster-metrics{grid-template-columns:1fr}}
