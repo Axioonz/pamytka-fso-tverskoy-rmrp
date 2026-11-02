@@ -98,6 +98,12 @@ async function launchWithRole(browser,role){
  const capture=await page.evaluate(()=>({people:window.__fsoMock.db.fso_members.length,rpcs:window.__fsoMock.rpcs.map(x=>x.name)}));
  assert.equal(capture.people,2);
  assert.ok(capture.rpcs.includes('fso_issue_discipline'));
+ await page.getByRole('button',{name:'Сотрудники'}).click();
+ assert.deepEqual(await page.locator('#roster-rows .employee-name').allTextContents(),['Алексей Проверочный','Иван Тестовый']);
+ await page.locator('#rank-filter').selectOption('Генерал-майор');
+ assert.deepEqual(await page.locator('#roster-rows .employee-name').allTextContents(),['Алексей Проверочный']);
+ await page.locator('#rank-filter').selectOption('');
+ assert.equal(await page.locator('#roster-rows tr').count(),2);
  await page.getByRole('button',{name:'Экзамены'}).click();
  await page.getByRole('heading',{name:'Экзамены и аттестация'}).waitFor();
  await page.locator('#exam-title').fill('Первичная аттестация');
