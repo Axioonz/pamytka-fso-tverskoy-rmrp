@@ -163,6 +163,7 @@ async function launchWithRole(browser,role){
  assert.ok((await page.evaluate(()=>window.__fsoMock.rpcs)).some(x=>x.name==='fso_access_set_role'&&x.args.p_role==='employee'));
  await page.getByRole('button',{name:'История выдачи и изменения прав в журнале аудита'}).click();
  await page.getByRole('heading',{name:'Журнал аудита'}).waitFor();
+ assert.equal(await page.locator('#audit-category').inputValue(),'profile');
  assert.deepEqual(errors,[]);
  await page.screenshot({path:'/tmp/portal-admin.png',fullPage:true});
  await page.close();
