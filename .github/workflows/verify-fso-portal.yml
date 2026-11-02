@@ -1,0 +1,50 @@
+name: Verify FSO Portal scripts
+on:
+  push:
+    branches:
+      - feature/supabase-live-cabinet
+  pull_request:
+    branches:
+      - main
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript syntax
+        run: |
+          node --check js/кабинет-supabase.js
+          node --check js/курсант-supabase.js
+          node --check tests/portal-smoke.cjs
+      - name: Verify candidate API refuses invalid access codes
+        run: |
+          status=$(curl -sS -o /tmp/cadet-response.json -w '%{http_code}' \
+            -X POST 'https://lejagyuibxdnvpmxoggy.supabase.co/functions/v1/fso-cadet-exam' \
+            -H 'Content-Type: application/json' \
+            --data '{"action":"start","code":"FSO-00000000000000000000000000000000"}')
+          test "$status" = "403"
+      - name: Check page references
+        run: |
+          test -f кабинет.html
+          test -f css/кабинет-supabase.css
+          grep -q 'курсант-supabase.js' кабинет.html
+          grep -q 'кабинет-supabase.js' кабинет.html
+      - name: Install Playwright Chromium for browser smoke tests
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Exercise browser UI without live account credentials
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/fso-test-http.log 2>&1 &
+          sleep 2
+          node tests/portal-smoke.cjs
+      - name: Save browser screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fso-portal-browser-screenshots
+          path: /tmp/portal-*.png
+          if-no-files-found: ignore
