@@ -86,6 +86,9 @@ async function launchWithRole(browser,role){
  await page.locator('#member-rank').fill('Рядовой');
  await page.locator('#member-discord').fill('demo.test');
  await page.locator('#member-status').selectOption('cadet');
+ assert.equal(await page.locator('#member-rank optgroup').count(),5);
+ assert.equal(await page.locator('#member-rank option:not([disabled])').count(),16);
+ await page.locator('#member-rank').selectOption('Генерал-майор');
  await page.locator('#member-form button[type="submit"]').click();
  await page.getByRole('heading',{name:'Алексей Проверочный'}).waitFor();
  await page.locator('#issue-reason').fill('Нарушение служебного регламента');
