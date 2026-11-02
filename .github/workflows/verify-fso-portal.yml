@@ -2,6 +2,7 @@ name: Verify FSO Portal scripts
 on:
   push:
     branches:
+      - main
       - feature/supabase-live-cabinet
   pull_request:
     branches:
