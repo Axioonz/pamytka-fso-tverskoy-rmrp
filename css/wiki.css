@@ -442,7 +442,7 @@ html.wk-preview :is(.material-card,.work-norm,.service-tab,.tg-part,.escort-stop
  html.wk-preview .wk-stat{padding:17px 16px;min-height:114px}
  html.wk-preview .wk-stat>small{font-size:8px;white-space:normal}
  html.wk-preview .wk-stat>strong{font-size:30px}
- html.wk-preview .wk-catalog-grid{gap:8px;grid-auto-rows:164px}
+ html.wk-preview .wk-catalog-grid{gap:8px;grid-auto-rows:minmax(164px,auto)}
  html.wk-preview .wk-catalog-card{padding:14px 13px}
  html.wk-preview .wk-catalog-card b{font-size:12px}
  html.wk-preview .wk-catalog-card p{font-size:9px}
