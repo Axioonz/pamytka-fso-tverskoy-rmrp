@@ -353,3 +353,8 @@ html.v2-preview .about-launch{display:none}
 /* The legacy navigation buttons had width:100%; reset it in horizontal mode. */
 html.v2-preview .v2-navigation > .rail-button{width:auto!important;flex:0 0 auto!important}
 html.v2-preview .v2-home{opacity:1!important;animation:none!important;transform:none!important}
+
+/* Immediate, stable page transitions. The old site's fade-rise made the new pages briefly unreadable. */
+html.v2-preview :is(.home-screen,.reference-screen,.det-screen,.work-screen,.subpage){
+ animation:none!important;opacity:1!important;transform:none!important
+}
