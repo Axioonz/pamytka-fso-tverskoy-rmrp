@@ -23,6 +23,7 @@ jobs:
           node --check js/курсант-supabase.js
           node --check tests/portal-smoke.cjs
           node --check tests/reference-modal.cjs
+          node --check tests/redesign-smoke.cjs
       - name: Verify candidate API refuses invalid access codes
         run: |
           status=$(curl -sS -o /tmp/cadet-response.json -w '%{http_code}' \
@@ -46,10 +47,13 @@ jobs:
           sleep 2
           node tests/portal-smoke.cjs
           node tests/reference-modal.cjs
+          node tests/redesign-smoke.cjs
       - name: Save browser screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: fso-portal-browser-screenshots
-          path: /tmp/portal-*.png
+          path: |
+            /tmp/portal-*.png
+            /tmp/fso-redesign-*.png
           if-no-files-found: ignore
