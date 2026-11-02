@@ -18,6 +18,13 @@ jobs:
         run: |
           node --check js/кабинет-supabase.js
           node --check js/курсант-supabase.js
+      - name: Verify candidate API refuses invalid access codes
+        run: |
+          status=$(curl -sS -o /tmp/cadet-response.json -w '%{http_code}' \
+            -X POST 'https://lejagyuibxdnvpmxoggy.supabase.co/functions/v1/fso-cadet-exam' \
+            -H 'Content-Type: application/json' \
+            --data '{"action":"start","code":"FSO-00000000000000000000000000000000"}')
+          test "$status" = "403"
       - name: Check page references
         run: |
           test -f кабинет.html
