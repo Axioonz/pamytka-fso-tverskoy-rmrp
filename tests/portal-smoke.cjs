@@ -83,7 +83,7 @@ async function launchWithRole(browser,role){
  await page.locator('#member-first').fill('Алексей');
  await page.locator('#member-last').fill('Проверочный');
  await page.locator('#member-position').fill('Курсант');
- await page.locator('#member-rank').fill('Рядовой');
+ await page.locator('#member-rank').selectOption('Рядовой');
  await page.locator('#member-discord').fill('demo.test');
  await page.locator('#member-status').selectOption('cadet');
  assert.equal(await page.locator('#member-rank optgroup').count(),5);
