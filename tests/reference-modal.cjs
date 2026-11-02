@@ -1,0 +1,65 @@
+const { chromium } = require('playwright');
+const assert = require('node:assert/strict');
+
+const BASE='http://127.0.0.1:8765/';
+
+(async()=>{
+ const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+ const page=await browser.newPage({viewport:{width:1280,height:900}});
+ const errors=[];
+ page.on('pageerror',error=>errors.push(error.message));
+ try{
+  await page.goto(BASE+'index.html',{waitUntil:'domcontentloaded'});
+  await page.locator('.rail-button[data-page="reference"]').click();
+  const item=page.locator('#reference-list .reference-entry').filter({hasText:'Проверка документов'}).first();
+  await item.waitFor();
+  await item.click();
+  await page.locator('#reference-modal-title').waitFor();
+  assert.match(await page.locator('#reference-modal-title').innerText(),/Проверка документов/i);
+  const cards=page.locator('.reference-context-link');
+  const count=await cards.count();
+  assert.ok(count>=2,'Expected several related legal grounds');
+  const visual=await cards.first().evaluate(el=>{
+    const style=getComputedStyle(el);
+    return {
+      display:style.display,
+      padding:parseFloat(style.paddingLeft),
+      borderRadius:parseFloat(style.borderTopLeftRadius),
+      children:[...el.children].map(node=>({
+        tag:node.tagName,
+        display:getComputedStyle(node).display
+      }))
+    };
+  });
+  assert.equal(visual.display,'flex','Related legal grounds must use card layout');
+  assert.ok(visual.padding>=12,'Related card should have inner spacing');
+  assert.ok(visual.borderRadius>=8,'Related card should have rounded corners');
+  assert.deepEqual(visual.children.map(x=>x.tag),['B','SPAN','SMALL']);
+  assert.ok(visual.children.every(x=>x.display==='block'));
+  const first=await cards.nth(0).boundingBox();
+  const second=await cards.nth(1).boundingBox();
+  assert.ok(first&&second);
+  assert.ok(Math.abs(first.y-second.y)<3,'Desktop cards must align in columns');
+  const article=page.locator('.reference-full-article');
+  if(await article.count()){
+    await article.locator('summary').click();
+    const display=await article.evaluate(el=>getComputedStyle(el).display);
+    assert.equal(display,'block');
+    assert.ok(await article.locator('.reference-full-article-text p').count()>0);
+  }
+  await page.screenshot({path:'/tmp/portal-reference-desktop.png',fullPage:false});
+  await page.setViewportSize({width:390,height:844});
+  const mFirst=await cards.nth(0).boundingBox();
+  const mSecond=await cards.nth(1).boundingBox();
+  assert.ok(mFirst&&mSecond);
+  assert.ok(mSecond.y>mFirst.y+20,'Mobile cards must stack vertically');
+  assert.ok(mFirst.x>=0&&mFirst.x+mFirst.width<=391,'Mobile card must remain within viewport');
+  await page.screenshot({path:'/tmp/portal-reference-mobile.png',fullPage:false});
+  await cards.first().click();
+  assert.notEqual(await page.locator('#reference-modal-title').innerText(),'Проверка документов');
+  assert.deepEqual(errors,[],'Unexpected JavaScript errors');
+  console.log('PASS: reference modal layout desktop/mobile, related navigation, article expansion');
+ }finally{
+  await browser.close();
+ }
+})().catch(error=>{console.error(error);process.exitCode=1});
