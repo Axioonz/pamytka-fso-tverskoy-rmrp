@@ -9,8 +9,8 @@ let newlyIssuedCode=null,cadetCode='',cadetState=null,cadetIndex=0,cadetPending=
 const e=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const v=id=>document.getElementById(id)?.value?.trim()||'';
 const date=x=>x?new Date(String(x).slice(0,10)+'T12:00:00').toLocaleDateString('ru-RU'):'Не указана';
-const roleTitle={admin:'Администратор',hr:'Кадровый сотрудник',examiner:'Экзаменатор',employee:'Сотрудник',cadet:'Курсант'};
-const statusTitle={active:'В составе',cadet:'Курсант',dismissed:'Уволен',archived:'Архив'};
+const roleTitle={admin:'Администратор',hr:'Редактор',examiner:'Экзаменатор',employee:'Сотрудник',cadet:'Курсант'};
+const statusTitle={active:'Сотрудник',cadet:'Курсант',dismissed:'Уволен',archived:'Архив'};
 const rankGroups=[
  {group:'Высшие офицеры',level:'general',ranks:['Генерал-майор']},
  {group:'Старшие офицеры',level:'senior',ranks:['Полковник','Подполковник','Майор']},
@@ -53,12 +53,12 @@ function render(){if(!profile||!allowed.includes(profile.role))return;let conten
 function roster(){
  const current=members.filter(m=>['active','cadet'].includes(m.status));
  const n=current.filter(m=>m.status==='active').length,c=current.filter(m=>m.status==='cadet').length;
- return hero('Сотрудники','Кадровый реестр действующего состава. Сотрудники упорядочены по старшинству воинских званий.')+
- '<div class="cards"><div class="metric"><b>'+current.length+'</b><span>Всего в составе</span></div>'+
+ return hero('Сотрудники','Действующий состав Федеральной службы охраны.')+
+ '<div class="cards roster-metrics"><div class="metric"><b>'+current.length+'</b><span>Всего в составе</span></div>'+
  '<div class="metric"><b>'+n+'</b><span>Сотрудники</span></div>'+
- '<div class="metric"><b>'+c+'</b><span>Курсанты</span></div>'+
- '<div class="metric"><b>'+current.filter(m=>kindcounts(m).reprimands>=3).length+'</b><span>Три выговора</span></div></div>'+
- '<section class="section roster-section"><div class="section-heading"><div><span class="form-step">КАДРОВЫЙ РЕЕСТР</span><h2>Действующий состав</h2></div><span class="sort-note">По старшинству · генерал-майор → рядовой</span></div>'+
+ '<div class="metric"><b>'+c+'</b><span>Курсанты</span></div></div>'+
+ 
+ '<section class="section roster-section"><div class="section-heading"><div><span class="form-step">КАДРОВЫЙ РЕЕСТР</span><h2>Действующий состав</h2></div></div>'+
  '<div class="member-toolbar"><input id="search" type="search" placeholder="Поиск по ФИО, ID, должности, Discord" aria-label="Поиск сотрудников">'+rankFilter()+
  (rosterRoles.includes(profile.role)?'<button class="btn primary" id="new-member">+ Добавить сотрудника</button>':'')+
  '</div><div class="table-wrap"><table><thead><tr><th>ID</th><th>Сотрудник</th><th>Должность</th><th>Звание</th><th>Взыскания</th><th>Статус</th><th></th></tr></thead><tbody id="roster-rows">'+rows(current)+'</tbody></table></div></section>';
