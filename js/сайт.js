@@ -271,14 +271,6 @@ function addStepContent(container,item){
  });container.append(steps);return true;
 }
 
-const detentionHints={
- 'Основание':'Отдельно проверь место, факты и конкретную норму. Не смешивай охранные полномочия с общим правом на задержание.',
- 'Проверить вид задержания':'Срок считается с фактического задержания. Ограничение в 60 минут не переносится на предварительное задержание, для которого указан отдельный срок.',
- 'Сообщить причину':'Указывай конкретное предполагаемое деяние и статью. Процессуальные действия выполняются только в пределах компетенции.',
- 'Обеспечить права':'Проверь, кто проводит процессуальное задержание, где реализуются отдельные права и какая очередность предусмотрена ПК.',
- 'Госслужащий или адвокат':'Проверь особый порядок и полномочия органа прежде, чем продолжать процессуальные действия.',
- 'Передача':'Сохрани сведения о фактах и доступные материалы, включая видео, чтобы передать их уполномоченному органу.'
-};
 let detentionObserver=null;
 function renderDetention(){
  const list=$('detention-steps'),nav=$('detention-nav'),extra=$('detention-extra');
@@ -296,10 +288,8 @@ function renderDetention(){
   const kicker=document.createElement('div');kicker.className='det-step-topline';kicker.textContent='Этап '+String(i+1).padStart(2,'0');card.append(kicker);
   const h=document.createElement('h2');h.textContent=step.title;card.append(h);
   const action=document.createElement('p');action.className='det-step-action';action.textContent=step.action||'';card.append(action);
-  if(step.explain){const reason=document.createElement('p');reason.className='det-step-reason';reason.textContent=step.explain;card.append(reason)}
-  if(detentionHints[step.title]){const hint=document.createElement('div');hint.className='det-hint';const label=document.createElement('b');label.textContent='Подсказка';hint.append(label,document.createTextNode(detentionHints[step.title]));card.append(hint)}
   if(Array.isArray(step.norms)&&step.norms.length){
-   const norms=document.createElement('div');norms.className='det-norms';const label=document.createElement('div');label.className='det-norms-heading';label.textContent='Правовое основание · точный текст';norms.append(label);
+   const norms=document.createElement('div');norms.className='det-norms';const label=document.createElement('div');label.className='det-norms-heading';label.textContent='Текст закона';norms.append(label);
    step.norms.forEach(n=>{const box=document.createElement('div');box.className='det-norm';const cite=document.createElement('cite');cite.textContent=n.citation||'Норма';const quote=document.createElement('p');quote.className='det-norm-text';quote.textContent=n.text||'';box.append(cite,quote);norms.append(box)});
    card.append(norms);
   }
@@ -311,7 +301,7 @@ function renderDetention(){
  if('IntersectionObserver' in window){detentionObserver=new IntersectionObserver((entries)=>{for(const entry of entries){if(entry.isIntersecting){const ix=shownSteps.findIndex((_,i)=>entry.target.id==='det-step-'+(i+1));if(ix>=0)buttons.forEach((b,j)=>b.classList.toggle('active',j===ix))}}},{rootMargin:'-5% 0px -70% 0px',threshold:0});list.querySelectorAll('.det-step').forEach(x=>detentionObserver.observe(x));}
  const other=detItems.filter(x=>x!==guide);extra.hidden=!other.length;
  for(const item of other){const article=document.createElement('article');const h=document.createElement('h3');h.textContent=item.title;article.append(h);if(item.summary){const p=document.createElement('p');p.textContent=item.summary;article.append(p)}if(Array.isArray(item.steps)){
-   for(const stage of item.steps){const title=document.createElement('h4');title.textContent=stage.title;article.append(title);const action=document.createElement('p');action.textContent=stage.action||'';article.append(action);if(stage.explain){const reason=document.createElement('p');reason.textContent=stage.explain;article.append(reason)}for(const n of stage.norms||[]){const norm=document.createElement('div');norm.className='det-norm';const citation=document.createElement('cite');citation.textContent=n.citation||'';const txt=document.createElement('p');txt.className='det-norm-text';txt.textContent=n.text||'';norm.append(citation,txt);article.append(norm)}}
+   for(const stage of item.steps){const title=document.createElement('h4');title.textContent=stage.title;article.append(title);const action=document.createElement('p');action.textContent=stage.action||'';article.append(action);for(const n of stage.norms||[]){const norm=document.createElement('div');norm.className='det-norm';const citation=document.createElement('cite');citation.textContent=n.citation||'';const txt=document.createElement('p');txt.className='det-norm-text';txt.textContent=n.text||'';norm.append(citation,txt);article.append(norm)}}
   }else{const p=document.createElement('p');p.textContent=item.body||'';article.append(p)}extra.append(article)}
 }
 document.addEventListener('click',event=>{
