@@ -26,6 +26,8 @@ jobs:
           node --check tests/redesign-smoke.cjs
           node --check js/site-v2.js
           node --check tests/site-v2-smoke.cjs
+          node --check js/wiki.js
+          node --check tests/wiki-smoke.cjs
       - name: Verify candidate API refuses invalid access codes
         run: |
           status=$(curl -sS -o /tmp/cadet-response.json -w '%{http_code}' \
@@ -51,6 +53,7 @@ jobs:
           node tests/reference-modal.cjs
           node tests/redesign-smoke.cjs
           node tests/site-v2-smoke.cjs
+          node tests/wiki-smoke.cjs
           node tests/reference-design-capture.cjs
       - name: Save browser screenshots
         if: always()
@@ -62,4 +65,5 @@ jobs:
             /tmp/fso-redesign-*.png
             /tmp/fso-v2-*.png
             /tmp/reference-*.png
+            /tmp/fso-wiki-*.png
           if-no-files-found: ignore
