@@ -16,6 +16,14 @@ try{
  const nav=await page.locator('#rail').boundingBox();
  const home=await page.locator('#home-screen').boundingBox();
  assert.ok(nav&&home&&home.y>=nav.y+nav.height-2,'Main content should start below horizontal header');
+ const layout=await page.evaluate(()=>({
+  width:document.documentElement.scrollWidth,viewport:innerWidth,
+  offenders:[...document.querySelectorAll('*')].map(el=>{
+   const r=el.getBoundingClientRect();return {tag:el.tagName,className:typeof el.className==='string'?el.className.slice(0,65):'',width:Math.round(r.width),left:Math.round(r.left),right:Math.round(r.right)};
+  }).filter(x=>x.right>innerWidth+30&&x.width>0).sort((a,b)=>b.right-a.right).slice(0,10)
+ }));
+ console.log('V2 desktop layout',JSON.stringify(layout));
+ assert.ok(layout.width<=layout.viewport+5,'Desktop overflow '+JSON.stringify(layout));
  await page.screenshot({path:'/tmp/fso-v2-desktop.png',fullPage:true});
  // Primary navigation works with existing JS and content.
  await page.locator('.v2-navigation [data-page="reference"]').click();
@@ -44,6 +52,7 @@ try{
  await page.locator('#reference-list .reference-entry').first().waitFor();
  assert.equal(await page.locator('#v2-menu-toggle').getAttribute('aria-expanded'),'false');
  await page.locator('.v2-navigation [data-page="home"]').first().evaluate(el=>el.click());
+ await page.waitForTimeout(650);
  await page.screenshot({path:'/tmp/fso-v2-mobile.png',fullPage:true});
  assert.deepEqual(errors,[],'Unexpected page script errors');
  console.log('PASS: full v2 navigation, document sections, live search, mobile menu and layout');
