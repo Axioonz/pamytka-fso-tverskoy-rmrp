@@ -51,6 +51,7 @@ jobs:
           node tests/reference-modal.cjs
           node tests/redesign-smoke.cjs
           node tests/site-v2-smoke.cjs
+          node tests/reference-design-capture.cjs
       - name: Save browser screenshots
         if: always()
         uses: actions/upload-artifact@v4
@@ -60,4 +61,5 @@ jobs:
             /tmp/portal-*.png
             /tmp/fso-redesign-*.png
             /tmp/fso-v2-*.png
+            /tmp/reference-*.png
           if-no-files-found: ignore
