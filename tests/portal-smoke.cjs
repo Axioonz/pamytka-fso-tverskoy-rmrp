@@ -5,7 +5,7 @@ const BASE='http://127.0.0.1:8765/';
 const mockSupabase=String.raw`(()=>{'use strict';
 const role=window.__role||'anonymous';
 const seed=[{id:'member-1',employee_number:'0007',first_name:'Иван',last_name:'Тестовый',position:'Сотрудник',rank:'Сержант',discord:'ivan.test',status:'active',joined_on:'2026-10-10',dismissed_on:null,created_at:'2026-10-10',updated_at:'2026-10-10'}];
-const db={fso_profiles:[{user_id:'user-1',role,display_name:''}],fso_members:seed,fso_disciplinary_actions:[],fso_disciplinary_audit:[],fso_questions:[{id:'q1',source_key:'quiz2-001',difficulty:1,prompt:'Проверочный вопрос?',is_published:true}],fso_exams:[],fso_exam_assignments:[],fso_exam_attempts:[]};
+const db={fso_profiles:[{user_id:'user-1',role,display_name:''}],fso_members:seed,fso_disciplinary_actions:[],fso_disciplinary_audit:[],fso_activity_audit:[{id:1,entity_type:'member',entity_id:'member-1',member_id:'member-1',actor_id:'user-1',action:'member.updated',occurred_at:'2026-11-03T10:00:00Z',before_data:{rank:'Рядовой'},after_data:{rank:'Сержант'}}],fso_questions:[{id:'q1',source_key:'quiz2-001',difficulty:1,prompt:'Проверочный вопрос?',is_published:true}],fso_exams:[],fso_exam_assignments:[],fso_exam_attempts:[]};
 const state={db,rpcs:[],signedOut:false};window.__fsoMock=state;
 const user={id:'user-1',email:'admin@example.test'};
 function make(table){const q={table,where:[],action:'read',payload:null,
@@ -104,6 +104,20 @@ async function launchWithRole(browser,role){
  assert.deepEqual(await page.locator('#roster-rows .employee-name').allTextContents(),['Алексей Проверочный']);
  await page.locator('#rank-filter').selectOption('');
  assert.equal(await page.locator('#roster-rows tr').count(),2);
+ assert.equal(await page.locator('.roster-metrics .metric').count(),3);
+ assert.equal(await page.getByText('По старшинству · генерал-майор → рядовой').count(),0);
+ assert.equal(await page.getByText('Три выговора',{exact:true}).count(),0);
+ assert.equal(await page.locator('#roster-rows .status-label').first().innerText(),'Курсант');
+ await page.getByRole('button',{name:'Журнал аудита'}).click();
+ await page.getByRole('heading',{name:'Журнал аудита'}).waitFor();
+ await page.getByRole('heading',{name:'Изменение личного дела'}).waitFor();
+ await page.getByText('Иван Тестовый · № 0007').waitFor();
+ await page.locator('.audit-details summary').first().click();
+ await page.getByText('Звание',{exact:true}).waitFor();
+ await page.locator('#audit-category').selectOption('profile');
+ await page.getByText('Событий по выбранным условиям нет.').waitFor();
+ await page.locator('#audit-category').selectOption('');
+ await page.getByRole('button',{name:'Сотрудники'}).click();
  await page.getByRole('button',{name:'Экзамены'}).click();
  await page.getByRole('heading',{name:'Экзамены и аттестация'}).waitFor();
  await page.locator('#exam-title').fill('Первичная аттестация');
@@ -116,6 +130,17 @@ async function launchWithRole(browser,role){
  await page.getByText('FSO-'+('A'.repeat(32))).waitFor();
  assert.deepEqual(errors,[]);
  await page.screenshot({path:'/tmp/portal-admin.png',fullPage:true});
+ await page.close();
+ }
+ // HR editor can edit personnel without seeing administrator audit.
+ {
+ const {page,errors}=await launchWithRole(browser,'hr');
+ await page.getByRole('heading',{name:'Сотрудники'}).waitFor();
+ assert.equal(await page.getByRole('button',{name:'Журнал аудита'}).count(),0);
+ assert.equal(await page.locator('#roster-rows .status-label').first().innerText(),'Сотрудник');
+ await page.locator('#new-member').click();
+ assert.deepEqual(await page.locator('#member-status option').allTextContents(),['Курсант','Сотрудник']);
+ assert.deepEqual(errors,[]);
  await page.close();
  }
  // Ordinary employee denied access
