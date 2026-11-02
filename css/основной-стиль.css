@@ -1071,3 +1071,178 @@ body.tg-law-open{overflow:hidden}
  .law-document .law-paragraph.law-point{padding-left:11px;margin-bottom:13px}
  .law-document .law-paragraph.law-preamble{font-size:15px;line-height:1.78}
  .law-document .law-chapter,.law-document .law-part{margin:29px 0 18px}}
+
+
+/* Правовой справочник. Отдельная типографика и сетка связанных оснований.
+   Эти классы создаются renderReferenceModal() в js/сайт.js.
+   Все правила локализованы внутри модального окна и не затрагивают другие кнопки. */
+.reference-overlay .reference-modal{
+ box-sizing:border-box;
+ max-width:calc(100vw - 24px);
+ overflow-x:hidden;
+}
+.reference-modal #reference-modal-body{
+ min-width:0;
+ width:100%;
+ color:var(--text);
+}
+.reference-modal #reference-modal-body>.ref-law-text{
+ display:block;
+ white-space:pre-wrap;
+ overflow-wrap:anywhere;
+ font-size:clamp(14px,1.25vw,16px);
+ line-height:1.78;
+ border-left:3px solid var(--accent-strong);
+ background:var(--surface2);
+ border-radius:0 11px 11px 0;
+ padding:17px 20px;
+ margin:12px 0 24px;
+ max-width:100%;
+}
+.reference-modal .reference-full-article{
+ display:block;
+ margin:16px 0 25px;
+ border:1px solid var(--line);
+ background:var(--surface2);
+ border-radius:12px;
+ overflow:hidden;
+}
+.reference-modal .reference-full-article>summary{
+ cursor:pointer;
+ display:list-item;
+ list-style-position:inside;
+ padding:14px 18px;
+ font-size:13px;
+ line-height:1.5;
+ font-weight:700;
+ color:var(--accent-strong);
+}
+.reference-modal .reference-full-article[open]>summary{
+ border-bottom:1px solid var(--line);
+}
+.reference-modal .reference-full-article-text{
+ display:grid;
+ gap:11px;
+ padding:18px 20px 22px;
+ min-width:0;
+}
+.reference-modal .reference-full-article-text>h4{
+ margin:0 0 2px;
+ color:var(--text);
+ font-size:16px;
+ line-height:1.45;
+}
+.reference-modal .reference-full-article-text>p{
+ margin:0;
+ color:var(--text);
+ font-size:13px;
+ line-height:1.75;
+ white-space:pre-wrap;
+ overflow-wrap:anywhere;
+}
+.reference-modal .reference-full-focused{
+ border-left:3px solid var(--accent-strong);
+ background:var(--accent-wash);
+ border-radius:0 8px 8px 0;
+ padding:11px 14px;
+}
+.reference-modal .reference-context-links{
+ display:block;
+ margin:28px 0 0;
+ padding:24px 0 0;
+ border-top:1px solid var(--line);
+}
+.reference-modal .reference-context-links>h3{
+ margin:0 0 9px;
+ color:var(--text);
+ font-size:18px;
+ font-weight:760;
+ letter-spacing:-.025em;
+ line-height:1.35;
+}
+.reference-modal .reference-context-links>p{
+ margin:0 0 18px;
+ max-width:90ch;
+ font-size:13px;
+ line-height:1.65;
+ color:var(--muted);
+}
+.reference-modal .reference-context-grid{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:12px;
+ width:100%;
+ min-width:0;
+ align-items:stretch;
+}
+.reference-modal .reference-context-grid>.reference-context-link{
+ appearance:none;
+ -webkit-appearance:none;
+ box-sizing:border-box;
+ display:flex;
+ flex-direction:column;
+ align-items:flex-start;
+ justify-content:flex-start;
+ gap:9px;
+ min-width:0;
+ width:100%;
+ height:auto;
+ margin:0;
+ padding:17px 18px;
+ text-align:left;
+ white-space:normal;
+ background:var(--surface2);
+ color:var(--text);
+ border:1px solid var(--line);
+ border-radius:12px;
+ font:inherit;
+ font-size:13px;
+ line-height:1.5;
+ cursor:pointer;
+ overflow-wrap:anywhere;
+ transition:background-color .18s,border-color .18s,box-shadow .18s;
+}
+.reference-modal .reference-context-link:hover{
+ background:var(--accent-wash);
+ border-color:var(--line-hover);
+ box-shadow:0 5px 16px rgba(0,0,0,.1);
+}
+.reference-modal .reference-context-link:focus-visible{
+ outline:2px solid var(--accent-strong);
+ outline-offset:3px;
+}
+.reference-modal .reference-context-link>b{
+ display:block;
+ width:100%;
+ margin:0;
+ font-size:14px;
+ line-height:1.45;
+ font-weight:750;
+ color:var(--text);
+}
+.reference-modal .reference-context-link>span{
+ display:block;
+ width:100%;
+ font-size:12px;
+ line-height:1.65;
+ font-weight:400;
+ color:var(--muted);
+}
+.reference-modal .reference-context-link>small{
+ display:block;
+ max-width:100%;
+ align-self:flex-start;
+ margin-top:auto;
+ padding-top:10px;
+ font-size:11px;
+ line-height:1.5;
+ color:var(--accent-strong);
+ font-weight:650;
+ overflow-wrap:anywhere;
+}
+@media(max-width:780px){
+ .reference-modal .reference-context-grid{grid-template-columns:minmax(0,1fr)}
+ .reference-modal .reference-context-links{margin-top:22px;padding-top:19px}
+ .reference-modal .reference-context-grid>.reference-context-link{padding:15px 16px}
+ .reference-modal #reference-modal-body>.ref-law-text{padding:15px 16px;font-size:14px}
+}
