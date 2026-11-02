@@ -76,7 +76,7 @@ async function launchWithRole(browser,role){
  // Admin roster, member CRUD, disciplinary RPC, official exam builder
  {
  const {page,errors}=await launchWithRole(browser,'admin');
- await page.getByRole('heading',{name:'Личный состав'}).waitFor();
+ await page.getByRole('heading',{name:'Сотрудники'}).waitFor();
  await page.getByText('Иван Тестовый').waitFor();
  await page.locator('#new-member').click();
  await page.locator('#member-no').fill('0020');
