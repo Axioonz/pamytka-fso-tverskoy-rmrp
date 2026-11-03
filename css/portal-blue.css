@@ -294,3 +294,212 @@ html.nv-preview .subpage .subpage-desc{background:var(--surface);border:1px soli
  html.nv-preview .nv-access span{font-size:12px}
  html.nv-preview .nv-hero h1{font-size:47px}
 }
+
+
+/* 2026-11-03 · Visual finishing based on modern product sites.
+   Restrained geometry, functional accents and a fully dark knowledge section. */
+
+/* The surrounding surface has a small amount of atmosphere without global glow effects. */
+html.nv-preview[data-theme="dark"] body{
+ background-color:var(--bg);
+ background-image:
+  radial-gradient(ellipse 760px 440px at 94% 145px,rgba(39,86,125,.115),transparent 75%),
+  radial-gradient(ellipse 700px 430px at 0% 1180px,rgba(22,60,99,.065),transparent 77%);
+ background-repeat:no-repeat;
+}
+html.nv-preview .nv-header{box-shadow:0 8px 34px rgba(3,10,20,.14)}
+html.nv-preview .nv-header::after{
+ content:"";position:absolute;bottom:-1px;left:max(4%,calc((100vw - 1480px) / 2));width:min(230px,24vw);
+ height:1px;background:linear-gradient(90deg,transparent,rgba(125,187,239,.64),transparent);
+ pointer-events:none;
+}
+
+/* Blueprint-like rules around the hero, rather than decorative particles. */
+html.nv-preview .nv-hero{
+ box-shadow:0 23px 60px rgba(1,9,20,.15),inset 0 1px 0 rgba(140,190,226,.07);
+}
+html.nv-preview .nv-hero-copy{
+ background-color:#111f2e;
+ background-image:
+  linear-gradient(rgba(158,198,230,.035) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(158,198,230,.035) 1px,transparent 1px),
+  radial-gradient(ellipse at 3% 0%,rgba(40,98,151,.21),transparent 67%);
+ background-size:46px 46px,46px 46px,auto;
+ background-position:0 0,0 0,center;
+}
+html.nv-preview .nv-hero-copy::after{
+ content:"";position:absolute;top:23px;right:23px;width:72px;height:72px;
+ border-top:1px solid rgba(127,186,231,.24);
+ border-right:1px solid rgba(127,186,231,.24);
+ pointer-events:none;
+}
+html.nv-preview .nv-overline-mark{width:31px;box-shadow:0 0 13px rgba(116,182,246,.22)}
+html.nv-preview .nv-hero-photo{
+ background-color:#0c1d2b;
+ box-shadow:inset 1px 0 0 rgba(211,234,255,.09);
+}
+html.nv-preview .nv-hero-photo::before{
+ content:"";position:absolute;inset:15px;z-index:0;pointer-events:none;
+ background:
+  linear-gradient(#c8e5fc,#c8e5fc) top left/21px 1px no-repeat,
+  linear-gradient(#c8e5fc,#c8e5fc) top left/1px 21px no-repeat,
+  linear-gradient(#c8e5fc,#c8e5fc) bottom right/21px 1px no-repeat,
+  linear-gradient(#c8e5fc,#c8e5fc) bottom right/1px 21px no-repeat;
+ opacity:.46;
+}
+html.nv-preview .nv-image-index,html.nv-preview .nv-image-foot{position:relative;z-index:1}
+
+/* A defined task bar, with interactive accents only when there is an action. */
+html.nv-preview .nv-utility{box-shadow:0 13px 36px rgba(3,11,22,.09)}
+html.nv-preview .nv-utility>button{
+ position:relative;transition:background .18s ease,color .18s ease;
+}
+html.nv-preview .nv-utility>button::after{
+ content:"";position:absolute;left:0;top:19%;height:62%;width:2px;border-radius:2px;
+ background:#82c1f7;opacity:0;transform:scaleY(.45);transition:opacity .18s ease,transform .18s ease;
+}
+html.nv-preview .nv-utility>button:hover::after,
+html.nv-preview .nv-utility>button:focus-visible::after{opacity:1;transform:scaleY(1)}
+html.nv-preview .nv-utility-icon{transition:border-color .18s ease,background .18s ease}
+html.nv-preview .nv-utility>button:hover .nv-utility-icon{border-color:#608fb5;background:#214260}
+
+/* Section labels and rule details create rhythm without adding new floating widgets. */
+html.nv-preview .nv-eyebrow{display:inline-flex;gap:9px;align-items:center}
+html.nv-preview .nv-eyebrow::before{
+ content:"";display:inline-block;flex:0 0 18px;width:18px;height:2px;
+ background:currentColor;opacity:.76;
+}
+html.nv-preview .nv-section-title{position:relative;padding-bottom:18px}
+html.nv-preview .nv-section-title::after{
+ content:"";position:absolute;bottom:0;left:0;right:0;height:1px;
+ background:linear-gradient(90deg,var(--line-hover),var(--line) 62%,transparent);
+}
+html.nv-preview .nv-main-module{
+ background-image:
+  linear-gradient(rgba(172,213,249,.035) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(172,213,249,.035) 1px,transparent 1px),
+  radial-gradient(ellipse at 35% 8%,rgba(48,110,165,.31),transparent 62%),
+  linear-gradient(140deg,#1c3a54,#132b42 67%,#10243a);
+ background-size:34px 34px,34px 34px,auto,auto;
+}
+html.nv-preview .nv-main-module-top .icon{
+ box-sizing:content-box;width:25px;height:25px;padding:11px;
+ border:1px solid rgba(169,211,246,.24);border-radius:11px;
+ background:rgba(140,191,233,.07);
+}
+html.nv-preview .nv-service-links>button{
+ position:relative;transition:background .18s ease,padding-left .18s ease;
+}
+html.nv-preview .nv-service-links>button::before{
+ content:"";position:absolute;top:0;bottom:0;left:0;width:2px;background:#78bdf6;
+ opacity:0;transition:opacity .18s ease;
+}
+html.nv-preview .nv-service-links>button:hover{padding-left:20px}
+html.nv-preview .nv-service-links>button:hover::before{opacity:1}
+html.nv-preview .nv-service-links>button i{transition:transform .18s ease,color .18s ease}
+html.nv-preview .nv-service-links>button:hover i{transform:translate(2px,-2px);color:var(--accent-strong)}
+
+/* Knowledge centre: no white/light section in the middle of the dark page. */
+html.nv-preview .nv-library{
+ position:relative;isolation:isolate;overflow:hidden;
+ margin:0;
+ border:1px solid #304c66;border-radius:15px;
+ background-color:#14283d;
+ background-image:
+  radial-gradient(ellipse 650px 420px at 9% 0%,rgba(40,97,152,.26),transparent 79%),
+  linear-gradient(90deg,rgba(166,206,242,.028) 1px,transparent 1px),
+  linear-gradient(rgba(166,206,242,.028) 1px,transparent 1px),
+  linear-gradient(115deg,#182f47,#122438 67%,#102337);
+ background-size:auto,44px 44px,44px 44px,auto;
+ color:#ecf5ff;
+ box-shadow:inset 0 1px 0 rgba(186,221,250,.06),0 20px 52px rgba(0,9,21,.12);
+}
+html.nv-preview .nv-library::after{
+ content:"";position:absolute;z-index:-1;pointer-events:none;right:-180px;bottom:-315px;
+ width:555px;height:555px;border:1px solid rgba(120,174,219,.13);border-radius:50%;
+ box-shadow:0 0 0 55px rgba(125,175,219,.028),0 0 0 125px rgba(125,175,219,.022);
+}
+html.nv-preview .nv-library .nv-eyebrow{color:#8fc7ff}
+html.nv-preview .nv-library-intro h2{color:#f1f8ff}
+html.nv-preview .nv-library-intro>p{color:#a9c0d4}
+html.nv-preview .nv-library-totals{gap:20px}
+html.nv-preview .nv-library-totals>div{
+ padding-left:15px;border-left:2px solid rgba(125,188,246,.43);
+}
+html.nv-preview .nv-library-totals strong{color:#f1f8ff}
+html.nv-preview .nv-library-totals span{color:#95b0c6}
+html.nv-preview .nv-library-cta{
+ background:#92caff;border:1px solid #92caff;color:#0c2841;
+ box-shadow:0 6px 25px rgba(47,104,163,.13);
+}
+html.nv-preview .nv-library-cta:hover{background:#b7deff;border-color:#b7deff}
+html.nv-preview .nv-library-list{border-top:1px solid #3b5872;position:relative;z-index:1}
+html.nv-preview .nv-library-list>button{
+ color:#e7f3ff;border-bottom:1px solid #35516a;
+ border-radius:6px;transition:background .18s ease;
+}
+html.nv-preview .nv-library-list>button:hover{background:rgba(120,174,218,.10)}
+html.nv-preview .nv-library-list>button>span{color:#88b2d4}
+html.nv-preview .nv-library-list .icon{color:#92caff}
+html.nv-preview .nv-library-list small{color:#9cb5c9}
+html.nv-preview .nv-library-list i{color:#84b8e2}
+html.nv-preview .nv-library-list>button:hover i{color:#d4edff}
+
+/* Laws are documents, so use a quiet technical index rather than ornamental cards. */
+html.nv-preview .nv-legal-list button{position:relative;transition:background .18s ease}
+html.nv-preview .nv-legal-list button span{
+ width:34px;min-height:26px;display:grid;place-items:center;
+ background:rgba(121,183,232,.065);border:1px solid var(--line);
+ border-radius:6px;font-variant-numeric:tabular-nums;
+}
+html.nv-preview .nv-legal-list button:hover span{border-color:#5b84a4;color:#b5dfff}
+html.nv-preview .nv-legal-list button em{transition:transform .16s ease}
+html.nv-preview .nv-legal-list button:hover em{transform:translate(2px,-2px)}
+
+/* Workspace: a restrained schematic instead of decorative charts or status figures. */
+html.nv-preview .nv-workspace{
+ border-color:#31516c;
+ box-shadow:0 18px 50px rgba(1,10,23,.11);
+}
+html.nv-preview .nv-workspace-visual{
+ background-image:
+  linear-gradient(rgba(156,201,239,.046) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(156,201,239,.046) 1px,transparent 1px),
+  radial-gradient(ellipse at 55% 80%,rgba(42,105,155,.58),transparent 67%);
+ background-size:36px 36px,36px 36px,auto;
+ background-color:#122d44;
+}
+html.nv-preview .nv-workspace-info{position:relative}
+html.nv-preview .nv-workspace-info::after{
+ content:"";position:absolute;right:26px;top:26px;
+ width:49px;height:49px;border-top:1px solid rgba(132,190,235,.25);
+ border-right:1px solid rgba(132,190,235,.25);pointer-events:none;
+}
+html.nv-preview .nv-roadmap{border-left-color:#80baf0}
+html.nv-preview .nv-footer{position:relative}
+html.nv-preview .nv-footer::before{
+ content:"";position:absolute;left:0;top:-1px;width:125px;height:1px;
+ background:linear-gradient(90deg,#86bdf0,transparent);
+}
+@media(max-width:850px){
+ html.nv-preview .nv-library{margin:0;padding:47px clamp(22px,5vw,45px)}
+ html.nv-preview .nv-main-module{background-size:34px 34px,34px 34px,auto,auto}
+}
+@media(max-width:620px){
+ html.nv-preview .nv-hero-copy::after{width:42px;height:42px;top:17px;right:17px}
+ html.nv-preview .nv-hero-photo::before{inset:11px}
+ html.nv-preview .nv-library{margin:0;padding:37px 22px;border-radius:12px}
+ html.nv-preview .nv-library::after{right:-280px;bottom:-370px;opacity:.65}
+ html.nv-preview .nv-library-totals{gap:22px}
+ html.nv-preview .nv-library-list>button{padding:16px 5px}
+ html.nv-preview .nv-service-links>button:hover{padding-left:11px}
+}
+@media(prefers-reduced-motion:reduce){
+ html.nv-preview .nv-utility>button,
+ html.nv-preview .nv-utility>button::after,
+ html.nv-preview .nv-utility-icon,
+ html.nv-preview .nv-service-links>button,
+ html.nv-preview .nv-service-links>button::before,
+ html.nv-preview .nv-service-links>button i,
+ html.nv-preview .nv-legal-list button em{transition:none!important}
+}
