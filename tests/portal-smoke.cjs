@@ -4,8 +4,8 @@ const assert = require('node:assert/strict');
 const BASE='http://127.0.0.1:8765/';
 const mockSupabase=String.raw`(()=>{'use strict';
 const role=window.__role||'anonymous';
-const seed=[{id:'member-1',employee_number:'0007',first_name:'Иван',last_name:'Тестовый',position:'Сотрудник',rank:'Сержант',discord:'ivan.test',status:'active',joined_on:'2026-10-10',dismissed_on:null,created_at:'2026-10-10',updated_at:'2026-10-10'}];
-const db={fso_profiles:[{user_id:'user-1',role,display_name:''}],fso_members:seed,fso_disciplinary_actions:[],fso_disciplinary_audit:[],fso_activity_audit:[{id:1,entity_type:'member',entity_id:'member-1',member_id:'member-1',actor_id:'user-1',action:'member.updated',occurred_at:'2026-11-03T10:00:00Z',before_data:{rank:'Рядовой'},after_data:{rank:'Сержант'}}],fso_questions:[{id:'q1',source_key:'quiz2-001',difficulty:1,prompt:'Проверочный вопрос?',is_published:true}],fso_exams:[],fso_exam_assignments:[],fso_exam_attempts:[],fso_exam_items:[],fso_exam_answers:[]};
+const seed=[{id:'member-1',employee_number:'0007',first_name:'Иван',last_name:'Тестовый',position:'Сотрудник',rank:'Сержант',discord:'ivan.test',user_id:'user-1',status:'active',joined_on:'2026-10-10',dismissed_on:null,created_at:'2026-10-10',updated_at:'2026-10-10'}];
+const db={fso_profiles:[{user_id:'user-1',role,display_name:''}],fso_members:seed,fso_disciplinary_actions:[],fso_disciplinary_audit:[],fso_activity_audit:[{id:1,entity_type:'member',entity_id:'member-1',member_id:'member-1',actor_id:'user-1',action:'member.updated',occurred_at:'2026-11-03T10:00:00Z',before_data:{rank:'Рядовой'},after_data:{rank:'Сержант'}}],fso_questions:[{id:'q1',source_key:'quiz2-001',difficulty:1,prompt:'Проверочный вопрос?',is_published:true}],fso_exams:[],fso_exam_assignments:[],fso_exam_attempts:[],fso_exam_items:[],fso_exam_answers:[],fso_service_events:[],fso_service_requests:[],fso_service_leaves:[]};
 const accounts=[
  {user_id:'user-1',email:'admin@example.test',role,display_name:'Администратор',confirmed:true,created_at:'2026-10-01',last_sign_in_at:'2026-11-03T10:00:00Z'},
  {user_id:'user-2',email:'editor@example.test',role:'employee',display_name:'Редактор без роли',confirmed:true,created_at:'2026-10-20',last_sign_in_at:null}
@@ -249,12 +249,15 @@ async function launchWithRole(browser,role){
  assert.deepEqual(errors,[]);
  await page.close();
  }
- // Ordinary employee denied access
+ // Employee can only use their linked personal self-service area.
  {
  const {page,errors}=await launchWithRole(browser,'employee');
- await page.getByRole('heading',{name:'Ожидается выдача доступа'}).waitFor();
- assert.equal(await page.locator('#new-member').count(),0);
+ await page.getByRole('heading',{name:'Рапорты и заявки'}).waitFor();
+ assert.equal(await page.locator('#lead-request-form').count(),1);
+ assert.equal(await page.getByRole('button',{name:'Кадровые решения'}).count(),0);
  assert.equal(await page.getByRole('button',{name:'Управление доступом'}).count(),0);
+ await page.getByRole('button',{name:'История службы'}).click();
+ await page.getByRole('heading',{name:'История службы'}).waitFor();
  assert.deepEqual(errors,[]);
  await page.close();
  }
