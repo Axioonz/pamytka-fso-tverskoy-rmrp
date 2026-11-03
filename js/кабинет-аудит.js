@@ -2,18 +2,18 @@
 let records=[],profiles=[],error='';
 const html=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const titles={
- 'member.created':'Добавление сотрудника','member.updated':'Изменение личного дела','member.dismissed':'Увольнение сотрудника','member.deleted':'Удаление сотрудника',
+ 'member.created':'Добавление сотрудника','member.updated':'Изменение личного дела','member.dismissed':'Увольнение сотрудника','member.deleted':'Удаление сотрудника','member.archive_cleared':'Полная очистка архива',
  'blacklist.added':'Внесение в чёрный список','blacklist.removed':'Исключение из чёрного списка','blacklist.updated':'Изменение чёрного списка','blacklist.deleted':'Удаление из чёрного списка',
  'profile.created':'Выдача доступа','profile.updated':'Редактирование профиля','profile.role_changed':'Изменение прав доступа','profile.deleted':'Удаление доступа',
  'discipline.issued':'Выдача взыскания','discipline.converted':'Автоматическая замена взысканий','discipline.removed':'Снятие взыскания','discipline.dismissed':'Увольнение сотрудника','discipline.dismissal_proposed':'Предложение об увольнении','discipline.voided':'Отмена взыскания',
  'exam.created':'Создание экзамена','exam.updated':'Изменение экзамена','exam.deleted':'Удаление экзамена',
  'question.created':'Добавление вопроса','question.updated':'Изменение вопроса','question.deleted':'Удаление вопроса',
- 'assignment.created':'Назначение экзамена','assignment.updated':'Изменение назначения','assignment.deleted':'Удаление назначения'
+ 'assignment.created':'Назначение экзамена','assignment.updated':'Изменение назначения','assignment.deleted':'Удаление назначения','assignment.results_cleared':'Очистка результатов экзамена'
 };
 const categories={member:'Сотрудники',blacklist:'Чёрный список',discipline:'Взыскания',profile:'Права доступа',exam:'Экзамены',question:'Вопросы',assignment:'Назначения'};
 const labels={employee_number:'ID',first_name:'Имя',last_name:'Фамилия',rank:'Звание',position:'Должность',discord:'Discord',status:'Статус',joined_on:'Дата вступления',dismissed_on:'Дата увольнения',
 role:'Роль',display_name:'Имя пользователя',title:'Название',prompt:'Вопрос',reason:'Причина',removal_reason:'Причина снятия',event:'Событие',details:'Детали',
-kind:'Вид взыскания',expires_at:'Срок действия',pass_percent:'Проходной балл',duration_minutes:'Длительность',max_attempts:'Количество попыток',difficulty:'Сложность',is_published:'Опубликован'};
+members:'Удалено личных дел',assignments:'Удалено назначений',attempts:'Удалено попыток',exam_id:'Экзамен',kind:'Вид взыскания',expires_at:'Срок действия',pass_percent:'Проходной балл',duration_minutes:'Длительность',max_attempts:'Количество попыток',difficulty:'Сложность',is_published:'Опубликован'};
 const pretty=v=>v===undefined||v===null||v===''?'Не указано':typeof v==='boolean'?(v?'Да':'Нет'):typeof v==='object'?JSON.stringify(v):String(v);
 const formatTime=v=>v?new Date(v).toLocaleString('ru-RU',{dateStyle:'short',timeStyle:'short'}):'Без даты';
 async function load(api,role){
