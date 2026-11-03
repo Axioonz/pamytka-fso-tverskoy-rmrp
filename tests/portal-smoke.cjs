@@ -68,6 +68,50 @@ function rpc(name,args){
   else if(assignment)assignment.status='assigned';
   return Promise.resolve({data:{deleted_attempts:attemptIds.length},error:null});
  }
+
+ if(name==='fso_personnel_decision'){
+  if(!['admin','hr'].includes(role))return Promise.resolve({data:null,error:{message:'Недостаточно прав',code:'42501'}});
+  const m=db.fso_members.find(x=>x.id===args.p_member),before={rank:m.rank,position:m.position};
+  m.rank=args.p_rank;m.position=args.p_position;
+  for(const [field,kind] of [['rank','rank_changed'],['position','position_changed']]){
+   if(before[field]!==m[field])db.fso_service_events.unshift({id:state.rpcs.length,member_id:m.id,event_type:kind,actor_id:'user-1',
+    old_value:{[field]:before[field]},new_value:{[field]:m[field]},reason:args.p_reason,occurred_at:new Date().toISOString()});
+  }
+  return Promise.resolve({data:{member_id:m.id},error:null});
+ }
+ if(name==='fso_request_submit'){
+  const member=db.fso_members.find(x=>x.id===args.p_member);
+  if(!member||(!['admin','hr'].includes(role)&&member.user_id!=='user-1'))
+   return Promise.resolve({data:null,error:{message:'Нет права на рапорт',code:'42501'}});
+  const row={id:'request-'+state.rpcs.length,member_id:args.p_member,kind:args.p_kind,statement:args.p_statement,
+   date_from:args.p_from,date_to:args.p_to,submitted_by:'user-1',submitted_at:new Date().toISOString(),status:'pending'};
+  db.fso_service_requests.unshift(row);return Promise.resolve({data:row.id,error:null});
+ }
+ if(name==='fso_request_review'){
+  if(!['admin','hr'].includes(role))return Promise.resolve({data:null,error:{message:'Недостаточно прав',code:'42501'}});
+  const row=db.fso_service_requests.find(x=>x.id===args.p_id);
+  row.status=args.p_decision;row.reviewed_by='user-1';row.review_note=args.p_note;row.reviewed_at=new Date().toISOString();
+  if(row.kind==='leave'&&row.status==='approved')
+   db.fso_service_leaves.unshift({id:'leave-'+state.rpcs.length,member_id:row.member_id,request_id:row.id,
+    date_from:row.date_from,date_to:row.date_to,reason:row.statement,status:'approved',approved_by:'user-1'});
+  return Promise.resolve({data:{status:row.status},error:null});
+ }
+ if(name==='fso_leave_create'){
+  if(!['admin','hr'].includes(role))return Promise.resolve({data:null,error:{message:'Недостаточно прав',code:'42501'}});
+  db.fso_service_leaves.unshift({id:'leave-'+state.rpcs.length,member_id:args.p_member,date_from:args.p_from,
+   date_to:args.p_to,reason:args.p_reason,status:'approved',approved_by:'user-1'});
+  return Promise.resolve({data:{},error:null});
+ }
+ if(name==='fso_leave_close'){
+  if(!['admin','hr'].includes(role))return Promise.resolve({data:null,error:{message:'Недостаточно прав',code:'42501'}});
+  const row=db.fso_service_leaves.find(x=>x.id===args.p_leave);if(row)row.status=args.p_action;
+  return Promise.resolve({data:{},error:null});
+ }
+ if(name==='fso_member_account_link'){
+  if(role!=='admin')return Promise.resolve({data:null,error:{message:'Недостаточно прав',code:'42501'}});
+  const m=db.fso_members.find(x=>x.id===args.p_member);if(m)m.user_id=args.p_email?'user-2':null;
+  return Promise.resolve({data:{},error:null});
+ }
  if(name==='fso_issue_discipline'){
   db.fso_disciplinary_actions.push({id:'act-'+state.rpcs.length,member_id:args.p_member,kind:args.p_kind,status:'active',reason:args.p_reason,evidence:args.p_evidence,issued_at:new Date().toISOString()});
   return Promise.resolve({data:{issued_id:'act-1'},error:null});
