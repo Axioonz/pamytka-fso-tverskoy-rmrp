@@ -3,7 +3,7 @@ const URL='https://lejagyuibxdnvpmxoggy.supabase.co';
 const KEY='sb_publishable_8cdFcw4V8F545924bpdLjg_3yKTHt1d';
 const EXAM_EDGE=URL+'/functions/v1/fso-cadet-exam';
 const root=document.getElementById('main'), toast=document.getElementById('toast');
-const allowed=['admin','hr','examiner'];const rosterRoles=['admin','hr'];
+const allowed=['admin','hr','examiner','employee','cadet'];const rosterRoles=['admin','hr'];
 let api=null,user=null,profile=null,members=[],blacklist=[],actions=[],audits=[],questions=[],examsList=[],assignments=[],examAttempts=[],examStaff=[],screen='home',selected=null;
 let newlyIssuedCode=null,cadetCode='',cadetState=null,cadetIndex=0,cadetPending=false;
 const e=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -111,12 +111,59 @@ api.rpc('fso_exam_staff_directory')
 ]);
 questions=q.data||[];examsList=ex.data||[];assignments=as.data||[];examAttempts=at.data||[];examStaff=Array.isArray(staff.data)?staff.data:[];
 }
+if(!['admin','hr','examiner'].includes(profile.role)&&!['requests','leaves','history'].includes(screen))screen='requests';
+await window.FSO_LEADERSHIP.load(api,profile.role);
 if(screen==='audit'&&profile.role==='admin')await window.FSO_AUDIT.load(api,profile.role);
 if(screen==='access'&&profile.role==='admin')await window.FSO_ACCESS.load(api,profile.role);
 render()}
-function nav(active){return '<div class="row between" style="margin-bottom:20px"><div class="row"><span class="badge">'+e(roleTitle[profile.role])+'</span><span class="subtle">'+e(user.email)+'</span></div><button class="btn small" id="logout">Выйти</button></div><nav class="tabs" aria-label="Разделы"><button data-tab="roster" class="'+(active==='roster'?'active':'')+'">Сотрудники</button>'+(rosterRoles.includes(profile.role)?'<button data-tab="archive" class="'+(active==='archive'?'active':'')+'">Архив</button><button data-tab="blacklist" class="'+(active==='blacklist'?'active':'')+'">Чёрный список</button>':'')+'<button data-tab="exams" class="'+(active==='exams'?'active':'')+'">Экзамены</button>'+(profile.role==='admin'?'<button data-tab="audit" class="'+(active==='audit'?'active':'')+'">Журнал аудита</button><button data-tab="access" class="'+(active==='access'?'active':'')+'">Управление доступом</button>':'')+'</nav>'}
-function bindNav(){document.getElementById('logout').onclick=logout;document.querySelectorAll('[data-tab]').forEach(x=>x.onclick=async()=>{screen=x.dataset.tab;selected=null;if(screen==='audit'&&profile.role==='admin'){loading();await window.FSO_AUDIT.load(api,profile.role)}if(screen==='access'&&profile.role==='admin'){loading();await window.FSO_ACCESS.load(api,profile.role)}render()})}
-function render(){if(!profile||!allowed.includes(profile.role))return;let content='';if(screen==='exams')content=exams();else if(screen==='audit')content=window.FSO_AUDIT.render(profile.role,members);else if(screen==='access')content=window.FSO_ACCESS.render(profile.role,user.id);else if(screen==='archive')content=archivePage();else if(screen==='blacklist')content=blacklistPage();else if(screen==='detail')content=detail();else if(screen==='add')content=editor();else if(screen==='edit')content=editor(selected);else content=roster();root.innerHTML=nav(['exams','archive','blacklist','audit','access'].includes(screen)?screen:'roster')+content;bindNav();bindScreen()}
+function nav(active){
+ const leadership=['admin','hr','examiner'].includes(profile.role);
+ const cadres=rosterRoles.includes(profile.role);
+ return '<div class="row between" style="margin-bottom:20px"><div class="row"><span class="badge">'+e(roleTitle[profile.role])+'</span><span class="subtle">'+e(user.email)+'</span></div><button class="btn small" id="logout">Выйти</button></div>'+
+ '<nav class="tabs" aria-label="Разделы">'+
+ (leadership?'<button data-tab="home" class="'+(active==='home'?'active':'')+'">Обзор</button><button data-tab="roster" class="'+(active==='roster'?'active':'')+'">Сотрудники</button>':'')+
+ '<button data-tab="requests" class="'+(active==='requests'?'active':'')+'">Рапорты</button>'+
+ '<button data-tab="leaves" class="'+(active==='leaves'?'active':'')+'">Отпуска</button>'+
+ '<button data-tab="history" class="'+(active==='history'?'active':'')+'">История службы</button>'+
+ (cadres?'<button data-tab="personnel" class="'+(active==='personnel'?'active':'')+'">Кадровые решения</button>':'')+
+ (cadres?'<button data-tab="archive" class="'+(active==='archive'?'active':'')+'">Архив</button><button data-tab="blacklist" class="'+(active==='blacklist'?'active':'')+'">Чёрный список</button>':'')+
+ (profile.role==='admin'||profile.role==='examiner'?'<button data-tab="exams" class="'+(active==='exams'?'active':'')+'">Экзамены</button>':'')+
+ (profile.role==='admin'?'<button data-tab="audit" class="'+(active==='audit'?'active':'')+'">Журнал аудита</button><button data-tab="access" class="'+(active==='access'?'active':'')+'">Управление доступом</button>':'')+
+ '</nav>';
+}
+function bindNav(){
+ document.getElementById('logout').onclick=logout;
+ document.querySelectorAll('[data-tab]').forEach(button=>button.onclick=async()=>{
+  screen=button.dataset.tab;selected=null;
+  if(screen==='audit'&&profile.role==='admin'){loading();await window.FSO_AUDIT.load(api,profile.role)}
+  if(screen==='access'&&profile.role==='admin'){loading();await window.FSO_ACCESS.load(api,profile.role)}
+  render();
+ });
+}
+function workflowContext(){
+ return {role:profile.role,userId:user.id,members,actions,exams:examsList,assignments,attempts:examAttempts};
+}
+function render(){
+ if(!profile||!allowed.includes(profile.role))return;
+ const workflow=window.FSO_LEADERSHIP,ctx=workflowContext();
+ let content='';
+ if(screen==='home')content=workflow.dashboard(ctx);
+ else if(screen==='requests')content=workflow.requestPage(ctx);
+ else if(screen==='leaves')content=workflow.leavePage(ctx);
+ else if(screen==='history')content=workflow.historyPage(ctx,selected);
+ else if(screen==='personnel')content=workflow.decisionPage(ctx,selected);
+ else if(screen==='exams')content=exams();
+ else if(screen==='audit'&&profile.role==='admin')content=window.FSO_AUDIT.render(profile.role,members);
+ else if(screen==='access'&&profile.role==='admin')content=window.FSO_ACCESS.render(profile.role,user.id);
+ else if(screen==='archive'&&rosterRoles.includes(profile.role))content=archivePage();
+ else if(screen==='blacklist'&&rosterRoles.includes(profile.role))content=blacklistPage();
+ else if(screen==='detail')content=detail();
+ else if(screen==='add'||screen==='edit')content=editor(screen==='edit'?selected:null);
+ else content=roster();
+ const activeTab=['detail','add','edit'].includes(screen)?'roster':screen;
+ root.innerHTML=nav(activeTab)+content;
+ bindNav();bindScreen();
+}
 function roster(){
  const current=members.filter(m=>['active','cadet'].includes(m.status));
  const n=current.filter(m=>m.status==='active').length,c=current.filter(m=>m.status==='cadet').length;
@@ -139,7 +186,8 @@ function rows(data){
  '<td>'+e(m.position||'Не указана')+'</td>'+
  '<td><span class="rank-badge rank-'+rankLevel(m.rank)+'">'+e(m.rank||'Не указано')+'</span></td>'+
  '<td><span class="tag '+(danger?'bad':'')+'">'+z.warnings+'/3 · '+z.reprimands+'/3</span></td>'+
- '<td><span class="status-label status-'+e(m.status)+'">'+e(statusTitle[m.status]||m.status)+'</span></td>'+
+ '<td><span class="status-label status-'+e(m.status)+'">'+e(statusTitle[m.status]||m.status)+'</span>'+
+ (window.FSO_LEADERSHIP.leaveFor(m.id)?'<small class="table-subline lead-leave-tag">'+e(window.FSO_LEADERSHIP.leaveState(window.FSO_LEADERSHIP.leaveFor(m.id)))+'</small>':'')+'</td>'+
  '<td><div class="archive-row-actions"><button class="btn small" data-person="'+e(m.id)+'">Открыть</button>'+(screen==='archive'&&profile.role==='admin'?'<button type="button" class="btn danger small" data-archive-delete="'+e(m.id)+'">Удалить</button>':'')+'</div></td></tr>'
  }).join('');
 }
@@ -149,7 +197,8 @@ const c=kindcounts(m),list=actions.filter(x=>x.member_id===m.id),history=audits.
 const can=rosterRoles.includes(profile.role)&&!['dismissed','archived'].includes(m.status);const retired=['dismissed','archived'].includes(m.status);const listed=blacklist.some(x=>x.member_id===m.id&&!x.removed_at);
 const head=hero(m.first_name+' '+m.last_name,'Личное дело № '+m.employee_number)+
 '<div class="detail-rank"><span class="rank-badge rank-'+rankLevel(m.rank)+'">'+e(m.rank||'Без звания')+'</span><span class="status-label status-'+e(m.status)+'">'+e(statusTitle[m.status])+'</span></div><div class="actions"><button class="btn" id="back-roster">← '+(retired?'Архив':'Реестр')+'</button>'+
-(can?'<button class="btn primary" id="edit-person">Редактировать личное дело</button>':'')+'</div>';
+(can?'<button class="btn primary" id="edit-person">Редактировать личное дело</button>':'')+
+ (can?'<button class="btn" type="button" id="open-personnel">Кадровое решение</button>':'')+'</div>';
 const warning=c.reprimands>=3&&!retired?'<div class="danger-box"><b>Три действующих выговора · '+c.reprimands+'/3</b><p>Основание по пункту 30.3. Увольнение доступно и по другим причинам.</p></div>':'';
 const dismissal=can?'<section class="section"><h2>Увольнение сотрудника</h2><p class="hint">Уволить можно в любой момент. Причина обязательна, доказательства необязательны.</p><button class="btn danger" id="dismiss-show">Уволить сотрудника</button><form id="dismiss-form" hidden><div class="fields"><label class="wide">Причина увольнения<textarea id="dismiss-reason" required minlength="5" maxlength="4000"></textarea></label><label class="wide">Доказательства (необязательно), ссылки HTTPS<textarea id="dismiss-proof"></textarea></label></div><div class="actions"><button class="btn danger" type="submit">Подтвердить увольнение</button></div><div id="dismiss-error"></div></form></section>':'';
 const blackAction=retired&&rosterRoles.includes(profile.role)?'<section class="section"><h2>Чёрный список</h2>'+(listed?'<p class="text-critical">Сотрудник находится в чёрном списке.</p><form id="black-remove-form"><div class="fields"><label class="wide">Причина исключения<textarea id="black-remove-reason" required minlength="5" maxlength="4000"></textarea></label></div><button class="btn" type="submit">Исключить из чёрного списка</button><div id="black-error"></div></form>':'<form id="black-add-form"><div class="fields"><label class="wide">Причина внесения<textarea id="black-reason" required minlength="5" maxlength="4000"></textarea></label></div><button class="btn danger" type="submit">Внести в чёрный список</button><div id="black-error"></div></form>')+'</section>':'';
@@ -165,7 +214,7 @@ return '<div class="record"><div class="row between"><strong>'+e(type)+' · <spa
 }).join(''):'<div class="empty">Взысканий нет.</div>')+
 (can?'<form class="section" id="remove-form" hidden style="margin-top:12px"><h3>Снятие взыскания</h3><input type="hidden" id="remove-id"><div class="fields"><label class="wide">Основание снятия<textarea required minlength="5" id="remove-reason"></textarea></label><label class="wide">Доказательства, ссылки HTTPS<textarea required id="remove-proof" placeholder="https://... (одна ссылка на строку)"></textarea></label></div><div class="actions"><button type="submit" class="btn primary">Подтвердить снятие</button><button type="button" class="btn" id="remove-cancel">Отмена</button></div><div id="remove-error"></div></form>':'')+'</section>';
 const events=history.length?'<section class="section"><h2>Журнал решений</h2><div class="records">'+history.map(x=>'<div class="record"><strong>'+e(({issued:'Выдача взыскания',converted:'Автоматическая замена',removed:'Снятие взыскания',dismissed:'Увольнение'}[x.event]||x.event))+'</strong><small>'+date(x.occurred_at)+' · '+e(x.details?.reason||'Событие зафиксировано в журнале')+'</small></div>').join('')+'</div></section>':'';
-return '<div class="'+(c.reprimands>=3?'critical-profile':'')+'">'+head+'<section class="section member-profile-section"><div class="section-heading"><div><span class="form-step">СВЕДЕНИЯ</span><h2>Личное дело</h2></div></div><div class="member-details">'+fields+'</div></section>'+counter+warning+issue+listing+events+blackAction+dismissal+'</div>';
+return '<div class="'+(c.reprimands>=3?'critical-profile':'')+'">'+head+'<section class="section member-profile-section"><div class="section-heading"><div><span class="form-step">СВЕДЕНИЯ</span><h2>Личное дело</h2></div></div><div class="member-details">'+fields+'</div></section>'+counter+warning+issue+listing+events+window.FSO_LEADERSHIP.memberEvents(m)+window.FSO_LEADERSHIP.accountPanel(m,profile.role)+blackAction+dismissal+'</div>';
 }
 function editor(id){
  if(!rosterRoles.includes(profile.role))return msg('Недостаточно прав.',true);
@@ -177,12 +226,16 @@ function editor(id){
  '<label>Статус *<select id="member-status">'+['cadet','active'].map(x=>'<option value="'+x+'" '+(m?.status===x||(!m&&x==='active')?'selected':'')+'>'+statusTitle[x]+'</option>').join('')+'</select></label>'+
  '<label>Имя *<input id="member-first" maxlength="100" value="'+e(m?.first_name||'')+'" required></label>'+
  '<label>Фамилия *<input id="member-last" maxlength="100" value="'+e(m?.last_name||'')+'" required></label>'+
- '<label>Должность<input id="member-position" maxlength="200" value="'+e(m?.position||'')+'"></label>'+
- '<label>Воинское звание *<select id="member-rank" required><option value="" disabled '+(!known?'selected':'')+'>Выберите звание</option>'+rankOptions(known?existing:'')+'</select></label>'+
+ (m?'<div class="card-muted"><span>Должность</span><strong>'+e(m.position||'Не указана')+'</strong></div>':
+ '<label>Должность<input id="member-position" maxlength="200"></label>')+
+ (m?'<div class="card-muted"><span>Воинское звание</span><strong>'+e(m.rank||'Не указано')+'</strong></div>':
+ '<label>Воинское звание *<select id="member-rank" required><option value="" disabled selected>Выберите звание</option>'+rankOptions('')+'</select></label>')+
  '<label>Discord<input id="member-discord" maxlength="150" value="'+e(m?.discord||'')+'"></label>'+
  '<label>Дата вступления *<input id="member-date" type="date" value="'+e(m?.joined_on||new Date().toISOString().slice(0,10))+'" required></label>'+
  '</div><p class="hint rank-help">Звания расположены от генерал-майора до рядового. После сохранения порядок в таблице обновляется автоматически.</p>'+
- '<div class="actions"><button class="btn primary" type="submit">Сохранить личное дело</button><button class="btn" type="button" id="cancel-editor">Отмена</button></div><div id="save-error" role="alert"></div></form></section>';
+ '<div class="actions"><button class="btn primary" type="submit">Сохранить личное дело</button><button class="btn" type="button" id="cancel-editor">Отмена</button></div>'+
+ (m?'<p class="hint">Звание и должность меняются через раздел «Кадровые решения» с обязательным основанием.</p>':'')+
+ '<div id="save-error" role="alert"></div></form></section>';
 }
 function exams(){
 if(!['admin','examiner'].includes(profile.role))return msg('Нет полномочий экзаменатора.',true);
@@ -199,7 +252,13 @@ return hero('Экзамены и аттестация','Серверная си�
 window.FSO_ADMIN_TOOLS.examPanels({exams:examsList,assignments,attempts:examAttempts,members,staff:examStaff,role:profile.role});
 }
 function bindScreen(){if(screen==='access'){window.FSO_ACCESS.bind(api,profile.role,user.id,{refresh,render,audit:async()=>{screen='audit';selected=null;loading();await window.FSO_AUDIT.load(api,profile.role);render();const filter=document.getElementById('audit-category');if(filter){filter.value='profile';filter.dispatchEvent(new Event('change'))}}});return}if(screen==='audit'){window.FSO_AUDIT.bind(api,profile.role,members,async()=>{loading();await window.FSO_AUDIT.load(api,profile.role);render()});return}
- if(['roster','home','archive','blacklist'].includes(screen)){
+ if(['home','requests','leaves','history','personnel'].includes(screen)){
+ window.FSO_LEADERSHIP.bind(workflowContext(),api,screen,refresh,(next,member)=>{
+  screen=next;selected=member||null;render();
+ });
+ return;
+}
+if(['roster','archive','blacklist'].includes(screen)){
   const search=document.getElementById('search'),rank=document.getElementById('rank-filter');
   function updateRoster(){
    const term=(search?.value||'').trim().toLocaleLowerCase('ru-RU'),selectedRank=rank?.value||'';
@@ -217,6 +276,12 @@ function bindScreen(){if(screen==='access'){window.FSO_ACCESS.bind(api,profile.r
   if(add)add.onclick=()=>{screen='add';selected=null;render()};
   document.querySelectorAll('[data-person]').forEach(b=>b.onclick=()=>{selected=b.dataset.person;screen='detail';render()});
  }
+if(screen==='detail'){
+ const linked=members.find(m=>m.id===selected);
+ if(linked)window.FSO_LEADERSHIP.bindAccount(api,linked,refresh);
+ const personnelBtn=document.getElementById('open-personnel');
+ if(personnelBtn)personnelBtn.onclick=()=>{screen='personnel';render()};
+}
 if(screen==='detail'){document.getElementById('back-roster').onclick=()=>{screen=members.find(x=>x.id===selected)&&['dismissed','archived'].includes(members.find(x=>x.id===selected).status)?'archive':'roster';selected=null;render()};const b=document.getElementById('edit-person');if(b)b.onclick=()=>{screen='edit';render()}}if(screen==='detail'){
 const f=document.getElementById('issue-form');if(f)f.onsubmit=submitDiscipline;
 document.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{document.getElementById('remove-id').value=b.dataset.remove;document.getElementById('remove-form').hidden=false;document.getElementById('remove-form').scrollIntoView({behavior:'smooth',block:'center'});});
@@ -296,9 +361,9 @@ const {data,error}=await api.rpc('fso_assign_exam',{p_exam:v('exam-assign-exam')
 if(error)throw error;newlyIssuedCode=data.access_code;flash('Назначение создано. Обязательно сохраните код.');await refresh()
 }catch(err){document.getElementById('exam-assign-error').innerHTML=msg(err.message||'Ошибка назначения',true)}finally{b.disabled=false}
 }
-async function saveMember(ev){ev.preventDefault();const button=ev.target.querySelector('[type=submit]');button.disabled=true;const payload={employee_number:v('member-no'),first_name:v('member-first'),last_name:v('member-last'),position:v('member-position'),rank:v('member-rank'),discord:v('member-discord'),joined_on:v('member-date'),status:v('member-status')};if(!/^\d{1,12}$/.test(payload.employee_number)){document.getElementById('save-error').innerHTML=msg('ID должен содержать только цифры.',true);button.disabled=false;return}if(!rankNames.includes(payload.rank)){document.getElementById('save-error').innerHTML=msg('Выберите звание из списка.',true);button.disabled=false;return}
-try{const old=screen==='edit'&&selected;const q=old?api.from('fso_members').update(payload).eq('id',selected):api.from('fso_members').insert(payload);const r=await q.select('id').single();if(r.error)throw r.error;flash(old?'Личное дело обновлено':'Сотрудник добавлен');selected=r.data.id;screen='detail';await refresh()}catch(err){document.getElementById('save-error').innerHTML=msg(err.message||'Ошибка сохранения',true)}finally{button.disabled=false}}
-async function logout(){await api.auth.signOut();user=null;profile=null;members=[];blacklist=[];window.FSO_AUDIT.clear();window.FSO_ACCESS.clear();screen='home';authPage()}
+async function saveMember(ev){ev.preventDefault();const button=ev.target.querySelector('[type=submit]');button.disabled=true;const old=screen==='edit'&&selected;const payload={employee_number:v('member-no'),first_name:v('member-first'),last_name:v('member-last'),discord:v('member-discord'),joined_on:v('member-date'),status:v('member-status')};if(!old){payload.position=v('member-position');payload.rank=v('member-rank')}if(!/^\d{1,12}$/.test(payload.employee_number)){document.getElementById('save-error').innerHTML=msg('ID должен содержать только цифры.',true);button.disabled=false;return}if(!old&&!rankNames.includes(payload.rank)){document.getElementById('save-error').innerHTML=msg('Выберите звание из списка.',true);button.disabled=false;return}
+try{const q=old?api.from('fso_members').update(payload).eq('id',selected):api.from('fso_members').insert(payload);const r=await q.select('id').single();if(r.error)throw r.error;flash(old?'Личное дело обновлено':'Сотрудник добавлен');selected=r.data.id;screen='detail';await refresh()}catch(err){document.getElementById('save-error').innerHTML=msg(err.message||'Ошибка сохранения',true)}finally{button.disabled=false}}
+async function logout(){await api.auth.signOut();user=null;profile=null;members=[];blacklist=[];window.FSO_AUDIT.clear();window.FSO_ACCESS.clear();members=[];actions=[];examsList=[];assignments=[];examAttempts=[];screen='home';authPage()}
 async function init(){if(!window.supabase?.createClient){root.innerHTML=msg('Не загрузилась библиотека Supabase. Проверьте соединение с интернетом.',true);return}api=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});api.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT'){user=null;profile=null;authPage()}});await refresh()}
 init().catch(err=>{root.innerHTML=msg('Не удалось подключиться к серверу: '+(err.message||err),true)});
 })();
