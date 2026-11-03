@@ -36,6 +36,12 @@ const BASE='http://127.0.0.1:8765/';
   assert.ok(visual.borderRadius>=8,'Related card should have rounded corners');
   assert.deepEqual(visual.children.map(x=>x.tag),['B','SPAN','SMALL']);
   assert.ok(visual.children.every(x=>x.display==='block'));
+  // Wait for the existing entry animation to settle before measuring grid alignment.
+  await page.waitForFunction(()=>{
+    const elements=document.querySelectorAll('.reference-context-link');
+    if(elements.length<2)return false;
+    return Math.abs(elements[0].getBoundingClientRect().y-elements[1].getBoundingClientRect().y)<2;
+  },null,{timeout:3000});
   const first=await cards.nth(0).boundingBox();
   const second=await cards.nth(1).boundingBox();
   assert.ok(first&&second);
