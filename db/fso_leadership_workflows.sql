@@ -6,7 +6,8 @@ create table if not exists public.fso_service_events (
  member_id uuid not null references public.fso_members(id) on delete cascade,
  event_type text not null check (event_type in (
  'joined','rank_changed','position_changed','status_changed','request_submitted',
- 'request_approved','request_rejected','leave_approved','leave_finished','leave_cancelled','account_linked')),
+ 'request_approved','request_rejected','leave_approved','leave_finished','leave_cancelled','account_linked',
+ 'absence_approved','absence_finished','absence_cancelled')),
  actor_id uuid references auth.users(id) on delete set null,
  old_value jsonb not null default '{}'::jsonb,
  new_value jsonb not null default '{}'::jsonb,
@@ -34,6 +35,7 @@ create table if not exists public.fso_service_leaves (
  id uuid primary key default gen_random_uuid(),
  member_id uuid not null references public.fso_members(id) on delete cascade,
  request_id uuid references public.fso_service_requests(id) on delete set null,
+ kind text not null default 'leave' check(kind in ('leave','inactivity')),
  date_from date not null,
  date_to date not null check(date_to>=date_from),
  reason text not null check(length(btrim(reason)) between 5 and 3000),
@@ -248,22 +250,23 @@ CREATE OR REPLACE FUNCTION fso_private.close_service_leave(p_leave uuid, p_actio
  SECURITY DEFINER
  SET search_path TO ''
 AS $function$
-declare actor uuid; item public.fso_service_leaves%rowtype;
+declare actor uuid; item public.fso_service_leaves%rowtype; type_name text;
 begin
  actor:=fso_private.require_personnel_manager();
  if p_action not in ('completed','cancelled') then raise exception 'Некорректное действие'; end if;
  perform pg_catalog.pg_advisory_xact_lock(735024,1);
  select * into item from public.fso_service_leaves where id=p_leave for update;
- if not found or item.status<>'approved' then raise exception 'Отпуск уже закрыт или не найден'; end if;
- if p_action='completed' and item.date_to>=current_date then
-  raise exception 'Срок отпуска ещё не закончился'; end if;
- if p_action='cancelled' and length(pg_catalog.btrim(coalesce(p_reason,'')))<5 then
-  raise exception 'Укажите основание отмены'; end if;
+ if not found or item.status<>'approved' then raise exception 'Отсутствие уже закрыто или не найдено'; end if;
+ if p_action='completed' and item.date_to>=current_date then raise exception 'Период отсутствия ещё не закончился'; end if;
+ if p_action='cancelled' and length(pg_catalog.btrim(coalesce(p_reason,'')))<5 then raise exception 'Укажите основание отмены'; end if;
  update public.fso_service_leaves set status=p_action,closed_by=actor,closed_at=now(),
  closure_reason=nullif(pg_catalog.btrim(p_reason),'') where id=p_leave;
+ type_name:=case when item.kind='inactivity' then
+    case when p_action='completed' then 'absence_finished' else 'absence_cancelled' end
+   else case when p_action='completed' then 'leave_finished' else 'leave_cancelled' end end;
  insert into public.fso_service_events(member_id,event_type,actor_id,new_value,reason)
- values(item.member_id,case when p_action='completed' then 'leave_finished' else 'leave_cancelled' end,
- actor,pg_catalog.jsonb_build_object('leave_id',p_leave,'date_from',item.date_from,'date_to',item.date_to),
+ values(item.member_id,type_name,actor,pg_catalog.jsonb_build_object('leave_id',p_leave,'kind',item.kind,
+ 'date_from',item.date_from,'date_to',item.date_to),
  coalesce(nullif(pg_catalog.btrim(p_reason),''),'Подтверждено возвращение'));
  return pg_catalog.jsonb_build_object('leave_id',p_leave,'status',p_action);
 end $function$;
@@ -336,6 +339,39 @@ AS $function$
  select fso_private.link_member_account(p_member,p_email) $function$;
 
 
+CREATE OR REPLACE FUNCTION fso_private.create_service_absence(p_member uuid, p_from date, p_to date, p_reason text, p_kind text)
+ RETURNS uuid
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
+declare actor uuid; member_status text; new_id uuid;
+begin
+ actor:=fso_private.require_personnel_manager();
+ if p_kind not in ('leave','inactivity') or p_kind is null then raise exception 'Выберите вид отсутствия'; end if;
+ if p_from is null or p_to is null or p_from>p_to then raise exception 'Укажите корректный период'; end if;
+ if length(pg_catalog.btrim(coalesce(p_reason,''))) not between 5 and 3000 then raise exception 'Укажите основание от 5 до 3000 символов'; end if;
+ select status into member_status from public.fso_members where id=p_member for update;
+ if not found or member_status not in ('active','cadet') then raise exception 'Сотрудник не состоит в действующем составе'; end if;
+ perform pg_catalog.pg_advisory_xact_lock(735024,1);
+ if exists(select 1 from public.fso_service_leaves l where l.member_id=p_member and l.status='approved'
+   and l.date_from<=p_to and l.date_to>=p_from) then raise exception 'На этот период уже оформлено отсутствие'; end if;
+ insert into public.fso_service_leaves(member_id,kind,date_from,date_to,reason,approved_by)
+ values(p_member,p_kind,p_from,p_to,pg_catalog.btrim(p_reason),actor) returning id into new_id;
+ insert into public.fso_service_events(member_id,event_type,actor_id,new_value,reason)
+ values(p_member,case when p_kind='inactivity' then 'absence_approved' else 'leave_approved' end,
+ actor,pg_catalog.jsonb_build_object('kind',p_kind,'date_from',p_from,'date_to',p_to,'leave_id',new_id),
+ pg_catalog.btrim(p_reason));
+ return new_id;
+end $function$;
+
+CREATE OR REPLACE FUNCTION public.fso_absence_create(p_member uuid, p_from date, p_to date, p_reason text, p_kind text)
+ RETURNS uuid
+ LANGUAGE sql
+ SET search_path TO ''
+AS $function$
+ select fso_private.create_service_absence(p_member,p_from,p_to,p_reason,p_kind) $function$;
+
 drop trigger if exists fso_service_history_members on public.fso_members;
 create trigger fso_service_history_members after insert or update of rank,position,status
  on public.fso_members for each row execute function fso_private.service_member_audit();
@@ -366,3 +402,18 @@ revoke all on function public.fso_request_review(p_id uuid, p_decision text, p_n
 grant execute on function public.fso_request_review(p_id uuid, p_decision text, p_note text) to authenticated;
 revoke all on function public.fso_request_submit(p_member uuid, p_kind text, p_statement text, p_from date, p_to date) from public,anon;
 grant execute on function public.fso_request_submit(p_member uuid, p_kind text, p_statement text, p_from date, p_to date) to authenticated;
+
+
+-- Support upgrades from the earlier, leave-only version of the portal.
+alter table public.fso_service_leaves add column if not exists kind text not null default 'leave';
+alter table public.fso_service_leaves drop constraint if exists fso_service_leaves_kind_check;
+alter table public.fso_service_leaves add constraint fso_service_leaves_kind_check check(kind in ('leave','inactivity'));
+alter table public.fso_service_events drop constraint if exists fso_service_events_event_type_check;
+alter table public.fso_service_events add constraint fso_service_events_event_type_check check(
+ event_type in ('joined','rank_changed','position_changed','status_changed','request_submitted',
+ 'request_approved','request_rejected','leave_approved','leave_finished','leave_cancelled','account_linked',
+ 'absence_approved','absence_finished','absence_cancelled'));
+revoke all on function public.fso_absence_create(uuid,date,date,text,text) from public,anon;
+revoke all on function fso_private.create_service_absence(uuid,date,date,text,text) from public,anon;
+grant execute on function public.fso_absence_create(uuid,date,date,text,text) to authenticated;
+grant execute on function fso_private.create_service_absence(uuid,date,date,text,text) to authenticated;
