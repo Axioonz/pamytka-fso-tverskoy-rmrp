@@ -10,7 +10,7 @@ const accounts=[
  {user_id:'user-1',email:'admin@example.test',role,display_name:'Администратор',confirmed:true,created_at:'2026-10-01',last_sign_in_at:'2026-11-03T10:00:00Z'},
  {user_id:'user-2',email:'editor@example.test',role:'employee',display_name:'Редактор без роли',confirmed:true,created_at:'2026-10-20',last_sign_in_at:null}
 ];
-const state={db,rpcs:[],accounts,signedOut:false};window.__fsoMock=state;
+const state={db,rpcs:[],accounts,signedOut:false,functionCalls:[],lastLogin:null};window.__fsoMock=state;
 const user={id:'user-1',email:'admin@example.test'};
 function make(table){const q={table,where:[],action:'read',payload:null,
 select(){return this},eq(k,v){this.where.push([k,v]);return this},in(k,values){this.where.push([k,values]);return this},order(){return this},limit(){return this},
@@ -127,11 +127,38 @@ function rpc(name,args){
  }
  return Promise.resolve({data:{},error:null});
 }
+const functions={invoke:async(name,request)=>{
+ if(name!=='fso-staff-account')return {data:null,error:{message:'Unknown function'}};
+ const b=request.body;
+ state.functionCalls.push({action:b.action,member_id:b.member_id,login:b.login});
+ if(b.action==='issue'){
+  if(!['admin','hr'].includes(role))return {data:null,error:{message:'Not allowed'}};
+  const m=db.fso_members.find(x=>x.id===b.member_id);
+  if(!m||m.user_id)return {data:null,error:{message:'Account already linked'}};
+  m.user_id='managed-'+m.id;
+  db.fso_profiles.push({user_id:m.user_id,role:'employee_pending',display_name:m.first_name+' '+m.last_name});
+  return {data:{ok:true,member_id:m.id,login:b.login,first_login:true},error:null};
+ }
+ if(b.action==='reset'){
+  if(!['admin','hr'].includes(role))return {data:null,error:{message:'Not allowed'}};
+  const m=db.fso_members.find(x=>x.id===b.member_id);
+  const p=db.fso_profiles.find(x=>x.user_id===m?.user_id);
+  if(p)p.role='employee_pending';
+  return {data:{ok:true,login:'fso_0100',first_login:true},error:null};
+ }
+ if(b.action==='activate'){
+  const p=db.fso_profiles.find(x=>x.user_id==='user-1');
+  if(p)p.role='employee';
+  return {data:{ok:true,role:'employee'},error:null};
+ }
+ return {data:null,error:{message:'Unknown action'}};
+}};
 const client={auth:{
  getUser:async()=>({data:{user:role==='anonymous'?null:user},error:null}),
- signInWithPassword:async()=>({data:{user},error:null}),signOut:async()=>{state.signedOut=true;return {error:null}},
+ signInWithPassword:async(args)=>{state.lastLogin=args.email;return {data:{user},error:null}},
+ signOut:async()=>{state.signedOut=true;return {error:null}},
  onAuthStateChange:()=>({data:{subscription:{unsubscribe(){}}}})
- },from:make,rpc};
+ },from:make,rpc,functions};
 window.supabase={createClient:()=>client};
 })();`;
 async function launchWithRole(browser,role){
@@ -182,8 +209,17 @@ async function launchWithRole(browser,role){
  assert.equal(await page.locator('#member-rank optgroup').count(),5);
  assert.equal(await page.locator('#member-rank option:not([disabled])').count(),16);
  await page.locator('#member-rank').selectOption('Генерал-майор');
+ await page.locator('#new-staff-login').fill('serov_0100');
+ assert.ok((await page.locator('#new-staff-password').inputValue()).length>=12);
  await page.locator('#member-form button[type="submit"]').click();
  await page.getByRole('heading',{name:'Алексей Проверочный'}).waitFor();
+ await page.getByText('Служебные данные для выдачи').waitFor();
+ assert.equal(await page.locator('#staff-issued-login').innerText(),'serov_0100');
+ assert.ok((await page.locator('#staff-issued-password').innerText()).length>=12);
+ assert.equal(await page.evaluate(()=>window.__fsoMock.db.fso_members.find(m=>m.id==='member-2').user_id),'managed-member-2');
+ assert.equal(await page.evaluate(()=>window.__fsoMock.db.fso_profiles.find(p=>p.user_id==='managed-member-2').role),'employee_pending');
+ assert.ok(!Object.prototype.hasOwnProperty.call(await page.evaluate(()=>window.__fsoMock.db.fso_members.find(m=>m.id==='member-2')),'password'));
+ assert.ok((await page.evaluate(()=>window.__fsoMock.functionCalls)).some(x=>x.action==='issue'&&x.login==='serov_0100'));
  await page.locator('#issue-reason').fill('Нарушение служебного регламента');
  await page.locator('#issue-proof').fill('https://example.com/evidence');
  await page.locator('#issue-form button[type="submit"]').click();
@@ -338,6 +374,19 @@ async function launchWithRole(browser,role){
  assert.equal(await page.locator('#roster-rows .status-label').first().innerText(),'Сотрудник');
  await page.locator('#new-member').click();
  assert.deepEqual(await page.locator('#member-status option').allTextContents(),['Курсант','Сотрудник']);
+ assert.deepEqual(errors,[]);
+ await page.close();
+ }
+ // First sign-in blocks access until the temporary password is replaced.
+ {
+ const {page,errors}=await launchWithRole(browser,'employee_pending');
+ await page.getByRole('heading',{name:'Первый вход'}).waitFor();
+ assert.equal(await page.getByRole('button',{name:'Сотрудники'}).count(),0);
+ await page.locator('#staff-activate-password').fill('DifferentStaffPass44');
+ await page.locator('#staff-activate-repeat').fill('DifferentStaffPass44');
+ await page.locator('#staff-activate-form [type="submit"]').click();
+ await page.getByRole('heading',{name:'Рапорты и заявки'}).waitFor();
+ assert.ok((await page.evaluate(()=>window.__fsoMock.functionCalls)).some(x=>x.action==='activate'));
  assert.deepEqual(errors,[]);
  await page.close();
  }
