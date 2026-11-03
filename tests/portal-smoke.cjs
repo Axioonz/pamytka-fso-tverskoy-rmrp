@@ -186,6 +186,14 @@ async function launchWithRole(browser,role){
  await page.locator('[data-attempt-clear]').click();
  await page.getByText('Не проходил',{exact:true}).waitFor();
  assert.ok((await page.evaluate(()=>window.__fsoMock.rpcs)).some(x=>x.name==='fso_admin_assignment_delete'&&x.args.p_mode==='results'));
+ page.once('dialog',dialog=>dialog.accept());
+ await page.locator('[data-assignment-delete]').click();
+ await page.getByText('Назначений пока нет.').waitFor();
+ assert.ok((await page.evaluate(()=>window.__fsoMock.rpcs)).some(x=>x.name==='fso_admin_assignment_delete'&&x.args.p_mode==='assignment'));
+ page.once('dialog',dialog=>dialog.accept());
+ await page.locator('[data-exam-delete]').click();
+ await page.getByText('Экзамены не созданы.').waitFor();
+ assert.ok((await page.evaluate(()=>window.__fsoMock.rpcs)).some(x=>x.name==='fso_admin_exam_delete'));
  await page.getByRole('button',{name:'Управление доступом'}).click();
  await page.getByRole('heading',{name:'Центр управления доступом'}).waitFor();
  assert.equal(await page.locator('#access-users tr').count(),2);
@@ -206,6 +214,21 @@ async function launchWithRole(browser,role){
  await page.getByRole('button',{name:'История выдачи и изменения прав в журнале аудита'}).click();
  await page.getByRole('heading',{name:'Журнал аудита'}).waitFor();
  assert.equal(await page.locator('#audit-category').inputValue(),'profile');
+ // Archive may be deleted only by administrators, after an explicit confirmation.
+ await page.evaluate(()=>{
+  const person=window.__fsoMock.db.fso_members.find(x=>x.id==='member-2');
+  person.status='dismissed';
+  person.dismissed_on='2026-11-03';
+ });
+ await page.getByRole('button',{name:'Управление доступом'}).click();
+ await page.locator('#access-refresh').click();
+ await page.getByRole('button',{name:'Архив'}).click();
+ await page.getByRole('heading',{name:'Архив'}).waitFor();
+ assert.equal(await page.locator('[data-archive-delete]').count(),1);
+ page.once('dialog',dialog=>dialog.accept());
+ await page.locator('[data-archive-delete]').click();
+ await page.getByText('Записи не найдены.').waitFor();
+ assert.ok((await page.evaluate(()=>window.__fsoMock.rpcs)).some(x=>x.name==='fso_admin_archive_delete'&&!x.args.p_all));
  assert.deepEqual(errors,[]);
  await page.screenshot({path:'/tmp/portal-admin.png',fullPage:true});
  await page.close();
