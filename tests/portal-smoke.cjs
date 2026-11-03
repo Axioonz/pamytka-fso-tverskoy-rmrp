@@ -80,7 +80,7 @@ async function launchWithRole(browser,role){
  {
  const {page,errors}=await launchWithRole(browser,'anonymous');
  await page.getByRole('heading',{name:'Вход в личный кабинет'}).waitFor();
- await page.getByRole('button',{name:/Для курсантов/}).click();
+ await page.getByRole('button',{name:/Вход по коду экзамена/}).click();
  await page.getByRole('heading',{name:'Для курсантов'}).waitFor();
  assert.equal(new URL(page.url()).hash,'#cadet');
  await page.locator('#cadet-code').fill('123');
@@ -183,7 +183,7 @@ async function launchWithRole(browser,role){
  // Ordinary employee denied access
  {
  const {page,errors}=await launchWithRole(browser,'employee');
- await page.getByRole('heading',{name:'Недостаточно прав'}).waitFor();
+ await page.getByRole('heading',{name:'Ожидается выдача доступа'}).waitFor();
  assert.equal(await page.locator('#new-member').count(),0);
  assert.equal(await page.getByRole('button',{name:'Управление доступом'}).count(),0);
  assert.deepEqual(errors,[]);
@@ -203,7 +203,7 @@ async function launchWithRole(browser,role){
   {status:'in_progress',title:'Экзамен курсанта',member:'Иван Тестовый',pass_percent:80,max_attempts:1,attempts_used:1,retries_remaining:0,started_at:new Date().toISOString(),deadline_at:new Date(Date.now()+15*60*1000).toISOString(),answers:chosen===null?{}:{1:[chosen]},questions:[{ordinal:1,prompt:'Что должен знать курсант?',options:['Ответ А','Ответ Б','Ответ В','Ответ Г']}]};
   await route.fulfill({status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:JSON.stringify(result)});
  });
- await page.getByRole('button',{name:/Для курсантов/}).click();
+ await page.getByRole('button',{name:/Вход по коду экзамена/}).click();
  await page.locator('#cadet-code').fill(code);
  await page.getByRole('button',{name:'Открыть экзамен'}).click();
  await page.getByRole('heading',{name:'Что должен знать курсант?'}).waitFor();
