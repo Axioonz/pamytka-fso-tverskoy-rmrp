@@ -79,7 +79,18 @@
   requestAnimationFrame(()=>{pending=false;registerScreen()});
  };
  const contentObserver=new MutationObserver(changes=>{
-  if(changes.some(x=>x.type==='childList'||(x.type==='attributes'&&x.attributeName==='hidden')))refresh();
+  const updates=changes.some(x=>x.type==='childList'||(x.type==='attributes'&&x.attributeName==='hidden'));
+  if(!updates)return;
+  for(const change of changes){
+   if(change.type!=='attributes'||change.attributeName!=='hidden')continue;
+   const screen=change.target;
+   if(screen.hidden||!screens.includes(screen.id)||reduced.matches)continue;
+   screen.dataset.nvEnter='1';
+   const end=()=>{delete screen.dataset.nvEnter};
+   screen.addEventListener('animationend',end,{once:true});
+   window.setTimeout(end,900);
+  }
+  refresh();
  });
  for(const id of screens){
   const element=document.getElementById(id);
@@ -99,28 +110,9 @@
  refreshSteps();
  const stepList=document.getElementById('detention-steps');
  if(stepList)new MutationObserver(refreshSteps).observe(stepList,{childList:true,subtree:false});
- // Native same-document view transitions, only for navigation between different screens.
- // The original click is re-issued inside the transition callback, preserving existing handlers.
- let forwarded=false;
- const canTransition=typeof document.startViewTransition==='function'&&!reduced.matches;
- if(canTransition){
-  root.classList.add('nv-view-transition');
-  document.addEventListener('click',event=>{
-   if(forwarded||event.defaultPrevented||event.button!==0)return;
-   const button=event.target.closest('[data-page]');
-   const current=activeScreen();
-   if(!button||!current||button.dataset.page===current.id.replace('-screen',''))return;
-   if(button.disabled||button.closest('[hidden]')||!button.isConnected)return;
-   event.preventDefault();
-   event.stopImmediatePropagation();
-   const transition=document.startViewTransition(()=>{
-    forwarded=true;
-    try{button.click()}finally{forwarded=false}
-    refresh();
-   });
-   transition.finished.catch(()=>{});
-  },true);
- }
+ // Navigation is synchronous. Screen-enter animation happens AFTER the
+ // original screen switch, so hash/reload and tests always see the new page.
+ // The original go() handler is never intercepted or replayed.
  // Avoid motion if a visitor chooses reduced animation while the page stays open.
  reduced.addEventListener?.('change',()=>{
   root.classList.toggle('nv-motion-ready',!reduced.matches);
