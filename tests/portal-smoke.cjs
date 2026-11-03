@@ -212,6 +212,37 @@ async function launchWithRole(browser,role){
  await page.locator('#audit-category').selectOption('profile');
  await page.getByText('Событий по выбранным условиям нет.').waitFor();
  await page.locator('#audit-category').selectOption('');
+
+ // Rapor -> approval -> leave; personnel decision -> career history.
+ await page.getByRole('button',{name:'Рапорты'}).click();
+ await page.getByRole('heading',{name:'Рапорты и заявки'}).waitFor();
+ await page.locator('#lead-request-member').selectOption('member-2');
+ await page.locator('#lead-request-kind').selectOption('leave');
+ await page.locator('#lead-request-from').fill('2030-06-03');
+ await page.locator('#lead-request-to').fill('2030-06-10');
+ await page.locator('#lead-request-text').fill('Прошу предоставить отпуск на указанный период для отдыха и восстановления сил.');
+ await page.locator('#lead-request-form [type="submit"]').click();
+ await page.getByText('На рассмотрении',{exact:true}).waitFor();
+ await page.locator('.lead-review summary').click();
+ page.once('dialog',dialog=>dialog.accept());
+ await page.locator('[data-decision="approved"]').click();
+ await page.getByText('Одобрено',{exact:true}).waitFor();
+ await page.getByRole('button',{name:'Отпуска'}).click();
+ await page.getByRole('heading',{name:'Отпуска и неактивность'}).waitFor();
+ await page.getByText('Запланирован',{exact:true}).waitFor();
+ await page.getByRole('button',{name:'Кадровые решения'}).click();
+ await page.getByRole('heading',{name:'Повышения и назначения'}).waitFor();
+ await page.locator('#lead-person').selectOption('member-2');
+ await page.locator('#lead-rank').selectOption('Полковник');
+ await page.locator('#lead-position').fill('Помощник директора');
+ await page.locator('#lead-decision-reason').fill('Кадровое назначение по служебным заслугам');
+ page.once('dialog',dialog=>dialog.accept());
+ await page.locator('#lead-decision-form [type="submit"]').click();
+ await page.getByText('Текущее звание · Полковник').waitFor();
+ await page.getByRole('button',{name:'История службы'}).click();
+ await page.locator('#lead-history-person').selectOption('member-2');
+ await page.getByText('Изменение звания',{exact:true}).waitFor();
+ await page.getByText('Изменение должности',{exact:true}).waitFor();
  await page.getByRole('button',{name:'Сотрудники'}).click();
  await page.getByRole('button',{name:'Экзамены'}).click();
  await page.getByRole('heading',{name:'Экзамены и аттестация'}).waitFor();
