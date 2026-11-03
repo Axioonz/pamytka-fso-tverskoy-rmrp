@@ -96,7 +96,7 @@ function rpc(name,args){
     date_from:row.date_from,date_to:row.date_to,reason:row.statement,status:'approved',approved_by:'user-1'});
   return Promise.resolve({data:{status:row.status},error:null});
  }
- if(name==='fso_leave_create'){
+ if(name==='fso_absence_create'){
   if(!['admin','hr'].includes(role))return Promise.resolve({data:null,error:{message:'Недостаточно прав',code:'42501'}});
   db.fso_service_leaves.unshift({id:'leave-'+state.rpcs.length,member_id:args.p_member,date_from:args.p_from,
    date_to:args.p_to,reason:args.p_reason,status:'approved',approved_by:'user-1'});
@@ -230,6 +230,13 @@ async function launchWithRole(browser,role){
  await page.getByRole('button',{name:'Отпуска'}).click();
  await page.getByRole('heading',{name:'Отпуска и неактивность'}).waitFor();
  await page.getByText('Запланирован',{exact:true}).waitFor();
+ await page.locator('#lead-leave-member').selectOption('member-1');
+ await page.locator('#lead-absence-kind').selectOption('inactivity');
+ await page.locator('#lead-leave-from').fill('2030-07-01');
+ await page.locator('#lead-leave-to').fill('2030-07-04');
+ await page.locator('#lead-leave-reason').fill('Временная неактивность согласована с руководством.');
+ await page.locator('#lead-leave-form [type="submit"]').click();
+ await page.getByText('Неактивность',{exact:true}).waitFor();
  await page.getByRole('button',{name:'Кадровые решения'}).click();
  await page.getByRole('heading',{name:'Повышения и назначения'}).waitFor();
  await page.locator('#lead-person').selectOption('member-2');
