@@ -332,7 +332,7 @@ async function launchWithRole(browser,role){
  assert.equal(await page.getByRole('button',{name:'Кадровые решения'}).count(),0);
  assert.equal(await page.getByRole('button',{name:'Управление доступом'}).count(),0);
  await page.getByRole('button',{name:'История службы'}).click();
- await page.getByRole('heading',{name:'История службы'}).waitFor();
+ await page.getByRole('heading',{name:'История службы',level:1}).waitFor();
  assert.deepEqual(errors,[]);
  await page.close();
  }
