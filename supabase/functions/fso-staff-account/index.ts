@@ -81,7 +81,12 @@ Deno.serve(async(req:Request)=>{
    }catch(error){
     const rollback=await supabase.auth.admin.deleteUser(created.user.id);
     if(rollback.error)console.error("Account rollback failed",created.user.id,rollback.error.message);
-    fail(409,"Не удалось привязать аккаунт: "+(error instanceof Error?error.message:String(error)));
+    const dbError=error as {message?:string;code?:string;hint?:string;details?:string}|null;
+    const message=typeof dbError?.message==="string"?dbError.message:
+      error instanceof Error?error.message:"Ошибка связи с базой данных";
+    const code=typeof dbError?.code==="string"?" ["+dbError.code+"]":"";
+    console.error("Staff account bind error",dbError?.code||"unknown",message);
+    fail(409,"Не удалось привязать аккаунт: "+message+code);
    }
    return respond(req,{ok:true,member_id:id,login,first_login:true});
   }
