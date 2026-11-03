@@ -3,7 +3,7 @@
 const safe=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const short=x=>x?new Date(String(x).slice(0,10)+'T12:00:00').toLocaleDateString('ru-RU'):'Не указана';
 const when=x=>x?new Date(x).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):'Не указано';
-const day=()=>new Date().toLocaleDateString('en-CA');
+const day=()=>{const d=new Date(),p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())};
 const manager=r=>['admin','hr'].includes(r);
 const officer=r=>['admin','hr','examiner'].includes(r);
 const active=m=>m&&['active','cadet'].includes(m.status);
@@ -93,7 +93,7 @@ function dashboard(ctx){
   ['Рапорты на рассмотрении',pending.length,'requests'],
   ['Не подтверждён выход из отпуска',returns.length,'leaves'],
   ['Сотрудники с двумя и более выговорами',high.length,'roster'],
-  ['Незавершённые назначения экзаменов',incomplete.length,'exams']
+  ['Незавершённые назначения экзаменов',ctx.role==='hr'?0:incomplete.length,'exams']
  ].filter(x=>x[1]>0);
  if(ctx.role==='admin'&&data.pendingAccess)tasks.unshift(['Заявки на доступ',data.pendingAccess,'access']);
  const recent=data.events.slice(0,8).map(ev=>'<div class="lead-feed-row"><span class="lead-feed-date">'+safe(when(ev.occurred_at))+'</span>'+
@@ -139,7 +139,7 @@ function historyPage(ctx,chosen){
  '<h2>'+safe(name(m))+'</h2>'+memberEvents(m);
 }
 function accountPanel(member,role){
- if(role!=='admin')return '';
+ if(role!=='admin'||!active(member))return '';
  return '<section class="section lead-account"><h2>Связь с учётной записью</h2>'+
  '<p class="hint">Для самостоятельной подачи рапортов личное дело необходимо привязать к подтверждённой учётной записи. Пользователю предварительно выдают роль в «Управлении доступом».</p>'+
  '<form id="lead-account-form"><label>Электронная почта аккаунта<input type="email" id="lead-account-email" placeholder="user@example.com" required></label>'+
@@ -180,7 +180,7 @@ function requestPage(ctx){
     '<label>Комментарий руководителя<textarea class="lead-review-text" maxlength="2000" placeholder="Причина отказа или комментарий к решению"></textarea></label>'+
     '<div class="actions"><button class="btn primary" type="button" data-lead-review="'+safe(r.id)+'" data-decision="approved">Одобрить</button>'+
     '<button class="btn danger" type="button" data-lead-review="'+safe(r.id)+'" data-decision="rejected">Отклонить</button></div>'+
-    '<p class="hint">Одобрение отпуска автоматически создаст запись. Повышение или перевод оформляется затем через «Кадровые решения».</p></details>':'')+'</article>';
+    '<p class="hint">Одобрение отпуска автоматически создаст запись. Повышение и перевод требуют отдельного кадрового решения. Восстановление сотрудника оформляется отдельно.</p></details>':'')+'</article>';
  }).join('');
  const form=eligible.length?'<section class="section"><h2>Подать рапорт</h2>'+
  '<form id="lead-request-form" class="lead-form">'+
