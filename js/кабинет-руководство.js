@@ -13,7 +13,9 @@ const states={pending:'На рассмотрении',approved:'Одобрено
 const eventsTitles={joined:'Приём в подразделение',rank_changed:'Изменение звания',position_changed:'Изменение должности',
  status_changed:'Изменение статуса службы',request_submitted:'Рапорт подан',request_approved:'Рапорт одобрен',
  request_rejected:'Отказ по рапорту',leave_approved:'Отпуск оформлен',leave_finished:'Выход из отпуска',
- leave_cancelled:'Отпуск отменён',account_linked:'Привязка учётной записи'};
+ leave_cancelled:'Отпуск отменён',absence_approved:'Неактивность оформлена',
+ absence_finished:'Выход из неактивности',absence_cancelled:'Неактивность отменена',
+ account_linked:'Привязка учётной записи'};
 const rankGroups=[
  ['Высшие офицеры','Генерал-майор'],
  ['Старшие офицеры','Полковник','Подполковник','Майор'],
@@ -36,10 +38,10 @@ function leaveState(l){
  const today=day();
  if(l.date_to<today)return 'Требует проверки';
  if(l.date_from>today)return 'Запланирован';
- return 'В отпуске';
+ return l.kind==='inactivity'?'Неактивен':'В отпуске';
 }
 function leaveFor(memberId){
- return data.leaves.find(l=>l.member_id===memberId&&l.status==='approved'&&leaveState(l)==='В отпуске')
+ return data.leaves.find(l=>l.member_id===memberId&&l.status==='approved'&&['В отпуске','Неактивен'].includes(leaveState(l)))
  ||data.leaves.find(l=>l.member_id===memberId&&leaveState(l)==='Требует проверки');
 }
 function notice(text,wrong=false){
@@ -62,7 +64,7 @@ async function load(api,role){
  const queue=[
   api.from('fso_service_events').select('id,member_id,event_type,actor_id,old_value,new_value,reason,occurred_at').order('occurred_at',{ascending:false}).limit(900),
   api.from('fso_service_requests').select('id,member_id,kind,statement,date_from,date_to,submitted_by,submitted_at,status,reviewed_by,reviewed_at,review_note').order('submitted_at',{ascending:false}).limit(600),
-  api.from('fso_service_leaves').select('id,member_id,request_id,date_from,date_to,reason,status,approved_by,approved_at,closed_by,closed_at,closure_reason').order('date_to',{ascending:false}).limit(600)
+  api.from('fso_service_leaves').select('id,member_id,request_id,kind,date_from,date_to,reason,status,approved_by,approved_at,closed_by,closed_at,closure_reason').order('date_to',{ascending:false}).limit(600)
  ];
  if(officer(role))queue.push(api.from('fso_profiles').select('user_id,display_name,role'));
  if(role==='admin')queue.push(api.rpc('fso_access_list'));
@@ -83,6 +85,7 @@ function dashboard(ctx){
  const archived=ctx.members.filter(m=>!active(m));
  const pending=data.requests.filter(r=>r.status==='pending');
  const onLeave=data.leaves.filter(l=>leaveState(l)==='В отпуске');
+ const inactive=data.leaves.filter(l=>leaveState(l)==='Неактивен');
  const returns=data.leaves.filter(l=>leaveState(l)==='Требует проверки');
  const incomplete=ctx.assignments.filter(a=>!ctx.attempts.some(t=>t.assignment_id===a.id&&t.completed_at));
  const last30=new Date();last30.setDate(last30.getDate()-30);
@@ -104,7 +107,7 @@ function dashboard(ctx){
  '<div class="lead-stats">'+count(current.length,'Действующий состав','roster')+
  count(cadets.length,'Курсанты','roster')+count(fired,'Уволено за 30 дней','archive')+
  count(pending.length,'Рапорты на рассмотрении','requests')+
- count(onLeave.length,'В отпуске','leaves')+count(returns.length,'Проверить возвращение','leaves')+'</div>'+
+ count(onLeave.length,'В отпуске','leaves')+count(inactive.length,'Неактивны','leaves')+count(returns.length,'Проверить возвращение','leaves')+'</div>'+
  '<section class="section lead-tasks"><div class="section-heading"><div><h2>Требуют внимания</h2></div></div>'+
  (tasks.length?tasks.map(([title,num,to])=>'<button class="lead-task" data-lead-go="'+to+'"><b>'+num+'</b><span>'+safe(title)+'</span><i>Открыть</i></button>').join(''):
  '<p class="hint">Сейчас нет заявок и кадровых событий, требующих проверки.</p>')+'</section>'+
@@ -200,15 +203,17 @@ function requestPage(ctx){
 function leavePage(ctx){
  const isManager=manager(ctx.role),self=!officer(ctx.role);
  const candidates=ctx.members.filter(active);
- const form=isManager&&candidates.length?'<section class="section"><h2>Оформить отпуск</h2>'+
+ const form=isManager&&candidates.length?'<section class="section"><h2>Оформить отсутствие</h2>'+
  '<form id="lead-leave-form" class="lead-form">'+personSelect('lead-leave-member',candidates,candidates[0].id)+
+ '<label>Вид отсутствия<select id="lead-absence-kind"><option value="leave">Отпуск</option><option value="inactivity">Временная неактивность</option></select></label>'+
  '<div class="lead-date-pair"><label>С<input id="lead-leave-from" type="date" required></label>'+
  '<label>По<input id="lead-leave-to" type="date" required></label></div>'+
  '<label>Основание<textarea id="lead-leave-reason" minlength="5" maxlength="3000" required></textarea></label>'+
- '<button type="submit" class="btn primary">Оформить отпуск</button></form></section>':'';
+ '<button type="submit" class="btn primary">Сохранить период отсутствия</button></form></section>':'';
  const rows=data.leaves.map(l=>{
   const status=leaveState(l);
   return '<tr><td>'+safe(name(ctx.members.find(m=>m.id===l.member_id)))+'</td>'+
+   '<td>'+safe(l.kind==='inactivity'?'Неактивность':'Отпуск')+'</td>'+
    '<td>'+safe(short(l.date_from))+' – '+safe(short(l.date_to))+'</td>'+
    '<td><span class="lead-status">'+safe(status)+'</span></td><td>'+safe(l.reason)+'</td>'+
    '<td>'+safe(actor(l.approved_by))+'</td><td>'+
@@ -218,10 +223,10 @@ function leavePage(ctx){
  }).join('');
  return '<div class="eyebrow">FSO / ОТСУТСТВИЕ</div><h1>Отпуска и неактивность</h1>'+
  '<p class="head-subtitle">Периоды отсутствия, запланированные отпуска и возвращения, требующие подтверждения.</p>'+
- errorBanner()+form+'<section class="section"><h2>'+ (self?'Мои отпуска':'Учёт отпусков')+'</h2>'+
- '<div class="table-wrap"><table class="lead-table"><thead><tr><th>Сотрудник</th><th>Период</th><th>Состояние</th><th>Основание</th><th>Оформил</th><th></th></tr></thead>'+
- '<tbody>'+ (rows||'<tr><td colspan="6">Отпусков пока нет.</td></tr>')+'</tbody></table></div>'+
- '<p class="hint">После окончания периода отпуск помечается «Требует проверки» до подтверждения возвращения руководителем.</p></section>';
+ errorBanner()+form+'<section class="section"><h2>'+ (self?'Мои отпуска':'Отпуска и неактивность')+'</h2>'+
+ '<div class="table-wrap"><table class="lead-table"><thead><tr><th>Сотрудник</th><th>Вид</th><th>Период</th><th>Состояние</th><th>Основание</th><th>Оформил</th><th></th></tr></thead>'+
+ '<tbody>'+ (rows||'<tr><td colspan="7">Периодов отсутствия пока нет.</td></tr>')+'</tbody></table></div>'+
+ '<p class="hint">После окончания периода отсутствия ставится отметка «Требует проверки» до подтверждения возвращения руководителем.</p></section>';
 }
 function bind(ctx,api,screen,refresh,navigate){
  document.querySelectorAll('[data-lead-go]').forEach(btn=>btn.onclick=()=>navigate(btn.dataset.leadGo));
@@ -266,11 +271,12 @@ function bind(ctx,api,screen,refresh,navigate){
  const leave=document.getElementById('lead-leave-form');
  if(leave)leave.onsubmit=async e=>{
   e.preventDefault();
-  await action(api,'fso_leave_create',{
+  await action(api,'fso_absence_create',{
    p_member:document.getElementById('lead-leave-member').value,
    p_from:document.getElementById('lead-leave-from').value,
    p_to:document.getElementById('lead-leave-to').value,
-   p_reason:document.getElementById('lead-leave-reason').value.trim()
+   p_reason:document.getElementById('lead-leave-reason').value.trim(),
+   p_kind:document.getElementById('lead-absence-kind').value
   },refresh,leave.querySelector('[type="submit"]'));
  };
  document.querySelectorAll('[data-lead-leave]').forEach(btn=>btn.onclick=async()=>{
@@ -281,6 +287,7 @@ function bind(ctx,api,screen,refresh,navigate){
   await action(api,'fso_leave_close',{p_leave:btn.dataset.leadLeave,p_action:mode,p_reason:reason},refresh,btn);
  });
 }
+function clear(){data={events:[],requests:[],leaves:[],profiles:[],pendingAccess:0,error:''}}
 function bindAccount(api,member,refresh){
  const form=document.getElementById('lead-account-form');if(!form)return;
  form.onsubmit=async e=>{
@@ -294,6 +301,6 @@ function bindAccount(api,member,refresh){
   await action(api,'fso_member_account_link',{p_member:member.id,p_email:null},refresh,unbind);
  };
 }
-window.FSO_LEADERSHIP={load,dashboard,memberEvents,historyPage,accountPanel,decisionPage,requestPage,leavePage,bind,bindAccount,
+window.FSO_LEADERSHIP={load,clear,dashboard,memberEvents,historyPage,accountPanel,decisionPage,requestPage,leavePage,bind,bindAccount,
  leaveFor,leaveState};
 })();
