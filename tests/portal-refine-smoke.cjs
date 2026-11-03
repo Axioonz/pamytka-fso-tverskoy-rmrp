@@ -80,6 +80,8 @@ async function settle(page){await page.waitForTimeout(370)}
   await page.locator('#about-close').click();
   await page.locator('#about-layer').waitFor({state:'hidden'});
 
+  await page.locator('.nv-identity').click();
+  await page.locator('#home-screen').waitFor({state:'visible'});
   await page.setViewportSize({width:390,height:844});
   await page.reload({waitUntil:'domcontentloaded'});
   await page.locator('#home-title').waitFor({state:'visible'});
