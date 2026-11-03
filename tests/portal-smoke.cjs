@@ -410,6 +410,15 @@ async function launchWithRole(browser,role){
  assert.ok((await page.evaluate(()=>window.__fsoMock.rpcs)).some(x=>
   x.name==='fso_request_submit'&&x.args.p_kind==='inactivity'&&x.args.p_member==='member-1'));
  assert.equal(await page.locator('[data-lead-review]').count(),0);
+ await page.locator('#lead-absence-kind').selectOption('dayoff');
+ await page.locator('#lead-absence-from').fill('2030-08-15');
+ await page.locator('#lead-absence-to').fill('2030-08-15');
+ await page.locator('#lead-absence-reason').fill('Прошу согласовать отгул на один день по личным обстоятельствам.');
+ await page.locator('#lead-absence-request-form [type="submit"]').click();
+ await page.getByText('Отгул',{exact:true}).first().waitFor();
+ assert.ok((await page.evaluate(()=>window.__fsoMock.rpcs)).some(x=>
+  x.name==='fso_request_submit'&&x.args.p_kind==='dayoff'&&x.args.p_member==='member-1'));
+ assert.equal(await page.locator('[data-lead-review]').count(),0);
  await page.getByRole('button',{name:'История службы'}).click();
  await page.getByRole('heading',{name:'История службы',level:1}).waitFor();
  assert.deepEqual(errors,[]);
