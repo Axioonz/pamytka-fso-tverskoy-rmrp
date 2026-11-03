@@ -8,7 +8,7 @@ const manager=r=>['admin','hr'].includes(r);
 const officer=r=>['admin','hr','examiner'].includes(r);
 const active=m=>m&&['active','cadet'].includes(m.status);
 const name=m=>m?m.first_name+' '+m.last_name:'Сотрудник не найден';
-const types={leave:'Отпуск',promotion:'Повышение',transfer:'Перевод',reinstatement:'Восстановление',other:'Другое обращение'};
+const types={leave:'Отпуск',inactivity:'Временная неактивность',promotion:'Повышение',transfer:'Перевод',reinstatement:'Восстановление',other:'Другое обращение'};
 const states={pending:'На рассмотрении',approved:'Одобрено',rejected:'Отклонено'};
 const eventsTitles={joined:'Приём в подразделение',rank_changed:'Изменение звания',position_changed:'Изменение должности',
  status_changed:'Изменение статуса службы',request_submitted:'Рапорт подан',request_approved:'Рапорт одобрен',
@@ -189,44 +189,72 @@ function requestPage(ctx){
  '<form id="lead-request-form" class="lead-form">'+
  (self?'<p class="hint">Личное дело · '+safe(name(eligible[0]))+'</p>':personSelect('lead-request-member',eligible,eligible[0]?.id,false))+
  '<label>Вид рапорта<select id="lead-request-kind">'+
- Object.entries(types).map(([key,t])=>'<option value="'+key+'">'+safe(t)+'</option>').join('')+'</select></label>'+
- '<div class="lead-date-pair" id="lead-request-dates" hidden><label>Начало отпуска<input id="lead-request-from" type="date"></label>'+
- '<label>Конец отпуска<input id="lead-request-to" type="date"></label></div>'+
+ Object.entries(types).filter(([key])=>!['leave','inactivity'].includes(key)).map(([key,t])=>'<option value="'+key+'">'+safe(t)+'</option>').join('')+'</select></label>'+
+ 
  '<label>Текст рапорта<textarea id="lead-request-text" minlength="10" maxlength="3000" required placeholder="Содержание обращения и основания"></textarea></label>'+
  '<div class="actions"><button type="submit" class="btn primary">Отправить рапорт</button></div></form></section>':
  '<section class="section"><h2>Подача рапорта</h2><p class="hint">Личное дело пока не привязано к вашему аккаунту. Обратитесь к администратору.</p></section>';
  return '<div class="eyebrow">FSO / ОБРАЩЕНИЯ</div><h1>Рапорты и заявки</h1>'+
- '<p class="head-subtitle">Подача, рассмотрение и история решений по рапортам сотрудников.</p>'+errorBanner()+
+ '<p class="head-subtitle">Заявки на отпуск и неактивность сотрудник подаёт самостоятельно в разделе «Отпуска». Здесь сохраняются все рапорты и решения.</p>'+errorBanner()+
  form+'<section class="section"><h2>Реестр рапортов</h2><div class="lead-request-list">'+
  (rows||'<p class="hint">Рапортов пока нет.</p>')+'</div></section>';
 }
 function leavePage(ctx){
- const isManager=manager(ctx.role),self=!officer(ctx.role);
- const candidates=ctx.members.filter(active);
- const form=isManager&&candidates.length?'<section class="section"><h2>Оформить отсутствие</h2>'+
- '<form id="lead-leave-form" class="lead-form">'+personSelect('lead-leave-member',candidates,candidates[0].id)+
- '<label>Вид отсутствия<select id="lead-absence-kind"><option value="leave">Отпуск</option><option value="inactivity">Временная неактивность</option></select></label>'+
- '<div class="lead-date-pair"><label>С<input id="lead-leave-from" type="date" required></label>'+
- '<label>По<input id="lead-leave-to" type="date" required></label></div>'+
- '<label>Основание<textarea id="lead-leave-reason" minlength="5" maxlength="3000" required></textarea></label>'+
- '<button type="submit" class="btn primary">Сохранить период отсутствия</button></form></section>':'';
+ const isManager=manager(ctx.role);
+ const own=ctx.members.find(m=>m.user_id===ctx.userId&&active(m));
+ const form=own?'<section class="section"><div class="section-heading"><div><h2>Подать заявку на отсутствие</h2></div></div>'+
+ '<p class="hint">Заявку оформляет сам сотрудник. Руководство рассмотрит её и подтвердит или отклонит. До одобрения период не считается согласованным.</p>'+
+ '<form id="lead-absence-request-form" class="lead-form">'+
+ '<p class="hint">Личное дело · <strong>'+safe(name(own))+'</strong></p>'+
+ '<label>Вид отсутствия<select id="lead-absence-kind" required><option value="leave">Отпуск</option><option value="inactivity">Временная неактивность</option></select></label>'+
+ '<div class="lead-date-pair"><label>Дата начала<input id="lead-absence-from" type="date" required></label>'+
+ '<label>Дата окончания<input id="lead-absence-to" type="date" required></label></div>'+
+ '<label>Причина<textarea id="lead-absence-reason" minlength="10" maxlength="3000" required placeholder="Укажите причину отсутствия"></textarea></label>'+
+ '<div class="actions"><button type="submit" class="btn primary">Отправить заявку</button></div>'+
+ '</form></section>':
+ (isManager?'<section class="section"><h2>Оформление заявок</h2><p class="hint">Отпуск и неактивность оформляют сотрудники в своих кабинетах. Руководство рассматривает поступившие заявки. Для собственной заявки необходимо привязать личное дело к аккаунту.</p></section>':
+ '<section class="section"><h2>Оформление заявок</h2><p class="hint">Ваше личное дело не привязано к аккаунту. Обратитесь к администратору, чтобы самостоятельно подавать заявки.</p></section>');
+ const requests=data.requests.filter(r=>['leave','inactivity'].includes(r.kind));
+ const pending=requests.filter(r=>r.status==='pending');
+ const requestRows=requests.map(r=>{
+  const m=ctx.members.find(x=>x.id===r.member_id);
+  return '<article class="lead-request"><div class="lead-request-head"><strong>'+safe(types[r.kind])+'</strong>'+
+    '<span class="lead-status lead-'+safe(r.status)+'">'+safe(states[r.status])+'</span></div>'+
+    '<div class="lead-request-meta">'+safe(name(m))+' · '+safe(when(r.submitted_at))+'</div>'+
+    '<p>Период · '+safe(short(r.date_from))+' – '+safe(short(r.date_to))+'</p>'+
+    '<p>'+safe(r.statement)+'</p>'+
+    (r.reviewed_at?'<p class="lead-review-note">Решение · '+safe(actor(r.reviewed_by))+
+      ' · '+safe(when(r.reviewed_at))+(r.review_note?' · '+safe(r.review_note):'')+'</p>':'')+
+    (isManager&&r.status==='pending'?'<details class="lead-review"><summary>Рассмотреть заявку</summary>'+
+      '<label>Комментарий руководителя<textarea class="lead-review-text" maxlength="2000" placeholder="Комментарий или причина отказа"></textarea></label>'+
+      '<div class="actions"><button class="btn primary" type="button" data-lead-review="'+safe(r.id)+'" data-decision="approved">Одобрить</button>'+
+      '<button class="btn danger" type="button" data-lead-review="'+safe(r.id)+'" data-decision="rejected">Отклонить</button></div>'+
+      '</details>':'')+'</article>';
+ }).join('');
  const rows=data.leaves.map(l=>{
-  const status=leaveState(l);
+  const state=leaveState(l);
   return '<tr><td>'+safe(name(ctx.members.find(m=>m.id===l.member_id)))+'</td>'+
-   '<td>'+safe(l.kind==='inactivity'?'Неактивность':'Отпуск')+'</td>'+
-   '<td>'+safe(short(l.date_from))+' – '+safe(short(l.date_to))+'</td>'+
-   '<td><span class="lead-status">'+safe(status)+'</span></td><td>'+safe(l.reason)+'</td>'+
-   '<td>'+safe(actor(l.approved_by))+'</td><td>'+
-   (isManager&&l.status==='approved'?'<div class="actions">'+
-    (status==='Требует проверки'?'<button class="btn small primary" type="button" data-lead-leave="'+safe(l.id)+'" data-leave-action="completed">Подтвердить возвращение</button>':'')+
-    '<button class="btn danger small" type="button" data-lead-leave="'+safe(l.id)+'" data-leave-action="cancelled">Отменить</button></div>':'')+'</td></tr>';
+    '<td>'+safe(l.kind==='inactivity'?'Неактивность':'Отпуск')+'</td>'+
+    '<td>'+safe(short(l.date_from))+' – '+safe(short(l.date_to))+'</td>'+
+    '<td><span class="lead-status">'+safe(state)+'</span></td>'+
+    '<td>'+safe(l.reason)+'</td><td>'+safe(actor(l.approved_by))+'</td><td>'+
+    (isManager&&l.status==='approved'?'<div class="actions">'+
+      (state==='Требует проверки'?'<button class="btn small primary" type="button" data-lead-leave="'+safe(l.id)+'" data-leave-action="completed">Подтвердить возвращение</button>':'')+
+      '<button class="btn danger small" type="button" data-lead-leave="'+safe(l.id)+'" data-leave-action="cancelled">Отменить</button></div>':'')+
+    '</td></tr>';
  }).join('');
  return '<div class="eyebrow">FSO / ОТСУТСТВИЕ</div><h1>Отпуска и неактивность</h1>'+
- '<p class="head-subtitle">Периоды отсутствия, запланированные отпуска и возвращения, требующие подтверждения.</p>'+
- errorBanner()+form+'<section class="section"><h2>'+ (self?'Мои отпуска':'Отпуска и неактивность')+'</h2>'+
- '<div class="table-wrap"><table class="lead-table"><thead><tr><th>Сотрудник</th><th>Вид</th><th>Период</th><th>Состояние</th><th>Основание</th><th>Оформил</th><th></th></tr></thead>'+
- '<tbody>'+ (rows||'<tr><td colspan="7">Периодов отсутствия пока нет.</td></tr>')+'</tbody></table></div>'+
- '<p class="hint">После окончания периода отсутствия ставится отметка «Требует проверки» до подтверждения возвращения руководителем.</p></section>';
+ '<p class="head-subtitle">Самостоятельные заявки сотрудников. Одобрение и подтверждение возвращения выполняет руководство.</p>'+
+ errorBanner()+form+
+ '<section class="section"><div class="section-heading"><div><h2>Заявки сотрудников</h2></div>'+
+ '<span class="sort-note">На рассмотрении · '+pending.length+'</span></div>'+
+ '<div class="lead-request-list">'+(requestRows||'<p class="hint">Заявок пока нет.</p>')+'</div></section>'+
+ '<section class="section"><h2>'+(isManager?'Учёт согласованных периодов':'Мои согласованные периоды')+'</h2>'+
+ '<div class="table-wrap"><table class="lead-table"><thead><tr>'+
+ '<th>Сотрудник</th><th>Вид</th><th>Период</th><th>Состояние</th><th>Основание</th><th>Одобрил</th><th></th></tr></thead>'+
+ '<tbody>'+(rows||'<tr><td colspan="7">Согласованных периодов пока нет.</td></tr>')+
+ '</tbody></table></div>'+
+ '<p class="hint">После окончания периода появляется статус «Требует проверки». Руководство подтверждает возвращение сотрудника.</p></section>';
 }
 function bind(ctx,api,screen,refresh,navigate){
  document.querySelectorAll('[data-lead-go]').forEach(btn=>btn.onclick=()=>navigate(btn.dataset.leadGo));
@@ -248,17 +276,14 @@ function bind(ctx,api,screen,refresh,navigate){
     {p_member:memberId,p_rank:rank,p_position:position,p_reason:document.getElementById('lead-decision-reason').value.trim()},
     refresh,decision.querySelector('[type="submit"]'));
  };
- const kind=document.getElementById('lead-request-kind'),dates=document.getElementById('lead-request-dates');
- if(kind&&dates){const change=()=>{dates.hidden=kind.value!=='leave';
-  for(const x of dates.querySelectorAll('input'))x.required=kind.value==='leave';};kind.onchange=change;change();}
+ const kind=document.getElementById('lead-request-kind');
  const req=document.getElementById('lead-request-form');
  if(req)req.onsubmit=async e=>{
   e.preventDefault();const memberId=document.getElementById('lead-request-member')?.value||
     ctx.members.find(m=>m.user_id===ctx.userId&&active(m))?.id;
   await action(api,'fso_request_submit',{
    p_member:memberId,p_kind:kind.value,p_statement:document.getElementById('lead-request-text').value.trim(),
-   p_from:kind.value==='leave'?document.getElementById('lead-request-from').value:null,
-   p_to:kind.value==='leave'?document.getElementById('lead-request-to').value:null
+   p_from:null,p_to:null
   },refresh,req.querySelector('[type="submit"]'));
  };
  document.querySelectorAll('[data-lead-review]').forEach(btn=>btn.onclick=async()=>{
@@ -268,22 +293,28 @@ function bind(ctx,api,screen,refresh,navigate){
   if(!window.confirm('Подтвердить решение по рапорту?'))return;
   await action(api,'fso_request_review',{p_id:btn.dataset.leadReview,p_decision:btn.dataset.decision,p_note:note},refresh,btn);
  });
- const leave=document.getElementById('lead-leave-form');
- if(leave)leave.onsubmit=async e=>{
-  e.preventDefault();
-  await action(api,'fso_absence_create',{
-   p_member:document.getElementById('lead-leave-member').value,
-   p_from:document.getElementById('lead-leave-from').value,
-   p_to:document.getElementById('lead-leave-to').value,
-   p_reason:document.getElementById('lead-leave-reason').value.trim(),
-   p_kind:document.getElementById('lead-absence-kind').value
-  },refresh,leave.querySelector('[type="submit"]'));
+ const absence=document.getElementById('lead-absence-request-form');
+ if(absence)absence.onsubmit=async ev=>{
+  ev.preventDefault();
+  const own=ctx.members.find(m=>m.user_id===ctx.userId&&active(m));
+  if(!own){notice('Личное дело не привязано к вашему аккаунту',true);return}
+  const from=document.getElementById('lead-absence-from').value;
+  const to=document.getElementById('lead-absence-to').value;
+  if(!from||!to||from>to){notice('Укажите корректный период отсутствия',true);return}
+  const today=day();
+  if(from<today){notice('Дата начала не может быть в прошлом',true);return}
+  const selectedKind=document.getElementById('lead-absence-kind').value;
+  await action(api,'fso_request_submit',{
+   p_member:own.id,p_kind:selectedKind,
+   p_from:from,p_to:to,
+   p_statement:document.getElementById('lead-absence-reason').value.trim()
+  },refresh,absence.querySelector('[type="submit"]'));
  };
  document.querySelectorAll('[data-lead-leave]').forEach(btn=>btn.onclick=async()=>{
   const mode=btn.dataset.leaveAction;
-  const reason=mode==='cancelled'?window.prompt('Причина отмены отпуска (минимум 5 символов)'):null;
+  const reason=mode==='cancelled'?window.prompt('Причина отмены периода отсутствия (минимум 5 символов)'):null;
   if(mode==='cancelled'&&(reason===null||reason.trim().length<5)){if(reason!==null)notice('Укажите причину отмены',true);return;}
-  if(mode==='completed'&&!window.confirm('Подтвердить возвращение сотрудника из отпуска?'))return;
+  if(mode==='completed'&&!window.confirm('Подтвердить возвращение сотрудника?'))return;
   await action(api,'fso_leave_close',{p_leave:btn.dataset.leadLeave,p_action:mode,p_reason:reason},refresh,btn);
  });
 }
