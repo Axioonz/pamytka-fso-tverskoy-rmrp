@@ -53,6 +53,8 @@ const BASE='http://127.0.0.1:8765/';
   await page.locator('#law-list').waitFor({state:'visible'});
   await page.screenshot({path:'/tmp/fso-motion-laws.png',fullPage:false});
   // Mobile, menu, no overflow, sticky native scroll.
+  await page.locator('.nv-nav [data-page="home"]').click();
+  await page.locator('#home-screen').waitFor({state:'visible'});
   await page.setViewportSize({width:390,height:844});
   await page.reload({waitUntil:'domcontentloaded'});
   await page.locator('#home-title').waitFor({state:'visible'});
