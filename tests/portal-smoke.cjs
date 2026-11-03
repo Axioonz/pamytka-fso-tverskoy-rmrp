@@ -83,6 +83,9 @@ async function launchWithRole(browser,role){
  await page.getByRole('button',{name:/Вход по коду экзамена/}).click();
  await page.getByRole('heading',{name:'Для курсантов'}).waitFor();
  assert.equal(new URL(page.url()).hash,'#cadet');
+ const backHref=await page.getByRole('link',{name:'Не курсант?'}).getAttribute('href');
+ assert.ok(decodeURIComponent(backHref).endsWith('/кабинет.html'),
+   'Legacy view must return to the same legacy cabinet');
  await page.locator('#cadet-code').fill('123');
  await page.getByRole('button',{name:'Открыть экзамен'}).click();
  await page.getByText(/Проверьте код/).waitFor();

@@ -19,12 +19,15 @@ async function call(action,extra={}){
  return result;
 }
 function renderLogin(message=''){
- stopTimer();root.innerHTML='<div class="auth-layout">'+
+ stopTimer();
+ // Keep the current cabinet document when leaving the cadet login.
+ const cabinetUrl=esc(window.location.pathname+window.location.search);
+ root.innerHTML='<div class="auth-layout">'+
  '<div class="eyebrow">FSO / АТТЕСТАЦИЯ</div><h1>Для курсантов</h1>'+
  '<p class="lead">Введите индивидуальный код, выданный руководством. По нему откроется только назначенный вам экзамен. Памятка остаётся общедоступной.</p>'+
  '<section class="section"><h2>Вход по коду</h2>'+(message?'<div class="message error">'+esc(message)+'</div>':'')+
  '<form id="cadet-login"><label>Индивидуальный код<input id="cadet-code" required autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="FSO-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" value="'+esc(code)+'"></label>'+
- '<div class="actions"><button class="btn primary" type="submit">Открыть экзамен</button><a class="btn" href="./кабинет.html">Не курсант?</a></div></form>'+
+ '<div class="actions"><button class="btn primary" type="submit">Открыть экзамен</button><a class="btn" href="'+cabinetUrl+'">Не курсант?</a></div></form>'+
  '<div class="foot">Не передавайте свой код другим пользователям. Он даёт доступ к вашей попытке.</div></section></div>';
  document.getElementById('cadet-login').onsubmit=async e=>{e.preventDefault();const input=document.getElementById('cadet-code');const entered=input.value.trim().toUpperCase();
   if(!/^FSO-[0-9A-F]{32}$/.test(entered)){renderLogin('Проверьте код. Он должен содержать FSO- и 32 символа.');return}

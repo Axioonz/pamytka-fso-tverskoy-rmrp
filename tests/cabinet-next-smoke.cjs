@@ -39,6 +39,13 @@ const mockSupabase=source.slice(start,end);
    await page.screenshot({path:'/tmp/fso-cabinet-next-login.png',fullPage:true});
    await page.locator('#to-cadet').click();
    await page.getByRole('heading',{name:'Для курсантов'}).waitFor();
+   await page.getByRole('link',{name:'Не курсант?'}).click();
+   await page.getByRole('heading',{name:'Вход в личный кабинет'}).waitFor();
+   assert.ok(decodeURIComponent(new URL(page.url()).pathname).endsWith('/кабинет-новый.html'),
+    'Returning from cadet exam must open the original modern cabinet');
+   assert.ok(!page.url().includes('#cadet'));
+   assert.ok(await page.locator('#show-register').isVisible(),
+    'Registration remains available after return from cadet view');
    assert.deepEqual(errors,[]);
    await page.close();
   }
