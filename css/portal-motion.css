@@ -373,3 +373,17 @@ html.nv-preview :is(.reference-entry,.det-nav button,.law-list button,.nv-back-t
  html.nv-preview::view-transition-old(root),
  html.nv-preview::view-transition-new(root){animation:none!important}
 }
+
+/* Instant state change with an animated content entrance, never a delayed route. */
+@media(prefers-reduced-motion:no-preference){
+ html.nv-preview :is(.home-screen,.subpage,.work-screen,.det-screen,.reference-screen,.law-screen,.escort-studio,.service-screen)[data-nv-enter]{
+  animation:nv-screen-enter .32s cubic-bezier(.16,.8,.23,1) both!important;
+ }
+ @keyframes nv-screen-enter{
+  from{opacity:.65;transform:translate3d(0,14px,0);filter:blur(2px)}
+  to{opacity:1;transform:none;filter:none}
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ html.nv-preview [data-nv-enter]{animation:none!important;opacity:1!important;transform:none!important;filter:none!important}
+}
