@@ -18,7 +18,7 @@ async function load(api,role){
 }
 function itemRow(u,currentId){
  const self=u.user_id===currentId;
- const status=!u.confirmed?'Почта не подтверждена':activeRoles.has(u.role)?'Доступ разрешён':u.self_registered?'Ожидает выдачи доступа':'Нет доступа';
+ const status=!u.confirmed?'Почта не подтверждена':activeRoles.has(u.role)?'Доступ разрешён':u.self_registered&&!u.has_profile?'Ожидает выдачи доступа':'Нет доступа';
  return '<tr data-access-user="'+escapeId(u.user_id)+'">'+
  '<td><strong class="access-name">'+h(u.display_name||u.email||'Без имени')+'</strong><small class="access-subline">'+h(u.email||'Email не указан')+(self?' · Вы':'')+'</small>'+(u.discord?'<small class="access-subline">Discord · '+h(u.discord)+'</small>':'')+'</td>'+
  '<td><span class="access-role access-role-'+h(u.role)+'">'+h(roleNames[u.role]||u.role)+'</span></td>'+
@@ -42,7 +42,7 @@ function editor(u){
 function render(role,currentId){
  if(role!=='admin')return '<div class="message error">Доступ только администратору.</div>';
  const staff=users.filter(u=>activeRoles.has(u.role)).length;
- const waiting=users.filter(u=>u.self_registered&&u.confirmed&&!activeRoles.has(u.role)).length;
+ const waiting=users.filter(u=>u.self_registered&&!u.has_profile&&u.confirmed&&!activeRoles.has(u.role)).length;
  const unconfirmed=users.filter(u=>!u.confirmed).length;
  return '<div class="eyebrow">FSO / СЛУЖЕБНЫЙ ПОРТАЛ</div><h1>Центр управления доступом</h1>'+
  '<p class="head-subtitle">Учётные записи, роли и последний вход. Изменять права может только администратор.</p>'+
@@ -106,7 +106,7 @@ function bind(api,role,currentId,callbacks){
   const query=(search?.value||'').trim().toLocaleLowerCase('ru-RU'),type=filter?.value||'';
   const visible=users.filter(u=>{
    if(type==='staff'&&!activeRoles.has(u.role))return false;
-   if(type==='requests'&&!(u.self_registered&&u.confirmed&&!activeRoles.has(u.role)))return false;
+   if(type==='requests'&&!(u.self_registered&&!u.has_profile&&u.confirmed&&!activeRoles.has(u.role)))return false;
    if(type==='none'&&activeRoles.has(u.role))return false;
    if(type==='pending'&&u.confirmed)return false;
    return [u.email,u.display_name,u.role].join(' ').toLocaleLowerCase('ru-RU').includes(query);
