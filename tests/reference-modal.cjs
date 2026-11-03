@@ -36,6 +36,8 @@ const BASE='http://127.0.0.1:8765/';
   assert.ok(visual.borderRadius>=8,'Related card should have rounded corners');
   assert.deepEqual(visual.children.map(x=>x.tag),['B','SPAN','SMALL']);
   assert.ok(visual.children.every(x=>x.display==='block'));
+  // Measure static layout, not intermediate entrance transforms from the modal.
+  await page.addStyleTag({content:'.reference-context-link{animation:none!important;transition:none!important;transform:none!important}'});
   // Wait for the existing entry animation to settle before measuring grid alignment.
   await page.waitForFunction(()=>{
     const elements=document.querySelectorAll('.reference-context-link');
