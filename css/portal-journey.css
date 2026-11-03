@@ -106,3 +106,11 @@ html.nv-preview :is(.nv-chapter,.nv-territory-jump button,.nv-reader-toggle):foc
  html.nv-preview .nv-territory-jump button,
  html.nv-preview .nv-reader-toggle{transition:none!important}
 }
+
+/* Force readable contrast over legacy shared button declarations. */
+html.nv-preview .law-top .nv-reader-toggle{
+ background:#213d55!important;color:#d8edff!important;border:1px solid #6389a9!important;
+}
+html.nv-preview .law-top .nv-reader-toggle[aria-pressed="true"]{
+ background:#aed9ff!important;color:#0b2439!important;border-color:#aed9ff!important;
+}
