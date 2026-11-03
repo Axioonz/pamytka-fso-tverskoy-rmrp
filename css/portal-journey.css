@@ -1,0 +1,108 @@
+/* FSO portal: purposeful scroll chapters, section atlas and focused reading */
+html.nv-preview .nv-chapters{
+ position:fixed;right:13px;top:50%;transform:translateY(-50%);
+ z-index:48;display:flex;flex-direction:column;align-items:flex-end;gap:3px;
+ padding:10px 0;background:rgba(7,11,16,.80);border:1px solid rgba(62,91,120,.45);
+ border-radius:12px;backdrop-filter:blur(14px);box-shadow:0 12px 40px rgba(0,0,0,.18);
+}
+html.nv-preview .nv-chapters[hidden]{display:none!important}
+html.nv-preview .nv-chapter{
+ display:flex;flex-direction:row-reverse;justify-content:flex-end;align-items:center;gap:10px;
+ min-height:32px;padding:6px 11px;border:0;background:none;color:#8495a8;
+ cursor:pointer;font-size:10px;letter-spacing:.015em;
+}
+html.nv-preview .nv-chapter-dot{flex:0 0 5px;width:5px;height:5px;border-radius:50%;background:#4b677d;transition:background .2s,transform .2s,box-shadow .2s}
+html.nv-preview .nv-chapter-label{
+ max-width:0;overflow:hidden;opacity:0;white-space:nowrap;
+ transition:max-width .27s cubic-bezier(.2,.75,.25,1),opacity .2s ease;
+}
+html.nv-preview .nv-chapters:hover .nv-chapter-label,
+html.nv-preview .nv-chapters:focus-within .nv-chapter-label{max-width:140px;opacity:1}
+html.nv-preview .nv-chapter.nv-current .nv-chapter-dot{
+ transform:scale(1.65);background:#9fd0ff;box-shadow:0 0 0 3px rgba(137,190,237,.11);
+}
+html.nv-preview .nv-chapter.nv-current{color:#d9ecfd}
+html.nv-preview .nv-chapter:hover{color:#f0f8ff}
+html.nv-preview .nv-chapter:hover .nv-chapter-dot{background:#b6dcfb}
+html.nv-preview .nv-home .nv-hero,
+html.nv-preview .nv-service-index,
+html.nv-preview .nv-library,
+html.nv-preview .nv-legal,
+html.nv-preview .nv-workspace{scroll-margin-top:107px}
+html.nv-preview .nv-territory-jump{
+ position:sticky;top:76px;z-index:35;display:flex;align-items:center;gap:5px;
+ margin:15px 0 0;padding:9px 13px;overflow-x:auto;overscroll-behavior-inline:contain;
+ border:1px solid #33495e;background:rgba(10,17,25,.96);border-radius:10px;
+ -webkit-backdrop-filter:blur(15px);backdrop-filter:blur(15px);
+ scrollbar-width:thin;scrollbar-color:#395976 transparent;
+ box-shadow:0 12px 37px rgba(0,0,0,.17);
+}
+html.nv-preview .nv-territory-jump>strong{
+ color:#87a7c1;font-size:9px;font-weight:820;letter-spacing:.12em;flex:none;
+ padding:8px 14px 8px 5px;margin-right:5px;border-right:1px solid #334b61;
+}
+html.nv-preview .nv-territory-jump button{
+ flex:0 0 auto;min-height:35px;padding:8px 11px;
+ color:#9cb5ca;background:transparent;border:1px solid transparent;border-radius:7px;
+ white-space:nowrap;font-size:11px;font-weight:690;cursor:pointer;
+ transition:background .16s,border-color .16s,color .16s;
+}
+html.nv-preview .nv-territory-jump button:hover{color:#f3f8ff;background:#1b2c3c}
+html.nv-preview .nv-territory-jump button.nv-current{
+ background:#183149;color:#b9dfff;border-color:#3b6284;
+}
+html.nv-preview .territory-guide .tg-part{scroll-margin-top:153px}
+html.nv-preview .nv-reader-toggle{
+ flex:0 0 auto;align-self:center;
+ border:1px solid #4b7192;background:rgba(31,63,91,.45);
+ border-radius:8px;padding:11px 14px;color:#c7e8ff;
+ font-size:11px;font-weight:760;cursor:pointer;z-index:3;
+ transition:background .17s,border-color .17s;
+}
+html.nv-preview .nv-reader-toggle:hover{background:#2b5274;border-color:#8bbce4}
+html.nv-preview .nv-reader-toggle[aria-pressed="true"]{
+ background:#a8d5fb;color:#102b43;border-color:#a8d5fb;
+}
+html.nv-preview .law-screen.nv-reader-focused .law-layout{
+ display:block!important;
+}
+html.nv-preview .law-screen.nv-reader-focused .law-sidebar{display:none!important}
+html.nv-preview .law-screen.nv-reader-focused .law-reader{
+ width:min(100%,1000px)!important;max-width:1000px;
+ margin:0 auto;padding:clamp(20px,4vw,56px)!important;
+ border-color:#3a5670!important;
+}
+html.nv-preview .law-screen.nv-reader-focused .law-document{
+ font-size:15px;line-height:1.95;max-width:850px;margin-inline:auto;
+}
+html.nv-preview .law-screen.nv-reader-focused .law-top{
+ min-height:140px!important;
+}
+html.nv-preview .nv-det-step-position{
+ display:block;padding:0 0 16px;margin:10px 0 14px;
+ color:#8fc5f0;font-size:10px;letter-spacing:.16em;font-weight:810;
+ border-bottom:1px solid #2b435a;
+}
+html.nv-preview .det-step.nv-step-in-view .det-step-index{
+ background:#244562!important;box-shadow:0 0 0 6px rgba(95,159,222,.14);
+}
+html.nv-preview .det-step-card{scroll-margin-top:100px}
+html.nv-preview :is(.nv-chapter,.nv-territory-jump button,.nv-reader-toggle):focus-visible{
+ outline:2px solid #a8d7ff!important;outline-offset:3px;
+}
+@media(max-width:1200px){html.nv-preview .nv-chapters{display:none!important}}
+@media(max-width:760px){
+ html.nv-preview .nv-territory-jump{top:66px;margin:10px 0 0;padding:8px}
+ html.nv-preview .nv-territory-jump>strong{position:sticky;left:0;z-index:2;background:#0a1119;padding-right:10px}
+ html.nv-preview .nv-territory-jump button{font-size:10px;padding:7px 9px}
+ html.nv-preview .territory-guide .tg-part{scroll-margin-top:131px}
+ html.nv-preview .nv-reader-toggle{font-size:10px;padding:10px}
+ html.nv-preview .law-screen .law-top{flex-wrap:wrap}
+ html.nv-preview .law-screen .nv-reader-toggle{margin-top:6px}
+}
+@media(prefers-reduced-motion:reduce){
+ html.nv-preview .nv-chapter-dot,
+ html.nv-preview .nv-chapter-label,
+ html.nv-preview .nv-territory-jump button,
+ html.nv-preview .nv-reader-toggle{transition:none!important}
+}
