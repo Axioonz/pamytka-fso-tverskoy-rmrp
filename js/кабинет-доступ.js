@@ -1,7 +1,7 @@
 (()=>{'use strict';
 let users=[],error='',editing=null,busy=false,notice='';
-const roleNames={admin:'Администратор',hr:'Редактор',examiner:'Экзаменатор',employee:'Без доступа',cadet:'Курсант'};
-const activeRoles=new Set(['admin','hr','examiner']);
+const roleNames={admin:'Администратор',hr:'Редактор',examiner:'Экзаменатор',employee:'Сотрудник',cadet:'Курсант',employee_pending:'Ожидает первого входа'};
+const activeRoles=new Set(['admin','hr','examiner','employee','cadet']);
 const h=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
 const dt=x=>x?new Date(x).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):'Ещё не входил';
 const roles=selected=>['employee','hr','examiner','admin','cadet'].map(r=>'<option value="'+r+'" '+(selected===r?'selected':'')+'>'+roleNames[r]+'</option>').join('');
@@ -18,7 +18,7 @@ async function load(api,role){
 }
 function itemRow(u,currentId){
  const self=u.user_id===currentId;
- const status=!u.confirmed?'Почта не подтверждена':activeRoles.has(u.role)?'Доступ разрешён':u.self_registered&&!u.has_profile?'Ожидает выдачи доступа':'Нет доступа';
+ const status=!u.confirmed?'Почта не подтверждена':u.role==='employee_pending'?'Ожидает первого входа':activeRoles.has(u.role)?'Доступ разрешён':u.self_registered&&!u.has_profile?'Ожидает выдачи доступа':'Нет доступа';
  return '<tr data-access-user="'+escapeId(u.user_id)+'">'+
  '<td><strong class="access-name">'+h(u.display_name||u.email||'Без имени')+'</strong><small class="access-subline">'+h(u.email||'Email не указан')+(self?' · Вы':'')+'</small>'+(u.discord?'<small class="access-subline">Discord · '+h(u.discord)+'</small>':'')+'</td>'+
  '<td><span class="access-role access-role-'+h(u.role)+'">'+h(roleNames[u.role]||u.role)+'</span></td>'+

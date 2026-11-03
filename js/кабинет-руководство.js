@@ -8,9 +8,9 @@ const manager=r=>['admin','hr'].includes(r);
 const officer=r=>['admin','hr','examiner'].includes(r);
 const active=m=>m&&['active','cadet'].includes(m.status);
 const name=m=>m?m.first_name+' '+m.last_name:'Сотрудник не найден';
-const types={leave:'Отпуск',inactivity:'Временная неактивность',promotion:'Повышение',transfer:'Перевод',reinstatement:'Восстановление',other:'Другое обращение'};
+const types={leave:'Отпуск',inactivity:'Временная неактивность',dayoff:'Отгул',promotion:'Повышение',transfer:'Перевод',reinstatement:'Восстановление',other:'Другое обращение'};
 const states={pending:'На рассмотрении',approved:'Одобрено',rejected:'Отклонено'};
-const eventsTitles={joined:'Приём в подразделение',rank_changed:'Изменение звания',position_changed:'Изменение должности',
+const eventsTitles={dayoff_approved:'Отгул одобрен',dayoff_finished:'Отгул завершён',dayoff_cancelled:'Отгул отменён',joined:'Приём в подразделение',rank_changed:'Изменение звания',position_changed:'Изменение должности',
  status_changed:'Изменение статуса службы',request_submitted:'Рапорт подан',request_approved:'Рапорт одобрен',
  request_rejected:'Отказ по рапорту',leave_approved:'Отпуск оформлен',leave_finished:'Выход из отпуска',
  leave_cancelled:'Отпуск отменён',absence_approved:'Неактивность оформлена',
@@ -38,10 +38,10 @@ function leaveState(l){
  const today=day();
  if(l.date_to<today)return 'Требует проверки';
  if(l.date_from>today)return 'Запланирован';
- return l.kind==='inactivity'?'Неактивен':'В отпуске';
+ return l.kind==='inactivity'?'Неактивен':l.kind==='dayoff'?'На отгуле':'В отпуске';
 }
 function leaveFor(memberId){
- return data.leaves.find(l=>l.member_id===memberId&&l.status==='approved'&&['В отпуске','Неактивен'].includes(leaveState(l)))
+ return data.leaves.find(l=>l.member_id===memberId&&l.status==='approved'&&['В отпуске','Неактивен','На отгуле'].includes(leaveState(l)))
  ||data.leaves.find(l=>l.member_id===memberId&&leaveState(l)==='Требует проверки');
 }
 function notice(text,wrong=false){
@@ -142,13 +142,7 @@ function historyPage(ctx,chosen){
  '<h2>'+safe(name(m))+'</h2>'+memberEvents(m);
 }
 function accountPanel(member,role){
- if(role!=='admin'||!active(member))return '';
- return '<section class="section lead-account"><h2>Связь с учётной записью</h2>'+
- '<p class="hint">Для самостоятельной подачи рапортов личное дело необходимо привязать к подтверждённой учётной записи. Пользователю предварительно выдают роль в «Управлении доступом».</p>'+
- '<form id="lead-account-form"><label>Электронная почта аккаунта<input type="email" id="lead-account-email" placeholder="user@example.com" required></label>'+
- '<div class="actions"><button class="btn primary" type="submit">Привязать аккаунт</button>'+
- (member.user_id?'<button class="btn" id="lead-account-unlink" type="button">Отвязать</button>':'')+'</div></form>'+
- '<p class="hint">Сейчас · '+(member.user_id?'Аккаунт привязан':'Аккаунт не привязан')+'</p></section>';
+ return window.FSO_STAFF_ACCOUNTS.accountPanel(member,role);
 }
 function decisionPage(ctx,chosen){
  if(!manager(ctx.role))return '<div class="message error">Недостаточно полномочий.</div>';
@@ -189,7 +183,7 @@ function requestPage(ctx){
  '<form id="lead-request-form" class="lead-form">'+
  (self?'<p class="hint">Личное дело · '+safe(name(eligible[0]))+'</p>':personSelect('lead-request-member',eligible,eligible[0]?.id,false))+
  '<label>Вид рапорта<select id="lead-request-kind">'+
- Object.entries(types).filter(([key])=>!['leave','inactivity'].includes(key)).map(([key,t])=>'<option value="'+key+'">'+safe(t)+'</option>').join('')+'</select></label>'+
+ Object.entries(types).filter(([key])=>!['leave','inactivity','dayoff'].includes(key)).map(([key,t])=>'<option value="'+key+'">'+safe(t)+'</option>').join('')+'</select></label>'+
  
  '<label>Текст рапорта<textarea id="lead-request-text" minlength="10" maxlength="3000" required placeholder="Содержание обращения и основания"></textarea></label>'+
  '<div class="actions"><button type="submit" class="btn primary">Отправить рапорт</button></div></form></section>':
@@ -206,7 +200,7 @@ function leavePage(ctx){
  '<p class="hint">Заявку оформляет сам сотрудник. Руководство рассмотрит её и подтвердит или отклонит. До одобрения период не считается согласованным.</p>'+
  '<form id="lead-absence-request-form" class="lead-form">'+
  '<p class="hint">Личное дело · <strong>'+safe(name(own))+'</strong></p>'+
- '<label>Вид отсутствия<select id="lead-absence-kind" required><option value="leave">Отпуск</option><option value="inactivity">Временная неактивность</option></select></label>'+
+ '<label>Вид отсутствия<select id="lead-absence-kind" required><option value="leave">Отпуск</option><option value="inactivity">Временная неактивность</option><option value="dayoff">Отгул (один день)</option></select></label>'+
  '<div class="lead-date-pair"><label>Дата начала<input id="lead-absence-from" type="date" required></label>'+
  '<label>Дата окончания<input id="lead-absence-to" type="date" required></label></div>'+
  '<label>Причина<textarea id="lead-absence-reason" minlength="10" maxlength="3000" required placeholder="Укажите причину отсутствия"></textarea></label>'+
@@ -214,7 +208,7 @@ function leavePage(ctx){
  '</form></section>':
  (isManager?'<section class="section"><h2>Оформление заявок</h2><p class="hint">Отпуск и неактивность оформляют сотрудники в своих кабинетах. Руководство рассматривает поступившие заявки. Для собственной заявки необходимо привязать личное дело к аккаунту.</p></section>':
  '<section class="section"><h2>Оформление заявок</h2><p class="hint">Ваше личное дело не привязано к аккаунту. Обратитесь к администратору, чтобы самостоятельно подавать заявки.</p></section>');
- const requests=data.requests.filter(r=>['leave','inactivity'].includes(r.kind));
+ const requests=data.requests.filter(r=>['leave','inactivity','dayoff'].includes(r.kind));
  const pending=requests.filter(r=>r.status==='pending');
  const requestRows=requests.map(r=>{
   const m=ctx.members.find(x=>x.id===r.member_id);
@@ -234,7 +228,7 @@ function leavePage(ctx){
  const rows=data.leaves.map(l=>{
   const state=leaveState(l);
   return '<tr><td>'+safe(name(ctx.members.find(m=>m.id===l.member_id)))+'</td>'+
-    '<td>'+safe(l.kind==='inactivity'?'Неактивность':'Отпуск')+'</td>'+
+    '<td>'+safe(l.kind==='inactivity'?'Неактивность':l.kind==='dayoff'?'Отгул':'Отпуск')+'</td>'+
     '<td>'+safe(short(l.date_from))+' – '+safe(short(l.date_to))+'</td>'+
     '<td><span class="lead-status">'+safe(state)+'</span></td>'+
     '<td>'+safe(l.reason)+'</td><td>'+safe(actor(l.approved_by))+'</td><td>'+
@@ -304,6 +298,7 @@ function bind(ctx,api,screen,refresh,navigate){
   const today=day();
   if(from<today){notice('Дата начала не может быть в прошлом',true);return}
   const selectedKind=document.getElementById('lead-absence-kind').value;
+  if(selectedKind==='dayoff'&&from!==to){notice('Отгул оформляется на один день',true);return}
   await action(api,'fso_request_submit',{
    p_member:own.id,p_kind:selectedKind,
    p_from:from,p_to:to,
@@ -320,17 +315,7 @@ function bind(ctx,api,screen,refresh,navigate){
 }
 function clear(){data={events:[],requests:[],leaves:[],profiles:[],pendingAccess:0,error:''}}
 function bindAccount(api,member,refresh){
- const form=document.getElementById('lead-account-form');if(!form)return;
- form.onsubmit=async e=>{
-  e.preventDefault();
-  await action(api,'fso_member_account_link',{p_member:member.id,p_email:document.getElementById('lead-account-email').value.trim()},
-    refresh,form.querySelector('[type="submit"]'));
- };
- const unbind=document.getElementById('lead-account-unlink');
- if(unbind)unbind.onclick=async()=>{
-  if(!window.confirm('Отвязать личное дело от учётной записи?'))return;
-  await action(api,'fso_member_account_link',{p_member:member.id,p_email:null},refresh,unbind);
- };
+ window.FSO_STAFF_ACCOUNTS.bindAccount(api,member,refresh);
 }
 window.FSO_LEADERSHIP={load,clear,dashboard,memberEvents,historyPage,accountPanel,decisionPage,requestPage,leavePage,bind,bindAccount,
  leaveFor,leaveState};

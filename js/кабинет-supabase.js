@@ -35,7 +35,7 @@ function hero(title,subtitle=''){return '<div class="eyebrow">FSO / СЛУЖЕБ
 function authPage(error='',mode='login',success=''){
  const isSignup=mode==='signup';
  const title=isSignup?'Регистрация':'Вход в личный кабинет';
- const details=isSignup?'Создайте учётную запись. Доступ к служебному кабинету выдаёт администратор после регистрации.':'Войдите под своей учётной записью или зарегистрируйтесь, чтобы запросить доступ.';
+ const details=isSignup?'Самостоятельная регистрация не заменяет служебную учётную запись. Доступ к кабинету выдаёт руководство.':'Введите логин и пароль, выданные при приёме во ФСО. При первом входе установите собственный пароль.';
  const form=isSignup?
  '<form id="register-form" class="auth-form">'+
  '<label>Имя и фамилия<input id="register-name" type="text" autocomplete="name" maxlength="120" placeholder="Как к вам обращаться" required></label>'+
@@ -46,7 +46,7 @@ function authPage(error='',mode='login',success=''){
  '<button class="btn primary" type="submit">Зарегистрироваться</button>'+
  '<p class="auth-note">После регистрации подтвердите электронную почту, если придёт письмо. Назначение роли выполняет администратор.</p></form>':
  '<form id="login-form" class="auth-form">'+
- '<label>Электронная почта<input id="email" type="email" autocomplete="username" placeholder="name@example.com" required></label>'+
+ '<label>Служебный логин или почта<input id="email" type="text" autocapitalize="none" spellcheck="false" autocomplete="username" placeholder="fso_0007" required></label>'+
  '<label>Пароль<input id="password" type="password" autocomplete="current-password" required></label>'+
  '<button class="btn primary" type="submit">Войти</button></form>';
  root.innerHTML='<div class="auth-layout">'+hero(title,details)+
@@ -97,8 +97,16 @@ function waitingPage(){
  document.getElementById('logout').onclick=logout;
 }
 
-async function login(ev){ev.preventDefault();const btn=ev.target.querySelector('button');btn.disabled=true;try{const {error}=await api.auth.signInWithPassword({email:v('email'),password:v('password')});if(error)throw error;await refresh()}catch(err){authPage(err.message||'Не удалось войти')}finally{btn.disabled=false}}
-async function refresh(){loading();const {data:{user:u},error:ue}=await api.auth.getUser();if(ue||!u){user=null;profile=null;if(location.hash==='#cadet'){window.FSO_CADET.open();return}authPage();return}user=u;const pr=await api.from('fso_profiles').select('user_id,role,display_name').eq('user_id',u.id).maybeSingle();if(pr.error){root.innerHTML=msg('Не удалось прочитать служебный профиль: '+pr.error.message,true);return}profile=pr.data;if(!profile||!allowed.includes(profile.role)){waitingPage();return}
+async function login(ev){ev.preventDefault();const btn=ev.target.querySelector('button');btn.disabled=true;try{
+ const login=v('email').trim().toLowerCase();
+ if(!login.includes('@')&&!/^[a-z][a-z0-9_-]{2,23}$/.test(login))throw Error('Укажите служебный логин или электронную почту');
+ const email=login.includes('@')?login:login+'@staff.fso-rmrp.example';
+ const {error}=await api.auth.signInWithPassword({email,password:v('password')});
+ if(error)throw error;await refresh()
+ }catch(err){authPage(err.message||'Не удалось войти')}finally{btn.disabled=false}}
+async function refresh(){loading();const {data:{user:u},error:ue}=await api.auth.getUser();if(ue||!u){user=null;profile=null;if(location.hash==='#cadet'){window.FSO_CADET.open();return}authPage();return}user=u;const pr=await api.from('fso_profiles').select('user_id,role,display_name').eq('user_id',u.id).maybeSingle();if(pr.error){root.innerHTML=msg('Не удалось прочитать служебный профиль: '+pr.error.message,true);return}profile=pr.data;if(profile?.role==='employee_pending'){
+ window.FSO_STAFF_ACCOUNTS.firstLogin(api,refresh,logout,root);return
+ }if(!profile||!allowed.includes(profile.role)){waitingPage();return}
 const m=await api.from('fso_members').select('id,user_id,employee_number,first_name,last_name,position,rank,discord,joined_on,status,dismissed_on,created_at,updated_at').order('created_at',{ascending:false});if(m.error){root.innerHTML=msg('Ошибка получения личного состава: '+m.error.message,true);return}members=m.data||[];const bl=await api.from('fso_blacklist').select('id,member_id,reason,added_at,removed_at,removal_reason').order('added_at',{ascending:false});blacklist=bl.error?[]:(bl.data||[]);
 const a=await api.from('fso_disciplinary_actions').select('id,member_id,kind,status,reason,evidence,issued_at,removed_at,removal_reason,removal_evidence,converted_to').order('issued_at',{ascending:false});actions=a.error?[]:(a.data||[]);const log=await api.from('fso_disciplinary_audit').select('id,member_id,event,details,occurred_at').order('occurred_at',{ascending:false}).limit(500);audits=log.error?[]:(log.data||[]);
 if(['admin','examiner'].includes(profile.role)){
@@ -232,7 +240,8 @@ function editor(id){
  '<label>Воинское звание *<select id="member-rank" required><option value="" disabled selected>Выберите звание</option>'+rankOptions('')+'</select></label>')+
  '<label>Discord<input id="member-discord" maxlength="150" value="'+e(m?.discord||'')+'"></label>'+
  '<label>Дата вступления *<input id="member-date" type="date" value="'+e(m?.joined_on||new Date().toISOString().slice(0,10))+'" required></label>'+
- '</div><p class="hint rank-help">Звания расположены от генерал-майора до рядового. После сохранения порядок в таблице обновляется автоматически.</p>'+
+ '</div>'+(m?'':window.FSO_STAFF_ACCOUNTS.newFields())+
+ '<p class="hint rank-help">Звания расположены от генерал-майора до рядового. После сохранения порядок в таблице обновляется автоматически.</p>'+
  '<div class="actions"><button class="btn primary" type="submit">Сохранить личное дело</button><button class="btn" type="button" id="cancel-editor">Отмена</button></div>'+
  (m?'<p class="hint">Звание и должность меняются через раздел «Кадровые решения» с обязательным основанием.</p>':'')+
  '<div id="save-error" role="alert"></div></form></section>';
@@ -299,7 +308,11 @@ document.getElementById('exam-assign').onsubmit=assignOfficialExam;
 const cp=document.getElementById('code-copy');if(cp)cp.onclick=()=>navigator.clipboard.writeText(newlyIssuedCode).then(()=>flash('Код скопирован')).catch(()=>flash('Скопируйте код вручную',true));
 window.FSO_ADMIN_TOOLS.bindExams(api,{exams:examsList,assignments,attempts:examAttempts,members,staff:examStaff,role:profile.role},refresh);
 }
-if(screen==='add'||screen==='edit'){document.getElementById('cancel-editor').onclick=()=>{screen='roster';render()};document.getElementById('member-form').onsubmit=saveMember}}
+if(screen==='add'||screen==='edit'){
+ document.getElementById('cancel-editor').onclick=()=>{screen='roster';render()};
+ document.getElementById('member-form').onsubmit=saveMember;
+ if(screen==='add')window.FSO_STAFF_ACCOUNTS.bindNewForm()
+}}
 
 function readOptionalProof(id){if(!v(id))return [];return readProof(id)}
 function archivePage(){const data=members.filter(m=>['dismissed','archived'].includes(m.status));return hero('Архив','Уволенные сотрудники и сохранённые личные дела.')+'<section class="section"><div class="member-toolbar"><input id="search" type="search" placeholder="Поиск по архиву">'+rankFilter()+'</div><div class="table-wrap"><table><thead><tr><th>ID</th><th>Имя и фамилия</th><th>Должность</th><th>Звание</th><th>Взыскания</th><th>Статус</th><th></th></tr></thead><tbody id="roster-rows">'+rows(data)+'</tbody></table></div>'+window.FSO_ADMIN_TOOLS.archiveToolbar(data,profile.role)+'</section>'}
@@ -361,9 +374,41 @@ const {data,error}=await api.rpc('fso_assign_exam',{p_exam:v('exam-assign-exam')
 if(error)throw error;newlyIssuedCode=data.access_code;flash('Назначение создано. Обязательно сохраните код.');await refresh()
 }catch(err){document.getElementById('exam-assign-error').innerHTML=msg(err.message||'Ошибка назначения',true)}finally{b.disabled=false}
 }
-async function saveMember(ev){ev.preventDefault();const button=ev.target.querySelector('[type=submit]');button.disabled=true;const old=screen==='edit'&&selected;const payload={employee_number:v('member-no'),first_name:v('member-first'),last_name:v('member-last'),discord:v('member-discord'),joined_on:v('member-date'),status:v('member-status')};if(!old){payload.position=v('member-position');payload.rank=v('member-rank')}if(!/^\d{1,12}$/.test(payload.employee_number)){document.getElementById('save-error').innerHTML=msg('ID должен содержать только цифры.',true);button.disabled=false;return}if(!old&&!rankNames.includes(payload.rank)){document.getElementById('save-error').innerHTML=msg('Выберите звание из списка.',true);button.disabled=false;return}
-try{const q=old?api.from('fso_members').update(payload).eq('id',selected):api.from('fso_members').insert(payload);const r=await q.select('id').single();if(r.error)throw r.error;flash(old?'Личное дело обновлено':'Сотрудник добавлен');selected=r.data.id;screen='detail';await refresh()}catch(err){document.getElementById('save-error').innerHTML=msg(err.message||'Ошибка сохранения',true)}finally{button.disabled=false}}
-async function logout(){await api.auth.signOut();user=null;profile=null;members=[];blacklist=[];window.FSO_AUDIT.clear();window.FSO_ACCESS.clear();window.FSO_LEADERSHIP.clear();members=[];actions=[];examsList=[];assignments=[];examAttempts=[];screen='home';authPage()}
-async function init(){if(!window.supabase?.createClient){root.innerHTML=msg('Не загрузилась библиотека Supabase. Проверьте соединение с интернетом.',true);return}api=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});api.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT'){user=null;profile=null;members=[];actions=[];window.FSO_LEADERSHIP.clear();authPage()}});await refresh()}
+async function saveMember(ev){
+ ev.preventDefault();
+ const button=ev.target.querySelector('[type=submit]');
+ if(button.disabled)return;
+ button.disabled=true;
+ const old=screen==='edit'&&selected;
+ const payload={
+  employee_number:v('member-no'),first_name:v('member-first'),last_name:v('member-last'),
+  discord:v('member-discord'),joined_on:v('member-date'),status:v('member-status')
+ };
+ if(!old){payload.position=v('member-position');payload.rank=v('member-rank')}
+ const area=document.getElementById('save-error');
+ try{
+  if(!/^\d{1,12}$/.test(payload.employee_number))throw Error('ID должен содержать только цифры');
+  if(!old&&!rankNames.includes(payload.rank))throw Error('Выберите звание из списка');
+  const credential=old?null:window.FSO_STAFF_ACCOUNTS.newValues();
+  const query=old?api.from('fso_members').update(payload).eq('id',selected):api.from('fso_members').insert(payload);
+  const result=await query.select('id').single();
+  if(result.error)throw result.error;
+  selected=result.data.id;
+  if(!old){
+   try{
+    await window.FSO_STAFF_ACCOUNTS.issue(api,{id:selected},credential.login,credential.password);
+    flash('Сотрудник добавлен. Логин и временный пароль готовы к выдаче');
+   }catch(err){
+    window.FSO_STAFF_ACCOUNTS.failed(selected,err);
+    flash('Личное дело создано, но аккаунт не выдан. Откройте личное дело и повторите выдачу',true);
+   }
+  }else flash('Личное дело обновлено');
+  screen='detail';
+  await refresh();
+ }catch(err){if(area)area.innerHTML=msg(err.message||'Ошибка сохранения',true)}
+ finally{button.disabled=false}
+}
+async function logout(){await api.auth.signOut();user=null;profile=null;members=[];blacklist=[];window.FSO_AUDIT.clear();window.FSO_ACCESS.clear();window.FSO_LEADERSHIP.clear();window.FSO_STAFF_ACCOUNTS.forget();members=[];actions=[];examsList=[];assignments=[];examAttempts=[];screen='home';authPage()}
+async function init(){if(!window.supabase?.createClient){root.innerHTML=msg('Не загрузилась библиотека Supabase. Проверьте соединение с интернетом.',true);return}api=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});api.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT'){user=null;profile=null;members=[];actions=[];window.FSO_LEADERSHIP.clear();window.FSO_STAFF_ACCOUNTS.forget();authPage()}});await refresh()}
 init().catch(err=>{root.innerHTML=msg('Не удалось подключиться к серверу: '+(err.message||err),true)});
 })();
