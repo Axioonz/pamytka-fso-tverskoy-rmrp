@@ -81,7 +81,7 @@
   let current=0;
   for(let i=0;i<elements.length;i++){
    const rect=elements[i].getBoundingClientRect();
-   if(rect.top<=cutoff&&rect.bottom>0)current=i;
+   if(rect.top<=cutoff)current=i;
   }
   return current;
  };
