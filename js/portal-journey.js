@@ -68,7 +68,7 @@
  // Escape returns the document catalogue, unless a dialog is open.
  document.addEventListener('keydown',event=>{
   if(event.key!=='Escape'||!laws.classList.contains('nv-reader-focused'))return;
-  if(document.querySelector('[role="dialog"]:not([hidden])'))return;
+  if([...document.querySelectorAll('[role="dialog"]')].some(el=>el.getClientRects().length>0))return;
   switchFocus(false);focus.focus();
  });
 
