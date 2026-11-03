@@ -51,6 +51,8 @@ const mockSupabase=source.slice(start,end);
   }
   {
    const {page,errors}=await newPage('admin',{width:1440,height:940});
+   await page.getByRole('heading',{name:'Обзор подразделения'}).waitFor();
+   await page.getByRole('button',{name:'Сотрудники'}).click();
    await page.getByRole('heading',{name:'Сотрудники'}).waitFor();
    await page.getByText('Иван Тестовый').waitFor();
    assert.equal(await page.locator('.roster-metrics .metric').count(),3);
@@ -76,6 +78,8 @@ const mockSupabase=source.slice(start,end);
   }
   {
    const {page,errors}=await newPage('admin',{width:390,height:844});
+   await page.getByRole('heading',{name:'Обзор подразделения'}).waitFor();
+   await page.getByRole('button',{name:'Сотрудники'}).click();
    await page.getByRole('heading',{name:'Сотрудники'}).waitFor();
    await page.locator('nav.tabs').waitFor({state:'visible'});
    assert.equal(await page.locator('#main').evaluate(el=>getComputedStyle(el).display),'flex');

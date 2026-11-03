@@ -99,6 +99,10 @@ async function launchWithRole(browser,role){
  await page.addInitScript({content:'window.__role='+JSON.stringify(role)});
  await page.route('**/cdn.jsdelivr.net/**',route=>route.fulfill({status:200,contentType:'application/javascript',body:mockSupabase}));
  await page.goto(BASE+'кабинет.html',{waitUntil:'load'});
+ if(['admin','hr','examiner'].includes(role)){
+  await page.getByRole('heading',{name:'Обзор подразделения'}).waitFor();
+  await page.getByRole('button',{name:'Сотрудники'}).click();
+ }
  return {page,errors};
 }
 (async()=>{
