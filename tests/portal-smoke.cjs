@@ -81,9 +81,10 @@ function rpc(name,args){
  }
  if(name==='fso_request_submit'){
   const member=db.fso_members.find(x=>x.id===args.p_member);
-  if(!member||(!['admin','hr'].includes(role)&&member.user_id!=='user-1'))
-   return Promise.resolve({data:null,error:{message:'Нет права на рапорт',code:'42501'}});
-  const row={id:'request-'+state.rpcs.length,member_id:args.p_member,kind:args.p_kind,statement:args.p_statement,
+  const selfAbsence=['leave','inactivity'].includes(args.p_kind);
+  if(!member||(selfAbsence?member.user_id!==user.id:(!['admin','hr'].includes(role)&&member.user_id!==user.id)))
+   return Promise.resolve({data:null,error:{message:'Нельзя оформлять отсутствие за другого сотрудника',code:'42501'}});
+ const row={id:'request-'+state.rpcs.length,member_id:args.p_member,kind:args.p_kind,statement:args.p_statement,
    date_from:args.p_from,date_to:args.p_to,submitted_by:'user-1',submitted_at:new Date().toISOString(),status:'pending'};
   db.fso_service_requests.unshift(row);return Promise.resolve({data:row.id,error:null});
  }
@@ -91,16 +92,13 @@ function rpc(name,args){
   if(!['admin','hr'].includes(role))return Promise.resolve({data:null,error:{message:'Недостаточно прав',code:'42501'}});
   const row=db.fso_service_requests.find(x=>x.id===args.p_id);
   row.status=args.p_decision;row.reviewed_by='user-1';row.review_note=args.p_note;row.reviewed_at=new Date().toISOString();
-  if(row.kind==='leave'&&row.status==='approved')
-   db.fso_service_leaves.unshift({id:'leave-'+state.rpcs.length,member_id:row.member_id,request_id:row.id,kind:'leave',
+  if(['leave','inactivity'].includes(row.kind)&&row.status==='approved')
+   db.fso_service_leaves.unshift({id:'leave-'+state.rpcs.length,member_id:row.member_id,request_id:row.id,kind:row.kind,
     date_from:row.date_from,date_to:row.date_to,reason:row.statement,status:'approved',approved_by:'user-1'});
   return Promise.resolve({data:{status:row.status},error:null});
  }
- if(name==='fso_absence_create'){
-  if(!['admin','hr'].includes(role))return Promise.resolve({data:null,error:{message:'Недостаточно прав',code:'42501'}});
-  db.fso_service_leaves.unshift({id:'leave-'+state.rpcs.length,member_id:args.p_member,kind:args.p_kind,date_from:args.p_from,
-   date_to:args.p_to,reason:args.p_reason,status:'approved',approved_by:'user-1'});
-  return Promise.resolve({data:{},error:null});
+ if(name==='fso_absence_create'||name==='fso_leave_create'){
+  return Promise.resolve({data:null,error:{message:'Старый способ оформления отсутствия отключён',code:'42501'}});
  }
  if(name==='fso_leave_close'){
   if(!['admin','hr'].includes(role))return Promise.resolve({data:null,error:{message:'Недостаточно прав',code:'42501'}});
@@ -213,29 +211,41 @@ async function launchWithRole(browser,role){
  await page.getByText('Событий по выбранным условиям нет.').waitFor();
  await page.locator('#audit-category').selectOption('');
 
- // Rapor -> approval -> leave; personnel decision -> career history.
- await page.getByRole('button',{name:'Рапорты'}).click();
- await page.getByRole('heading',{name:'Рапорты и заявки'}).waitFor();
- await page.locator('#lead-request-member').selectOption('member-2');
- await page.locator('#lead-request-kind').selectOption('leave');
- await page.locator('#lead-request-from').fill('2030-06-03');
- await page.locator('#lead-request-to').fill('2030-06-10');
- await page.locator('#lead-request-text').fill('Прошу предоставить отпуск на указанный период для отдыха и восстановления сил.');
- await page.locator('#lead-request-form [type="submit"]').click();
- await page.getByText('На рассмотрении',{exact:true}).waitFor();
- await page.locator('.lead-review summary').click();
- page.once('dialog',dialog=>dialog.accept());
- await page.locator('[data-decision="approved"]').click();
- await page.getByText('Одобрено',{exact:true}).waitFor();
+ // A linked employee files their own absence; leadership approves but cannot file for others.
  await page.getByRole('button',{name:'Отпуска'}).click();
  await page.getByRole('heading',{name:'Отпуска и неактивность',level:1}).waitFor();
+ assert.equal(await page.locator('#lead-leave-form').count(),0);
+ assert.equal(await page.locator('#lead-leave-member').count(),0);
+ const forbidden=await page.evaluate(async()=>window.supabase.createClient().rpc('fso_request_submit',{
+  p_member:'member-2',p_kind:'leave',p_statement:'Попытка оформить отпуск другому сотруднику',
+  p_from:'2030-06-03',p_to:'2030-06-10'
+ }));
+ assert.equal(forbidden.error.code,'42501');
+ const retired=await page.evaluate(async()=>window.supabase.createClient().rpc('fso_absence_create',{
+  p_member:'member-2',p_kind:'leave',p_reason:'Неправомерное оформление',
+  p_from:'2030-06-03',p_to:'2030-06-10'
+ }));
+ assert.equal(retired.error.code,'42501');
+ await page.locator('#lead-absence-kind').selectOption('leave');
+ await page.locator('#lead-absence-from').fill('2030-06-03');
+ await page.locator('#lead-absence-to').fill('2030-06-10');
+ await page.locator('#lead-absence-reason').fill('Прошу согласовать отпуск на указанный период для отдыха.');
+ await page.locator('#lead-absence-request-form [type="submit"]').click();
+ await page.getByText('На рассмотрении',{exact:true}).waitFor();
+ await page.locator('.lead-review summary').first().click();
+ page.once('dialog',dialog=>dialog.accept());
+ await page.locator('[data-decision="approved"]').first().click();
+ await page.getByText('Одобрено',{exact:true}).waitFor();
  await page.getByText('Запланирован',{exact:true}).waitFor();
- await page.locator('#lead-leave-member').selectOption('member-1');
  await page.locator('#lead-absence-kind').selectOption('inactivity');
- await page.locator('#lead-leave-from').fill('2030-07-01');
- await page.locator('#lead-leave-to').fill('2030-07-04');
- await page.locator('#lead-leave-reason').fill('Временная неактивность согласована с руководством.');
- await page.locator('#lead-leave-form [type="submit"]').click();
+ await page.locator('#lead-absence-from').fill('2030-07-01');
+ await page.locator('#lead-absence-to').fill('2030-07-04');
+ await page.locator('#lead-absence-reason').fill('Прошу согласовать временную неактивность по личным обстоятельствам.');
+ await page.locator('#lead-absence-request-form [type="submit"]').click();
+ await page.getByText('На рассмотрении',{exact:true}).waitFor();
+ await page.locator('.lead-review summary').first().click();
+ page.once('dialog',dialog=>dialog.accept());
+ await page.locator('[data-decision="approved"]').first().click();
  await page.getByText('Неактивность',{exact:true}).waitFor();
  await page.getByRole('button',{name:'Кадровые решения'}).click();
  await page.getByRole('heading',{name:'Повышения и назначения'}).waitFor();
@@ -338,6 +348,19 @@ async function launchWithRole(browser,role){
  assert.equal(await page.locator('#lead-request-form').count(),1);
  assert.equal(await page.getByRole('button',{name:'Кадровые решения'}).count(),0);
  assert.equal(await page.getByRole('button',{name:'Управление доступом'}).count(),0);
+ await page.getByRole('button',{name:'Отпуска'}).click();
+ await page.getByRole('heading',{name:'Отпуска и неактивность',level:1}).waitFor();
+ assert.equal(await page.locator('#lead-absence-request-form').count(),1);
+ assert.equal(await page.locator('[data-lead-review]').count(),0);
+ await page.locator('#lead-absence-kind').selectOption('inactivity');
+ await page.locator('#lead-absence-from').fill('2030-08-01');
+ await page.locator('#lead-absence-to').fill('2030-08-10');
+ await page.locator('#lead-absence-reason').fill('Прошу согласовать временную неактивность по личным обстоятельствам.');
+ await page.locator('#lead-absence-request-form [type="submit"]').click();
+ await page.getByText('На рассмотрении',{exact:true}).waitFor();
+ assert.ok((await page.evaluate(()=>window.__fsoMock.rpcs)).some(x=>
+  x.name==='fso_request_submit'&&x.args.p_kind==='inactivity'&&x.args.p_member==='member-1'));
+ assert.equal(await page.locator('[data-lead-review]').count(),0);
  await page.getByRole('button',{name:'История службы'}).click();
  await page.getByRole('heading',{name:'История службы',level:1}).waitFor();
  assert.deepEqual(errors,[]);
