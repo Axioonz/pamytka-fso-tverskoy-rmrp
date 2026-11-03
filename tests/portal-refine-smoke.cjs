@@ -2,6 +2,15 @@ const {chromium}=require('playwright');
 const assert=require('node:assert/strict');
 const BASE='http://127.0.0.1:8765/';
 async function settle(page){await page.waitForTimeout(370)}
+async function revealAll(page){
+ const height=await page.evaluate(()=>document.documentElement.scrollHeight);
+ for(let y=0;y<height;y+=520){
+  await page.evaluate(position=>window.scrollTo({top:position,behavior:'instant'}),y);
+  await page.waitForTimeout(75);
+ }
+ await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
+ await page.waitForTimeout(300);
+}
 (async()=>{
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
  const page=await browser.newPage({viewport:{width:1440,height:940},deviceScaleFactor:1});
@@ -25,6 +34,7 @@ async function settle(page){await page.waitForTimeout(370)}
   const more=page.locator('.nv-more summary');
   assert.equal(await more.locator('svg.nv-more-icon').count(),1);
   assert.ok(!(await more.innerText()).includes('⌄'));
+  await revealAll(page);
   await page.screenshot({path:'/tmp/fso-refine-home.png',fullPage:true});
 
   await page.locator('.nv-nav [data-page="reference"]').click();
@@ -87,8 +97,10 @@ async function settle(page){await page.waitForTimeout(370)}
   await page.locator('#home-title').waitFor({state:'visible'});
   const dimension=await page.evaluate(()=>({viewport:innerWidth,scroll:document.documentElement.scrollWidth}));
   assert.ok(dimension.scroll<=dimension.viewport+3,'Mobile horizontal overflow '+JSON.stringify(dimension));
+  await revealAll(page);
   await page.screenshot({path:'/tmp/fso-refine-mobile.png',fullPage:true});
-  await page.locator('#about-open').evaluate(el=>el.click());
+  assert.ok(await page.locator('#about-open').isVisible(),'About button must be visible on mobile');
+  await page.locator('#about-open').click();
   await page.locator('#about-layer.open #about-drawer').waitFor({state:'visible'});
   const mobileCard=await page.locator('#about-drawer').boundingBox();
   assert.ok(mobileCard.width<=390&&mobileCard.height<=844,'Mobile About card must fit viewport '+JSON.stringify(mobileCard));
