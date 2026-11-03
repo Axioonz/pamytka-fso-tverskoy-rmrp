@@ -36,6 +36,7 @@ const BASE='http://127.0.0.1:8765/';
   await page.locator('.tg-regime').first().waitFor({state:'visible'});
   assert.equal(await page.locator('.tg-regime').count(),3);
   assert.ok(await page.locator('#territories-screen').isVisible());
+  await page.waitForTimeout(440);
   await page.screenshot({path:'/tmp/fso-motion-territories.png',fullPage:false});
   // Detention timeline with preserved procedural text and deadlines.
   await page.locator('.nv-more summary').click();
@@ -43,14 +44,17 @@ const BASE='http://127.0.0.1:8765/';
   await page.locator('#detention-steps .det-step').first().waitFor({state:'visible'});
   assert.ok(await page.getByText('60 минут',{exact:true}).isVisible());
   assert.ok(await page.getByText('15 минут',{exact:true}).isVisible());
+  await page.waitForTimeout(440);
   await page.screenshot({path:'/tmp/fso-motion-detention.png',fullPage:false});
   // Legal reference library remains interactive under the redesigned styles.
   await page.locator('.nv-nav [data-page="reference"]').click();
   await page.locator('#reference-list .reference-entry').first().waitFor({state:'visible'});
   assert.equal(await page.locator('#reference-list .reference-entry').first().evaluate(el=>getComputedStyle(el).display),'flex');
+  await page.waitForTimeout(440);
   await page.screenshot({path:'/tmp/fso-motion-reference.png',fullPage:false});
   await page.locator('.nv-nav [data-page="laws"]').click();
   await page.locator('#law-list').waitFor({state:'visible'});
+  await page.waitForTimeout(440);
   await page.screenshot({path:'/tmp/fso-motion-laws.png',fullPage:false});
   // Mobile, menu, no overflow, sticky native scroll.
   await page.locator('.nv-nav [data-page="home"]').click();
