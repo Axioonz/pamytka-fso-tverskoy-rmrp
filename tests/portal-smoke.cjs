@@ -341,7 +341,7 @@ async function launchWithRole(browser,role){
  await page.locator('#access-users tr').filter({hasText:'editor@example.test'}).getByRole('button',{name:'Настроить'}).click();
  page.once('dialog',dialog=>dialog.accept());
  await page.getByRole('button',{name:'Отозвать доступ'}).click();
- await page.locator('#access-users tr').filter({hasText:'editor@example.test'}).getByText('Нет доступа',{exact:true}).first().waitFor();
+ await page.locator('#access-users tr').filter({hasText:'editor@example.test'}).getByText('Личный кабинет',{exact:true}).first().waitFor();
  assert.ok((await page.evaluate(()=>window.__fsoMock.rpcs)).some(x=>x.name==='fso_access_set_role'&&x.args.p_role==='employee'));
  await page.getByRole('button',{name:'История выдачи и изменения прав в журнале аудита'}).click();
  await page.getByRole('heading',{name:'Журнал аудита'}).waitFor();
