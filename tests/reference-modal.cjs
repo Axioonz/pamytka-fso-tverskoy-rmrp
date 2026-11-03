@@ -71,7 +71,10 @@ const BASE='http://127.0.0.1:8765/';
   // Detention content must be concise: no repeated advice blocks, no empty explanations.
   await page.locator('#reference-close').click();
   await page.setViewportSize({width:1280,height:900});
-  await page.locator('.rail-button[data-page="detention"]').click();
+  // In the redesigned portal the detention link lives in the collapsed "More sections" menu.
+  // Open the menu first, then navigate via a visible control.
+  await page.locator('#nv-more > summary').click();
+  await page.locator('#nv-more .rail-button[data-page="detention"]').click();
   await page.locator('#detention-screen').waitFor({state:'visible'});
   const detSteps=page.locator('#detention-steps .det-step');
   assert.equal(await detSteps.count(),4);
