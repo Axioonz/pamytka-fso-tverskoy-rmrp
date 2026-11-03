@@ -34,6 +34,7 @@ jobs:
           node --check js/кабинет-next-ui.js
           node --check tests/portal-motion-smoke.cjs
           node --check tests/cabinet-next-smoke.cjs
+          node --check tests/cadet-clock-skew.cjs
       - name: Verify candidate API refuses invalid access codes
         run: |
           status=$(curl -sS -o /tmp/cadet-response.json -w '%{http_code}' \
@@ -63,6 +64,7 @@ jobs:
           node tests/portal-blue-smoke.cjs
           node tests/portal-motion-smoke.cjs
           node tests/cabinet-next-smoke.cjs
+          node tests/cadet-clock-skew.cjs
           # Reference screenshots captured separately; no external site dependency in normal CI.
       - name: Save browser screenshots
         if: always()
