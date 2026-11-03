@@ -283,3 +283,26 @@ html.cb-next #main.wrap:has(>.auth-layout){padding-top:32px}
  html.cb-next .wrap>*{animation:none!important}
  html.cb-next *{scroll-behavior:auto!important}
 }
+
+
+/* Account sign-up and pending access, matching the closed-cabinet appearance. */
+html.cb-next .auth-switch{
+ display:grid;grid-template-columns:1fr 1fr;gap:5px;padding:5px;
+ border:1px solid #2c4053;background:#0a1119;border-radius:10px;margin-bottom:23px
+}
+html.cb-next .auth-switch button{
+ cursor:pointer;border:1px solid transparent;border-radius:7px;padding:12px 10px;
+ background:transparent;color:#9ab1c2;font:inherit;font-weight:700;font-size:12px
+}
+html.cb-next .auth-switch button.active{
+ background:#1c3449;color:#e9f3fc;border-color:#3b617d
+}
+html.cb-next .auth-switch button:focus-visible{outline:2px solid #b2d8f2;outline-offset:2px}
+html.cb-next .auth-note{font-size:11px;line-height:1.65;color:#9fb2c2;margin:0}
+html.cb-next .auth-actions{border-top:1px solid #2b3c4c;padding-top:17px;margin-top:17px}
+html.cb-next .auth-actions .btn{font-size:11px}
+html.cb-next .pending-access{max-width:740px;line-height:1.7}
+html.cb-next .pending-access p{color:#a8bdcb}
+html.cb-next .pending-access strong{color:#f0f7ff;overflow-wrap:anywhere}
+html.cb-next #register-error .message{margin:0 0 9px}
+html.cb-next .access-subline+ .access-subline{margin-top:4px}

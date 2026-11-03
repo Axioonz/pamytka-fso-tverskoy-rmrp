@@ -32,9 +32,73 @@ function loading(){root.innerHTML='<div class="section">Загрузка дан�
 function days(iso){if(!iso)return 'Не указан';const from=new Date(iso+'T12:00:00'),to=new Date();return Math.max(0,Math.floor((to-from)/864e5))+' дн.'}
 function kindcounts(m){const rows=actions.filter(a=>a.member_id===m.id&&a.status==='active');return {warnings:rows.filter(a=>a.kind==='warning').length,reprimands:rows.filter(a=>a.kind==='reprimand').length}}
 function hero(title,subtitle=''){return '<div class="eyebrow">FSO / СЛУЖЕБНЫЙ ПОРТАЛ</div><h1>'+e(title)+'</h1><p class="head-subtitle">'+e(subtitle)+'</p>'}
-function authPage(error=''){root.innerHTML='<div class="auth-layout">'+hero('Вход в личный кабинет','Доступ только по служебной учётной записи. Памятка остаётся общедоступной.')+'<section class="section"><h2>Авторизация</h2>'+(error?msg(error,true):'')+'<form id="login-form" class="auth-form"><label>Электронная почта<input id="email" type="email" autocomplete="username" placeholder="name@example.com" required></label><label>Пароль<input id="password" type="password" autocomplete="current-password" required></label><button class="btn primary" type="submit">Войти</button></form><div class="foot">Если аккаунт был создан приглашением, используйте установленный вами пароль.</div><div class="actions"><button class="btn" type="button" id="to-cadet">Для курсантов · вход по коду</button></div></section></div>';document.getElementById('login-form').addEventListener('submit',login);document.getElementById('to-cadet').onclick=()=>{location.hash='cadet';window.FSO_CADET.open()}}
+function authPage(error='',mode='login',success=''){
+ const isSignup=mode==='signup';
+ const title=isSignup?'Регистрация':'Вход в личный кабинет';
+ const details=isSignup?'Создайте учётную запись. Доступ к служебному кабинету выдаёт администратор после регистрации.':'Войдите под своей учётной записью или зарегистрируйтесь, чтобы запросить доступ.';
+ const form=isSignup?
+ '<form id="register-form" class="auth-form">'+
+ '<label>Имя и фамилия<input id="register-name" type="text" autocomplete="name" maxlength="120" placeholder="Как к вам обращаться" required></label>'+
+ '<label>Discord<input id="register-discord" type="text" maxlength="100" placeholder="Имя пользователя Discord" required></label>'+
+ '<label>Электронная почта<input id="register-email" type="email" autocomplete="email" placeholder="name@example.com" required></label>'+
+ '<label>Пароль<input id="register-password" type="password" minlength="8" maxlength="72" autocomplete="new-password" required></label>'+
+ '<label>Повторите пароль<input id="register-password-repeat" type="password" minlength="8" maxlength="72" autocomplete="new-password" required></label>'+
+ '<button class="btn primary" type="submit">Зарегистрироваться</button>'+
+ '<p class="auth-note">После регистрации подтвердите электронную почту, если придёт письмо. Назначение роли выполняет администратор.</p></form>':
+ '<form id="login-form" class="auth-form">'+
+ '<label>Электронная почта<input id="email" type="email" autocomplete="username" placeholder="name@example.com" required></label>'+
+ '<label>Пароль<input id="password" type="password" autocomplete="current-password" required></label>'+
+ '<button class="btn primary" type="submit">Войти</button></form>';
+ root.innerHTML='<div class="auth-layout">'+hero(title,details)+
+ '<section class="section"><div class="auth-switch" aria-label="Авторизация"><button type="button" id="show-login" class="'+(!isSignup?'active':'')+'" aria-pressed="'+!isSignup+'">Вход</button><button type="button" id="show-register" class="'+(isSignup?'active':'')+'" aria-pressed="'+isSignup+'">Регистрация</button></div>'+
+ (error?msg(error,true):'')+(success?'<div class="message good" role="status">'+e(success)+'</div>':'')+
+ form+'<div class="actions auth-actions"><button class="btn" type="button" id="to-cadet">Вход по коду экзамена</button></div></section></div>';
+ document.getElementById('show-login').onclick=()=>authPage();
+ document.getElementById('show-register').onclick=()=>authPage('','signup');
+ document.getElementById(isSignup?'register-form':'login-form').addEventListener('submit',isSignup?register:login);
+ document.getElementById('to-cadet').onclick=()=>{location.hash='cadet';window.FSO_CADET.open()};
+}
+async function register(event){
+ event.preventDefault();
+ const form=event.currentTarget,button=form.querySelector('button[type="submit"]');
+ const name=v('register-name'),discord=v('register-discord'),email=v('register-email').toLowerCase();
+ const password=document.getElementById('register-password').value;
+ const repeated=document.getElementById('register-password-repeat').value;
+ const feedback=(message)=>{let box=document.getElementById('register-error');if(!box){box=document.createElement('div');box.id='register-error';box.setAttribute('role','alert');form.prepend(box)}box.innerHTML=msg(message,true)};
+ if(name.length<3||name.length>120){feedback('Укажите имя и фамилию, от 3 до 120 символов.');return}
+ if(discord.length<2||discord.length>100){feedback('Укажите Discord, от 2 до 100 символов.');return}
+ if(password.length<8){feedback('Пароль должен содержать не менее 8 символов.');return}
+ if(password!==repeated){feedback('Пароли не совпадают.');return}
+ button.disabled=true;
+ try{
+  const redirect=new URL('./кабинет-новый.html',location.href);
+  redirect.hash='';redirect.search='';
+  const {data,error}=await api.auth.signUp({
+   email,password,
+   options:{emailRedirectTo:redirect.toString(),data:{display_name:name,discord,signup_source:'cabinet'}}
+  });
+  if(error)throw error;
+  if(data?.session){await refresh();return}
+  authPage('','login','Если адрес ещё не зарегистрирован, на него отправлено письмо для подтверждения. После подтверждения войдите в кабинет. Администратор рассмотрит запрос на доступ.');
+ }catch(err){
+  const message=String(err?.message||'Не удалось создать аккаунт');
+  feedback(/signups? not allowed|signup.*disabled|email signups are disabled/i.test(message)?
+   'Регистрация отключена в настройках Supabase Auth. Администратору нужно разрешить регистрацию по электронной почте.':
+   message);
+ }finally{button.disabled=false}
+}
+function waitingPage(){
+ root.innerHTML=hero('Ожидается выдача доступа','Учётная запись создана, но права для работы в кабинете ещё не назначены.')+
+ '<section class="section pending-access"><h2>Регистрация завершена</h2>'+
+ '<p>Аккаунт <strong>'+e(user?.email||'')+'</strong> пока не имеет доступа к закрытым разделам. Администратор должен назначить роль в разделе «Управление доступом».</p>'+
+ '<p class="hint">Если вам уже сообщили о выдаче доступа, обновите статус.</p>'+
+ '<div class="actions"><button class="btn primary" id="check-access" type="button">Проверить доступ</button><button class="btn" id="logout" type="button">Выйти</button></div></section>';
+ document.getElementById('check-access').onclick=refresh;
+ document.getElementById('logout').onclick=logout;
+}
+
 async function login(ev){ev.preventDefault();const btn=ev.target.querySelector('button');btn.disabled=true;try{const {error}=await api.auth.signInWithPassword({email:v('email'),password:v('password')});if(error)throw error;await refresh()}catch(err){authPage(err.message||'Не удалось войти')}finally{btn.disabled=false}}
-async function refresh(){loading();const {data:{user:u},error:ue}=await api.auth.getUser();if(ue||!u){user=null;profile=null;if(location.hash==='#cadet'){window.FSO_CADET.open();return}authPage();return}user=u;const pr=await api.from('fso_profiles').select('user_id,role,display_name').eq('user_id',u.id).maybeSingle();if(pr.error){root.innerHTML=msg('Не удалось прочитать служебный профиль: '+pr.error.message,true);return}profile=pr.data;if(!profile||!allowed.includes(profile.role)){root.innerHTML=hero('Недостаточно прав','Ваш аккаунт существует, но доступ к кабинету руководства не предоставлен.')+'<div class="section">Уровень доступа: '+e(roleTitle[profile?.role]||'не назначен')+'<div class="actions"><button class="btn" id="logout">Выйти</button></div></div>';document.getElementById('logout').onclick=logout;return}
+async function refresh(){loading();const {data:{user:u},error:ue}=await api.auth.getUser();if(ue||!u){user=null;profile=null;if(location.hash==='#cadet'){window.FSO_CADET.open();return}authPage();return}user=u;const pr=await api.from('fso_profiles').select('user_id,role,display_name').eq('user_id',u.id).maybeSingle();if(pr.error){root.innerHTML=msg('Не удалось прочитать служебный профиль: '+pr.error.message,true);return}profile=pr.data;if(!profile||!allowed.includes(profile.role)){waitingPage();return}
 const m=await api.from('fso_members').select('id,user_id,employee_number,first_name,last_name,position,rank,discord,joined_on,status,dismissed_on,created_at,updated_at').order('created_at',{ascending:false});if(m.error){root.innerHTML=msg('Ошибка получения личного состава: '+m.error.message,true);return}members=m.data||[];const bl=await api.from('fso_blacklist').select('id,member_id,reason,added_at,removed_at,removal_reason').order('added_at',{ascending:false});blacklist=bl.error?[]:(bl.data||[]);
 const a=await api.from('fso_disciplinary_actions').select('id,member_id,kind,status,reason,evidence,issued_at,removed_at,removal_reason,removal_evidence,converted_to').order('issued_at',{ascending:false});actions=a.error?[]:(a.data||[]);const log=await api.from('fso_disciplinary_audit').select('id,member_id,event,details,occurred_at').order('occurred_at',{ascending:false}).limit(500);audits=log.error?[]:(log.data||[]);
 if(['admin','examiner'].includes(profile.role)){
