@@ -4,7 +4,7 @@ const KEY='sb_publishable_8cdFcw4V8F545924bpdLjg_3yKTHt1d';
 const EXAM_EDGE=URL+'/functions/v1/fso-cadet-exam';
 const root=document.getElementById('main'), toast=document.getElementById('toast');
 const allowed=['admin','hr','examiner'];const rosterRoles=['admin','hr'];
-let api=null,user=null,profile=null,members=[],blacklist=[],actions=[],audits=[],questions=[],examsList=[],assignments=[],examAttempts=[],screen='home',selected=null;
+let api=null,user=null,profile=null,members=[],blacklist=[],actions=[],audits=[],questions=[],examsList=[],assignments=[],examAttempts=[],examStaff=[],screen='home',selected=null;
 let newlyIssuedCode=null,cadetCode='',cadetState=null,cadetIndex=0,cadetPending=false;
 const e=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const v=id=>document.getElementById(id)?.value?.trim()||'';
@@ -102,13 +102,14 @@ async function refresh(){loading();const {data:{user:u},error:ue}=await api.auth
 const m=await api.from('fso_members').select('id,user_id,employee_number,first_name,last_name,position,rank,discord,joined_on,status,dismissed_on,created_at,updated_at').order('created_at',{ascending:false});if(m.error){root.innerHTML=msg('Ошибка получения личного состава: '+m.error.message,true);return}members=m.data||[];const bl=await api.from('fso_blacklist').select('id,member_id,reason,added_at,removed_at,removal_reason').order('added_at',{ascending:false});blacklist=bl.error?[]:(bl.data||[]);
 const a=await api.from('fso_disciplinary_actions').select('id,member_id,kind,status,reason,evidence,issued_at,removed_at,removal_reason,removal_evidence,converted_to').order('issued_at',{ascending:false});actions=a.error?[]:(a.data||[]);const log=await api.from('fso_disciplinary_audit').select('id,member_id,event,details,occurred_at').order('occurred_at',{ascending:false}).limit(500);audits=log.error?[]:(log.data||[]);
 if(['admin','examiner'].includes(profile.role)){
-const [q,ex,as,at]=await Promise.all([
+const [q,ex,as,at,staff]=await Promise.all([
 api.from('fso_questions').select('id,source_key,difficulty,prompt').eq('is_published',true).order('source_key'),
-api.from('fso_exams').select('id,title,pass_percent,duration_minutes,max_attempts,status,created_at').order('created_at',{ascending:false}),
-api.from('fso_exam_assignments').select('id,exam_id,member_id,status,assigned_at,expires_at').order('assigned_at',{ascending:false}),
-api.from('fso_exam_attempts').select('id,assignment_id,correct_count,total_count,passed,completed_at,started_at').order('started_at',{ascending:false})
+api.from('fso_exams').select('id,title,created_by,pass_percent,duration_minutes,max_attempts,status,created_at').order('created_at',{ascending:false}),
+api.from('fso_exam_assignments').select('id,exam_id,member_id,issued_by,status,assigned_at,expires_at').order('assigned_at',{ascending:false}),
+api.from('fso_exam_attempts').select('id,assignment_id,user_id,correct_count,total_count,passed,completed_at,started_at,deadline_at').order('started_at',{ascending:false}),
+api.rpc('fso_exam_staff_directory')
 ]);
-questions=q.data||[];examsList=ex.data||[];assignments=as.data||[];examAttempts=at.data||[];
+questions=q.data||[];examsList=ex.data||[];assignments=as.data||[];examAttempts=at.data||[];examStaff=Array.isArray(staff.data)?staff.data:[];
 }
 if(screen==='audit'&&profile.role==='admin')await window.FSO_AUDIT.load(api,profile.role);
 if(screen==='access'&&profile.role==='admin')await window.FSO_ACCESS.load(api,profile.role);
@@ -139,7 +140,7 @@ function rows(data){
  '<td><span class="rank-badge rank-'+rankLevel(m.rank)+'">'+e(m.rank||'Не указано')+'</span></td>'+
  '<td><span class="tag '+(danger?'bad':'')+'">'+z.warnings+'/3 · '+z.reprimands+'/3</span></td>'+
  '<td><span class="status-label status-'+e(m.status)+'">'+e(statusTitle[m.status]||m.status)+'</span></td>'+
- '<td><button class="btn small" data-person="'+e(m.id)+'">Открыть</button></td></tr>'
+ '<td><div class="archive-row-actions"><button class="btn small" data-person="'+e(m.id)+'">Открыть</button>'+(screen==='archive'&&profile.role==='admin'?'<button type="button" class="btn danger small" data-archive-delete="'+e(m.id)+'">Удалить</button>':'')+'</div></td></tr>'
  }).join('');
 }
 function detail(){
@@ -188,16 +189,14 @@ if(!['admin','examiner'].includes(profile.role))return msg('Нет полном�
 const choices=questions.map(q=>'<label class="question-check"><input type="checkbox" class="exam-choose" value="'+e(q.id)+'"><span><small>Уровень '+e(q.difficulty)+'</small>'+e(q.prompt)+'</span></label>').join('');
 const examOptions=examsList.filter(x=>x.status==='published').map(x=>'<option value="'+e(x.id)+'">'+e(x.title)+'</option>').join('');
 const memberOptions=members.filter(m=>['active','cadet'].includes(m.status)).map(x=>'<option value="'+e(x.id)+'">'+e(x.employee_number+' · '+x.first_name+' '+x.last_name)+'</option>').join('');
-const reports=assignments.map(a=>{const ex=examsList.find(x=>x.id===a.exam_id),m=members.find(x=>x.id===a.member_id),attempts=examAttempts.filter(x=>x.assignment_id===a.id),last=attempts[0];
-const result=last?.completed_at?(last.passed?'Сдан · ':'Не сдан · ')+last.correct_count+'/'+last.total_count:last?'В процессе':a.status==='revoked'?'Отозван':'Не проходил';
-return '<tr><td>'+e(m?(m.first_name+' '+m.last_name):'Неизвестный сотрудник')+'</td><td>'+e(ex?.title||'Неизвестный экзамен')+'</td><td>'+e(result)+'</td><td>'+e(attempts.length)+'</td><td>'+e(date(a.assigned_at))+'</td></tr>'}).join('');
+
 return hero('Экзамены и аттестация','Серверная система. Коды индивидуальные, ответы проверяются на сервере.')+
 '<div class="cards"><div class="metric"><b>'+questions.length+'</b><span>Вопросов в банке</span></div><div class="metric"><b>'+examsList.length+'</b><span>Экзаменов</span></div><div class="metric"><b>'+assignments.length+'</b><span>Назначений</span></div><div class="metric"><b>'+examAttempts.filter(x=>!!x.completed_at).length+'</b><span>Завершённых попыток</span></div></div>'+
 '<section class="section"><h2>Создать экзамен</h2><form id="exam-create"><div class="fields"><label class="wide">Название экзамена<input id="exam-title" required minlength="4" maxlength="160" placeholder="Первичная аттестация курсанта"></label><label>Проходной балл, %<input id="exam-pass" type="number" required min="1" max="100" value="80"></label><label>Время, минут<input id="exam-minutes" type="number" required min="1" max="480" value="30"></label><label>Максимум попыток<input id="exam-max" type="number" required min="1" max="10" value="1"></label></div><p class="hint">Выберите от 1 до 60 вопросов. Состав экзамена фиксируется при создании.</p><div class="q-picker">'+choices+'</div><div class="actions"><span id="question-count" class="tag">Выбрано 0</span><button class="btn primary" type="submit">Создать экзамен</button></div><div id="exam-create-error"></div></form></section>'+
 '<section class="section"><h2>Добавить собственный вопрос</h2><form id="question-create"><div class="fields"><label>Сложность<select id="new-question-level"><option value="1">Основы</option><option value="2">Применение</option><option value="3">Сложные ситуации</option></select></label><label class="wide">Формулировка<textarea id="new-question-prompt" required minlength="12"></textarea></label>'+['A','B','C','D'].map((v,i)=>'<label>Ответ '+v+'<input id="new-question-opt-'+i+'" required></label>').join('')+'<label>Правильный вариант<select id="new-question-correct">'+['A','B','C','D'].map((v,i)=>'<option value="'+i+'">'+v+'</option>').join('')+'</select></label><label class="wide">Объяснение и правовое обоснование<textarea id="new-question-explanation" required minlength="10"></textarea></label></div><div class="actions"><button type="submit" class="btn">Добавить в банк</button></div><div id="question-create-error"></div></form></section>'+
 '<section class="section"><h2>Назначить экзамен</h2><form id="exam-assign"><div class="fields"><label>Экзамен<select id="exam-assign-exam" required>'+examOptions+'</select></label><label>Курсант или сотрудник<select id="exam-assign-member" required>'+memberOptions+'</select></label><label>Код действителен до<input id="exam-expires" type="date" min="'+new Date().toISOString().slice(0,10)+'"></label></div><div class="actions"><button class="btn primary" type="submit" '+(!examOptions||!memberOptions?'disabled':'')+'>Выдать индивидуальный код</button></div><div id="exam-assign-error"></div></form>'+
 (newlyIssuedCode?'<div class="notice"><strong>Сохраните новый код, он показывается только сейчас</strong><p style="font-size:20px;font-weight:850;word-break:break-all">'+e(newlyIssuedCode)+'</p><button class="btn small" id="code-copy" type="button">Скопировать код</button></div>':'')+'</section>'+
-'<section class="section"><h2>Результаты назначенных экзаменов</h2><div class="table-wrap"><table><thead><tr><th>Сотрудник</th><th>Экзамен</th><th>Результат</th><th>Попыток</th><th>Назначено</th></tr></thead><tbody>'+(reports||'<tr><td colspan="5" class="subtle">Назначений пока нет.</td></tr>')+'</tbody></table></div></section>';
+window.FSO_ADMIN_TOOLS.examPanels({exams:examsList,assignments,attempts:examAttempts,members,staff:examStaff,role:profile.role});
 }
 function bindScreen(){if(screen==='access'){window.FSO_ACCESS.bind(api,profile.role,user.id,{refresh,render,audit:async()=>{screen='audit';selected=null;loading();await window.FSO_AUDIT.load(api,profile.role);render();const filter=document.getElementById('audit-category');if(filter){filter.value='profile';filter.dispatchEvent(new Event('change'))}}});return}if(screen==='audit'){window.FSO_AUDIT.bind(api,profile.role,members,async()=>{loading();await window.FSO_AUDIT.load(api,profile.role);render()});return}
  if(['roster','home','archive','blacklist'].includes(screen)){
@@ -213,6 +212,7 @@ function bindScreen(){if(screen==='access'){window.FSO_ACCESS.bind(api,profile.r
   }
   if(search)search.oninput=updateRoster;
   if(rank)rank.onchange=updateRoster;
+ if(screen==='archive'&&profile.role==='admin')window.FSO_ADMIN_TOOLS.bindArchive(api,members.filter(m=>['dismissed','archived'].includes(m.status)),refresh);
   const add=document.getElementById('new-member');
   if(add)add.onclick=()=>{screen='add';selected=null;render()};
   document.querySelectorAll('[data-person]').forEach(b=>b.onclick=()=>{selected=b.dataset.person;screen='detail';render()});
@@ -232,11 +232,12 @@ document.getElementById('exam-create').onsubmit=createOfficialExam;
 document.getElementById('question-create').onsubmit=createOwnQuestion;
 document.getElementById('exam-assign').onsubmit=assignOfficialExam;
 const cp=document.getElementById('code-copy');if(cp)cp.onclick=()=>navigator.clipboard.writeText(newlyIssuedCode).then(()=>flash('Код скопирован')).catch(()=>flash('Скопируйте код вручную',true));
+window.FSO_ADMIN_TOOLS.bindExams(api,{exams:examsList,assignments,attempts:examAttempts,members,staff:examStaff,role:profile.role},refresh);
 }
 if(screen==='add'||screen==='edit'){document.getElementById('cancel-editor').onclick=()=>{screen='roster';render()};document.getElementById('member-form').onsubmit=saveMember}}
 
 function readOptionalProof(id){if(!v(id))return [];return readProof(id)}
-function archivePage(){const data=members.filter(m=>['dismissed','archived'].includes(m.status));return hero('Архив','Уволенные сотрудники и сохранённые личные дела.')+'<section class="section"><div class="member-toolbar"><input id="search" type="search" placeholder="Поиск по архиву">'+rankFilter()+'</div><div class="table-wrap"><table><thead><tr><th>ID</th><th>Имя и фамилия</th><th>Должность</th><th>Звание</th><th>Взыскания</th><th>Статус</th><th></th></tr></thead><tbody id="roster-rows">'+rows(data)+'</tbody></table></div></section>'}
+function archivePage(){const data=members.filter(m=>['dismissed','archived'].includes(m.status));return hero('Архив','Уволенные сотрудники и сохранённые личные дела.')+'<section class="section"><div class="member-toolbar"><input id="search" type="search" placeholder="Поиск по архиву">'+rankFilter()+'</div><div class="table-wrap"><table><thead><tr><th>ID</th><th>Имя и фамилия</th><th>Должность</th><th>Звание</th><th>Взыскания</th><th>Статус</th><th></th></tr></thead><tbody id="roster-rows">'+rows(data)+'</tbody></table></div>'+window.FSO_ADMIN_TOOLS.archiveToolbar(data,profile.role)+'</section>'}
 function blacklistPage(){const data=members.filter(m=>blacklist.some(x=>x.member_id===m.id&&!x.removed_at));return hero('Чёрный список','Сотрудники, внесённые по решению руководства.')+'<section class="section"><div class="member-toolbar"><input id="search" type="search" placeholder="Поиск по чёрному списку">'+rankFilter()+'</div><div class="table-wrap"><table><thead><tr><th>ID</th><th>Имя и фамилия</th><th>Должность</th><th>Звание</th><th>Взыскания</th><th>Статус</th><th></th></tr></thead><tbody id="roster-rows">'+rows(data)+'</tbody></table></div></section>'+data.map(m=>{const b=blacklist.find(x=>x.member_id===m.id&&!x.removed_at);return '<div class="record"><strong>'+e(m.first_name+' '+m.last_name)+'</strong><p>Причина: '+e(b.reason)+'</p><small>Внесён: '+date(b.added_at)+'</small></div>'}).join('')}
 async function submitBlacklistAdd(ev){ev.preventDefault();const b=ev.target.querySelector('[type=submit]');b.disabled=true;try{const {error}=await api.rpc('fso_blacklist_add',{p_member:selected,p_reason:v('black-reason')});if(error)throw error;flash('Сотрудник внесён в чёрный список');await refresh()}catch(err){document.getElementById('black-error').innerHTML=msg(err.message||'Ошибка',true)}finally{b.disabled=false}}
 async function submitBlacklistRemove(ev){ev.preventDefault();const b=ev.target.querySelector('[type=submit]');b.disabled=true;try{if(!confirm('Исключить сотрудника из чёрного списка?'))return;const {error}=await api.rpc('fso_blacklist_remove',{p_member:selected,p_reason:v('black-remove-reason')});if(error)throw error;flash('Сотрудник исключён из чёрного списка');await refresh()}catch(err){document.getElementById('black-error').innerHTML=msg(err.message||'Ошибка',true)}finally{b.disabled=false}}
