@@ -132,7 +132,7 @@ html.nv-preview .nv-home a{scroll-margin-top:95px}
   }
   @keyframes nv-enter-page{
     from{opacity:.45;transform:translate3d(11px,8px,0);filter:blur(3px)}
-    to{opacity:1;transform:none;filter:none}
+    to{opacity:1;transform:none}
   }
 }
 /* Internal page mastheads are intentionally different for each workflow. */
@@ -380,10 +380,14 @@ html.nv-preview :is(.reference-entry,.det-nav button,.law-list button,.nv-back-t
   animation:nv-screen-enter .32s cubic-bezier(.16,.8,.23,1) both!important;
  }
  @keyframes nv-screen-enter{
-  from{opacity:.65;transform:translate3d(0,14px,0);filter:blur(2px)}
+  from{opacity:.7;transform:translate3d(0,12px,0)}
   to{opacity:1;transform:none;filter:none}
  }
 }
 @media(prefers-reduced-motion:reduce){
  html.nv-preview [data-nv-enter]{animation:none!important;opacity:1!important;transform:none!important;filter:none!important}
 }
+
+/* Reset inherited filled pseudo-element. Legal deadlines must never be obscured. */
+html.nv-preview .det-stat::before{left:auto!important;right:-26px!important;top:-34px!important;background:transparent!important;opacity:.34!important;z-index:0;pointer-events:none}
+html.nv-preview .det-stat > *{position:relative;z-index:1}
