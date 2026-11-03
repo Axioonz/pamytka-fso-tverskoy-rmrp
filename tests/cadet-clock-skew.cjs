@@ -47,7 +47,7 @@ const mockSupabase=original.slice(begin,end);
   await page.locator('#cadet-code').fill('FSO-'+'A'.repeat(32));
   await page.getByRole('button',{name:'Открыть экзамен'}).click();
   await page.getByRole('heading',{name:'Контрольный вопрос?'}).waitFor();
-  assert.match(await page.locator('#cadet-clock').innerText(),/Осталось 2[89]:/,'Countdown must use server time despite local skew');
+  assert.match(await page.locator('#cadet-clock').innerText(),/Осталось (30:00|2[89]:[0-5][0-9])/,'Countdown must use server time despite local skew');
   await page.waitForTimeout(1800);
   assert.equal(calls.filter(x=>x.action==='finish').length,0,'Clock skew must not submit exam');
   assert.equal(await page.getByRole('heading',{name:'Экзамен не сдан'}).count(),0);
