@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="ru" data-theme="dark">
+<html lang="ru" data-theme="dark" class="nv-preview">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#000000" id="theme-meta">
-<meta name="description" content="Памятка сотрудника ФСО — RMRP, сервер Тверской.">
-<title>ФСО / RMRP — Тверской</title>
+<meta name="theme-color" content="#0B1422" id="theme-meta">
+<meta name="description" content="Служебный портал ФСО RMRP Тверской. Правовой справочник, законодательство, посты и кадровый кабинет.">
+<title>ФСО Тверской | Служебный портал</title>
 <!-- Неблокирующая загрузка шрифта. При недоступности Google Fonts используется системный. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
@@ -107,136 +107,7 @@ html[data-theme="light"] .rail-theme > svg.icon.moon {display:block !important;}
 <!-- Декоративные элементы. Только оформление; не изменяют логику разделов. -->
 
 
-<style id="fso-visible-accents-2026">
-/*
- * Декоративное оформление. ЦВЕТА ИСХОДНОЙ ПАМЯТКИ НЕ ПЕРЕОПРЕДЕЛЯЮТСЯ.
- * #000 фон, исходные голубые акценты, старые кнопки, навигация и вёрстка.
- * Декор находится в шапках и фоне и никогда не перехватывает клики.
- */
-html[data-theme="dark"] body{background:#000}
-html[data-theme="dark"] .app{position:relative;isolation:isolate}
-/* Сдержанные переливы в свободной части страницы, не декоративные плавающие фигуры. */
-html[data-theme="dark"] .app::before{content:"";position:fixed;z-index:-1;pointer-events:none;
- inset:0 0 0 76px;
- background:
-  radial-gradient(ellipse 430px 350px at 95% 8%,rgba(124,183,231,.098),transparent 75%),
-  radial-gradient(ellipse 320px 400px at 5% 85%,rgba(148,194,225,.060),transparent 75%),
-  linear-gradient(125deg,transparent 55%,rgba(122,172,218,.018) 65%,transparent 80%);
- animation:fso-ambient-drift 27s ease-in-out infinite alternate;
-}
-/* Главная. Сохраняем существующую фотографию, под ней световые арки и линии архитектоники. */
-.portal-home .portal-hero{position:relative;isolation:isolate;overflow:hidden;
- box-shadow:inset 0 1px 0 rgba(228,244,255,.085),0 24px 75px rgba(0,0,0,.27)}
-.portal-home .portal-hero-content,.portal-home .portal-hero-side{position:relative;z-index:2}
-.fso-hero-finish{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none}
-.fso-hero-finish::before{content:"";position:absolute;right:-18%;top:-20%;width:75%;height:165%;
- background:linear-gradient(103deg,transparent 37%,rgba(182,224,250,.10) 48%,rgba(219,240,255,.025) 52%,transparent 62%);
- transform:translateX(-21%) skewX(-8deg);animation:fso-soft-wide-sweep 20s ease-in-out infinite;}
-/* Более заметная архитектурная подсветка справа, но позади фотографии и карточки. */
-.fso-hero-finish svg{position:absolute;width:min(670px,62%);height:100%;right:-4%;top:0;
- opacity:.75;filter:drop-shadow(0 0 11px rgba(135,195,235,.15));
- transform:translateY(0);animation:fso-architect-float 23s ease-in-out infinite alternate;}
-.fso-hero-finish .fso-hero-line{stroke:rgba(169,209,238,.41);fill:none;stroke-width:1.2}
-.fso-hero-finish .fso-hero-light{stroke:rgba(228,243,255,.60);fill:none;stroke-width:1.7;stroke-dasharray:130 700;animation:fso-line-travel 16s linear infinite}
-.fso-hero-finish .fso-hero-dots{fill:rgba(199,231,250,.55)}
-/* Два тонких торцевых акцента задают выразительный контур главного блока. */
-.fso-hero-finish .fso-hero-trace{position:absolute;top:0;left:0;width:42%;height:2px;
- background:linear-gradient(90deg,transparent,rgba(148,207,247,.75),rgba(255,255,255,.85),transparent);
- opacity:.78;filter:drop-shadow(0 0 8px rgba(130,194,231,.5));animation:fso-trace-slide 15s ease-in-out infinite alternate}
-.fso-hero-finish .fso-hero-corner{position:absolute;right:14px;bottom:14px;width:36px;height:36px;
- border-right:1px solid rgba(174,221,248,.55);border-bottom:1px solid rgba(174,221,248,.55);opacity:.8}
-.portal-home .portal-hero-side{box-shadow:inset 0 1px rgba(206,233,250,.10),0 15px 40px rgba(0,0,0,.18)}
-/* Поиск. Видимая световая кромка, светится и движется без перекрытия поля. */
-.portal-home .portal-search-section{position:relative;isolation:isolate;overflow:hidden;
- box-shadow:inset 0 1px rgba(218,241,255,.045),0 15px 50px rgba(0,0,0,.2)}
-.portal-home .portal-search-section::after{content:"";position:absolute;z-index:1;pointer-events:none;
- top:0;left:18px;width:165px;height:2px;
- background:linear-gradient(90deg,transparent,rgba(144,204,244,.65),rgba(239,250,255,.9),transparent);
- filter:drop-shadow(0 0 7px rgba(135,201,249,.55));
- animation:fso-search-walk 17s ease-in-out infinite alternate}
-.portal-home .portal-search-section>*{position:relative;z-index:2}
-.portal-home .portal-search-form{box-shadow:inset 0 1px rgba(255,255,255,.035)}
-.portal-home .portal-search-form:focus-within{box-shadow:0 0 0 3px rgba(124,183,231,.095),0 12px 45px rgba(0,0,0,.14)}
-/* Домашние карточки. Яркая, но узкая верхняя грань, без накладных символов. */
-.portal-home :is(.portal-topic,.portal-section-card){position:relative;overflow:hidden;isolation:isolate;
- transition:box-shadow .28s,transform .28s,border-color .28s}
-.portal-home .portal-topic::before{content:"";position:absolute;left:18px;right:auto;top:0;width:66px;height:2px;
- background:linear-gradient(90deg,rgba(148,208,246,.92),rgba(158,210,245,.11));opacity:.85;pointer-events:none}
-.portal-home .portal-section-card::after{content:"";position:absolute;z-index:0;pointer-events:none;
- right:-20px;bottom:-26px;width:122px;height:122px;border-radius:50%;
- background:radial-gradient(circle,rgba(115,181,230,.085),transparent 68%);}
-.portal-home :is(.portal-topic,.portal-section-card):hover{
- box-shadow:0 18px 45px rgba(0,0,0,.35),inset 0 1px rgba(221,242,255,.085),0 0 24px rgba(122,179,220,.045)}
-/* Маленькая полоска у названия группы, подчёркивающая ритм, вместо огромных орнаментов. */
-.portal-home .portal-section-heading{position:relative}
-.portal-home .portal-section-heading::after{content:"";height:1px;flex:1;align-self:end;margin:0 0 8px 21px;
- background:linear-gradient(90deg,rgba(153,198,231,.24),transparent 85%);pointer-events:none}
-/* Внутренние разделы. Украшения в шапках, читательские области остаются нетронутыми. */
-:is(.law-screen,.reference-screen,.det-screen,.territory-guide,.escort-studio,.service-screen,.cheat-workspace,.subpage,.quiz-coming){position:relative;isolation:isolate}
-:is(.law-top,.reference-head,.det-head,.tg-header,.escort-banner,.service-header,.cheat-head){position:relative;isolation:isolate}
-.fso-page-finish{position:absolute;right:0;top:0;width:min(360px,36%);height:180px;z-index:0;
- pointer-events:none;overflow:hidden;opacity:1;
- -webkit-mask-image:linear-gradient(90deg,transparent,#000 29%);mask-image:linear-gradient(90deg,transparent,#000 29%)}
-.fso-page-finish::before{content:"";position:absolute;inset:5px 0 0;
- background:radial-gradient(ellipse 240px 120px at 90% 35%,rgba(130,194,239,.115),transparent 76%);
- animation:fso-ornament-breathe 16s ease-in-out infinite alternate}
-.fso-page-finish svg{position:relative;z-index:1;width:100%;height:100%;overflow:visible;
- filter:drop-shadow(0 0 7px rgba(120,187,230,.18));
- animation:fso-architect-float 19s ease-in-out infinite alternate}
-.fso-page-finish .fso-outline{stroke:rgba(155,207,245,.50);stroke-width:1.45;fill:none}
-.fso-page-finish .fso-track{stroke:rgba(224,244,255,.64);stroke-width:1.2;fill:none;
- stroke-dasharray:11 21;animation:fso-decor-dash 20s linear infinite}
-.fso-page-finish .fso-fine{stroke:rgba(140,184,219,.22);stroke-width:1;fill:none}
-.fso-page-finish .fso-point{fill:rgba(208,238,255,.65)}
-:is(.law-top,.reference-head,.det-head,.tg-header,.escort-banner,.service-header,.cheat-head) > :not(.fso-page-finish){position:relative;z-index:1}
-/* Под заголовком остаётся чёткий, но неширокий графический росчерк. */
-:is(.law-top,.reference-head,.det-head,.tg-header,.cheat-head){border-bottom:1px solid rgba(151,193,224,.19);padding-bottom:15px}
-:is(.law-top,.reference-head,.det-head,.tg-header,.cheat-head)::after{content:"";position:absolute;bottom:-1px;left:0;
- width:min(150px,30%);height:2px;pointer-events:none;
- background:linear-gradient(90deg,rgba(151,211,249,.85),rgba(175,219,248,.12));
- box-shadow:0 0 13px rgba(105,183,234,.22);animation:fso-heading-shine 12s ease-in-out infinite alternate}
-/* Сохранение привычных цветов и функций, небольшое повышение глубины рамок. */
-:is(.law-sidebar,.law-reader,.reference-reader,.reference-entry,.concept-card,.det-step-card,.tg-object-group,.tg-regime,.service-tab,.work-card){
- box-shadow:inset 0 1px rgba(220,237,249,.025)}
-html[data-theme="dark"] :is(.law-entry,.reference-entry,.concept-card,.service-tab,.tg-object-group,.work-card):hover{
- border-color:var(--line-hover);box-shadow:inset 0 1px rgba(210,235,252,.075),0 13px 36px rgba(0,0,0,.26)}
-/* Заголовок без собственного контейнера: небольшой световой угол на правой стороне. */
-.fso-section-decor{position:absolute;pointer-events:none;z-index:0;right:5px;top:25px;width:122px;height:65px;
- border-right:1px solid rgba(151,204,239,.34);border-top:1px solid rgba(151,204,239,.34);
- background:linear-gradient(140deg,transparent 55%,rgba(143,199,234,.04));opacity:.78}
-/* Навигация после клика: меню закрывается, если курсор уже вне панели. Клавиатурный фокус остаётся доступным. */
-@media(min-width:721px){
- .rail:focus-within:not(:hover):not(.expanded):not(:has(:focus-visible)){width:76px;box-shadow:none}
- .rail:focus-within:not(:hover):not(.expanded):not(:has(:focus-visible)) .rail-button span,
- .rail:focus-within:not(:hover):not(.expanded):not(:has(:focus-visible)) .theme-toggle span{opacity:0;transform:translateX(8px)}
-}
-/* Уважение к темам и настройкам пользователя */
-html[data-theme="light"] .fso-page-finish,html[data-theme="light"] .fso-hero-finish,
-html[data-theme="light"] .fso-section-decor{opacity:.26}
-@keyframes fso-ambient-drift{0%{transform:translate3d(0,0,0);opacity:.7}100%{transform:translate3d(-22px,17px,0);opacity:1}}
-@keyframes fso-soft-wide-sweep{0%,12%{transform:translateX(-22%) skewX(-8deg);opacity:0}45%{opacity:.85}88%,100%{transform:translateX(26%) skewX(-8deg);opacity:0}}
-@keyframes fso-architect-float{0%{transform:translate3d(0,-5px,0)}100%{transform:translate3d(-9px,7px,0)}}
-@keyframes fso-line-travel{to{stroke-dashoffset:-830}}
-@keyframes fso-trace-slide{from{transform:translateX(-25%)}to{transform:translateX(185%)}}
-@keyframes fso-search-walk{from{transform:translateX(-45px)}to{transform:translateX(min(60vw,700px))}}
-@keyframes fso-ornament-breathe{from{opacity:.55;transform:translateX(0)}to{opacity:1;transform:translateX(-12px)}}
-@keyframes fso-decor-dash{to{stroke-dashoffset:-640}}
-@keyframes fso-heading-shine{from{opacity:.5;transform:scaleX(.65);transform-origin:left}to{opacity:1;transform:scaleX(1);transform-origin:left}}
-@media(max-width:720px){
- html[data-theme="dark"] .app::before{inset:0;opacity:.6}
- .fso-page-finish{width:30%;height:120px;opacity:.48}
- .fso-hero-finish svg{opacity:.43;width:80%}
- .fso-hero-finish .fso-hero-trace{width:60%}
- .portal-home .portal-section-heading::after{display:none}
-}
-@media(prefers-reduced-motion:reduce){
- html[data-theme="dark"] .app::before,.fso-hero-finish::before,.fso-hero-finish svg,
- .fso-hero-finish .fso-hero-light,.fso-hero-finish .fso-hero-trace,
- .fso-page-finish::before,.fso-page-finish svg,.fso-page-finish .fso-track,
- :is(.law-top,.reference-head,.det-head,.tg-header,.cheat-head)::after,
- .portal-home .portal-search-section::after{animation:none!important}
-}
-</style>
+
 <style id="fso-about-style">
 /* О памятке. Изолировано от меню и действующего оформления. */
 .about-launch {
@@ -450,7 +321,15 @@ body.about-locked{overflow:hidden}
 .qz-source-footer .qz-secondary:hover{border-color:var(--accent-strong)}
 @media(max-width:590px){.qz-source-overlay{padding:8px}.qz-source-dialog{max-height:calc(100dvh - 16px)}.qz-source-head{padding:18px 16px 14px}.qz-source-head h2{font-size:21px}.qz-source-content{padding:17px 16px 22px}.qz-source-footer{padding:12px 16px}.qz-source-footer span{max-width:120px}}
 </style>
-<style id="fso-account-link-style">.fso-access-controls{display:flex;gap:9px;align-items:center}.fso-account-link{display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap;min-height:40px;padding:9px 14px;border:1px solid #355775;border-radius:10px;background:rgba(20,45,66,.65);color:#d5e9fa;text-decoration:none;font-weight:750;font-size:12px}.fso-account-link:hover{border-color:#55adf1;background:#1b3c54}.fso-account-link span{color:#71c5fb}@media(max-width:610px){.fso-access-controls{gap:5px}.fso-account-link{min-height:38px;padding:8px;font-size:10px}.fso-account-link span{display:none}}@media(max-width:390px){.fso-account-link{max-width:100px;text-align:center;line-height:1.1}}</style></head>
+<style id="fso-account-link-style">.fso-access-controls{display:flex;gap:9px;align-items:center}.fso-account-link{display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap;min-height:40px;padding:9px 14px;border:1px solid #355775;border-radius:10px;background:rgba(20,45,66,.65);color:#d5e9fa;text-decoration:none;font-weight:750;font-size:12px}.fso-account-link:hover{border-color:#55adf1;background:#1b3c54}.fso-account-link span{color:#71c5fb}@media(max-width:610px){.fso-access-controls{gap:5px}.fso-account-link{min-height:38px;padding:8px;font-size:10px}.fso-account-link span{display:none}}@media(max-width:390px){.fso-account-link{max-width:100px;text-align:center;line-height:1.1}}</style><link rel="stylesheet" href="./css/portal-blue.css?v=20261103-decor">
+<link rel="stylesheet" href="./css/portal-motion.css?v=20261103-black-motion-3">
+<link rel="stylesheet" href="./css/portal-journey.css?v=20261103-journey-2">
+<link rel="stylesheet" href="./css/portal-refine.css?v=20261103-refine-2">
+<script src="./js/portal-blue.js?v=20261103-a" defer></script>
+<script src="./js/portal-motion.js?v=20261103-motion-2" defer></script>
+<script src="./js/portal-journey.js?v=20261103-journey-1" defer></script>
+<script src="./js/portal-refine.js?v=20261103-refine-1" defer></script>
+</head>
 <body>
 <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
  <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-6h-5V21H5a1 1 0 0 1-1-1v-9.5Z"/></symbol>
@@ -469,100 +348,152 @@ body.about-locked{overflow:hidden}
  <symbol id="i-panel" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M15 3v18M7 12h4m-2-2 2 2-2 2"/></symbol>
  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
 </svg>
-<aside class="rail" id="rail" aria-label="Разделы памятки">
- <nav class="rail-nav" aria-label="Навигация">
-  <button class="rail-button active" data-page="home" aria-label="Главная" title="Главная"><svg class="icon"><use href="#i-home"/></svg><span>Главная</span></button>
-  <button class="rail-button" data-page="situations" aria-label="Ситуации" title="Ситуации"><svg class="icon"><use href="#i-message"/></svg><span>Ситуации</span></button>
-  <button class="rail-button" data-page="reference" aria-label="Правовой справочник" title="Правовой справочник"><svg class="icon"><use href="#i-scale"/></svg><span>Правовой справочник</span></button>
-  <button class="rail-button" data-page="concepts" aria-label="Понятия" title="Понятия"><svg class="icon"><use href="#i-file"/></svg><span>Понятия</span></button>
-<button class="rail-button" data-page="detention" aria-label="Порядок задержания" title="Порядок задержания"><svg class="icon"><use href="#i-list"/></svg><span>Про задержания</span></button>
-  <button class="rail-button" data-page="territories" aria-label="Территории и объекты" title="Территории и объекты"><svg class="icon"><use href="#i-pin"/></svg><span>Территории и объекты</span></button>
-<button class="rail-button" data-page="escort" aria-label="Сопровождение и кортежи" title="Сопровождение и кортежи"><svg class="icon"><use href="#i-users"/></svg><span>Сопровождение и кортежи</span></button>
-<button class="rail-button" data-page="posts" aria-label="Посты и патрули" title="Посты и патрули"><svg class="icon"><use href="#i-list"/></svg><span>Посты и патрули</span></button>
-<button class="rail-button" data-page="favorites" aria-label="Личная шпаргалка" title="Личная шпаргалка"><svg class="icon"><use href="#i-file"/></svg><span>Личная шпаргалка</span></button>
-<button class="rail-button" data-page="departments" aria-label="Памятки отделов" title="Памятки отделов"><svg class="icon"><use href="#i-book"/></svg><span>Памятки отделов</span></button>
-<button class="rail-button" data-page="quiz" aria-label="Проверка знаний" title="Проверка знаний"><svg class="icon"><use href="#i-shield"/></svg><span>Проверка знаний</span></button>
-<button class="rail-button" data-page="laws" aria-label="Законодательство" title="Законодательство"><svg class="icon"><use href="#i-book"/></svg><span>Законодательство</span></button>
- </nav>
- <div class="rail-bottom">
-  <button class="theme-toggle rail-theme" id="theme-toggle" aria-label="Включить светлую тему" title="Переключить тему"><svg class="icon sun"><use href="#i-sun"/></svg><svg class="icon moon"><use href="#i-moon"/></svg><span id="theme-label">Светлая тема</span></button>
+
+
+
+<header class="nv-header" id="rail">
+ <div class="nv-shell">
+  <button type="button" class="nv-identity" data-page="home" aria-label="На главную страницу ФСО">
+   <span class="brand-mark" id="brand-mark"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg></span>
+   <span class="nv-identity-name"><strong>ФСО <span>Тверской</span></strong><small>Служебный портал RMRP</small></span>
+  </button>
+  <nav class="rail-nav nv-nav" id="nv-nav" aria-label="Основные разделы">
+   <button class="rail-button active" type="button" data-page="home"><span>Главная</span></button>
+   <button class="rail-button" type="button" data-page="posts"><span>Посты и патрули</span></button>
+   <button class="rail-button" type="button" data-page="reference"><span>Справочник</span></button>
+   <button class="rail-button" type="button" data-page="laws"><span>Законодательство</span></button>
+   <details class="nv-more" id="nv-more"><summary>Ещё разделы <svg class="nv-more-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="m3.25 5.75 4.75 4.5 4.75-4.5"/></svg></summary>
+    <div class="nv-more-panel">
+     <span>СЛУЖБА</span>
+     <button class="rail-button" type="button" data-page="territories"><span>Территории и объекты</span></button>
+     <button class="rail-button" type="button" data-page="escort"><span>Сопровождение и кортежи</span></button>
+     <button class="rail-button" type="button" data-page="detention"><span>Порядок задержания</span></button>
+     <button class="rail-button" type="button" data-page="situations"><span>Ситуации</span></button>
+     <span>ЗНАНИЯ</span>
+     <button class="rail-button" type="button" data-page="concepts"><span>Понятия</span></button>
+     <button class="rail-button" type="button" data-page="favorites"><span>Личная шпаргалка</span></button>
+     <button class="rail-button" type="button" data-page="quiz"><span>Проверка знаний</span></button>
+     <button class="rail-button" type="button" data-page="departments"><span>Памятка отделов</span></button>
+    </div>
+   </details>
+  </nav>
+  <div class="nv-header-actions">
+   <button type="button" id="nv-search-open" class="nv-search-button" aria-label="Открыть поиск" title="Поиск по порталу"><svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg><span>Поиск</span></button>
+   <button class="theme-toggle rail-theme nv-theme" id="theme-toggle" aria-label="Включить светлую тему" title="Переключить тему"><svg class="icon sun"><use href="#i-sun"></use></svg><svg class="icon moon"><use href="#i-moon"></use></svg><span id="theme-label" class="visually-hidden">Светлая тема</span></button>
+   <a class="nv-access" href="./кабинет-новый.html">Кабинет <span aria-hidden="true">↗</span></a>
+   <button type="button" id="nv-menu-button" class="nv-menu-button" aria-label="Открыть меню" aria-expanded="false"><span></span><span></span><span></span></button>
+   <button id="about-open" class="nv-about" type="button" aria-haspopup="dialog" aria-controls="about-layer" aria-expanded="false" title="О портале" aria-label="О портале">i</button>
+  </div>
  </div>
-</aside>
-<div class="app">
- <header class="container topbar">
-  <div class="brand"><span class="brand-mark" id="brand-mark" aria-hidden="true"><svg class="icon"><use href="#i-shield"/></svg></span><span class="brand-title">ФСО | RMRP — Тверской</span></div>
-  <div class="fso-access-controls"><a class="fso-account-link" href="./кабинет.html">Сотрудники <span aria-hidden="true">↗</span></a>
-  <button class="about-launch" id="about-open" type="button" aria-haspopup="dialog" aria-controls="about-layer" aria-expanded="false" title="О памятке"><span class="about-launch-symbol" aria-hidden="true">i</span><span class="about-launch-text">О памятке</span><span class="about-launch-arr" aria-hidden="true">↗</span></button></div>
- </header>
- <main class="container">
-  <section aria-labelledby="home-title" class="home-screen portal-home" id="home-screen">
-<div class="portal-hero">
-<div class="fso-hero-finish" aria-hidden="true">
- <span class="fso-hero-trace"></span><span class="fso-hero-corner"></span>
- <svg viewBox="0 0 640 410" preserveAspectRatio="xMidYMid slice" focusable="false" aria-hidden="true">
-   <path class="fso-hero-line" d="M400 -45 Q260 120 400 455 M500 -45 Q365 120 500 455 M598 -45 Q455 120 598 455" />
-   <path class="fso-hero-line" d="M280 60 Q420 95 640 56 M265 308 Q435 280 640 310" />
-   <path class="fso-hero-light" d="M600 -48 Q455 120 598 455" />
-   <circle class="fso-hero-dots" cx="417" cy="94" r="2"/><circle class="fso-hero-dots" cx="537" cy="315" r="2"/>
- </svg>
-</div>
-<div class="portal-hero-content">
-<h1 id="home-title">Памятка <strong>сотрудника ФСО</strong></h1>
-<p>Правовые основания и законодательство проекта. Нужная и быстрая информация без заморочек.</p>
-<div aria-label="Содержание памятки" class="portal-facts">
-<span><b id="portal-ref-count">105</b> правовых оснований</span>
+</header>
+<div class="app nv-app">
+<main class="container">
 
-<span><b id="portal-law-count">31</b> документ</span>
-</div>
-</div>
-<aside aria-label="Начало работы" class="portal-hero-side">
-<h2>Основания</h2>
-<p>Полезные основания из разных законодательств, которые помогут сотрудникам ФСО при выполнении служебных обязанностей.</p>
-<button class="portal-hero-button" data-page="reference" type="button">Открыть правовой справочник <svg class="icon"><use href="#i-arrow"></use></svg></button>
-</aside>
-</div>
-<section aria-label="Поиск по памятке" class="portal-search-section">
-<div class="portal-section-heading portal-search-heading"><div><span class="portal-kicker"></span><h2>Поиск по всей памятке</h2></div>
+  
 
 
-</div><form class="search portal-search-form" id="section-search-form" role="search">
-<svg aria-hidden="true" class="icon"><use href="#i-search"></use></svg>
-<label class="visually-hidden" for="section-search">Поиск по материалам, нормам и документам</label>
-<input autocomplete="off" id="section-search" placeholder="Например: документы, задержание, пропуск, ст. 10..." type="search"/>
-<button type="submit">Найти</button>
-</form><p aria-live="polite" class="visually-hidden search-hint" id="search-hint"></p><div class="search-results portal-search-results" hidden="" id="search-results"></div></section>
-<section aria-labelledby="portal-important-title" class="portal-module">
-<div class="portal-section-heading"><div><span class="portal-kicker"></span><h2 id="portal-important-title">Частые основания</h2>
 
-</div></div><div class="portal-important-grid">
-<button class="portal-topic" data-reference-id="ref-exact-fso-10-1-2" type="button"><span class="portal-topic-index"></span><b>Проверка документов</b><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 2</small><span class="portal-topic-arrow">↗</span></button>
-<button class="portal-topic" data-reference-id="ref-exact-fso-10-1-4" type="button"><span class="portal-topic-index"></span><b>Ограничение доступа</b><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 4</small><span class="portal-topic-arrow">↗</span></button>
-<button class="portal-topic" data-reference-id="ref-exact-fso-10-1-6" type="button"><span class="portal-topic-index"></span><b>Задержание при угрозе объекту</b><small>ФЗ о ФСО · ст. 10 · ч. 1 · п. 6</small><span class="portal-topic-arrow">↗</span></button>
-</div></section>
-<section aria-labelledby="portal-sections-title" class="portal-module">
-<div class="portal-section-heading"><div><span class="portal-kicker">БИБЛИОТЕКА</span><h2 id="portal-sections-title">Разделы памятки</h2><p>Поиск нормы, последовательность действий или полный закон.</p></div></div>
-<div class="portal-section-grid">
-<button class="portal-section-card" data-page="situations" type="button"><span class="portal-section-icon"><svg class="icon"><use href="#i-message"></use></svg></span><b>Ситуации</b><p>Раздел пока в разработке.</p><span></span></button>
-<button class="portal-section-card" data-page="reference" type="button"><span class="portal-section-icon"><svg class="icon"><use href="#i-scale"></use></svg></span><b>Правовой справочник</b><p>Краткая суть и точные формулировки статей</p><span></span></button>
-<button class="portal-section-card" data-page="detention" type="button"><span class="portal-section-icon"><svg class="icon"><use href="#i-list"></use></svg></span><b>Порядок задержания</b><p>Порядок действий и статьи, которые его регулируют.</p><span></span></button>
-<button class="portal-section-card" data-page="laws" type="button"><span class="portal-section-icon"><svg class="icon"><use href="#i-book"></use></svg></span><b>Законодательство</b><p>Полные тексты законов не переходя на форум.</p><span></span></button>
-<button class="portal-section-card" data-page="concepts" type="button"><span class="portal-section-icon"><svg class="icon"><use href="#i-file"></use></svg></span><b>Понятия и термины</b><p>Определения из законодательства простым языком.</p><span></span></button>
-</div>
+<section class="home-screen nv-home" id="home-screen" aria-labelledby="home-title">
+  <div class="nv-hero">
+    <div class="nv-hero-copy">
+      <div class="nv-overline"><span class="nv-overline-mark"></span> ФЕДЕРАЛЬНАЯ СЛУЖБА ОХРАНЫ <span class="nv-overline-id">RMRP / ТВЕРСКОЙ</span></div>
+      <h1 id="home-title">Точка входа<br>в <em>службу.</em></h1>
+      <p>Здесь начинается работа с материалами ФСО. Найди нужное основание, открой порядок действий или перейди в служебный кабинет.</p>
+      <div class="nv-hero-buttons">
+        <button type="button" data-page="reference" class="nv-primary">Правовой справочник <span>↗</span></button>
+        <a class="nv-secondary" href="./кабинет-новый.html">Открыть кабинет <span>↗</span></a>
+      </div>
+      <div class="nv-hero-meta"><span>СЛУЖЕБНЫЙ ПОРТАЛ</span><span>Документы · Служба · Инструменты</span></div>
+    </div>
+    <div class="nv-hero-photo">
+      <div class="nv-image-index">ОБЪЕКТЫ ГОСУДАРСТВЕННОЙ ОХРАНЫ <span>01 / ФСО</span></div>
+      <div class="nv-image-foot"><strong>Территории<br>и объекты</strong><button data-page="territories" type="button" aria-label="Открыть раздел Территории и объекты">↗</button></div>
+    </div>
+  </div>
+
+  <section class="nv-utility" aria-label="С чего начать">
+   <div class="nv-utility-head"><small>БЫСТРЫЙ ПЕРЕХОД</small><strong>Что нужно сделать?</strong></div>
+   <button type="button" data-page="posts"><span class="nv-utility-icon"><svg class="icon"><use href="#i-pin"></use></svg></span><b>Найти пост</b><small>Посты и патрули</small><i>↗</i></button>
+   <button type="button" data-page="detention"><span class="nv-utility-icon"><svg class="icon"><use href="#i-list"></use></svg></span><b>Проверить порядок</b><small>Задержание</small><i>↗</i></button>
+   <button type="button" data-page="laws"><span class="nv-utility-icon"><svg class="icon"><use href="#i-book"></use></svg></span><b>Открыть закон</b><small>Нормативная база</small><i>↗</i></button>
+  </section>
+
+  <section class="nv-service-index" aria-labelledby="nv-service-title">
+   <div class="nv-section-title"><div><small class="nv-eyebrow">СЛУЖБА / НАВИГАЦИЯ</small><h2 id="nv-service-title">Рабочие направления</h2><p>Открой раздел и переходи сразу к нужным материалам. Без лишних промежуточных страниц.</p></div><span class="nv-section-number">01 / 03</span></div>
+   <div class="nv-service-layout">
+    <button type="button" class="nv-main-module" data-page="posts">
+      <div class="nv-main-module-top"><span>01 / ПАТРУЛЬНАЯ СЛУЖБА</span><svg class="icon"><use href="#i-shield"></use></svg></div>
+      <div class="nv-main-module-content"><h3>Посты<br>и патрули</h3><p>Места несения службы, маршруты, готовые доклады и сведения о постах.</p></div>
+      <span class="nv-main-module-bottom">Открыть раздел <i>↗</i></span>
+    </button>
+    <div class="nv-service-links">
+     <button data-page="territories" type="button"><span class="nv-item-number">02</span><span><b>Территории и объекты</b><small>Охраняемые зоны, режим доступа</small></span><i>↗</i></button>
+     <button data-page="escort" type="button"><span class="nv-item-number">03</span><span><b>Сопровождение и кортежи</b><small>Маршруты и полномочия</small></span><i>↗</i></button>
+     <button data-page="detention" type="button"><span class="nv-item-number">04</span><span><b>Про задержания</b><small>Порядок, права и процессуальные сроки</small></span><i>↗</i></button>
+     <button data-page="favorites" type="button"><span class="nv-item-number">05</span><span><b>Личная шпаргалка</b><small>Сохранённые материалы и заметки</small></span><i>↗</i></button>
+    </div>
+   </div>
+  </section>
+
+  <section class="nv-library" aria-labelledby="nv-library-title">
+    <div class="nv-library-intro">
+      <small class="nv-eyebrow">ИНФОРМАЦИОННАЯ БАЗА</small>
+      <h2 id="nv-library-title">Нужная норма<br>под рукой.</h2>
+      <p>Справочник оснований, законы и понятия собраны в одной системе. Изучи норму, затем перейди к полному тексту документа.</p>
+      <div class="nv-library-totals"><div><strong id="portal-ref-count">105</strong><span>правовых оснований</span></div><div><strong id="portal-law-count">31</strong><span>закон и кодекс</span></div></div>
+      <button type="button" data-page="reference" class="nv-library-cta">Открыть справочник <span>↗</span></button>
+    </div>
+    <div class="nv-library-list">
+      <button type="button" data-page="reference"><span>01 <svg class="icon"><use href="#i-scale"></use></svg></span><b>Правовые основания</b><small>Конкретные нормы и условия применения</small><i>↗</i></button>
+      <button type="button" data-page="laws"><span>02 <svg class="icon"><use href="#i-book"></use></svg></span><b>Законодательство</b><small>Полные тексты документов RMRP</small><i>↗</i></button>
+      <button type="button" data-page="concepts"><span>03 <svg class="icon"><use href="#i-file"></use></svg></span><b>Понятия</b><small>Юридические и служебные определения</small><i>↗</i></button>
+      <button type="button" data-page="quiz"><span>04 <svg class="icon"><use href="#i-shield"></use></svg></span><b>Проверка знаний</b><small>Раздел в разработке</small><i>↗</i></button>
+    </div>
+  </section>
+
+  <section class="nv-legal" aria-labelledby="nv-legal-title">
+    <div class="nv-section-title"><div><small class="nv-eyebrow">ДОКУМЕНТЫ</small><h2 id="nv-legal-title">Нормативные акты</h2><p>Быстрый доступ к документам, которые нужны при исполнении служебных обязанностей.</p></div><button type="button" data-page="laws" class="nv-text-link">Все документы <span>↗</span></button></div>
+    <div class="nv-legal-list">
+      <button type="button" data-law-id="law-25069"><span>01</span><b>О Федеральной службе охраны</b><small>Федеральный закон № 22-ФЗ</small><em>↗</em></button>
+      <button type="button" data-law-id="law-58424"><span>02</span><b>Процессуальный кодекс</b><small>Порядок процессуальных действий</small><em>↗</em></button>
+      <button type="button" data-law-id="law-26625"><span>03</span><b>Об охраняемых территориях</b><small>Федеральный закон № 86-ФЗ</small><em>↗</em></button>
+    </div>
+  </section>
+
+  <section class="nv-workspace" aria-labelledby="nv-workspace-title">
+    <div class="nv-workspace-visual">
+      <span>РАБОЧЕЕ ПРОСТРАНСТВО</span><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg>
+      <strong>FSO<br><i>CONTROL</i></strong>
+    </div>
+    <div class="nv-workspace-info">
+      <small class="nv-eyebrow">ЗАКРЫТАЯ ЧАСТЬ</small>
+      <h2 id="nv-workspace-title">Служебный<br>кабинет</h2>
+      <p>Рабочие инструменты руководства ФСО. Здесь ведут личные дела сотрудников, назначают экзамены и фиксируют дисциплинарные решения. Доступ определяется ролью в системе.</p>
+      <a href="./кабинет-новый.html">Перейти в кабинет <span>↗</span></a>
+    </div>
+  </section>
+
+  <section class="nv-roadmap" aria-labelledby="nv-roadmap-title">
+    <div><small class="nv-eyebrow">БУДУЩАЯ ФУНКЦИЯ</small><h2 id="nv-roadmap-title">Карта активных постов</h2><p>Когда появится карта сервера, здесь будут отображаться только посты, на которых сейчас несут службу сотрудники, и их количество. Пока функция не реализована.</p></div>
+    <button type="button" data-page="posts">Посты и патрули <span>↗</span></button>
+  </section>
+  <footer class="nv-footer"><div><strong>ФСО / Тверской</strong><p>Неофициальный служебный портал RMRP.</p></div><div><button data-page="reference">Справочник</button><button data-page="laws">Законодательство</button><button data-page="posts">Посты и патрули</button></div></footer>
 </section>
-<div class="portal-lower-grid">
-
-<section aria-labelledby="portal-docs-title" class="portal-module portal-docs">
-<div class="portal-section-heading"><div><span class="portal-kicker"></span><h2 id="portal-docs-title">Основные документы</h2></div></div>
-<div class="portal-doc-list">
-<button data-law-id="law-25069" type="button"><b>ФЗ «О Федеральной службе охраны»</b><span>№ 22-ФЗ ↗</span></button>
-<button data-law-id="law-58424" type="button"><b>Процессуальный кодекс</b><span>ПК ↗</span></button>
-<button data-law-id="law-26625" type="button"><b>ФЗ «О государственной собственности, закрытых и охраняемых территориях»</b><span>№ 86-ФЗ ↗</span></button>
-<button data-law-id="law-58209" type="button"><b>Уголовный кодекс</b><span>УК ↗</span></button>
+<div class="nv-search-modal" id="nv-search-modal" hidden>
+ <div class="nv-search-shade" data-nv-search-close></div>
+ <section class="nv-search-dialog" role="dialog" aria-modal="true" aria-labelledby="nv-search-label">
+  <div class="nv-search-top"><h2 id="nv-search-label">Поиск по материалам</h2><button type="button" id="nv-search-close" aria-label="Закрыть поиск">×</button></div>
+  <form class="search portal-search-form" id="section-search-form" role="search">
+    <svg class="icon" aria-hidden="true"><use href="#i-search"></use></svg>
+    <label class="visually-hidden" for="section-search">Поисковый запрос</label>
+    <input id="section-search" type="search" autocomplete="off" placeholder="Статья, правовое основание, документ...">
+    <button type="submit">Искать</button>
+  </form>
+  <p aria-live="polite" class="visually-hidden search-hint" id="search-hint"></p>
+  <div class="search-results portal-search-results" id="search-results" hidden></div>
+  <p class="nv-search-tip">Esc для закрытия · Ctrl + K для открытия</p>
+ </section>
 </div>
-</section>
-</div>
-<div class="portal-footer"><span>Неофициальная памятка для проекта RMRP · Тверской. Приоритет у действующих нормативных актов сервера.</span></div>
-</section>
 <section class="subpage" id="section-screen" hidden aria-live="polite">
 <div class="fso-section-decor" aria-hidden="true"></div>
    <button class="back" data-page="home">← На главную</button>
@@ -778,7 +709,7 @@ body.about-locked{overflow:hidden}
   </div>
   <p class="cheat-status" id="cheat-status" role="status" aria-live="polite"></p>
 </section>
-<section class="work-screen quiz-coming" id="departments-screen" hidden aria-label="Памятки отделов">
+<section class="work-screen quiz-coming" id="departments-screen" hidden aria-label="Памятка отделов">
 <div class="fso-section-decor" aria-hidden="true"></div><h1>В разработке</h1></section>
 <section class="work-screen qz-screen" id="quiz-screen" hidden aria-label="Проверка знаний">
 <div class="fso-section-decor" aria-hidden="true"></div>
@@ -818,13 +749,13 @@ body.about-locked{overflow:hidden}
     <div class="about-cover-copy"><span class="about-overline">RMRP / ТВЕРСКОЙ</span><h2 id="about-title">О памятке</h2><p>Справочный портал для сотрудников Федеральной службы охраны.</p><span class="about-cover-tag">Неофициальный проект</span></div>
    </section>
    <div class="about-body">
-    <section class="about-section" aria-labelledby="about-purpose"><div class="about-heading"><small>01</small><h3 id="about-purpose">Для чего создана</h3></div>
+    <section class="about-section" aria-labelledby="about-purpose"><div class="about-heading"><h3 id="about-purpose">Для чего создана</h3></div>
      <p class="about-description">Памятка помогает сотрудникам ФСО при несении службы. Здесь собраны правовые основания, тексты законов и полезные материалы о задержании, охраняемых территориях и сопровождении.</p>
      <p class="about-description">Её задача проста: помочь быстро найти нужную информацию и разобраться, как действовать в конкретной ситуации. Разделы с разбором служебных ситуаций и проверкой знаний будут дополняться.</p>
     </section>
-    <section class="about-section" aria-labelledby="about-updates"><div class="about-heading"><small>02</small><h3 id="about-updates">Обновления</h3></div><div class="about-void" aria-label="Журнал обновлений пока пуст"></div></section>
-    <section class="about-section" aria-labelledby="about-author"><div class="about-heading"><small>03</small><h3 id="about-author">Разработчик</h3></div>
-     <div class="about-person"><div><b>Арсений Рубежной</b><small>Разработчик памятки</small></div></div>
+    <section class="about-section" aria-labelledby="about-updates"><div class="about-heading"><h3 id="about-updates">Обновления</h3></div><p class="about-description">История обновлений пока не опубликована.</p></section>
+    <section class="about-section" aria-labelledby="about-author"><div class="about-heading"><h3 id="about-author">Разработчик</h3></div>
+     <div class="about-person"><div><b>Арсений Рубежной</b></div></div>
      <button class="about-contact" type="button" data-about-copy="kapi9090" aria-label="Скопировать Discord kapi9090"><span class="about-contact-icon">D</span><span class="about-contact-label"><small>Discord</small><b>kapi9090</b></span><span class="about-contact-action">Копировать</span></button>
      <a class="about-contact" href="https://t.me/axioonz" target="_blank" rel="noopener noreferrer" aria-label="Открыть Telegram @axioonz"><span class="about-contact-icon">T</span><span class="about-contact-label"><small>Telegram</small><b>@axioonz</b></span><span class="about-contact-action">Открыть ↗</span></a>
      <div class="about-footer"><span>ФСО · RMRP · Тверской</span><span>Справочный проект</span></div>
