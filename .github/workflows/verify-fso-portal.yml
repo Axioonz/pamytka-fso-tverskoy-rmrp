@@ -30,6 +30,10 @@ jobs:
           node --check tests/wiki-smoke.cjs
           node --check js/portal-blue.js
           node --check tests/portal-blue-smoke.cjs
+          node --check js/portal-motion.js
+          node --check js/кабинет-next-ui.js
+          node --check tests/portal-motion-smoke.cjs
+          node --check tests/cabinet-next-smoke.cjs
       - name: Verify candidate API refuses invalid access codes
         run: |
           status=$(curl -sS -o /tmp/cadet-response.json -w '%{http_code}' \
@@ -57,6 +61,8 @@ jobs:
           node tests/site-v2-smoke.cjs
           node tests/wiki-smoke.cjs
           node tests/portal-blue-smoke.cjs
+          node tests/portal-motion-smoke.cjs
+          node tests/cabinet-next-smoke.cjs
           # Reference screenshots captured separately; no external site dependency in normal CI.
       - name: Save browser screenshots
         if: always()
@@ -70,4 +76,6 @@ jobs:
             /tmp/reference-*.png
             /tmp/fso-wiki-*.png
             /tmp/fso-blue-*.png
+            /tmp/fso-motion-*.png
+            /tmp/fso-cabinet-next-*.png
           if-no-files-found: ignore
