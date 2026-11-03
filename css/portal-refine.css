@@ -321,3 +321,20 @@ html.nv-preview .nv-more summary:focus-visible{
   transition:none!important;
  }
 }
+/* Keep the About control reachable on phone, without widening the header. */
+@media(max-width:620px){
+ html.nv-preview .nv-identity-name strong span{display:none}
+ html.nv-preview .nv-identity{gap:7px}
+ html.nv-preview .nv-header-actions{gap:0}
+ html.nv-preview .nv-about{
+  display:grid!important;width:30px!important;min-width:30px!important;
+  height:34px!important;min-height:34px!important;
+  border:1px solid transparent!important;
+  padding:5px!important;
+ }
+ html.nv-preview .nv-identity-name strong{font-size:12px}
+}
+@media(max-width:380px){
+ html.nv-preview .nv-theme{display:none!important}
+ html.nv-preview .nv-access{min-width:44px!important;padding:8px!important}
+}
