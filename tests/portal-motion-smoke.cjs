@@ -49,7 +49,7 @@ const BASE='http://127.0.0.1:8765/';
   // Legal reference library remains interactive under the redesigned styles.
   await page.locator('.nv-nav [data-page="reference"]').click();
   await page.locator('#reference-list .reference-entry').first().waitFor({state:'visible'});
-  assert.equal(await page.locator('#reference-list .reference-entry').first().evaluate(el=>getComputedStyle(el).display),'flex');
+  assert.equal(await page.locator('#reference-list .reference-entry').first().evaluate(el=>getComputedStyle(el).display),'grid');
   await page.waitForTimeout(440);
   await page.screenshot({path:'/tmp/fso-motion-reference.png',fullPage:false});
   await page.locator('.nv-nav [data-page="laws"]').click();
