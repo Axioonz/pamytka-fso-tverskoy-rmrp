@@ -92,13 +92,13 @@ function rpc(name,args){
   const row=db.fso_service_requests.find(x=>x.id===args.p_id);
   row.status=args.p_decision;row.reviewed_by='user-1';row.review_note=args.p_note;row.reviewed_at=new Date().toISOString();
   if(row.kind==='leave'&&row.status==='approved')
-   db.fso_service_leaves.unshift({id:'leave-'+state.rpcs.length,member_id:row.member_id,request_id:row.id,
+   db.fso_service_leaves.unshift({id:'leave-'+state.rpcs.length,member_id:row.member_id,request_id:row.id,kind:'leave',
     date_from:row.date_from,date_to:row.date_to,reason:row.statement,status:'approved',approved_by:'user-1'});
   return Promise.resolve({data:{status:row.status},error:null});
  }
  if(name==='fso_absence_create'){
   if(!['admin','hr'].includes(role))return Promise.resolve({data:null,error:{message:'Недостаточно прав',code:'42501'}});
-  db.fso_service_leaves.unshift({id:'leave-'+state.rpcs.length,member_id:args.p_member,date_from:args.p_from,
+  db.fso_service_leaves.unshift({id:'leave-'+state.rpcs.length,member_id:args.p_member,kind:args.p_kind,date_from:args.p_from,
    date_to:args.p_to,reason:args.p_reason,status:'approved',approved_by:'user-1'});
   return Promise.resolve({data:{},error:null});
  }
@@ -228,7 +228,7 @@ async function launchWithRole(browser,role){
  await page.locator('[data-decision="approved"]').click();
  await page.getByText('Одобрено',{exact:true}).waitFor();
  await page.getByRole('button',{name:'Отпуска'}).click();
- await page.getByRole('heading',{name:'Отпуска и неактивность'}).waitFor();
+ await page.getByRole('heading',{name:'Отпуска и неактивность',level:1}).waitFor();
  await page.getByText('Запланирован',{exact:true}).waitFor();
  await page.locator('#lead-leave-member').selectOption('member-1');
  await page.locator('#lead-absence-kind').selectOption('inactivity');
