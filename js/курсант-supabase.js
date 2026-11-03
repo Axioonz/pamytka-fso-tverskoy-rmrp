@@ -2,6 +2,7 @@
 const endpoint='https://lejagyuibxdnvpmxoggy.supabase.co/functions/v1/fso-cadet-exam';
 const root=document.getElementById('main'),KEY='fso_exam_code_session';
 let code='',state=null,index=0,busy=false,timer=null;
+let serverClock=NaN,serverClockAt=0;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const stamp=s=>s?new Date(s).toLocaleString('ru-RU'):'';
 const badge=(i,answered)=>'<span class="tag '+(answered?'good':'')+'">'+(answered?'✓ ':'')+'Вопрос '+(i+1)+'</span>';
@@ -11,6 +12,10 @@ async function call(action,extra={}){
  const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,code,...extra}),cache:'no-store'});
  const result=await response.json().catch(()=>({}));
  if(!response.ok)throw Error(result.error||'Ошибка подключения к серверу');
+ // Use the server clock, not the trainee's device date/time.
+ // performance.now() is monotonic and unaffected by local clock changes.
+ const timestamp=Date.parse(result.server_now||'');
+ if(Number.isFinite(timestamp)){serverClock=timestamp;serverClockAt=performance.now()}
  return result;
 }
 function renderLogin(message=''){
@@ -53,7 +58,13 @@ function render(){
  document.querySelectorAll('[data-answer]').forEach(b=>b.onclick=()=>answer(item.ordinal,Number(b.dataset.answer)));
  document.getElementById('cadet-prev').onclick=()=>{index--;render()};
  document.getElementById('cadet-next').onclick=()=>{index++;render()};
- document.getElementById('cadet-finish').onclick=()=>{if(confirm('Завершить экзамен и отправить ответы на проверку?'))load('finish')};
+ document.getElementById('cadet-finish').onclick=()=>{
+  if(answered===0){
+   document.getElementById('cadet-error').textContent='Сначала ответьте хотя бы на один вопрос.';
+   return;
+  }
+  if(confirm('Завершить экзамен и отправить ответы на проверку?'))load('finish',{confirmed:true});
+ };
  startTimer();
 }
 async function answer(ordinal,chosen){
@@ -68,10 +79,18 @@ function startTimer(){
  const tick=()=>{
   if(!state||state.status==='completed')return;
   if(!state.deadline_at){el.textContent='Без ограничения времени';return}
-  const left=Math.max(0,Math.ceil((new Date(state.deadline_at).getTime()-Date.now())/1000));
+  if(!Number.isFinite(serverClock)){
+   el.textContent='Синхронизация времени с сервером';
+   return;
+  }
+  const monotonicNow=serverClock+(performance.now()-serverClockAt);
+  const left=Math.max(0,Math.ceil((Date.parse(state.deadline_at)-monotonicNow)/1000));
   const min=Math.floor(left/60),sec=String(left%60).padStart(2,'0');
   el.textContent='Осталось '+min+':'+sec;
-  if(left===0&&!busy){stopTimer();load('finish')}
+  if(left===0&&!busy){
+   // Only the server decides whether the deadline has actually expired.
+   stopTimer();load('start');
+  }
  };
  tick();timer=setInterval(tick,1000);
 }
