@@ -5,7 +5,7 @@ const BASE='http://127.0.0.1:8765/';
 const mockSupabase=String.raw`(()=>{'use strict';
 const role=window.__role||'anonymous';
 const seed=[{id:'member-1',employee_number:'0007',first_name:'Иван',last_name:'Тестовый',position:'Сотрудник',rank:'Сержант',discord:'ivan.test',status:'active',joined_on:'2026-10-10',dismissed_on:null,created_at:'2026-10-10',updated_at:'2026-10-10'}];
-const db={fso_profiles:[{user_id:'user-1',role,display_name:''}],fso_members:seed,fso_disciplinary_actions:[],fso_disciplinary_audit:[],fso_activity_audit:[{id:1,entity_type:'member',entity_id:'member-1',member_id:'member-1',actor_id:'user-1',action:'member.updated',occurred_at:'2026-11-03T10:00:00Z',before_data:{rank:'Рядовой'},after_data:{rank:'Сержант'}}],fso_questions:[{id:'q1',source_key:'quiz2-001',difficulty:1,prompt:'Проверочный вопрос?',is_published:true}],fso_exams:[],fso_exam_assignments:[],fso_exam_attempts:[]};
+const db={fso_profiles:[{user_id:'user-1',role,display_name:''}],fso_members:seed,fso_disciplinary_actions:[],fso_disciplinary_audit:[],fso_activity_audit:[{id:1,entity_type:'member',entity_id:'member-1',member_id:'member-1',actor_id:'user-1',action:'member.updated',occurred_at:'2026-11-03T10:00:00Z',before_data:{rank:'Рядовой'},after_data:{rank:'Сержант'}}],fso_questions:[{id:'q1',source_key:'quiz2-001',difficulty:1,prompt:'Проверочный вопрос?',is_published:true}],fso_exams:[],fso_exam_assignments:[],fso_exam_attempts:[],fso_exam_items:[],fso_exam_answers:[]};
 const accounts=[
  {user_id:'user-1',email:'admin@example.test',role,display_name:'Администратор',confirmed:true,created_at:'2026-10-01',last_sign_in_at:'2026-11-03T10:00:00Z'},
  {user_id:'user-2',email:'editor@example.test',role:'employee',display_name:'Редактор без роли',confirmed:true,created_at:'2026-10-20',last_sign_in_at:null}
@@ -13,11 +13,11 @@ const accounts=[
 const state={db,rpcs:[],accounts,signedOut:false};window.__fsoMock=state;
 const user={id:'user-1',email:'admin@example.test'};
 function make(table){const q={table,where:[],action:'read',payload:null,
-select(){return this},eq(k,v){this.where.push([k,v]);return this},order(){return this},limit(){return this},
+select(){return this},eq(k,v){this.where.push([k,v]);return this},in(k,values){this.where.push([k,values]);return this},order(){return this},limit(){return this},
 insert(payload){this.action='insert';this.payload=payload;return this},update(payload){this.action='update';this.payload=payload;return this},
 async run(){
 const a=db[table]||[];
-let records=a.filter(x=>this.where.every(([k,v])=>x[k]===v));
+let records=a.filter(x=>this.where.every(([k,v])=>Array.isArray(v)?v.includes(x[k]):x[k]===v));
 if(this.action==='insert'){
 const one={id:'member-'+(a.length+1),...this.payload,created_at:new Date().toISOString()};
 a.push(one);records=[one];
@@ -43,16 +43,44 @@ function rpc(name,args){
   account.role=args.p_role;account.display_name=args.p_display_name;
   return Promise.resolve({data:{user_id:account.user_id,role:account.role},error:null});
  }
+ if(name==='fso_exam_staff_directory'){
+  return Promise.resolve({data:[{user_id:'user-1',display_name:'Экзаменатор ФСО'}],error:null});
+ }
+ if(name==='fso_admin_archive_delete'){
+  if(role!=='admin')return Promise.resolve({data:null,error:{code:'42501',message:'Только администратор'}});
+  const targets=db.fso_members.filter(x=>['archived','dismissed'].includes(x.status)&&(args.p_all||x.id===args.p_member));
+  for(const m of targets)db.fso_members.splice(db.fso_members.indexOf(m),1);
+  return Promise.resolve({data:{deleted_members:targets.length},error:null});
+ }
+ if(name==='fso_admin_exam_delete'){
+  if(role!=='admin')return Promise.resolve({data:null,error:{code:'42501',message:'Только администратор'}});
+  const ex=db.fso_exams.find(x=>x.id===args.p_exam);
+  if(ex)db.fso_exams.splice(db.fso_exams.indexOf(ex),1);
+  return Promise.resolve({data:{deleted_exams:ex?1:0},error:null});
+ }
+ if(name==='fso_admin_assignment_delete'){
+  if(role!=='admin')return Promise.resolve({data:null,error:{code:'42501',message:'Только администратор'}});
+  const attemptIds=db.fso_exam_attempts.filter(x=>x.assignment_id===args.p_assignment).map(x=>x.id);
+  db.fso_exam_attempts.splice(0,db.fso_exam_attempts.length,...db.fso_exam_attempts.filter(x=>!attemptIds.includes(x.id)));
+  db.fso_exam_answers.splice(0,db.fso_exam_answers.length,...db.fso_exam_answers.filter(x=>!attemptIds.includes(x.attempt_id)));
+  const assignment=db.fso_exam_assignments.find(x=>x.id===args.p_assignment);
+  if(args.p_mode==='assignment'&&assignment)db.fso_exam_assignments.splice(db.fso_exam_assignments.indexOf(assignment),1);
+  else if(assignment)assignment.status='assigned';
+  return Promise.resolve({data:{deleted_attempts:attemptIds.length},error:null});
+ }
  if(name==='fso_issue_discipline'){
   db.fso_disciplinary_actions.push({id:'act-'+state.rpcs.length,member_id:args.p_member,kind:args.p_kind,status:'active',reason:args.p_reason,evidence:args.p_evidence,issued_at:new Date().toISOString()});
   return Promise.resolve({data:{issued_id:'act-1'},error:null});
  }
  if(name==='fso_make_exam'){
-  db.fso_exams.push({id:'exam-1',title:args.p_title,pass_percent:args.p_pass_percent,duration_minutes:args.p_duration,max_attempts:args.p_max_attempts,status:'published',created_at:new Date().toISOString()});
+  db.fso_exams.push({id:'exam-1',title:args.p_title,created_by:'user-1',pass_percent:args.p_pass_percent,duration_minutes:args.p_duration,max_attempts:args.p_max_attempts,status:'published',created_at:new Date().toISOString()});
+  db.fso_exam_items.push({exam_id:'exam-1',ordinal:1,question_snapshot:{prompt:'Проверочный вопрос?',options:['Верный ответ','Неверный ответ','Вариант 3','Вариант 4'],correct:[0]}});
   return Promise.resolve({data:'exam-1',error:null});
  }
  if(name==='fso_assign_exam'){
-  db.fso_exam_assignments.push({id:'assignment-1',exam_id:args.p_exam,member_id:args.p_member,status:'assigned',assigned_at:new Date().toISOString()});
+  db.fso_exam_assignments.push({id:'assignment-1',exam_id:args.p_exam,member_id:args.p_member,issued_by:'user-1',status:'completed',assigned_at:new Date().toISOString()});
+  db.fso_exam_attempts.push({id:'attempt-1',assignment_id:'assignment-1',started_at:new Date().toISOString(),completed_at:new Date().toISOString(),correct_count:1,total_count:1,passed:true});
+  db.fso_exam_answers.push({attempt_id:'attempt-1',ordinal:1,chosen:[0]});
   return Promise.resolve({data:{access_code:'FSO-'+('A'.repeat(32))},error:null});
  }
  return Promise.resolve({data:{},error:null});
@@ -147,6 +175,17 @@ async function launchWithRole(browser,role){
  await page.locator('#exam-assign-member').selectOption('member-2');
  await page.locator('#exam-assign button[type="submit"]').click();
  await page.getByText('FSO-'+('A'.repeat(32))).waitFor();
+ await page.getByRole('heading',{name:'Созданные экзамены'}).waitFor();
+ await page.getByText('Экзаменатор ФСО',{exact:true}).first().waitFor();
+ assert.equal(await page.locator('[data-exam-detail]').count(),1);
+ await page.locator('[data-exam-detail]').click();
+ await page.getByText('Ответ сотрудника · Верный ответ').waitFor();
+ await page.getByText('Правильный ответ · Верный ответ').waitFor();
+ await page.locator('#exam-review-close').click();
+ page.once('dialog',dialog=>dialog.accept());
+ await page.locator('[data-attempt-clear]').click();
+ await page.getByText('Не проходил',{exact:true}).waitFor();
+ assert.ok((await page.evaluate(()=>window.__fsoMock.rpcs)).some(x=>x.name==='fso_admin_assignment_delete'&&x.args.p_mode==='results'));
  await page.getByRole('button',{name:'Управление доступом'}).click();
  await page.getByRole('heading',{name:'Центр управления доступом'}).waitFor();
  assert.equal(await page.locator('#access-users tr').count(),2);
