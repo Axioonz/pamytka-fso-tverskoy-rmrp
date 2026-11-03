@@ -8,9 +8,9 @@ const base='http://127.0.0.1:8765/';
  try{
   await page.goto(base+'portal.html',{waitUntil:'domcontentloaded'});
   await page.locator('#home-title').waitFor({state:'visible'});
-  assert.match(await page.locator('#home-title').innerText(),/Точка входа.*службу/s);
+  assert.match(await page.locator('#home-title').innerText(),/Служебный.*портал ФСО/s);
   assert.equal(await page.locator('.nv-hero-photo').count(),1);
-  assert.equal(await page.locator('.nv-utility>button').count(),3);
+  assert.equal(await page.locator('.nv-utility>button').count(),4);
   assert.equal(await page.locator('.nv-service-links>button').count(),4);
   assert.equal(await page.locator('.nv-library-list>button').count(),4);
   assert.equal(await page.locator('.nv-legal-list>button').count(),3);

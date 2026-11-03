@@ -28,7 +28,7 @@ async function revealAll(page){
   assert.equal(serviceStyle.transform,'none','Service card must not jump on hover');
   const accent=await page.evaluate(()=>getComputedStyle(document.documentElement).getPropertyValue('--accent-strong').trim());
   assert.equal(accent,'#a4bdcf','Accent should be muted steel blue');
-  assert.match(await page.locator('.nv-workspace-info p').innerText(),/Рабочие инструменты руководства ФСО/);
+  assert.match(await page.locator('.nv-workspace-info p').innerText(),/Кабинет для руководства ФСО/);
   const footer=await page.locator('.nv-footer').innerText();
   assert.ok(!/Действующий сайт|Предыдущий вариант/.test(footer));
   const more=page.locator('.nv-more summary');
@@ -39,25 +39,27 @@ async function revealAll(page){
 
   await page.locator('.nv-nav [data-page="reference"]').click();
   await page.locator('#reference-list .reference-entry').first().waitFor({state:'visible'});
-  await page.locator('.nv-ref-index').first().waitFor();
   const cards=page.locator('#reference-list .reference-entry');
   assert.ok((await cards.count())>3);
-  assert.equal(await cards.first().locator('.nv-ref-index').innerText(),'001');
-  assert.equal(await cards.nth(1).locator('.nv-ref-index').innerText(),'002');
+  assert.equal(await page.locator('#reference-list .nv-ref-index').count(),0);
+  assert.equal(await page.locator('.nv-service-links .nv-item-number').count(),0);
   const refStyle=await cards.first().evaluate(el=>({
    summary:getComputedStyle(el.querySelector('.ref-summary')).display,
    grid:getComputedStyle(el).gridTemplateColumns.split(' ').length,
    height:Math.round(el.getBoundingClientRect().height)
   }));
-  assert.equal(refStyle.summary,'none');
-  assert.ok(refStyle.height<100,'Reference entries should be concise '+JSON.stringify(refStyle));
+  assert.notEqual(refStyle.summary,'none','Brief explanation must be visible');
+  assert.equal(refStyle.grid,3,'Reference row has content, citation and arrow');
+  assert.ok(refStyle.height>=86,'Readability '+JSON.stringify(refStyle));
+  assert.ok((await cards.first().locator('.ref-summary').innerText()).trim().length>25);
   await settle(page);await page.screenshot({path:'/tmp/fso-refine-reference.png',fullPage:false});
   await cards.first().click();
   await page.locator('#reference-overlay').waitFor({state:'visible'});
   await page.locator('#reference-close').click();
   await page.locator('#reference-search').fill('паспорт');
   await page.waitForTimeout(150);
-  assert.equal(await page.locator('#reference-list .reference-entry .nv-ref-index').first().innerText(),'001','List renumbers after search');
+  assert.equal(await page.locator('#reference-list .nv-ref-index').count(),0);
+  assert.ok((await page.locator('#reference-list .ref-summary').first().innerText()).trim().length>10);
   await page.locator('#reference-search').fill('');
 
   await page.locator('.nv-more summary').click();
@@ -112,6 +114,6 @@ async function revealAll(page){
   const mobileOverflow=await page.evaluate(()=>({viewport:innerWidth,scroll:document.documentElement.scrollWidth}));
   assert.ok(mobileOverflow.scroll<=mobileOverflow.viewport+3,'Mobile concepts overflow '+JSON.stringify(mobileOverflow));
   assert.deepEqual(errors,[],'Page errors');
-  console.log('PASS: refined black portal, service hover, muted accents, compact reference index, concepts and centered About');
+  console.log('PASS: refined black portal, service hover, muted accents, readable references, unnumbered sections, concepts and centered About');
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exitCode=1});

@@ -430,9 +430,9 @@ function renderScenarioCatalog(){
  if(!filtered.length){const p=document.createElement('p');p.className='reference-empty';p.textContent='По запросу ситуации не найдены.';list.append(p);return}
  for(let i=0;i<filtered.length;i++){
   const x=filtered[i],item=document.createElement('details');item.className='scenario-case';
-  const head=document.createElement('summary');const nr=document.createElement('span');nr.className='scenario-num';nr.textContent=String(i+1).padStart(2,'0');
+  const head=document.createElement('summary');
   const main=document.createElement('span'),title=document.createElement('span'),desc=document.createElement('span');title.className='scenario-title';title.textContent=x.title;desc.className='scenario-subtitle';desc.textContent=x.summary;main.append(title,desc);
-  head.append(nr,main);item.append(head);
+  head.append(main);item.append(head);
   const body=document.createElement('div');body.className='scenario-body';
   function info(cls,label,content){const box=document.createElement('div');box.className=cls;const strong=document.createElement('strong');strong.textContent=label;const p=document.createElement('span');p.textContent=content||'';box.append(strong,p);return box}
   body.append(info('scenario-context','Что произошло',x.context));
@@ -900,7 +900,7 @@ function renderEscort(){
  const track=$('escort-track');
  if(track.children.length===0){escortTopics.forEach((item,index)=>{
   const b=document.createElement('button');b.type='button';b.className='escort-stop';b.setAttribute('aria-pressed','false');
-  const num=document.createElement('span');num.className='escort-stop-dot';num.textContent=String(index+1).padStart(2,'0');
+  const num=document.createElement('span');num.className='escort-stop-dot';num.setAttribute('aria-hidden','true');
   const title=document.createElement('b');title.textContent=item.name;
   const sub=document.createElement('small');sub.textContent=item.short;b.append(num,title,sub);
   b.addEventListener('click',()=>showEscortTopic(index));track.append(b);
