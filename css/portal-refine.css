@@ -338,3 +338,42 @@ html.nv-preview .nv-more summary:focus-visible{
  html.nv-preview .nv-theme{display:none!important}
  html.nv-preview .nv-access{min-width:44px!important;padding:8px!important}
 }
+
+
+/* Прямые ссылки на главной, без громоздкой панели с задачами. */
+html.nv-preview .nv-utility{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  margin-top:20px;border-radius:12px;overflow:hidden;box-shadow:none;
+}
+html.nv-preview .nv-utility-head{
+  grid-column:1/-1;display:flex;flex-direction:row;align-items:baseline;
+  justify-content:space-between;gap:12px;padding:15px 19px;
+  border-right:0;border-bottom:1px solid var(--line);background:var(--surface);
+}
+html.nv-preview .nv-utility-head small{font-size:10px;letter-spacing:.12em}
+html.nv-preview .nv-utility-head strong{font-size:14px;letter-spacing:-.01em;font-weight:650}
+html.nv-preview .nv-utility>button{
+  min-height:86px;grid-template-columns:31px minmax(0,1fr) 10px;
+  grid-template-rows:auto auto;gap:2px 9px;padding:16px 13px;
+  border-bottom:0;border-right:1px solid var(--line);transition:background-color .16s ease;
+}
+html.nv-preview .nv-utility>button:last-child{border-right:0}
+html.nv-preview .nv-utility>button:focus-visible{outline:2px solid var(--accent-strong);outline-offset:-3px}
+html.nv-preview .nv-utility-icon{width:29px;height:29px;border-radius:7px;grid-row:1/3}
+html.nv-preview .nv-utility-icon .icon{width:15px;height:15px}
+html.nv-preview .nv-utility>button b{font-size:12px;line-height:1.35}
+html.nv-preview .nv-utility>button small{font-size:10px;line-height:1.4}
+html.nv-preview .nv-utility>button i{font-size:12px}
+html.nv-preview .about-bar{justify-content:flex-end;min-height:48px}
+html.nv-preview .about-close{margin-left:auto}
+@media(max-width:980px){
+  html.nv-preview .nv-utility{grid-template-columns:repeat(2,minmax(0,1fr))}
+  html.nv-preview .nv-utility>button:nth-of-type(2){border-right:0}
+  html.nv-preview .nv-utility>button:nth-of-type(-n+2){border-bottom:1px solid var(--line)}
+}
+@media(max-width:560px){
+  html.nv-preview .nv-utility{grid-template-columns:1fr}
+  html.nv-preview .nv-utility-head{flex-direction:column;align-items:flex-start;gap:4px;padding:14px 16px}
+  html.nv-preview .nv-utility>button{min-height:65px;padding:12px 15px;border-right:0;border-bottom:1px solid var(--line)}
+  html.nv-preview .nv-utility>button:last-child{border-bottom:0}
+}
