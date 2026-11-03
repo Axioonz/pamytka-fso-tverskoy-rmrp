@@ -1,0 +1,375 @@
+
+/* FSO STUDIO / Phase 03. Black environment, editorial motion, distinct reading interfaces.
+   Isolated to portal.html, loaded after portal-blue.css. */
+html.nv-preview[data-theme="dark"]{
+  --bg:#050607;
+  --surface:#0d1118;
+  --surface2:#141b25;
+  --rail-bg:#080c12;
+  --line:#263342;
+  --line-hover:#435e76;
+  --text:#eef3f9;
+  --muted:#98aabd;
+  --faint:#657d92;
+  --input-bg:#101924;
+  --accent:#79baff;
+  --accent-strong:#9acfff;
+  --accent-wash:rgba(71,136,203,.115);
+  background:#050607;
+  color-scheme:dark;
+}
+html.nv-preview[data-theme="dark"] body{
+  background:#050607!important;
+  background-image:none!important;
+}
+html.nv-preview[data-theme="dark"] .nv-header{background:rgba(6,8,12,.95)!important}
+html.nv-preview[data-theme="dark"] .nv-hero-copy{
+  background-color:#090d13!important;
+  background-image:
+    radial-gradient(ellipse 530px 350px at -15% -20%,rgba(29,75,115,.19),transparent 78%),
+    linear-gradient(rgba(163,201,237,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(163,201,237,.025) 1px,transparent 1px)!important;
+  background-size:auto,54px 54px,54px 54px;
+}
+html.nv-preview[data-theme="dark"] .nv-hero{background:#080b10!important;border-color:#293746}
+html.nv-preview[data-theme="dark"] .nv-hero-photo{background-color:#070a0e}
+html.nv-preview[data-theme="dark"] .nv-main-module{
+  background-color:#101a28;
+  background-image:
+    radial-gradient(ellipse at 11% 8%,rgba(57,107,153,.21),transparent 67%),
+    linear-gradient(123deg,#142338,#0b1420 70%)!important;
+}
+html.nv-preview[data-theme="dark"] .nv-library{
+  background:#0d1723!important;
+  background-image:
+    radial-gradient(ellipse at 2% 0%,rgba(37,86,131,.23),transparent 67%),
+    linear-gradient(122deg,#111d2d,#0a111a 72%)!important;
+  border-color:#273f56;
+}
+html.nv-preview[data-theme="dark"] .nv-utility-head{background:#131b25}
+html.nv-preview[data-theme="dark"] .nv-workspace{background:#0d141d}
+html.nv-preview[data-theme="dark"] .nv-workspace-visual{background-color:#0b1a2a}
+html.nv-preview[data-theme="dark"] .nv-roadmap{
+ background:linear-gradient(110deg,rgba(52,104,153,.12),rgba(8,10,15,.25))!important;
+}
+html.nv-preview[data-theme="dark"] .nv-section-title::after{background:linear-gradient(90deg,#496880,#203041 58%,transparent)}
+html.nv-preview[data-theme="dark"] .nv-service-links>button:hover{background:#111b26}
+html.nv-preview[data-theme="dark"] .nv-legal-list button:hover{background:#101a25}
+
+/* Scroll progress: shows position without replacing native scrolling. */
+html.nv-preview .nv-reading-progress{
+ position:fixed;top:0;left:0;width:100%;height:2px;z-index:110;
+ background:linear-gradient(90deg,#4c9de4,#b8dcff);
+ transform:scaleX(0);transform-origin:left center;pointer-events:none;
+ will-change:transform;
+}
+html.nv-preview .nv-back-top{
+ position:fixed;right:24px;bottom:24px;z-index:52;
+ display:flex;align-items:center;justify-content:center;gap:8px;
+ min-height:42px;padding:10px 14px;border:1px solid #456788;
+ background:rgba(17,30,46,.96);color:#cde8ff;border-radius:11px;
+ box-shadow:0 12px 33px rgba(0,0,0,.26);
+ font-size:11px;font-weight:760;cursor:pointer;
+ opacity:0;transform:translateY(14px);pointer-events:none;
+ transition:opacity .22s ease,transform .22s ease,border-color .22s ease;
+}
+html.nv-preview .nv-back-top.is-visible{opacity:1;transform:none;pointer-events:auto}
+html.nv-preview .nv-back-top:hover{border-color:#82bdf0}
+html.nv-preview .nv-back-top svg{width:16px;height:16px}
+html.nv-preview .nv-home,
+html.nv-preview .nv-home section,
+html.nv-preview .nv-home button,
+html.nv-preview .nv-home a{scroll-margin-top:95px}
+
+/* Motion-stage entrance: all content is visible by default without JS. */
+@media(prefers-reduced-motion:no-preference){
+  html.nv-preview.nv-motion-ready .nv-reveal:not(.nv-visible){
+    opacity:0;
+    transform:translateY(26px);
+  }
+  html.nv-preview.nv-motion-ready .nv-reveal.nv-visible{
+    opacity:1;transform:none;
+  }
+  html.nv-preview .nv-reveal{
+    transition:opacity .74s cubic-bezier(.2,.78,.22,1),
+               transform .74s cubic-bezier(.2,.78,.22,1);
+    transition-delay:var(--nv-stagger,0ms);
+  }
+  html.nv-preview .nv-hero-photo{
+    animation:nv-hero-image 1.15s cubic-bezier(.17,.78,.23,1) both;
+  }
+  html.nv-preview .nv-hero h1{
+    animation:nv-hero-letters .9s cubic-bezier(.12,.8,.24,1) both;
+  }
+  html.nv-preview .nv-hero-copy>p{animation:nv-hero-letters .85s .1s both}
+  @keyframes nv-hero-image{
+    from{opacity:.3;filter:saturate(.45);clip-path:inset(0 100% 0 0)}
+    to{opacity:1;filter:none;clip-path:inset(0 0 0 0)}
+  }
+  @keyframes nv-hero-letters{
+    from{opacity:0;transform:translate3d(0,28px,0)}
+    to{opacity:1;transform:none}
+  }
+  html.nv-preview .nv-main-module:hover{
+    transform:translateY(-4px);
+    box-shadow:0 22px 50px rgba(0,0,0,.25);
+  }
+  html.nv-preview .nv-service-links>button:hover i{transform:translate(4px,-4px)}
+  html.nv-preview .nv-hero-photo .nv-image-foot button:hover{transform:rotate(45deg)}
+  html.nv-preview .nv-hero-photo .nv-image-foot button{transition:transform .3s cubic-bezier(.2,.85,.2,1),background .22s}
+}
+/* Same-document view transitions between navigation pages. A dynamic single-page application
+   keeps focus/scroll and does not rely on document fetches. */
+@supports(view-transition-name:root){
+  html.nv-preview.nv-view-transition::view-transition-old(root){
+    animation:nv-exit-page .18s ease-out both;
+  }
+  html.nv-preview.nv-view-transition::view-transition-new(root){
+    animation:nv-enter-page .32s cubic-bezier(.2,.78,.23,1) both;
+  }
+  @keyframes nv-exit-page{
+    to{opacity:.22;transform:translate3d(-9px,0,0);filter:blur(3px)}
+  }
+  @keyframes nv-enter-page{
+    from{opacity:.45;transform:translate3d(11px,8px,0);filter:blur(3px)}
+    to{opacity:1;transform:none;filter:none}
+  }
+}
+/* Internal page mastheads are intentionally different for each workflow. */
+html.nv-preview[data-theme="dark"] :is(.reference-head,.law-top,.det-head,.tg-header,.escort-banner,.service-header){
+ background:#0c111a!important;border-color:#2e4055!important;
+}
+html.nv-preview :is(.reference-head,.law-top,.det-head,.tg-header,.escort-banner,.service-header){
+ position:relative;overflow:hidden;min-height:200px!important;
+ display:flex;align-items:flex-end;gap:18px;
+ padding:clamp(27px,3.5vw,52px)!important;
+ border-radius:15px!important;
+ isolation:isolate;
+}
+html.nv-preview :is(.reference-head,.law-top,.det-head,.tg-header,.escort-banner,.service-header)::after{
+ content:"";display:block!important;position:absolute;right:0;bottom:0;z-index:-1;
+ width:42%;height:100%;
+ background:linear-gradient(90deg,transparent,rgba(52,101,144,.095));
+ pointer-events:none;
+}
+html.nv-preview :is(.reference-head,.law-top,.det-head,.tg-header,.escort-banner,.service-header) h1{
+ font-size:clamp(38px,4.45vw,67px)!important;max-width:1050px;
+ text-wrap:balance;
+}
+html.nv-preview :is(.reference-head,.law-top,.det-head,.tg-header,.escort-banner,.service-header) p{
+ max-width:810px!important;font-size:13px!important;
+}
+html.nv-preview .reference-head{
+ background:
+ radial-gradient(circle at 87% 25%,rgba(75,132,191,.20),transparent 34%),
+ linear-gradient(125deg,#0a111b,#111e2b)!important;
+}
+html.nv-preview .reference-head::before{
+ content:"";display:block!important;position:absolute;top:27px;right:34px;
+ width:88px;height:88px;border:1px solid rgba(119,180,226,.2);border-radius:50%;opacity:.8;
+ background:radial-gradient(circle,transparent 29%,rgba(119,180,226,.12) 30%,transparent 32%);
+}
+html.nv-preview .reference-count{white-space:nowrap}
+html.nv-preview .ref-mode{
+ position:relative;display:inline-flex;gap:4px;
+ border:1px solid var(--line);padding:5px;border-radius:11px;background:#0b121c;
+ margin:1px 0 18px;
+}
+html.nv-preview .ref-mode button{
+ border:0!important;border-radius:7px!important;background:transparent!important;
+ padding:10px 14px!important;color:#96aac0!important;font-weight:730;
+ transition:background .18s,color .18s;
+}
+html.nv-preview .ref-mode button.active{background:#1a3147!important;color:#b3dcff!important}
+html.nv-preview .ref-mode button:hover:not(.active){background:#142336!important}
+html.nv-preview .reference-controls{border-color:var(--line)!important}
+html.nv-preview .reference-list{max-width:none!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+html.nv-preview .reference-entry{
+ position:relative;min-height:122px!important;
+ display:flex;align-items:center;justify-content:space-between;gap:17px;
+ border:1px solid #263a4c!important;
+ padding:22px 22px 22px 26px!important;background:#0d141d!important;
+ border-radius:12px!important;transition:border-color .2s,background .2s,transform .2s;
+}
+html.nv-preview .reference-entry::before{
+ content:"";position:absolute;left:0;top:18px;bottom:18px;width:2px;
+ background:#81bfff;opacity:0;transition:opacity .18s;
+}
+html.nv-preview .reference-entry:hover{
+ transform:translateY(-2px);border-color:#4a779b!important;background:#121f2c!important;
+}
+html.nv-preview .reference-entry:hover::before{opacity:1}
+html.nv-preview .reference-reader{display:none}
+html.nv-preview .reference-overlay:not([hidden]) .reference-modal{border-color:#527293!important;box-shadow:0 35px 110px rgba(0,0,0,.75)}
+/* Territories: three differentiated access regimes and a deliberate hierarchy. */
+html.nv-preview .territory-guide .tg-header{
+ min-height:245px!important;
+ background:
+ linear-gradient(88deg,rgba(7,14,23,.95) 0%,rgba(9,17,27,.75) 48%,rgba(7,16,25,.50)),
+ url('../assets/senate-palace.webp') center 40%/cover no-repeat!important;
+}
+html.nv-preview .tg-breadcrumb{
+ display:inline-block;border:1px solid rgba(166,204,234,.21);
+ background:rgba(4,9,14,.54);padding:7px 10px;border-radius:6px;
+}
+html.nv-preview .tg-header .tg-header-main{position:relative;z-index:1;width:100%}
+html.nv-preview .territory-guide .tg-regime-grid{gap:16px}
+html.nv-preview .territory-guide .tg-regime{
+ border:1px solid #2d3b46!important;border-top:4px solid var(--reg)!important;
+ border-radius:13px!important;
+ padding:24px 22px!important;min-height:272px;
+ background:linear-gradient(165deg,color-mix(in srgb,var(--reg) 10%,#10151b),#090d11 78%)!important;
+ position:relative;overflow:hidden;
+ transition:transform .25s ease,border-color .25s ease;
+}
+html.nv-preview .territory-guide .tg-regime:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--reg) 48%,#253443)!important}
+html.nv-preview .territory-guide .tg-regime::after{
+ content:"";position:absolute;right:-24px;top:10px;width:100px;height:100px;
+ border-radius:50%;border:1px solid var(--reg);opacity:.17;pointer-events:none;
+ box-shadow:0 0 0 17px color-mix(in srgb,var(--reg) 5%,transparent),0 0 0 36px color-mix(in srgb,var(--reg) 3%,transparent);
+}
+html.nv-preview .territory-guide .tg-regime h3{font-size:clamp(20px,2.1vw,29px)!important;letter-spacing:-.045em}
+html.nv-preview .territory-guide .tg-regime p{line-height:1.75!important;max-width:325px}
+html.nv-preview .territory-guide .tg-regime-top small{font-size:10px;letter-spacing:.13em}
+html.nv-preview .territory-guide .tg-part{padding-top:58px;scroll-margin-top:94px}
+html.nv-preview .territory-guide .tg-part-head{
+ border-bottom:1px solid var(--line);padding-bottom:21px;margin-bottom:24px;
+}
+html.nv-preview .territory-guide .tg-part-head h2{font-size:clamp(28px,3vw,43px)}
+html.nv-preview .territory-guide :is(.tg-object-card,.tg-part,.tg-law-content){scroll-margin-top:94px}
+html.nv-preview .territory-guide .tg-object-card{background:#101721!important;border-radius:12px!important}
+html.nv-preview .territory-guide .tg-object-card:hover{border-color:#517593!important}
+/* Detention is a procedural timeline with a fixed contents panel. */
+html.nv-preview .det-head{
+ min-height:235px!important;
+ background:
+ radial-gradient(circle at 93% 65%,rgba(69,112,156,.21),transparent 36%),
+ linear-gradient(120deg,#0a1019,#0e1b2a)!important;
+}
+html.nv-preview .det-quick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:25px 0 42px!important}
+html.nv-preview .det-stat{
+ min-height:165px;padding:25px!important;border-radius:13px!important;
+ border:1px solid #283e54!important;background:#0c141f!important;
+ position:relative;overflow:hidden;
+}
+html.nv-preview .det-stat::before{
+ content:"";position:absolute;right:-30px;top:-38px;border-radius:50%;
+ width:150px;height:150px;border:1px solid rgba(115,184,241,.15);opacity:.8;
+}
+html.nv-preview .det-stat:first-child{border-left:3px solid #84bff4!important}
+html.nv-preview .det-stat:nth-child(2){border-left:3px solid #c29b5a!important}
+html.nv-preview .det-stat b{
+ font-size:clamp(31px,3vw,43px)!important;letter-spacing:-.055em;
+}
+html.nv-preview .det-stat span{max-width:550px}
+html.nv-preview .det-grid{grid-template-columns:minmax(0,1fr) minmax(245px,290px);gap:28px}
+html.nv-preview .det-step{grid-template-columns:54px minmax(0,1fr);gap:17px;padding-bottom:25px;scroll-margin-top:100px}
+html.nv-preview .det-step:not(:last-child)::before{left:26px;width:2px;background:linear-gradient(#5288b8,#263b50)}
+html.nv-preview .det-step-index{
+ border:1px solid #426785!important;border-radius:50%!important;
+ background:#15283b!important;color:#a8d8ff!important;font-size:15px;font-weight:770;
+ box-shadow:0 0 0 6px rgba(62,108,148,.085);
+}
+html.nv-preview .det-step-card{
+ background:#0b111a!important;border:1px solid #28394a!important;
+ border-radius:14px!important;padding:25px 29px!important;
+ transition:border-color .22s,background .22s;
+}
+html.nv-preview .det-step.nv-step-in-view .det-step-card{border-color:#486a87!important}
+html.nv-preview .det-step-card h2{font-size:clamp(22px,2.5vw,30px);letter-spacing:-.045em}
+html.nv-preview .det-aside{top:100px}
+html.nv-preview .det-aside-box{background:#0e1722!important;border:1px solid #294259!important;border-radius:12px!important;padding:23px}
+html.nv-preview .det-nav button{transition:background .17s,border-color .17s,color .17s}
+html.nv-preview .det-nav button.active{background:#1d344a!important;color:#c7e5ff!important;border-color:#456b8e!important}
+/* Legal documents: a dense reading console with a stable left document index. */
+html.nv-preview .law-top{
+ background:linear-gradient(118deg,#0d1622,#0a1119)!important;
+}
+html.nv-preview .law-layout{grid-template-columns:minmax(260px,335px) minmax(0,1fr);gap:16px}
+html.nv-preview .law-sidebar{
+ background:#0c131d!important;border:1px solid #2b4055!important;
+ border-radius:12px!important;top:91px;max-height:calc(100vh - 105px);
+}
+html.nv-preview .law-sidebar-head{background:#111e2d;border-bottom:1px solid #2e4358}
+html.nv-preview .law-reader{
+ background:#0c121b!important;border:1px solid #2a4056!important;
+ border-radius:12px!important;
+}
+html.nv-preview .law-list button{transition:background .15s,color .15s,border-color .15s}
+html.nv-preview .law-list button:hover{background:#192b40}
+html.nv-preview .law-document{font-size:14px;line-height:1.87;max-width:980px}
+html.nv-preview .law-article-nav{border-color:#294158}
+html.nv-preview .law-source{transition:border-color .2s,background .2s}
+html.nv-preview .law-source:hover{border-color:#80b9e7!important;background:#294b68!important}
+/* Escort: progression by topic instead of generic tile treatment. */
+html.nv-preview .escort-banner{background:linear-gradient(110deg,#0c111a,#101d2a)!important}
+html.nv-preview .escort-track{gap:11px}
+html.nv-preview .escort-track::before{background:linear-gradient(90deg,#273f56,#6b9ac6,#273f56)!important}
+html.nv-preview .escort-stop{
+ border:1px solid #294158!important;background:#0c141e!important;
+ border-radius:11px!important;transition:transform .2s,border-color .2s;
+}
+html.nv-preview .escort-stop:hover{transform:translateY(-3px);border-color:#5d83a3!important}
+html.nv-preview .escort-briefing{background:#0d141e!important;border:1px solid #324a60!important;border-radius:12px!important}
+/* Post selector becomes a compact real tool, not a brochure. */
+html.nv-preview .service-header{
+ background:linear-gradient(110deg,#0c111a,#122337)!important;
+}
+html.nv-preview .service-layout{grid-template-columns:270px minmax(0,1fr);gap:18px}
+html.nv-preview .service-tabs{
+ background:#0d1520!important;border:1px solid #2c4359!important;
+ border-radius:12px!important;top:95px;padding:13px!important;
+}
+html.nv-preview .service-tab{border-radius:8px!important}
+html.nv-preview .service-tab:hover{background:#1a2d41!important}
+html.nv-preview .service-tab.is-active{background:#1d344b!important;border-color:#3d617f!important}
+html.nv-preview .service-panel{background:#0c121b!important;border-color:#2b4259!important;border-radius:12px!important}
+html.nv-preview .service-panel-top{border-color:var(--line)}
+html.nv-preview .service-panel h2{letter-spacing:-.045em}
+html.nv-preview .service-screen :is(.duty-item,.duty-card){border-radius:11px!important}
+/* Keyboard navigation and scroll-linked states remain legible. */
+html.nv-preview :is(.reference-entry,.det-nav button,.law-list button,.nv-back-top,.nv-hero-buttons>*):focus-visible{
+ outline:2px solid #a9d7ff!important;outline-offset:3px;
+}
+@media(max-width:1100px){
+ html.nv-preview .reference-list{grid-template-columns:1fr}
+ html.nv-preview .det-grid{grid-template-columns:minmax(0,1fr) 235px}
+ html.nv-preview .law-layout{grid-template-columns:minmax(220px,285px) minmax(0,1fr)}
+}
+@media(max-width:790px){
+ html.nv-preview :is(.reference-head,.law-top,.det-head,.tg-header,.escort-banner,.service-header){padding:26px!important;min-height:155px!important}
+ html.nv-preview .reference-list{grid-template-columns:1fr}
+ html.nv-preview .det-grid{grid-template-columns:1fr}
+ html.nv-preview .det-aside{position:static;order:-1}
+ html.nv-preview .det-quick{grid-template-columns:1fr}
+ html.nv-preview .territory-guide .tg-regime-grid{grid-template-columns:1fr}
+ html.nv-preview .territory-guide .tg-regime{min-height:210px}
+ html.nv-preview .law-layout{grid-template-columns:1fr}
+ html.nv-preview .law-sidebar{position:static;max-height:360px}
+ html.nv-preview .service-layout{grid-template-columns:1fr}
+ html.nv-preview .service-tabs{position:static;display:flex;flex-wrap:wrap}
+ html.nv-preview .nv-back-top{right:13px;bottom:13px}
+}
+@media(max-width:560px){
+ html.nv-preview .nv-hero h1{font-size:clamp(43px,10vw,62px)}
+ html.nv-preview .det-stat{padding:19px!important}
+ html.nv-preview .det-step{grid-template-columns:40px minmax(0,1fr);gap:10px}
+ html.nv-preview .det-step-index{width:40px;height:40px}
+ html.nv-preview .det-step:not(:last-child)::before{left:19px;top:44px}
+ html.nv-preview .det-step-card{padding:17px!important}
+ html.nv-preview .reference-entry{padding:18px!important;min-height:106px!important}
+ html.nv-preview .service-tabs{flex-direction:column}
+}
+@media(prefers-reduced-motion:reduce){
+ html.nv-preview .nv-reading-progress{will-change:auto}
+ html.nv-preview .nv-hero-photo,
+ html.nv-preview .nv-hero h1,
+ html.nv-preview .nv-hero-copy>p,
+ html.nv-preview :is(.nv-reveal,.reference-entry,.det-step-card,.escort-stop,.nv-back-top){
+   animation:none!important;transition:none!important;transform:none!important;
+ }
+ html.nv-preview .nv-reveal{opacity:1!important}
+ html.nv-preview .nv-back-top{opacity:1;pointer-events:auto}
+ html.nv-preview::view-transition-old(root),
+ html.nv-preview::view-transition-new(root){animation:none!important}
+}
