@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="./css/основной-стиль.css?v=20261103-reference-layout">
 <link rel="stylesheet" href="./css/понятия.css">
+<link rel="stylesheet" href="./assets/posts-map/posts-map.css?v=20261104">
 
 <!--
   ИСПРАВЛЕНИЯ ВНЕШНЕГО ВИДА
@@ -662,23 +663,56 @@ body.about-locked{overflow:hidden}
     </div>
     <div class="service-header-mark" aria-hidden="true">П / П</div>
   </header>
-  <div class="service-layout">
-    <nav class="service-tabs" aria-label="Разделы постов и патрулей">
-      <div class="service-tabs-label">Содержание</div>
-      <button type="button" class="service-tab is-active" data-service-tab="posts" aria-current="true"><span><b>Посты</b><small>Фото, расположение, доклад</small></span><svg class="icon"><use href="#i-arrow"/></svg></button>
-      <button type="button" class="service-tab" data-service-tab="patrols"><span><b>Патрули</b><small>Маршрут, схема, доклад</small></span><svg class="icon"><use href="#i-arrow"/></svg></button>
-      <div class="service-tabs-foot">Каждое место или маршрут будет иметь свою карточку с докладом.</div>
+  <div class="postmap-shell" id="postmap-shell">
+    <div class="postmap-toolbar">
+      <div class="postmap-caption"><strong>Карта объектов</strong><small>Выберите КПП на карте. Маршруты показываются на этой же схеме.</small></div>
+      <div class="postmap-controls" aria-label="Масштаб карты">
+        <button type="button" id="postmap-zoom-out" aria-label="Уменьшить карту">−</button>
+        <button type="button" id="postmap-zoom-in" aria-label="Увеличить карту">+</button>
+        <button type="button" id="postmap-reset">Сброс</button>
+      </div>
+    </div>
+    <div class="postmap-viewport" id="postmap-viewport">
+      <svg id="postmap-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 876" role="img" aria-label="Карта Кремля, здания Правительства и контрольно-пропускных пунктов" preserveAspectRatio="xMidYMid meet">
+        <title>Схема постов и маршрутов ФСО</title>
+        <image href="./assets/posts-map/map.svg" x="0" y="0" width="1672" height="941" aria-hidden="true" pointer-events="none"/>
+        <g id="postmap-post-layer" aria-label="Посты">
+          <g class="postmap-point" data-post="1" role="button" tabindex="0" aria-label="КПП №1" transform="translate(579.1 527.9)">
+            <circle class="postmap-hit" r="24"/><circle class="postmap-halo" r="14"/><circle class="postmap-core" r="8.5"/>
+          </g>
+          <g class="postmap-point" data-post="2" role="button" tabindex="0" aria-label="КПП №2" transform="translate(386.1 621.3)">
+            <circle class="postmap-hit" r="24"/><circle class="postmap-halo" r="14"/><circle class="postmap-core" r="8.5"/>
+          </g>
+          <g class="postmap-point" data-post="3" role="button" tabindex="0" aria-label="КПП Правительства" transform="translate(160.1 689.6)">
+            <circle class="postmap-hit" r="24"/><circle class="postmap-halo" r="14"/><circle class="postmap-core" r="8.5"/>
+          </g>
+        </g>
+        <g id="postmap-route-layer" aria-label="Маршруты патрулей" hidden></g>
+      </svg>
+      <aside class="postmap-popup" id="postmap-popup" hidden aria-live="polite">
+        <button type="button" id="postmap-popup-close" class="postmap-popup-close" aria-label="Закрыть карточку">×</button>
+        <span class="postmap-badge">Контрольно-пропускной пункт</span>
+        <h3 id="postmap-popup-title"></h3>
+        <img id="postmap-popup-photo" alt="" loading="lazy"/>
+        <p id="postmap-popup-desc"></p>
+      </aside>
+      <div class="postmap-zoom" id="postmap-zoom">100%</div>
+    </div>
+    <nav class="postmap-tabs" aria-label="Что показывать на карте">
+      <button type="button" class="service-tab is-active" data-service-tab="posts" aria-current="true">
+        <span><b>Посты</b><small>Расположение КПП</small></span>
+      </button>
+      <button type="button" class="service-tab" data-service-tab="patrols">
+        <span><b>Патрули</b><small>Маршруты патрулирования</small></span>
+      </button>
     </nav>
-    <div class="service-panels">
-      <section class="service-panel" id="service-panel-posts" aria-label="Посты">
-        <div class="service-panel-top"><h2>Посты</h2><p>Фотография, название, расположение и доклад находятся в одной карточке. Доклад можно будет скопировать одной кнопкой.</p></div>
-        <div class="duty-list" id="service-list-posts" aria-live="polite"></div>
+    <div class="postmap-panels">
+      <section id="service-panel-posts" class="postmap-mode-panel" aria-label="Посты">
+        <p>Три КПП отмечены на карте одним цветом. Нажмите на точку, чтобы открыть фотографию поста.</p>
       </section>
-      <section class="service-panel" id="service-panel-patrols" aria-label="Патрули" hidden>
-        <div class="service-panel-top"><h2>Патрули</h2><p>Для каждого маршрута будут указаны схема или фотография, участок патрулирования и соответствующий доклад.</p></div>
-        <div class="duty-list" id="service-list-patrols" aria-live="polite"></div>
+      <section id="service-panel-patrols" class="postmap-mode-panel" aria-label="Патрули" hidden>
+        <p id="postmap-patrol-hint">Маршруты патрулирования пока не добавлены. В этой вкладке будут отображаться их линии на общей карте.</p>
       </section>
-      <p class="service-note">Названия, расположения, маршруты и доклады добавим после получения материалов. Никаких постов или формулировок в памятку заранее не внесено.</p>
     </div>
   </div>
 </section>
@@ -3211,6 +3245,7 @@ if(!window.FSO_REFERENCE_META||!Object.keys(window.FSO_REFERENCE_META).length)wi
  }));
 })();
 </script>
+<script src="./assets/posts-map/posts-map.js?v=20261104"></script>
 </body>
 </html>
 
