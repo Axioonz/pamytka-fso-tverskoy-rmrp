@@ -1361,25 +1361,4 @@
 <path fill="#d87671" d="M795.91 1049.21l0.96 0.69l-0.71 0.15l-0.25 -0.84z"/>
 <path fill="#000000" d="M72.21 557.14c0.65 -0.81 1.22 -1.33 2.08 -1.94c-0.72 0.63 -1.41 1.27 -2.08 1.94z"/>
 <path fill="#eb6e67" d="M106.98 535.12l3.03 0.02c-1.05 0.08 -1.99 0.07 -3.03 -0.02z"/>
-</g><g id="map-landmarks" data-layer="landmark-pictograms">
-<g id="place-fso" transform="translate(255 506)" data-place="fso" aria-label="Здание ФСО">
- <title>Здание ФСО</title><rect x="-22" y="-24" width="44" height="44" rx="11" fill="#112c41" stroke="#369ad9" stroke-width="2"/>
- <path d="M0 -15L13 -10V-1Q13 9 0 14Q-13 9 -13 -1V-10Z" fill="none" stroke="#a5dfff" stroke-width="2.1" stroke-linejoin="round"/>
- <path d="M-6 -1L-1 4L8 -6" fill="none" stroke="#63c7ff" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>
- <rect x="28" y="-18" width="69" height="31" rx="9" fill="#102335" fill-opacity=".95" stroke="#255878"/>
- <text x="62" y="3" font-size="15" font-family="Arial,sans-serif" font-weight="700" text-anchor="middle" fill="#bfe6ff">ФСО</text>
-</g>
-<g id="place-duma" transform="translate(161 695)" data-place="duma" aria-label="Здание Государственной думы">
- <title>Здание Государственной думы</title><rect x="-22" y="-24" width="44" height="44" rx="11" fill="#133229" stroke="#37bd8b" stroke-width="2"/>
- <path d="M-14 -5L0 -14L14 -5M-14 -3H14M-11 0V10M-3 0V10M5 0V10M13 0V10M-15 11H15M-16 14H16" fill="none" stroke="#adf6d6" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
- <rect x="27" y="-18" width="114" height="31" rx="9" fill="#102b27" fill-opacity=".95" stroke="#24654d"/>
- <text x="84" y="3" font-size="14" font-family="Arial,sans-serif" font-weight="700" text-anchor="middle" fill="#b9f3dc">ГОС. ДУМА</text>
-</g>
-<g id="place-government" data-place="government" aria-label="Дом Правительства">
- <title>Дом Правительства</title><path d="M1304 1357L1334 1326" fill="none" stroke="#ffcd60" stroke-width="2" stroke-opacity=".65" stroke-dasharray="4 3"/>
- <g transform="translate(1351 1302)"><rect x="-21" y="-23" width="44" height="44" rx="11" fill="#392b16" stroke="#d6a447" stroke-width="2"/>
-  <path d="M-13 -6L1 -14L15 -6V-3H-13ZM-11 1H13M-10 2V9M-3 2V9M5 2V9M12 2V9M-14 11H16M-15 14H17" fill="none" stroke="#ffe7ac" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-  <rect x="-151" y="-18" width="124" height="31" rx="9" fill="#302718" fill-opacity=".96" stroke="#7f6031"/>
-  <text x="-89" y="2" font-size="13" font-family="Arial,sans-serif" font-weight="700" text-anchor="middle" fill="#ffe1a4">ПРАВИТЕЛЬСТВО</text>
- </g>
-</g></g></svg>
+</g></svg>

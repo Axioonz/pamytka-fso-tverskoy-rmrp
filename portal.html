@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="./css/основной-стиль.css?v=20261103-reference-layout">
 <link rel="stylesheet" href="./css/понятия.css">
-<link rel="stylesheet" href="./assets/posts-map/posts-map.css?v=20261107-five-posts">
+<link rel="stylesheet" href="./assets/posts-map/posts-map.css?v=20261107-clickable-buildings">
 <link rel="stylesheet" href="./assets/posts-map/post-duty.css?v=20261106-account">
 
 <!--
@@ -676,7 +676,25 @@ body.about-locked{overflow:hidden}
     <div class="postmap-viewport" id="postmap-viewport">
       <svg id="postmap-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1790 1518" role="img" aria-label="Карта зданий ФСО, Госдумы и Правительства с пятью КПП" preserveAspectRatio="xMidYMid meet">
         <title>Схема постов и маршрутов ФСО</title>
-        <image href="./assets/posts-map/map.svg?v=20261107-five-posts" x="0" y="0" width="1790" height="1518" aria-hidden="true" pointer-events="none"/>
+        <image href="./assets/posts-map/map.svg?v=20261107-clickable-buildings" x="0" y="0" width="1790" height="1518" aria-hidden="true" pointer-events="none"/>
+        <g id="postmap-landmark-layer" aria-label="Обозначения зданий">
+          <g class="postmap-place" data-place="fso" role="button" tabindex="0" aria-label="Здание ФСО" transform="translate(255 506)">
+            <circle class="postmap-place-hit" r="31"/>
+            <rect x="-22" y="-24" width="44" height="44" rx="11" fill="#112c41" stroke="#369ad9" stroke-width="2"/>
+            <path d="M0 -15L13 -10V-1Q13 9 0 14Q-13 9 -13 -1V-10Z" fill="none" stroke="#a5dfff" stroke-width="2.1" stroke-linejoin="round"/>
+            <path d="M-6 -1L-1 4L8 -6" fill="none" stroke="#63c7ff" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+          <g class="postmap-place" data-place="duma" role="button" tabindex="0" aria-label="Государственная дума" transform="translate(161 780)">
+            <circle class="postmap-place-hit" r="31"/>
+            <rect x="-22" y="-24" width="44" height="44" rx="11" fill="#133229" stroke="#37bd8b" stroke-width="2"/>
+            <path d="M-14 -5L0 -14L14 -5M-14 -3H14M-11 0V10M-3 0V10M5 0V10M13 0V10M-15 11H15M-16 14H16" fill="none" stroke="#adf6d6" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+          <g class="postmap-place" data-place="government" role="button" tabindex="0" aria-label="Дом Правительства" transform="translate(1351 1302)">
+            <circle class="postmap-place-hit" r="31"/>
+            <rect x="-21" y="-23" width="44" height="44" rx="11" fill="#392b16" stroke="#d6a447" stroke-width="2"/>
+            <path d="M-13 -6L1 -14L15 -6V-3H-13ZM-11 1H13M-10 2V9M-3 2V9M5 2V9M12 2V9M-14 11H16M-15 14H17" fill="none" stroke="#ffe7ac" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+          </g>
+        </g>
         <g id="postmap-post-layer" aria-label="Пять КПП">
           <g class="postmap-point" data-post="1" role="button" tabindex="0" aria-label="КПП №1" transform="translate(579.1 527.9)">
             <circle class="postmap-hit" r="24"/><circle class="postmap-halo" r="14"/><circle class="postmap-core" r="8.5"/>
@@ -684,7 +702,7 @@ body.about-locked{overflow:hidden}
           <g class="postmap-point" data-post="2" role="button" tabindex="0" aria-label="КПП №2" transform="translate(386.1 621.3)">
             <circle class="postmap-hit" r="24"/><circle class="postmap-halo" r="14"/><circle class="postmap-core" r="8.5"/>
           </g>
-          <g class="postmap-point" data-post="3" role="button" tabindex="0" aria-label="КПП Гос. думы" transform="translate(213 717)">
+          <g class="postmap-point" data-post="3" role="button" tabindex="0" aria-label="КПП Гос. думы" transform="translate(160.1 689.6)">
             <circle class="postmap-hit" r="24"/><circle class="postmap-halo" r="14"/><circle class="postmap-core" r="8.5"/>
           </g>
           <g class="postmap-point" data-post="4" role="button" tabindex="0" aria-label="КПП 2-го этажа" transform="translate(1254 1366)">
@@ -3292,9 +3310,9 @@ if(!window.FSO_REFERENCE_META||!Object.keys(window.FSO_REFERENCE_META).length)wi
  }));
 })();
 </script>
-<script src="./assets/posts-map/posts-map.js?v=20261107-five-posts"></script>
+<script src="./assets/posts-map/posts-map.js?v=20261107-clickable-buildings"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.js"></script>
-<script src="./assets/posts-map/post-duty.js?v=20261107-five-posts"></script>
+<script src="./assets/posts-map/post-duty.js?v=20261107-clickable-buildings"></script>
 </body>
 </html>
 

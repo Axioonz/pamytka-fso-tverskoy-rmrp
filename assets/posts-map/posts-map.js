@@ -4,8 +4,10 @@
   if(!svg)return;
   const stage=document.getElementById('postmap-viewport');
   const layerPosts=document.getElementById('postmap-post-layer');
+  const layerPlaces=document.getElementById('postmap-landmark-layer');
   const layerRoutes=document.getElementById('postmap-route-layer');
   const popup=document.getElementById('postmap-popup');
+  const badge=popup?.querySelector('.postmap-badge');
   const photo=document.getElementById('postmap-popup-photo');
   const title=document.getElementById('postmap-popup-title');
   const description=document.getElementById('postmap-popup-desc');
@@ -15,20 +17,29 @@
   const posts={
     '1':{x:579.1,y:527.9,title:'КПП №1',desc:'Пост у восточной границы охраняемой территории.',photo:'./assets/posts-map/photos/kpp-1.jpg'},
     '2':{x:386.1,y:621.3,title:'КПП №2',desc:'Пост у южной стороны охраняемой территории.',photo:'./assets/posts-map/photos/kpp-2.jpg'},
-    '3':{x:213,y:717,title:'КПП Гос. думы',desc:'Контрольно-пропускной пункт Государственной думы.',photo:null},
+    '3':{x:160.1,y:689.6,title:'КПП Гос. думы',desc:'Контрольно-пропускной пункт Государственной думы.',photo:'./assets/posts-map/photos/kpp-3.jpg'},
     '4':{x:1254,y:1366,title:'КПП 2-го этажа',desc:'Дополнительный КПП на 2-м этаже в отмеченной точке.',photo:null},
     '5':{x:1282,y:1379,title:'КПП 5-го этажа',desc:'Дополнительный КПП на 5-м этаже в отмеченной точке.',photo:null}
+  };
+  const places={
+    fso:{x:255,y:506,title:'Здание ФСО',desc:'Федеральная служба охраны.'},
+    duma:{x:161,y:780,title:'Государственная дума',desc:'Здание Государственной думы.'},
+    government:{x:1351,y:1302,title:'Дом Правительства',desc:'Здание Правительства.'}
   };
   let view={...base},mode='posts',drag=null,dragMoved=false;
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   function closePopup(){
     popup.hidden=true;
-    document.querySelectorAll('#postmap-post-layer .postmap-point.is-selected').forEach(el=>el.classList.remove('is-selected'));
+    document.querySelectorAll('#postmap-post-layer .postmap-point.is-selected, #postmap-landmark-layer .postmap-place.is-selected').forEach(el=>el.classList.remove('is-selected'));
   }
   function markersScale(){
     const scale=view.w/base.w;
     layerPosts.querySelectorAll('[data-post]').forEach(el=>{
       const p=posts[el.dataset.post];
+      if(p)el.setAttribute('transform','translate('+p.x+' '+p.y+') scale('+scale+')');
+    });
+    layerPlaces?.querySelectorAll('[data-place]').forEach(el=>{
+      const p=places[el.dataset.place];
       if(p)el.setAttribute('transform','translate('+p.x+' '+p.y+') scale('+scale+')');
     });
   }
@@ -66,11 +77,30 @@
     if(point)point.classList.add('is-selected');
     title.textContent=p.title;
     description.textContent=p.desc;
+    popup.dataset.popupType='post';
+    if(badge)badge.textContent='Контрольно-пропускной пункт';
+    const occupancy=popup.querySelector('#postmap-occupancy');
+    if(occupancy)occupancy.hidden=false;
     photo.hidden=!p.photo;
     if(p.photo){photo.src=p.photo;photo.alt='Фото '+p.title}
     else{photo.removeAttribute('src');photo.alt=''}
     popup.hidden=false;
     if(fly)focus(id);
+  }
+  function selectPlace(id){
+    const p=places[id];if(!p)return;
+    closePopup();
+    const marker=layerPlaces?.querySelector('[data-place="'+id+'"]');
+    if(marker)marker.classList.add('is-selected');
+    popup.dataset.popupType='place';
+    if(badge)badge.textContent='Объект на карте';
+    title.textContent=p.title;
+    description.textContent=p.desc;
+    photo.hidden=true;
+    photo.removeAttribute('src');
+    const occupancy=popup.querySelector('#postmap-occupancy');
+    if(occupancy)occupancy.hidden=true;
+    popup.hidden=false;
   }
   function setMode(value){
     mode=value==='patrols'?'patrols':'posts';
@@ -109,7 +139,8 @@
   svg.addEventListener('pointerdown',e=>{
     if(e.button!==0)return;
     const marker=e.target.closest?.('[data-post]');
-    drag={x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY,post:marker?.dataset.post||null};
+    const place=e.target.closest?.('[data-place]');
+    drag={x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY,post:marker?.dataset.post||null,place:place?.dataset.place||null};
     dragMoved=false;
     svg.classList.add('is-dragging');
     try{svg.setPointerCapture(e.pointerId)}catch{}
@@ -130,17 +161,22 @@
   });
   function release(e,cancelled=false){
     if(!drag)return;
-    const id=drag.post;
-    const shouldSelect=!cancelled&&!dragMoved&&id;
+    const id=drag.post,place=drag.place;
+    const shouldSelect=!cancelled&&!dragMoved;
     drag=null;svg.classList.remove('is-dragging');
     try{svg.releasePointerCapture(e.pointerId)}catch{}
-    if(shouldSelect)selectPost(id);
+    if(shouldSelect&&id)selectPost(id);
+    else if(shouldSelect&&place)selectPlace(place);
   }
   svg.addEventListener('pointerup',e=>release(e));
   svg.addEventListener('pointercancel',e=>release(e,true));
   svg.addEventListener('keydown',e=>{
     const key=e.target.closest?.('[data-post]')?.dataset.post;
-    if(key&&(e.key==='Enter'||e.key===' ')){e.preventDefault();selectPost(key)}
+    const place=e.target.closest?.('[data-place]')?.dataset.place;
+    if((key||place)&&(e.key==='Enter'||e.key===' ')){
+      e.preventDefault();
+      if(key)selectPost(key);else selectPlace(place);
+    }
   });
   document.getElementById('postmap-zoom-in')?.addEventListener('click',()=>zoom(.78));
   document.getElementById('postmap-zoom-out')?.addEventListener('click',()=>zoom(1.28));

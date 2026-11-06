@@ -58,3 +58,11 @@
 .postmap-floor{font-family:Arial,sans-serif;font-size:15px;font-weight:700;fill:#ccecff;stroke:#0b1725;stroke-width:3.5px;paint-order:stroke;text-anchor:middle;pointer-events:none}
 .postmap-popup img[hidden]{display:none!important}
 .postmap-shell #postmap-svg{background:#101923}
+
+/* Объекты представлены только пиктограммами, названия доступны по нажатию. */
+.postmap-place{cursor:pointer;outline:none}
+.postmap-place .postmap-place-hit{fill:transparent;stroke:none}
+.postmap-place>rect{transition:stroke-width .15s ease,filter .15s ease}
+.postmap-place:hover>rect,.postmap-place.is-selected>rect{stroke-width:3;filter:brightness(1.18)}
+.postmap-place:focus-visible>rect{stroke:#fff;stroke-width:3.5}
+.postmap-popup #postmap-occupancy[hidden]{display:none!important}

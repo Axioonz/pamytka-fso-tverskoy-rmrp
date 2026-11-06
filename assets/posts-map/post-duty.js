@@ -108,8 +108,13 @@ function drawMap(){
 }
 function showPopupRoster(){
   const popup=get('postmap-popup');if(!popup)return;
+  if(popup.dataset.popupType==='place'){
+    const extra=get('postmap-occupancy');if(extra)extra.hidden=true;
+    return;
+  }
   let extra=get('postmap-occupancy');
   if(!extra){extra=node('div','postmap-occupancy');extra.id='postmap-occupancy';popup.append(extra)}
+  extra.hidden=false;
   const id=popupPostId||post.value||'1',count=postCount(id);
   const heading=node('strong','',count?'На посту: '+personCount(count):'Пост свободен');
   extra.replaceChildren(heading);
