@@ -23,8 +23,8 @@
   };
   const places={
     fso:{x:255,y:506,title:'Здание ФСО',desc:'Федеральная служба охраны.'},
-    duma:{x:161,y:780,title:'Государственная дума',desc:'Здание Государственной думы.'},
-    government:{x:1351,y:1302,title:'Дом Правительства',desc:'Здание Правительства.'}
+    duma:{x:149,y:742,title:'Государственная дума',desc:'Здание Государственной думы.'},
+    government:{x:1215,y:1412,title:'Дом Правительства',desc:'Здание Правительства.'}
   };
   let view={...base},mode='posts',drag=null,dragMoved=false;
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
