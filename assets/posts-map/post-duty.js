@@ -10,11 +10,11 @@ const post=get('post-duty-post'),condition=get('post-duty-condition'),incident=g
 const checkin=get('post-duty-checkin'),checkout=get('post-duty-checkout'),status=get('post-duty-status'),live=get('post-duty-live'),own=get('post-duty-own');
 const roster=get('post-duty-roster'),total=get('post-duty-total');
 const reports={start:get('post-duty-report-start'),current:get('post-duty-report-current'),end:get('post-duty-report-end')};
-const postNames={'1':'КПП №1','2':'КПП №2','3':'КПП Правительства'};
+const postNames={'1':'КПП №1','2':'КПП №2','3':'КПП Гос. думы','4':'КПП 2-го этажа','5':'КПП 5-го этажа'};
 const conditionText={stable:'стабильная',attention:'повышенное внимание',violation:'нарушение',emergency:'чрезвычайная ситуация'};
 const url='https://lejagyuibxdnvpmxoggy.supabase.co';
 const key='sb_publishable_8cdFcw4V8F545924bpdLjg_3yKTHt1d';
-let db=null,identity=null,mine=null,active=[],counts={'1':0,'2':0,'3':0};
+let db=null,identity=null,mine=null,active=[],counts={'1':0,'2':0,'3':0,'4':0,'5':0};
 let busy=false,popupPostId=null,authSerial=0,refreshSerial=0;
 const safe=v=>String(v??'').trim();
 const personCount=n=>n+' '+(n%10===1&&n%100!==11?'сотрудник':n%10>=2&&n%10<=4&&(n%100<12||n%100>14)?'сотрудника':'сотрудников');
@@ -125,7 +125,7 @@ function showPopupRoster(){
   }
 }
 function recalcCountsFromRoster(){
-  counts={'1':0,'2':0,'3':0};
+  counts={'1':0,'2':0,'3':0,'4':0,'5':0};
   for(const row of active)if(Object.prototype.hasOwnProperty.call(counts,row.post_id))counts[row.post_id]++;
 }
 async function refreshCounts(){
@@ -135,7 +135,7 @@ async function refreshCounts(){
     const r=await db.rpc('fso_post_counts');
     if(r.error)throw r.error;
     if(serial!==refreshSerial||identity)return;
-    counts={'1':0,'2':0,'3':0};
+    counts={'1':0,'2':0,'3':0,'4':0,'5':0};
     for(const row of Array.isArray(r.data)?r.data:[]){
       if(Object.prototype.hasOwnProperty.call(counts,row.post_id))counts[row.post_id]=Number(row.count)||0;
     }

@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="./css/основной-стиль.css?v=20261103-reference-layout">
 <link rel="stylesheet" href="./css/понятия.css">
-<link rel="stylesheet" href="./assets/posts-map/posts-map.css?v=20261104">
+<link rel="stylesheet" href="./assets/posts-map/posts-map.css?v=20261107-five-posts">
 <link rel="stylesheet" href="./assets/posts-map/post-duty.css?v=20261106-account">
 
 <!--
@@ -674,18 +674,26 @@ body.about-locked{overflow:hidden}
       </div>
     </div>
     <div class="postmap-viewport" id="postmap-viewport">
-      <svg id="postmap-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 876" role="img" aria-label="Карта Кремля, здания Правительства и контрольно-пропускных пунктов" preserveAspectRatio="xMidYMid meet">
+      <svg id="postmap-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1790 1518" role="img" aria-label="Карта зданий ФСО, Госдумы и Правительства с пятью КПП" preserveAspectRatio="xMidYMid meet">
         <title>Схема постов и маршрутов ФСО</title>
-        <image href="./assets/posts-map/map.svg" x="0" y="0" width="1672" height="941" aria-hidden="true" pointer-events="none"/>
-        <g id="postmap-post-layer" aria-label="Посты">
+        <image href="./assets/posts-map/map.svg?v=20261107-five-posts" x="0" y="0" width="1790" height="1518" aria-hidden="true" pointer-events="none"/>
+        <g id="postmap-post-layer" aria-label="Пять КПП">
           <g class="postmap-point" data-post="1" role="button" tabindex="0" aria-label="КПП №1" transform="translate(579.1 527.9)">
             <circle class="postmap-hit" r="24"/><circle class="postmap-halo" r="14"/><circle class="postmap-core" r="8.5"/>
           </g>
           <g class="postmap-point" data-post="2" role="button" tabindex="0" aria-label="КПП №2" transform="translate(386.1 621.3)">
             <circle class="postmap-hit" r="24"/><circle class="postmap-halo" r="14"/><circle class="postmap-core" r="8.5"/>
           </g>
-          <g class="postmap-point" data-post="3" role="button" tabindex="0" aria-label="КПП Правительства" transform="translate(160.1 689.6)">
+          <g class="postmap-point" data-post="3" role="button" tabindex="0" aria-label="КПП Гос. думы" transform="translate(213 717)">
             <circle class="postmap-hit" r="24"/><circle class="postmap-halo" r="14"/><circle class="postmap-core" r="8.5"/>
+          </g>
+          <g class="postmap-point" data-post="4" role="button" tabindex="0" aria-label="КПП 2-го этажа" transform="translate(1254 1366)">
+            <circle class="postmap-hit" r="24"/><circle class="postmap-halo" r="14"/><circle class="postmap-core" r="8.5"/>
+            <text class="postmap-floor" x="0" y="-30">2 эт.</text>
+          </g>
+          <g class="postmap-point" data-post="5" role="button" tabindex="0" aria-label="КПП 5-го этажа" transform="translate(1282 1379)">
+            <circle class="postmap-hit" r="24"/><circle class="postmap-halo" r="14"/><circle class="postmap-core" r="8.5"/>
+            <text class="postmap-floor" x="0" y="37">5 эт.</text>
           </g>
         </g>
         <g id="postmap-route-layer" aria-label="Маршруты патрулей" hidden></g>
@@ -709,7 +717,7 @@ body.about-locked{overflow:hidden}
     </nav>
     <div class="postmap-panels">
       <section id="service-panel-posts" class="postmap-mode-panel" aria-label="Посты">
-        <p>Три КПП отмечены на карте одним цветом. Нажмите на точку, чтобы открыть фотографию поста.</p>
+        <p>На карте пять КПП. Нажмите на точку для просмотра поста. Значками отмечены здания ФСО, Госдумы и Правительства.</p>
         <div class="post-duty" id="post-duty">
           <div class="post-duty-heading"><div><span class="post-duty-eyebrow">Дежурство на объекте</span><h3>Доклады и заступление</h3></div><span class="post-duty-live" id="post-duty-live">Проверка авторизации…</span></div>
           <div class="post-duty-gate" id="post-duty-gate">
@@ -720,7 +728,7 @@ body.about-locked{overflow:hidden}
           <div class="post-duty-authorized" id="post-duty-authorized" hidden>
             <div class="post-duty-identity" id="post-duty-identity" aria-live="polite"></div>
             <div class="post-duty-fields">
-              <label>Пост<select id="post-duty-post"><option value="1">КПП №1</option><option value="2">КПП №2</option><option value="3">КПП Правительства</option></select></label>
+              <label>Пост<select id="post-duty-post"><option value="1">КПП №1</option><option value="2">КПП №2</option><option value="3">КПП Гос. думы</option><option value="4">КПП 2-го этажа</option><option value="5">КПП 5-го этажа</option></select></label>
               <label>Обстановка<select id="post-duty-condition">
                 <option value="stable">Стабильная</option>
                 <option value="attention">Повышенное внимание</option>
@@ -3284,9 +3292,9 @@ if(!window.FSO_REFERENCE_META||!Object.keys(window.FSO_REFERENCE_META).length)wi
  }));
 })();
 </script>
-<script src="./assets/posts-map/posts-map.js?v=20261104"></script>
+<script src="./assets/posts-map/posts-map.js?v=20261107-five-posts"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.js"></script>
-<script src="./assets/posts-map/post-duty.js?v=20261106-account"></script>
+<script src="./assets/posts-map/post-duty.js?v=20261107-five-posts"></script>
 </body>
 </html>
 
