@@ -1,104 +1,105 @@
-/* Генератор докладов и общий учёт активных постов. */
+/* Общая карта постов, генератор докладов и авторизация через служебный кабинет. */
 (()=>{
 'use strict';
 const root=document.getElementById('post-duty');
 if(!root)return;
 const get=id=>document.getElementById(id);
-const rank=get('post-duty-rank'),surname=get('post-duty-surname'),post=get('post-duty-post'),condition=get('post-duty-condition'),incident=get('post-duty-incident'),incidentField=get('post-duty-incident-field');
+const gate=get('post-duty-gate'),gateMessage=get('post-duty-gate-message'),authorized=get('post-duty-authorized');
+const identityLabel=get('post-duty-identity');
+const post=get('post-duty-post'),condition=get('post-duty-condition'),incident=get('post-duty-incident'),incidentField=get('post-duty-incident-field');
 const checkin=get('post-duty-checkin'),checkout=get('post-duty-checkout'),status=get('post-duty-status'),live=get('post-duty-live'),own=get('post-duty-own');
 const roster=get('post-duty-roster'),total=get('post-duty-total');
-const postNames={'1':'КПП №1','2':'КПП №2','3':'КПП Правительства'};
 const reports={start:get('post-duty-report-start'),current:get('post-duty-report-current'),end:get('post-duty-report-end')};
+const postNames={'1':'КПП №1','2':'КПП №2','3':'КПП Правительства'};
+const conditionText={stable:'стабильная',attention:'повышенное внимание',violation:'нарушение',emergency:'чрезвычайная ситуация'};
 const url='https://lejagyuibxdnvpmxoggy.supabase.co';
 const key='sb_publishable_8cdFcw4V8F545924bpdLjg_3yKTHt1d';
-const tokenKey='fso_post_duty_device_v1';
-const surnameKey='fso_post_duty_surname_v1',rankKey='fso_post_duty_rank_v1';
-let db=null,token=null,active=[],mine=null,busy=false,popupPostId=null;
-const safe=v=>String(v||'').trim();
+let db=null,identity=null,mine=null,active=[],counts={'1':0,'2':0,'3':0};
+let busy=false,popupPostId=null,authSerial=0,refreshSerial=0;
+const safe=v=>String(v??'').trim();
 const personCount=n=>n+' '+(n%10===1&&n%100!==11?'сотрудник':n%10>=2&&n%10<=4&&(n%100<12||n%100>14)?'сотрудника':'сотрудников');
-const conditionText={stable:'стабильная',attention:'повышенное внимание',violation:'нарушение',emergency:'чрезвычайная ситуация'};
-function incidentRequired(){return condition.value==='violation'||condition.value==='emergency'}
-function updateIncident(){
-  incidentField.hidden=!incidentRequired();
-  incident.required=incidentRequired();
+const node=(tag,className,value)=>{const el=document.createElement(tag);if(className)el.className=className;if(value!==undefined)el.textContent=value;return el};
+const postCount=id=>Number(counts[id]||0);
+const postRows=id=>active.filter(x=>x.post_id===id);
+const incidentRequired=()=>condition.value==='violation'||condition.value==='emergency';
+const publicName=x=>safe(x.rank)+' '+safe(x.surname)+(x.first_name?' '+x.first_name.charAt(0)+'.':'')+(x.employee_number?' · №'+x.employee_number:'');
+const reportName=x=>safe(x.rank)+' '+safe(x.surname);
+function setStatus(value,bad=false){status.textContent=value;status.classList.toggle('is-error',bad)}
+function setLive(value,bad=false){live.textContent=value;live.classList.toggle('is-error',bad);live.classList.toggle('is-ok',!bad)}
+function setBusy(value){
+  busy=value;
+  checkin.disabled=value||!identity||!db;
+  checkout.disabled=value||!identity||!db||!mine;
 }
-const postRows=id=>active.filter(row=>row.post_id===id);
-function setStatus(value,isError=false){status.textContent=value;status.classList.toggle('is-error',isError)}
-function saveInputs(){
-  try{localStorage.setItem(surnameKey,safe(surname.value));localStorage.setItem(rankKey,rank.value)}catch{}
+function setLocked(message){
+  identity=null;mine=null;active=[];
+  gate.hidden=false;authorized.hidden=true;
+  gateMessage.textContent=message;
+  identityLabel.textContent='';
+  setBusy(false);
+  for(const el of Object.values(reports))el.textContent='';
+  drawRoster();
 }
-function loadInputs(){
-  try{surname.value=localStorage.getItem(surnameKey)||'';rank.value=localStorage.getItem(rankKey)||''}catch{}
+function setReady(details){
+  identity=details;
+  gate.hidden=true;authorized.hidden=false;
+  identityLabel.textContent=publicName(details)+' · Личный кабинет подтверждён';
+  updateReports();setBusy(false);
 }
-function ensureToken(){
-  try{
-    let value=localStorage.getItem(tokenKey);
-    if(value&&/^[a-f0-9]{64}$/.test(value))return value;
-    if(!window.crypto?.getRandomValues)throw Error('Браузер не поддерживает безопасную генерацию ключа');
-    const bytes=new Uint8Array(32);crypto.getRandomValues(bytes);
-    value=[...bytes].map(b=>b.toString(16).padStart(2,'0')).join('');
-    localStorage.setItem(tokenKey,value);
-    return value;
-  }catch(error){throw Error('Невозможно сохранить отметку: нужен доступ к локальному хранилищу браузера и защищённое соединение.')}
-}
-function prettyRank(v){
-  const t=safe(v);
-  return t?t.charAt(0).toUpperCase()+t.slice(1).toLowerCase():'[звание]';
-}
-function fullName(r,s){return prettyRank(r)+' '+(safe(s)||'[фамилия]')}
+function updateIncident(){incidentField.hidden=!incidentRequired();incident.required=incidentRequired()}
 function buildReport(type){
-  const id=post.value;
-  const title=postNames[id]||'КПП №1';
-  const name=fullName(rank.value,surname.value);
-  const already=!!mine&&mine.post_id===id;
-  const count=Math.max(1,postRows(id).length+(already?0:1));
-  const state=conditionText[condition.value]||conditionText.stable;
-  const verb=type==='start'?'Заступил на '+title+'. ':type==='end'?'Покинул '+title+'. ':title+'. ';
-  let result=verb+name+'. Состав: '+personCount(count)+'. Обстановка: '+state+'.';
-  const details=incidentRequired()?safe(incident.value).replace(/\s+/g,' '):'';
-  if(details)result+=' Описание: '+details+(/[.!?]$/.test(details)?'':'.');
+  if(!identity)return '';
+  const id=post.value,title=postNames[id]||postNames['1'];
+  const count=Math.max(1,postCount(id)+(!mine||mine.post_id!==id?1:0));
+  const prefix=type==='start'?'Заступил на '+title+'. ':type==='end'?'Покинул '+title+'. ':title+'. ';
+  let result=prefix+reportName(identity)+'. Состав: '+personCount(count)+'. Обстановка: '+(conditionText[condition.value]||conditionText.stable)+'.';
+  const explanation=incidentRequired()?safe(incident.value).replace(/\s+/g,' '):'';
+  if(explanation)result+=' Описание: '+explanation+(/[.!?]$/.test(explanation)?'':'.');
   return result;
 }
-function updateReports(){for(const type of Object.keys(reports))reports[type].textContent=buildReport(type)}
-function setBusy(value){busy=value;checkin.disabled=value||!db||!token;checkout.disabled=value||!db||!token||!mine}
+function updateReports(){
+  if(!identity)return;
+  for(const type of Object.keys(reports))reports[type].textContent=buildReport(type);
+}
 function ownStatus(){
   own.classList.toggle('is-active',!!mine);
-  own.textContent=mine?'Вы заступили на '+(postNames[mine.post_id]||'пост')+'. '+fullName(mine.rank,mine.surname)+'.':'Вы пока не заступили на пост.';
+  own.textContent=mine?'Вы заступили на '+(postNames[mine.post_id]||'пост')+'. '+publicName(identity)+'.':'Вы пока не заступили на пост.';
   checkin.textContent=mine?'Обновить или сменить пост':'Заступить на пост';
   setBusy(busy);
 }
-function node(tag,className,value){const el=document.createElement(tag);if(className)el.className=className;if(value!==undefined)el.textContent=value;return el}
 function drawRoster(){
-  total.textContent=String(active.length);
+  total.textContent=String(Object.values(counts).reduce((sum,n)=>sum+Number(n||0),0));
   const holder=node('div','post-duty-roster-items');
   for(const id of Object.keys(postNames)){
-    const people=postRows(id),section=node('div','post-duty-roster-post'),head=node('div','post-duty-roster-post-head');
-    head.append(node('span','',postNames[id]),node('small','',people.length?personCount(people.length):'Свободен'));
-    section.append(head);
-    if(people.length){
+    const count=postCount(id),people=postRows(id);
+    const block=node('div','post-duty-roster-post'),head=node('div','post-duty-roster-post-head');
+    head.append(node('span','',postNames[id]),node('small','',count?personCount(count):'Свободен'));
+    block.append(head);
+    if(identity&&people.length){
       const list=node('ul','');
-      for(const row of people)list.append(node('li','',fullName(row.rank,row.surname)));
-      section.append(list);
+      for(const row of people)list.append(node('li','',publicName(row)));
+      block.append(list);
     }
-    holder.append(section);
+    holder.append(block);
   }
   roster.replaceChildren(holder);
   drawMap();
   updateReports();
 }
 function drawMap(){
-  const layer=get('postmap-post-layer');if(!layer)return;
+  const layer=get('postmap-post-layer');
+  if(!layer)return;
   const ns='http://www.w3.org/2000/svg';
-  for(const el of layer.querySelectorAll('[data-post]')){
-    const id=el.dataset.post,count=postRows(id).length;
-    el.classList.toggle('has-shift',count>0);
-    el.setAttribute('aria-label',postNames[id]+(count?' · '+personCount(count):' · свободен'));
-    let badge=el.querySelector('.postmap-count-badge');
+  for(const marker of layer.querySelectorAll('[data-post]')){
+    const id=marker.dataset.post,count=postCount(id);
+    marker.classList.toggle('has-shift',count>0);
+    marker.setAttribute('aria-label',postNames[id]+(count?' · '+personCount(count):' · свободен'));
+    let badge=marker.querySelector('.postmap-count-badge');
     if(!badge){
       badge=document.createElementNS(ns,'g');badge.setAttribute('class','postmap-count-badge');
       const circle=document.createElementNS(ns,'circle');circle.setAttribute('cx','16');circle.setAttribute('cy','-15');circle.setAttribute('r','11');
-      const label=document.createElementNS(ns,'text');label.setAttribute('x','16');label.setAttribute('y','-15');
-      badge.append(circle,label);el.append(badge);
+      const text=document.createElementNS(ns,'text');text.setAttribute('x','16');text.setAttribute('y','-15');
+      badge.append(circle,text);marker.append(badge);
     }
     badge.hidden=count===0;badge.style.display=count?'':'none';
     badge.querySelector('text').textContent=String(count);
@@ -109,115 +110,173 @@ function showPopupRoster(){
   const popup=get('postmap-popup');if(!popup)return;
   let extra=get('postmap-occupancy');
   if(!extra){extra=node('div','postmap-occupancy');extra.id='postmap-occupancy';popup.append(extra)}
-  const currentId=popupPostId||post.value;
-  const rows=postRows(currentId);
-  const heading=node('strong','',rows.length?'На посту: '+personCount(rows.length):'Пост свободен');
+  const id=popupPostId||post.value||'1',count=postCount(id);
+  const heading=node('strong','',count?'На посту: '+personCount(count):'Пост свободен');
   extra.replaceChildren(heading);
-  if(rows.length){
-    const ul=node('ul','');
-    for(const row of rows)ul.append(node('li','',fullName(row.rank,row.surname)));
-    extra.append(ul);
+  if(identity){
+    const list=postRows(id);
+    if(list.length){
+      const ul=node('ul','');
+      for(const row of list)ul.append(node('li','',publicName(row)));
+      extra.append(ul);
+    }
+  }else if(count){
+    extra.append(node('p','','Состав доступен после входа в личный кабинет.'));
   }
+}
+function recalcCountsFromRoster(){
+  counts={'1':0,'2':0,'3':0};
+  for(const row of active)if(Object.prototype.hasOwnProperty.call(counts,row.post_id))counts[row.post_id]++;
+}
+async function refreshCounts(){
+  if(!db)return;
+  const serial=++refreshSerial;
+  try{
+    const r=await db.rpc('fso_post_counts');
+    if(r.error)throw r.error;
+    if(serial!==refreshSerial||identity)return;
+    counts={'1':0,'2':0,'3':0};
+    for(const row of Array.isArray(r.data)?r.data:[]){
+      if(Object.prototype.hasOwnProperty.call(counts,row.post_id))counts[row.post_id]=Number(row.count)||0;
+    }
+    drawRoster();
+    setLive('Карта обновлена');
+  }catch(error){if(serial===refreshSerial)setLive('Не удалось загрузить карту',true)}
 }
 async function refresh(){
   if(!db)return;
+  if(!identity){await refreshCounts();return}
+  const serial=++refreshSerial,auth=authSerial;
   try{
-    const results=await Promise.all([
-      db.rpc('fso_post_active'),
-      token?db.rpc('fso_post_mine',{p_token:token}):Promise.resolve({data:null,error:null})
-    ]);
-    if(results[0].error)throw results[0].error;
-    if(results[1].error)throw results[1].error;
-    active=Array.isArray(results[0].data)?results[0].data:[];
-    mine=results[1].data||null;
-    live.textContent='Карта обновлена';live.classList.add('is-ok');live.classList.remove('is-error');
+    const [all,ownResponse]=await Promise.all([db.rpc('fso_post_active'),db.rpc('fso_post_mine')]);
+    if(all.error)throw all.error;
+    if(ownResponse.error)throw ownResponse.error;
+    if(serial!==refreshSerial||auth!==authSerial||!identity)return;
+    active=Array.isArray(all.data)?all.data:[];
+    mine=ownResponse.data||null;
+    recalcCountsFromRoster();
     drawRoster();ownStatus();
+    setLive('Карта обновлена');
   }catch(error){
-    live.textContent='Не удалось загрузить дежурства';live.classList.remove('is-ok');live.classList.add('is-error');
-    console.warn('Посты: синхронизация',error);
+    if(serial!==refreshSerial)return;
+    console.warn('Посты: ошибка синхронизации',error);
+    setLive('Не удалось загрузить дежурства',true);
+  }
+}
+async function syncAuth(){
+  if(!db)return;
+  const serial=++authSerial;
+  try{
+    const response=await db.auth.getUser();
+    if(serial!==authSerial)return;
+    const user=response.data?.user;
+    if(response.error||!user){
+      setLocked('Для заступления на пост и копирования докладов необходимо войти в личный кабинет.');
+      await refreshCounts();
+      return;
+    }
+    const identityResponse=await db.rpc('fso_post_identity');
+    if(serial!==authSerial)return;
+    if(identityResponse.error)throw identityResponse.error;
+    if(!identityResponse.data){
+      setLocked('Вы вошли в систему, но действующая карточка сотрудника не связана с аккаунтом либо не заполнены звание и служебный номер. Обратитесь к руководству.');
+      await refreshCounts();
+      return;
+    }
+    setReady(identityResponse.data);
+    await refresh();
+  }catch(error){
+    if(serial!==authSerial)return;
+    setLocked('Не удалось проверить доступ к личному составу. Перезагрузите страницу или обратитесь к руководству.');
+    setLive('Ошибка авторизации',true);
+    await refreshCounts();
   }
 }
 async function checkIn(){
-  if(busy||!db||!token)return;
-  const name=safe(surname.value);
-  if(!rank.value){setStatus('Выберите звание.',true);rank.focus();return}
-  if(!/^[А-Яа-яЁёA-Za-z][А-Яа-яЁёA-Za-z-]{1,49}$/.test(name)){setStatus('Введите фамилию (от 2 до 50 букв).',true);surname.focus();return}
-  setBusy(true);setStatus('Сохраняю заступление…');
+  if(busy||!db||!identity)return;
+  setBusy(true);setStatus('Отмечаю заступление…');
   try{
-    const result=await db.rpc('fso_post_checkin',{p_token:token,p_post_id:post.value,p_rank:rank.value,p_surname:name});
-    if(result.error)throw result.error;
-    saveInputs();
-    mine=result.data;
+    const response=await db.rpc('fso_post_checkin',{p_post_id:post.value});
+    if(response.error)throw response.error;
+    mine=response.data;
     setStatus('Вы заступили на '+postNames[post.value]+'.');
     await refresh();
-  }catch(err){setStatus('Заступить не удалось. '+(err?.message||'Ошибка связи'),true);console.error(err)}
-  finally{setBusy(false)}
+  }catch(error){
+    setStatus('Не удалось заступить: '+(error?.message||'ошибка сервера'),true);
+    console.error(error);
+  }finally{setBusy(false)}
 }
 async function checkOut(){
-  if(busy||!db||!token||!mine)return;
+  if(busy||!db||!identity||!mine)return;
   setBusy(true);setStatus('Завершаю дежурство…');
   try{
-    const result=await db.rpc('fso_post_checkout',{p_token:token});
-    if(result.error)throw result.error;
+    const response=await db.rpc('fso_post_checkout');
+    if(response.error)throw response.error;
     mine=null;
-    setStatus('Дежурство завершено. Отметка снята с карты.');
+    setStatus('Пост покинут. Отметка снята с карты.');
     await refresh();
-  }catch(err){setStatus('Не удалось снять отметку. '+(err?.message||'Ошибка связи'),true);console.error(err)}
+  }catch(error){setStatus('Не удалось покинуть пост: '+(error?.message||'ошибка сервера'),true)}
   finally{setBusy(false)}
 }
 async function copyReport(type,button){
-  const text=buildReport(type);
-  if(!rank.value||!safe(surname.value)){setStatus('Сначала укажите звание и фамилию.',true);return}
+  if(!identity){setStatus('Для докладов требуется авторизация.',true);return}
   if(incidentRequired()&&!safe(incident.value)){
-    setStatus('Укажите описание происшествия перед копированием доклада.',true);
-    incident.focus();
-    return;
+    setStatus('Укажите описание происшествия перед копированием.',true);incident.focus();return;
   }
+  const text=buildReport(type);
+  if(!text)return;
   try{
     if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(text);
     else{
       const area=node('textarea','');area.value=text;area.style.cssText='position:fixed;left:-9999px;top:0;';
       document.body.append(area);area.select();
-      const ok=document.execCommand('copy');area.remove();if(!ok)throw Error('Ошибка буфера обмена');
+      const ok=document.execCommand('copy');area.remove();if(!ok)throw Error('Буфер обмена недоступен');
     }
     setStatus('Доклад скопирован.');
     const original=button.textContent;button.textContent='Скопировано';
-    setTimeout(()=>{if(button.isConnected)button.textContent=original},1800);
-  }catch(e){setStatus('Не удалось скопировать доклад.',true)}
+    window.setTimeout(()=>{if(button.isConnected)button.textContent=original},1800);
+  }catch(error){setStatus('Не удалось скопировать доклад.',true)}
 }
-for(const el of [rank,surname,post,condition]){
-  el.addEventListener('change',()=>{if(el===condition)updateIncident();updateReports();if(el===rank||el===surname)saveInputs()});
-  if(el===surname)el.addEventListener('input',updateReports);
-}
+post.addEventListener('change',()=>{popupPostId=post.value;updateReports();showPopupRoster()});
+condition.addEventListener('change',()=>{updateIncident();updateReports()});
 incident.addEventListener('input',updateReports);
 checkin.addEventListener('click',checkIn);checkout.addEventListener('click',checkOut);
 root.querySelectorAll('[data-post-duty-copy]').forEach(button=>button.addEventListener('click',()=>copyReport(button.dataset.postDutyCopy,button)));
 const layer=get('postmap-post-layer');
-layer?.addEventListener('pointerup',e=>{
-  const el=e.target.closest?.('[data-post]');
-  if(el){popupPostId=el.dataset.post;post.value=popupPostId;updateReports();setTimeout(showPopupRoster,0)}
+layer?.addEventListener('pointerup',event=>{
+  const marker=event.target.closest?.('[data-post]');
+  if(marker){popupPostId=marker.dataset.post;post.value=popupPostId;updateReports();window.setTimeout(showPopupRoster,0)}
 },true);
-layer?.addEventListener('keydown',e=>{
-  const el=e.target.closest?.('[data-post]');
-  if(el&&(e.key==='Enter'||e.key===' ')){popupPostId=el.dataset.post;post.value=popupPostId;updateReports();setTimeout(showPopupRoster,0)}
+layer?.addEventListener('keydown',event=>{
+  const marker=event.target.closest?.('[data-post]');
+  if(marker&&(event.key==='Enter'||event.key===' ')){popupPostId=marker.dataset.post;post.value=popupPostId;updateReports();window.setTimeout(showPopupRoster,0)}
 },true);
-post.addEventListener('change',()=>{popupPostId=post.value;showPopupRoster()});
 get('postmap-popup-close')?.addEventListener('click',()=>{popupPostId=null});
-loadInputs();updateIncident();drawRoster();ownStatus();
+updateIncident();
+setLocked('Проверка авторизации…');
 (async()=>{
   try{
-    token=ensureToken();
-    if(!window.supabase?.createClient)throw Error('Не загрузилась библиотека базы данных');
-    db=window.supabase.createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false},realtime:{params:{eventsPerSecond:1}}});
-    setBusy(false);
-    await refresh();
+    if(!window.supabase?.createClient)throw Error('Не загрузилась библиотека Supabase');
+    db=window.supabase.createClient(url,key,{
+      auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
+    });
+    db.auth.onAuthStateChange(event=>{
+      if(event==='SIGNED_OUT'){
+        ++authSerial;
+        setLocked('Для заступления на пост и копирования докладов необходимо войти в личный кабинет.');
+        refreshCounts();
+      }else if(event==='SIGNED_IN'||event==='TOKEN_REFRESHED'){
+        window.setTimeout(syncAuth,0);
+      }
+    });
+    await syncAuth();
     window.setInterval(()=>{if(!document.hidden)refresh()},15000);
-    window.addEventListener('focus',refresh);
-    document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});
+    window.addEventListener('focus',syncAuth);
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncAuth()});
   }catch(error){
-    live.textContent='Дежурства недоступны';live.classList.add('is-error');
-    setStatus(error.message||'Ошибка инициализации',true);
-    setBusy(false);
+    setLocked('Система дежурств временно недоступна. Проверьте соединение с интернетом.');
+    setLive('Ошибка подключения',true);
+    console.warn('Посты:',error);
   }
 })();
 })();

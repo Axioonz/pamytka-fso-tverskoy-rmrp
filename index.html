@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="./css/основной-стиль.css?v=20261103-reference-layout">
 <link rel="stylesheet" href="./css/понятия.css">
 <link rel="stylesheet" href="./assets/posts-map/posts-map.css?v=20261104">
-<link rel="stylesheet" href="./assets/posts-map/post-duty.css?v=20261106-statuses">
+<link rel="stylesheet" href="./assets/posts-map/post-duty.css?v=20261106-account">
 
 <!--
   ИСПРАВЛЕНИЯ ВНЕШНЕГО ВИДА
@@ -711,38 +711,41 @@ body.about-locked{overflow:hidden}
       <section id="service-panel-posts" class="postmap-mode-panel" aria-label="Посты">
         <p>Три КПП отмечены на карте одним цветом. Нажмите на точку, чтобы открыть фотографию поста.</p>
         <div class="post-duty" id="post-duty">
-          <div class="post-duty-heading"><div><span class="post-duty-eyebrow">Дежурство на объекте</span><h3>Доклады и заступление</h3></div><span class="post-duty-live" id="post-duty-live">Загрузка данных…</span></div>
-          <div class="post-duty-fields">
-            <label>Звание<select id="post-duty-rank" required>
-              <option value="">Выберите звание</option>
-              <option>Рядовой</option><option>Ефрейтор</option><option>Младший сержант</option><option>Сержант</option><option>Старший сержант</option><option>Старшина</option><option>Прапорщик</option><option>Старший прапорщик</option><option>Младший лейтенант</option><option>Лейтенант</option><option>Старший лейтенант</option><option>Капитан</option><option>Майор</option><option>Подполковник</option><option>Полковник</option><option>Генерал-майор</option>
-            </select></label>
-            <label>Фамилия<input id="post-duty-surname" type="text" autocomplete="family-name" maxlength="50" placeholder="Иванов" required></label>
-            <label>Пост<select id="post-duty-post"><option value="1">КПП №1</option><option value="2">КПП №2</option><option value="3">КПП Правительства</option></select></label>
-            <label>Обстановка<select id="post-duty-condition">
-              <option value="stable">Стабильная</option>
-              <option value="attention">Повышенное внимание</option>
-              <option value="violation">Нарушение</option>
-              <option value="emergency">Чрезвычайная ситуация</option>
-            </select></label>
+          <div class="post-duty-heading"><div><span class="post-duty-eyebrow">Дежурство на объекте</span><h3>Доклады и заступление</h3></div><span class="post-duty-live" id="post-duty-live">Проверка авторизации…</span></div>
+          <div class="post-duty-gate" id="post-duty-gate">
+            <h4>Доступ для сотрудников</h4>
+            <p id="post-duty-gate-message">Для заступления на пост и копирования докладов необходимо войти в личный кабинет.</p>
+            <a class="post-duty-login" href="./кабинет.html">Войти в личный кабинет</a>
           </div>
-          <label class="post-duty-incident" id="post-duty-incident-field" hidden>
-            <span>Описание происшествия</span>
-            <textarea id="post-duty-incident" rows="3" maxlength="300" placeholder="Кратко укажите, что произошло"></textarea>
-          </label>
-          <div class="post-duty-actions">
-            <button type="button" id="post-duty-checkin" class="post-duty-primary">Заступить на пост</button>
-            <button type="button" id="post-duty-checkout" class="post-duty-secondary" disabled>Покинуть пост</button>
-            <span role="status" id="post-duty-status" class="post-duty-status"></span>
-          </div>
-          <p class="post-duty-own" id="post-duty-own">Вы пока не заступили на пост.</p>
-          <div class="post-duty-reports" aria-label="Готовые доклады">
-            <div class="post-duty-report"><div><b>Начало</b><p id="post-duty-report-start"></p></div><button type="button" data-post-duty-copy="start">Скопировать</button></div>
-            <div class="post-duty-report"><div><b>Продолжение</b><p id="post-duty-report-current"></p></div><button type="button" data-post-duty-copy="current">Скопировать</button></div>
-            <div class="post-duty-report"><div><b>Завершение</b><p id="post-duty-report-end"></p></div><button type="button" data-post-duty-copy="end">Скопировать</button></div>
+          <div class="post-duty-authorized" id="post-duty-authorized" hidden>
+            <div class="post-duty-identity" id="post-duty-identity" aria-live="polite"></div>
+            <div class="post-duty-fields">
+              <label>Пост<select id="post-duty-post"><option value="1">КПП №1</option><option value="2">КПП №2</option><option value="3">КПП Правительства</option></select></label>
+              <label>Обстановка<select id="post-duty-condition">
+                <option value="stable">Стабильная</option>
+                <option value="attention">Повышенное внимание</option>
+                <option value="violation">Нарушение</option>
+                <option value="emergency">Чрезвычайная ситуация</option>
+              </select></label>
+            </div>
+            <label class="post-duty-incident" id="post-duty-incident-field" hidden>
+              <span>Описание происшествия</span>
+              <textarea id="post-duty-incident" rows="3" maxlength="300" placeholder="Кратко укажите, что произошло"></textarea>
+            </label>
+            <div class="post-duty-actions">
+              <button type="button" id="post-duty-checkin" class="post-duty-primary" disabled>Заступить на пост</button>
+              <button type="button" id="post-duty-checkout" class="post-duty-secondary" disabled>Покинуть пост</button>
+              <span role="status" id="post-duty-status" class="post-duty-status"></span>
+            </div>
+            <p class="post-duty-own" id="post-duty-own">Вы пока не заступили на пост.</p>
+            <div class="post-duty-reports" aria-label="Готовые доклады">
+              <div class="post-duty-report"><div><b>Начало</b><p id="post-duty-report-start"></p></div><button type="button" data-post-duty-copy="start">Скопировать</button></div>
+              <div class="post-duty-report"><div><b>Продолжение</b><p id="post-duty-report-current"></p></div><button type="button" data-post-duty-copy="current">Скопировать</button></div>
+              <div class="post-duty-report"><div><b>Завершение</b><p id="post-duty-report-end"></p></div><button type="button" data-post-duty-copy="end">Скопировать</button></div>
+            </div>
           </div>
           <div class="post-duty-roster" aria-live="polite"><h4>Сотрудники на постах <span id="post-duty-total">0</span></h4><div id="post-duty-roster"></div></div>
-          <p class="post-duty-note">Отметка общая для посетителей сайта и действует до снятия либо 6 часов. Данные о звании и фамилии указываются самим сотрудником.</p>
+          <p class="post-duty-note">На карте отображаются активные дежурства. Состав постов доступен авторизованным сотрудникам. Отметка действует до выхода с поста или не более 6 часов.</p>
         </div>
 
       </section>
@@ -3283,7 +3286,7 @@ if(!window.FSO_REFERENCE_META||!Object.keys(window.FSO_REFERENCE_META).length)wi
 </script>
 <script src="./assets/posts-map/posts-map.js?v=20261104"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.js"></script>
-<script src="./assets/posts-map/post-duty.js?v=20261106-statuses"></script>
+<script src="./assets/posts-map/post-duty.js?v=20261106-account"></script>
 </body>
 </html>
 
