@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="./css/основной-стиль.css?v=20261103-reference-layout">
 <link rel="stylesheet" href="./css/понятия.css">
 <link rel="stylesheet" href="./assets/posts-map/posts-map.css?v=20261104">
+<link rel="stylesheet" href="./assets/posts-map/post-duty.css?v=20261106">
 
 <!--
   ИСПРАВЛЕНИЯ ВНЕШНЕГО ВИДА
@@ -709,6 +710,32 @@ body.about-locked{overflow:hidden}
     <div class="postmap-panels">
       <section id="service-panel-posts" class="postmap-mode-panel" aria-label="Посты">
         <p>Три КПП отмечены на карте одним цветом. Нажмите на точку, чтобы открыть фотографию поста.</p>
+        <div class="post-duty" id="post-duty">
+          <div class="post-duty-heading"><div><span class="post-duty-eyebrow">Дежурство на объекте</span><h3>Доклады и заступление</h3></div><span class="post-duty-live" id="post-duty-live">Загрузка данных…</span></div>
+          <div class="post-duty-fields">
+            <label>Звание<select id="post-duty-rank" required>
+              <option value="">Выберите звание</option>
+              <option>Рядовой</option><option>Ефрейтор</option><option>Младший сержант</option><option>Сержант</option><option>Старший сержант</option><option>Старшина</option><option>Прапорщик</option><option>Старший прапорщик</option><option>Младший лейтенант</option><option>Лейтенант</option><option>Старший лейтенант</option><option>Капитан</option><option>Майор</option><option>Подполковник</option><option>Полковник</option><option>Генерал-майор</option>
+            </select></label>
+            <label>Фамилия<input id="post-duty-surname" type="text" autocomplete="family-name" maxlength="50" placeholder="Иванов" required></label>
+            <label>Пост<select id="post-duty-post"><option value="1">КПП №1</option><option value="2">КПП №2</option><option value="3">КПП Правительства</option></select></label>
+            <label>Состояние<select id="post-duty-condition"><option>стабильно</option><option>напряжённо</option></select></label>
+          </div>
+          <div class="post-duty-actions">
+            <button type="button" id="post-duty-checkin" class="post-duty-primary">Заступить на пост</button>
+            <button type="button" id="post-duty-checkout" class="post-duty-secondary" disabled>Покинуть пост</button>
+            <span role="status" id="post-duty-status" class="post-duty-status"></span>
+          </div>
+          <p class="post-duty-own" id="post-duty-own">Вы пока не заступили на пост.</p>
+          <div class="post-duty-reports" aria-label="Готовые доклады">
+            <div class="post-duty-report"><div><b>Начало</b><p id="post-duty-report-start"></p></div><button type="button" data-post-duty-copy="start">Скопировать</button></div>
+            <div class="post-duty-report"><div><b>Продолжение</b><p id="post-duty-report-current"></p></div><button type="button" data-post-duty-copy="current">Скопировать</button></div>
+            <div class="post-duty-report"><div><b>Завершение</b><p id="post-duty-report-end"></p></div><button type="button" data-post-duty-copy="end">Скопировать</button></div>
+          </div>
+          <div class="post-duty-roster" aria-live="polite"><h4>Сотрудники на постах <span id="post-duty-total">0</span></h4><div id="post-duty-roster"></div></div>
+          <p class="post-duty-note">Отметка общая для посетителей сайта и действует до снятия либо 6 часов. Данные о звании и фамилии указываются самим сотрудником.</p>
+        </div>
+
       </section>
       <section id="service-panel-patrols" class="postmap-mode-panel" aria-label="Патрули" hidden>
         <p id="postmap-patrol-hint">Маршруты патрулирования пока не добавлены. В этой вкладке будут отображаться их линии на общей карте.</p>
@@ -3246,6 +3273,8 @@ if(!window.FSO_REFERENCE_META||!Object.keys(window.FSO_REFERENCE_META).length)wi
 })();
 </script>
 <script src="./assets/posts-map/posts-map.js?v=20261104"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.js"></script>
+<script src="./assets/posts-map/post-duty.js?v=20261106"></script>
 </body>
 </html>
 
