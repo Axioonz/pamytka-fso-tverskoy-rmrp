@@ -4,7 +4,7 @@
 const root=document.getElementById('post-duty');
 if(!root)return;
 const get=id=>document.getElementById(id);
-const rank=get('post-duty-rank'),surname=get('post-duty-surname'),post=get('post-duty-post'),condition=get('post-duty-condition');
+const rank=get('post-duty-rank'),surname=get('post-duty-surname'),post=get('post-duty-post'),condition=get('post-duty-condition'),incident=get('post-duty-incident'),incidentField=get('post-duty-incident-field');
 const checkin=get('post-duty-checkin'),checkout=get('post-duty-checkout'),status=get('post-duty-status'),live=get('post-duty-live'),own=get('post-duty-own');
 const roster=get('post-duty-roster'),total=get('post-duty-total');
 const postNames={'1':'КПП №1','2':'КПП №2','3':'КПП Правительства'};
@@ -16,7 +16,12 @@ const surnameKey='fso_post_duty_surname_v1',rankKey='fso_post_duty_rank_v1';
 let db=null,token=null,active=[],mine=null,busy=false,popupPostId=null;
 const safe=v=>String(v||'').trim();
 const personCount=n=>n+' '+(n%10===1&&n%100!==11?'сотрудник':n%10>=2&&n%10<=4&&(n%100<12||n%100>14)?'сотрудника':'сотрудников');
-const labels={'start':'Заступил на ','current':'','end':'Покинул '};
+const conditionText={stable:'стабильная',attention:'повышенное внимание',violation:'нарушение',emergency:'чрезвычайная ситуация'};
+function incidentRequired(){return condition.value==='violation'||condition.value==='emergency'}
+function updateIncident(){
+  incidentField.hidden=!incidentRequired();
+  incident.required=incidentRequired();
+}
 const postRows=id=>active.filter(row=>row.post_id===id);
 function setStatus(value,isError=false){status.textContent=value;status.classList.toggle('is-error',isError)}
 function saveInputs(){
@@ -47,9 +52,12 @@ function buildReport(type){
   const name=fullName(rank.value,surname.value);
   const already=!!mine&&mine.post_id===id;
   const count=Math.max(1,postRows(id).length+(already?0:1));
-  const state=condition.value||'стабильно';
+  const state=conditionText[condition.value]||conditionText.stable;
   const verb=type==='start'?'Заступил на '+title+'. ':type==='end'?'Покинул '+title+'. ':title+'. ';
-  return verb+name+'. Состав: '+personCount(count)+'. Состояние: '+state+'.';
+  let result=verb+name+'. Состав: '+personCount(count)+'. Обстановка: '+state+'.';
+  const details=incidentRequired()?safe(incident.value).replace(/\s+/g,' '):'';
+  if(details)result+=' Описание: '+details+(/[.!?]$/.test(details)?'':'.');
+  return result;
 }
 function updateReports(){for(const type of Object.keys(reports))reports[type].textContent=buildReport(type)}
 function setBusy(value){busy=value;checkin.disabled=value||!db||!token;checkout.disabled=value||!db||!token||!mine}
@@ -160,6 +168,11 @@ async function checkOut(){
 async function copyReport(type,button){
   const text=buildReport(type);
   if(!rank.value||!safe(surname.value)){setStatus('Сначала укажите звание и фамилию.',true);return}
+  if(incidentRequired()&&!safe(incident.value)){
+    setStatus('Укажите описание происшествия перед копированием доклада.',true);
+    incident.focus();
+    return;
+  }
   try{
     if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(text);
     else{
@@ -173,9 +186,10 @@ async function copyReport(type,button){
   }catch(e){setStatus('Не удалось скопировать доклад.',true)}
 }
 for(const el of [rank,surname,post,condition]){
-  el.addEventListener('change',()=>{updateReports();if(el===rank||el===surname)saveInputs()});
+  el.addEventListener('change',()=>{if(el===condition)updateIncident();updateReports();if(el===rank||el===surname)saveInputs()});
   if(el===surname)el.addEventListener('input',updateReports);
 }
+incident.addEventListener('input',updateReports);
 checkin.addEventListener('click',checkIn);checkout.addEventListener('click',checkOut);
 root.querySelectorAll('[data-post-duty-copy]').forEach(button=>button.addEventListener('click',()=>copyReport(button.dataset.postDutyCopy,button)));
 const layer=get('postmap-post-layer');
@@ -189,7 +203,7 @@ layer?.addEventListener('keydown',e=>{
 },true);
 post.addEventListener('change',()=>{popupPostId=post.value;showPopupRoster()});
 get('postmap-popup-close')?.addEventListener('click',()=>{popupPostId=null});
-loadInputs();drawRoster();ownStatus();
+loadInputs();updateIncident();drawRoster();ownStatus();
 (async()=>{
   try{
     token=ensureToken();

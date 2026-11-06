@@ -46,3 +46,9 @@
 .postmap-occupancy strong{display:block;color:#b4e8d0;font-size:12px}
 .postmap-occupancy ul{margin:7px 0 0 14px;padding:0;color:#c0cfdd;font-size:12px;line-height:1.6}
 @media(max-width:600px){.post-duty-heading{align-items:flex-start}.post-duty-fields{grid-template-columns:1fr}.post-duty-report{align-items:flex-start;flex-direction:column}.post-duty-report button{align-self:flex-end}.post-duty-status{flex:1 1 100%}}
+
+/* Описание инцидента появляется только при выборе соответствующей обстановки */
+.post-duty-incident{display:flex;flex-direction:column;gap:7px;margin-top:14px;font-size:12px;font-weight:650;color:var(--muted,#a3b5c4)}
+.post-duty-incident[hidden]{display:none!important}
+.post-duty-incident textarea{box-sizing:border-box;display:block;width:100%;min-height:92px;resize:vertical;padding:11px 12px;border:1px solid var(--line,#34485d);border-radius:9px;background:var(--surface,#101922);color:var(--text,#eaf2fc);font:500 13px/1.5 inherit;font-family:inherit;outline:none}
+.post-duty-incident textarea:focus{border-color:var(--accent,#61b4f4);box-shadow:0 0 0 2px rgba(87,167,226,.12)}

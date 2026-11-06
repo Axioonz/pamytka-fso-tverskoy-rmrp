@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="./css/основной-стиль.css?v=20261103-reference-layout">
 <link rel="stylesheet" href="./css/понятия.css">
 <link rel="stylesheet" href="./assets/posts-map/posts-map.css?v=20261104">
-<link rel="stylesheet" href="./assets/posts-map/post-duty.css?v=20261106">
+<link rel="stylesheet" href="./assets/posts-map/post-duty.css?v=20261106-statuses">
 
 <!--
   ИСПРАВЛЕНИЯ ВНЕШНЕГО ВИДА
@@ -719,8 +719,17 @@ body.about-locked{overflow:hidden}
             </select></label>
             <label>Фамилия<input id="post-duty-surname" type="text" autocomplete="family-name" maxlength="50" placeholder="Иванов" required></label>
             <label>Пост<select id="post-duty-post"><option value="1">КПП №1</option><option value="2">КПП №2</option><option value="3">КПП Правительства</option></select></label>
-            <label>Состояние<select id="post-duty-condition"><option>стабильно</option><option>напряжённо</option></select></label>
+            <label>Обстановка<select id="post-duty-condition">
+              <option value="stable">Стабильная</option>
+              <option value="attention">Повышенное внимание</option>
+              <option value="violation">Нарушение</option>
+              <option value="emergency">Чрезвычайная ситуация</option>
+            </select></label>
           </div>
+          <label class="post-duty-incident" id="post-duty-incident-field" hidden>
+            <span>Описание происшествия</span>
+            <textarea id="post-duty-incident" rows="3" maxlength="300" placeholder="Кратко укажите, что произошло"></textarea>
+          </label>
           <div class="post-duty-actions">
             <button type="button" id="post-duty-checkin" class="post-duty-primary">Заступить на пост</button>
             <button type="button" id="post-duty-checkout" class="post-duty-secondary" disabled>Покинуть пост</button>
@@ -3274,7 +3283,7 @@ if(!window.FSO_REFERENCE_META||!Object.keys(window.FSO_REFERENCE_META).length)wi
 </script>
 <script src="./assets/posts-map/posts-map.js?v=20261104"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.js"></script>
-<script src="./assets/posts-map/post-duty.js?v=20261106"></script>
+<script src="./assets/posts-map/post-duty.js?v=20261106-statuses"></script>
 </body>
 </html>
 
