@@ -2,7 +2,6 @@
 begin;
 alter table public.fso_service_requests alter column submitted_by drop not null;
 alter table public.fso_service_leaves alter column approved_by drop not null;
-alter table public.fso_post_assignments alter column user_id drop not null;
 
 do $migration$
 declare row record;
@@ -19,6 +18,7 @@ begin
     and array_length(c.conkey,1)=1
     and c.conrelid not in ('public.fso_members'::regclass,'public.fso_profiles'::regclass)
     and c.confdeltype<>'n'
+    and not exists(select 1 from pg_constraint pk where pk.conrelid=c.conrelid and pk.contype='p' and c.conkey[1]=any(pk.conkey))
  loop
   execute format('alter table %s drop constraint %I',row.table_name,row.conname);
   execute format('alter table %s add constraint %I foreign key (%I) references auth.users(id) on delete set null',
