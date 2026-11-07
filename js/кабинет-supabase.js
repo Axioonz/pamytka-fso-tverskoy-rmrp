@@ -11,6 +11,8 @@ const v=id=>document.getElementById(id)?.value?.trim()||'';
 const date=x=>x?new Date(String(x).slice(0,10)+'T12:00:00').toLocaleDateString('ru-RU'):'Не указана';
 const roleTitle={admin:'Администратор',hr:'Редактор',examiner:'Экзаменатор',employee:'Сотрудник',cadet:'Курсант'};
 const statusTitle={active:'Сотрудник',cadet:'Курсант',dismissed:'Уволен',archived:'Архив'};
+const subdivisionOptions=['АС','Академия','УЛО'];
+const subdivisionOf=m=>m.department||(m.status==='cadet'?'Академия':'Не назначено');
 const rankGroups=[
  {group:'Высшие офицеры',level:'general',ranks:['Генерал-майор']},
  {group:'Старшие офицеры',level:'senior',ranks:['Полковник','Подполковник','Майор']},
@@ -183,7 +185,7 @@ function roster(){
  '<section class="section roster-section"><div class="section-heading"><div><span class="form-step">КАДРОВЫЙ РЕЕСТР</span><h2>Действующий состав</h2></div></div>'+
  '<div class="member-toolbar"><input id="search" type="search" placeholder="Поиск по ФИО, ID, отделу, должности, Discord" aria-label="Поиск сотрудников">'+rankFilter()+
  (rosterRoles.includes(profile.role)?'<button class="btn primary" id="new-member">+ Добавить сотрудника</button>':'')+
- '</div><div class="table-wrap"><table><thead><tr><th>ID</th><th>Сотрудник</th><th>Должность</th><th>Отдел</th><th>Звание</th><th>Взыскания</th><th>Статус</th><th></th></tr></thead><tbody id="roster-rows">'+rows(current)+'</tbody></table></div></section>';
+ '</div><div class="table-wrap"><table><thead><tr><th>ID</th><th>Сотрудник</th><th>Должность</th><th>Подразделение</th><th>Звание</th><th>Взыскания</th><th>Статус</th><th></th></tr></thead><tbody id="roster-rows">'+rows(current)+'</tbody></table></div></section>';
 }
 function rows(data){
  const people=sortMembers(data);
@@ -191,7 +193,7 @@ function rows(data){
  return people.map(m=>{const z=kindcounts(m),danger=z.reprimands>=3&&['active','cadet'].includes(m.status);
  return '<tr class="'+(danger?'attention':'')+'"><td><span class="employee-id">'+e(m.employee_number)+'</span></td>'+
  '<td><strong class="employee-name">'+e(m.first_name+' '+m.last_name)+'</strong><small class="table-subline">'+e(m.discord||'Discord не указан')+'</small></td>'+
- '<td>'+e(m.position||'Не указана')+'</td>'+'<td>'+e(m.department||'Не назначен')+'</td>'+
+ '<td>'+e(m.position||'Не указана')+'</td>'+'<td>'+e(subdivisionOf(m))+'</td>'+
  '<td><span class="rank-badge rank-'+rankLevel(m.rank)+'">'+e(m.rank||'Не указано')+'</span></td>'+
  '<td><span class="tag '+(danger?'bad':'')+'">'+z.warnings+'/3 · '+z.reprimands+'/3</span></td>'+
  '<td><span class="status-label status-'+e(m.status)+'">'+e(statusTitle[m.status]||m.status)+'</span>'+
@@ -210,7 +212,7 @@ const head=hero(m.first_name+' '+m.last_name,'Личное дело № '+m.empl
 const warning=c.reprimands>=3&&!retired?'<div class="danger-box"><b>Три действующих выговора · '+c.reprimands+'/3</b><p>Основание по пункту 30.3. Увольнение доступно и по другим причинам.</p></div>':'';
 const dismissal=can?'<section class="section"><h2>Увольнение сотрудника</h2><p class="hint">Уволить можно в любой момент. Причина обязательна, доказательства необязательны.</p><button class="btn danger" id="dismiss-show">Уволить сотрудника</button><form id="dismiss-form" hidden><div class="fields"><label class="wide">Причина увольнения<textarea id="dismiss-reason" required minlength="5" maxlength="4000"></textarea></label><label class="wide">Доказательства (необязательно), ссылки HTTPS<textarea id="dismiss-proof"></textarea></label></div><div class="actions"><button class="btn danger" type="submit">Подтвердить увольнение</button></div><div id="dismiss-error"></div></form></section>':'';
 const blackAction=retired&&rosterRoles.includes(profile.role)?'<section class="section"><h2>Чёрный список</h2>'+(listed?'<p class="text-critical">Сотрудник находится в чёрном списке.</p><form id="black-remove-form"><div class="fields"><label class="wide">Причина исключения<textarea id="black-remove-reason" required minlength="5" maxlength="4000"></textarea></label></div><button class="btn" type="submit">Исключить из чёрного списка</button><div id="black-error"></div></form>':'<form id="black-add-form"><div class="fields"><label class="wide">Причина внесения<textarea id="black-reason" required minlength="5" maxlength="4000"></textarea></label></div><button class="btn danger" type="submit">Внести в чёрный список</button><div id="black-error"></div></form>')+'</section>':'';
-const fields=[['Служебный ID',m.employee_number],['Должность',m.position],['Отдел',m.department||'Не назначен'],['Звание',m.rank],['Discord',m.discord],['Дата вступления',date(m.joined_on)],['Стаж во фракции',days(m.joined_on)],['Статус',statusTitle[m.status]],['Дата увольнения',m.dismissed_on?date(m.dismissed_on):'Нет']].map(x=>'<div class="card-muted"><span>'+e(x[0])+'</span><strong>'+e(x[1]||'Не указано')+'</strong></div>').join('');
+const fields=[['Служебный ID',m.employee_number],['Должность',m.position],['Подразделение',subdivisionOf(m)],['Звание',m.rank],['Discord',m.discord],['Дата вступления',date(m.joined_on)],['Стаж во фракции',days(m.joined_on)],['Статус',statusTitle[m.status]],['Дата увольнения',m.dismissed_on?date(m.dismissed_on):'Нет']].map(x=>'<div class="card-muted"><span>'+e(x[0])+'</span><strong>'+e(x[1]||'Не указано')+'</strong></div>').join('');
 const counter='<div class="cards"><div class="metric"><b>'+c.warnings+'/3</b><span>Действующие предупреждения</span></div><div class="metric"><b class="'+(c.reprimands>=3?'text-critical':'')+'">'+c.reprimands+'/3</b><span>Действующие выговоры</span></div></div>';
 const issue=can?'<section class="section"><h2>Выдать взыскание</h2><p class="hint">Все действия фиксируются на сервере. Три предупреждения автоматически заменяются одним выговором.</p><form id="issue-form"><div class="fields"><label>Вид взыскания<select id="issue-kind"><option value="warning">Предупреждение (замечание)</option><option value="reprimand">Выговор</option></select></label><label class="wide">Причина<textarea id="issue-reason" minlength="5" maxlength="4000" required placeholder="Опишите факт нарушения"></textarea></label><label class="wide">Доказательства, ссылки HTTPS<textarea id="issue-proof" required placeholder="https://... (одна ссылка на строку)"></textarea></label></div><div class="actions"><button class="btn primary" type="submit">Выдать взыскание</button></div><div id="issue-error"></div></form></section>':'';
 const listing='<section class="section"><h2>Взыскания и их история</h2>'+(list.length?list.map(x=>{
@@ -231,17 +233,17 @@ function editor(id){
  return hero(m?'Редактирование сотрудника':'Добавление сотрудника',m?'Изменения сохраняются на сервере.':'После сохранения сотрудник появится в кадровом реестре.')+
  '<section class="section member-form-section"><div class="section-heading"><div><span class="form-step">ЛИЧНОЕ ДЕЛО</span><h2>Служебные сведения</h2></div><span class="sort-note">* Обязательное поле</span></div><form id="member-form"><div class="fields">'+
  '<label>Числовой ID *<input id="member-no" inputmode="numeric" pattern="[0-9]{1,12}" maxlength="12" value="'+e(m?.employee_number||'')+'" placeholder="0001" required></label>'+
- '<label>Статус *<select id="member-status">'+['cadet','active'].map(x=>'<option value="'+x+'" '+(m?.status===x||(!m&&x==='active')?'selected':'')+'>'+statusTitle[x]+'</option>').join('')+'</select></label>'+
+ '<label>Подразделение *<select id="member-department" required>'+subdivisionOptions.map(x=>'<option value="'+e(x)+'" '+(subdivisionOf(m||{status:'cadet'})===x?'selected':'')+'>'+e(x)+'</option>').join('')+'</select></label>'+
  '<label>Имя *<input id="member-first" maxlength="100" value="'+e(m?.first_name||'')+'" required></label>'+
  '<label>Фамилия *<input id="member-last" maxlength="100" value="'+e(m?.last_name||'')+'" required></label>'+
  (m?'<div class="card-muted"><span>Должность</span><strong>'+e(m.position||'Не указана')+'</strong></div>':
  '<label>Должность<input id="member-position" maxlength="200"></label>')+
- (m?'<div class="card-muted"><span>Отдел</span><strong>'+e(m.department||'Не назначен')+'</strong></div>':'')+
+ 
  (m?'<div class="card-muted"><span>Воинское звание</span><strong>'+e(m.rank||'Не указано')+'</strong></div>':
  '<label>Воинское звание *<select id="member-rank" required><option value="" disabled selected>Выберите звание</option>'+rankOptions('')+'</select></label>')+
  '<label>Discord<input id="member-discord" maxlength="150" value="'+e(m?.discord||'')+'"></label>'+
  '<label>Дата вступления *<input id="member-date" type="date" value="'+e(m?.joined_on||new Date().toISOString().slice(0,10))+'" required></label>'+
- '</div>'+(m?'':window.FSO_STAFF_ACCOUNTS.newFields())+
+ '</div>'+(m?'<label>Основание перевода при смене подразделения<textarea id="member-department-reason" minlength="5" maxlength="2000" placeholder="Укажите причину перевода"></textarea></label>':'')+(m?'':window.FSO_STAFF_ACCOUNTS.newFields())+
  '<p class="hint rank-help">Звания расположены от генерал-майора до рядового. После сохранения порядок в таблице обновляется автоматически.</p>'+
  '<div class="actions"><button class="btn primary" type="submit">Сохранить личное дело</button><button class="btn" type="button" id="cancel-editor">Отмена</button></div>'+
  (m?'<p class="hint">Звание и должность меняются через раздел «Кадровые решения» с обязательным основанием.</p>':'')+
@@ -316,8 +318,8 @@ if(screen==='add'||screen==='edit'){
 }}
 
 function readOptionalProof(id){if(!v(id))return [];return readProof(id)}
-function archivePage(){const data=members.filter(m=>['dismissed','archived'].includes(m.status));return hero('Архив','Уволенные сотрудники и сохранённые личные дела.')+'<section class="section"><div class="member-toolbar"><input id="search" type="search" placeholder="Поиск по архиву">'+rankFilter()+'</div><div class="table-wrap"><table><thead><tr><th>ID</th><th>Имя и фамилия</th><th>Должность</th><th>Отдел</th><th>Звание</th><th>Взыскания</th><th>Статус</th><th></th></tr></thead><tbody id="roster-rows">'+rows(data)+'</tbody></table></div>'+window.FSO_ADMIN_TOOLS.archiveToolbar(data,profile.role)+'</section>'}
-function blacklistPage(){const data=members.filter(m=>blacklist.some(x=>x.member_id===m.id&&!x.removed_at));return hero('Чёрный список','Сотрудники, внесённые по решению руководства.')+'<section class="section"><div class="member-toolbar"><input id="search" type="search" placeholder="Поиск по чёрному списку">'+rankFilter()+'</div><div class="table-wrap"><table><thead><tr><th>ID</th><th>Имя и фамилия</th><th>Должность</th><th>Отдел</th><th>Звание</th><th>Взыскания</th><th>Статус</th><th></th></tr></thead><tbody id="roster-rows">'+rows(data)+'</tbody></table></div></section>'+data.map(m=>{const b=blacklist.find(x=>x.member_id===m.id&&!x.removed_at);return '<div class="record"><strong>'+e(m.first_name+' '+m.last_name)+'</strong><p>Причина: '+e(b.reason)+'</p><small>Внесён: '+date(b.added_at)+'</small></div>'}).join('')}
+function archivePage(){const data=members.filter(m=>['dismissed','archived'].includes(m.status));return hero('Архив','Уволенные сотрудники и сохранённые личные дела.')+'<section class="section"><div class="member-toolbar"><input id="search" type="search" placeholder="Поиск по архиву">'+rankFilter()+'</div><div class="table-wrap"><table><thead><tr><th>ID</th><th>Имя и фамилия</th><th>Должность</th><th>Подразделение</th><th>Звание</th><th>Взыскания</th><th>Статус</th><th></th></tr></thead><tbody id="roster-rows">'+rows(data)+'</tbody></table></div>'+window.FSO_ADMIN_TOOLS.archiveToolbar(data,profile.role)+'</section>'}
+function blacklistPage(){const data=members.filter(m=>blacklist.some(x=>x.member_id===m.id&&!x.removed_at));return hero('Чёрный список','Сотрудники, внесённые по решению руководства.')+'<section class="section"><div class="member-toolbar"><input id="search" type="search" placeholder="Поиск по чёрному списку">'+rankFilter()+'</div><div class="table-wrap"><table><thead><tr><th>ID</th><th>Имя и фамилия</th><th>Должность</th><th>Подразделение</th><th>Звание</th><th>Взыскания</th><th>Статус</th><th></th></tr></thead><tbody id="roster-rows">'+rows(data)+'</tbody></table></div></section>'+data.map(m=>{const b=blacklist.find(x=>x.member_id===m.id&&!x.removed_at);return '<div class="record"><strong>'+e(m.first_name+' '+m.last_name)+'</strong><p>Причина: '+e(b.reason)+'</p><small>Внесён: '+date(b.added_at)+'</small></div>'}).join('')}
 async function submitBlacklistAdd(ev){ev.preventDefault();const b=ev.target.querySelector('[type=submit]');b.disabled=true;try{const {error}=await api.rpc('fso_blacklist_add',{p_member:selected,p_reason:v('black-reason')});if(error)throw error;flash('Сотрудник внесён в чёрный список');await refresh()}catch(err){document.getElementById('black-error').innerHTML=msg(err.message||'Ошибка',true)}finally{b.disabled=false}}
 async function submitBlacklistRemove(ev){ev.preventDefault();const b=ev.target.querySelector('[type=submit]');b.disabled=true;try{if(!confirm('Исключить сотрудника из чёрного списка?'))return;const {error}=await api.rpc('fso_blacklist_remove',{p_member:selected,p_reason:v('black-remove-reason')});if(error)throw error;flash('Сотрудник исключён из чёрного списка');await refresh()}catch(err){document.getElementById('black-error').innerHTML=msg(err.message||'Ошибка',true)}finally{b.disabled=false}}
 function readProof(id){
@@ -383,7 +385,8 @@ async function saveMember(ev){
  const old=screen==='edit'&&selected;
  const payload={
   employee_number:v('member-no'),first_name:v('member-first'),last_name:v('member-last'),
-  discord:v('member-discord'),joined_on:v('member-date'),status:v('member-status')
+  discord:v('member-discord'),joined_on:v('member-date'),department:v('member-department'),
+   status:v('member-department')==='Академия'?'cadet':'active'
  };
  if(!old){payload.position=v('member-position');payload.rank=v('member-rank')}
  const area=document.getElementById('save-error');
@@ -391,10 +394,20 @@ async function saveMember(ev){
   if(!/^\d{1,12}$/.test(payload.employee_number))throw Error('ID должен содержать только цифры');
   if(!old&&!rankNames.includes(payload.rank))throw Error('Выберите звание из списка');
   const credential=old?null:window.FSO_STAFF_ACCOUNTS.newValues();
-  const query=old?api.from('fso_members').update(payload).eq('id',selected):api.from('fso_members').insert(payload);
-  const result=await query.select('id').single();
-  if(result.error)throw result.error;
-  selected=result.data.id;
+  if(old){
+   const {data,error}=await api.rpc('fso_member_subdivision_save',{
+    p_member:selected,p_employee_number:payload.employee_number,
+    p_first_name:payload.first_name,p_last_name:payload.last_name,
+    p_discord:payload.discord,p_joined_on:payload.joined_on,
+    p_department:payload.department,p_reason:v('member-department-reason')
+   });
+   if(error)throw error;
+   selected=data.member_id;
+  }else{
+   const result=await api.from('fso_members').insert(payload).select('id').single();
+   if(result.error)throw result.error;
+   selected=result.data.id;
+  }
   if(!old){
    try{
     await window.FSO_STAFF_ACCOUNTS.issue(api,{id:selected},credential.login,credential.password);
