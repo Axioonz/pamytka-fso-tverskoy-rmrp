@@ -366,6 +366,20 @@ function bind(ctx,api,screen,refresh,navigate){
     }
     const selectedLabel=decisionKind.selectedOptions[0]?.textContent||'кадровое решение';
     if(!window.confirm('Подтвердить '+selectedLabel.toLowerCase()+' для '+name(member)+'?'+(kind==='dismiss_blacklist'?' Сотрудник будет уволен и занесён в чёрный список.':kind==='dismiss'?' Личное дело перейдёт в архив.':'')))return;
+    if(kind==='dismiss'||kind==='dismiss_blacklist'){
+     submit.disabled=true;
+     try{
+      const {data,error}=await api.functions.invoke('fso-staff-account',{body:{
+       action:kind==='dismiss'?'dismiss':'dismiss_blacklist',
+       member_id:member.id,reason,evidence:args.p_evidence
+      }});
+      if(error||!data?.ok)throw Error(data?.error||error?.message||'Не удалось оформить кадровое решение');
+      await refresh();
+      notice('Решение оформлено. Учётная запись удалена.');
+     }catch(error){notice(error.message||'Решение не выполнено',true)}
+     finally{if(submit.isConnected)submit.disabled=false}
+     return;
+    }
     await action(api,rpc,args,refresh,submit);
   };
  }
