@@ -1,4 +1,4 @@
-/* Главная: компактная карта активных постов. Отдельный компонент, без заступления. */
+/* Главная: увеличенная карта активных постов. Отдельный компонент, без заступления. */
 .nv-home .nv-activity-map{margin:54px 0 0;padding:24px 26px 20px;border:1px solid var(--line,#304355);border-radius:22px;background:linear-gradient(150deg,rgba(37,94,140,.12),rgba(10,20,30,.5) 65%);box-shadow:0 15px 45px rgba(0,0,0,.1);overflow:hidden}
 .nv-am-top{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:16px}
 .nv-am-top>div:first-child{min-width:0}
@@ -9,7 +9,7 @@
 .nv-am-stats span{display:flex;flex-direction:column;gap:4px;justify-content:center;min-width:100px;padding:9px 13px;border:1px solid var(--line,#2d4559);border-radius:12px;background:rgba(7,20,32,.5)}
 .nv-am-stats b{font-size:25px;line-height:1.1;color:var(--text,#f4f9ff);font-variant-numeric:tabular-nums}
 .nv-am-stats small{font-size:10px;color:var(--muted,#a5b6c6)}
-.nv-am-view{position:relative;height:350px;border-radius:16px;border:1px solid rgba(94,138,170,.27);background:#101923;overflow:hidden}
+.nv-am-view{position:relative;height:clamp(490px,62vw,650px);border-radius:16px;border:1px solid rgba(94,138,170,.27);background:#101923;overflow:hidden}
 #nv-am-svg{width:100%;height:100%;display:block;user-select:none}
 #nv-am-svg image{pointer-events:none}
 .nv-am-post,.nv-am-place{cursor:pointer;outline:none}
@@ -46,7 +46,7 @@
  .nv-am-stats span{flex:1;min-width:0;flex-direction:row;align-items:center;justify-content:flex-start;gap:9px;padding:8px 10px}
  .nv-am-stats b{font-size:22px}
  .nv-am-stats small{font-size:10px}
- .nv-am-view{height:250px;border-radius:12px}
+ .nv-am-view{height:clamp(360px,100vw,450px);border-radius:12px}
  .nv-am-bottom{align-items:stretch;flex-direction:column;gap:12px}
  .nv-am-hint{font-size:10px;padding:7px 9px}
  .nv-home .nv-am-open{width:100%;text-align:center}
