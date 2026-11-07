@@ -1,6 +1,6 @@
 (()=>{'use strict';
 let users=[],error='',editing=null,busy=false,notice='';
-const roleNames={admin:'Администратор',hr:'Редактор',examiner:'Экзаменатор',employee:'Сотрудник',cadet:'Курсант',employee_pending:'Ожидает первого входа'};
+const roleNames={admin:'Администратор',hr:'Руководство',examiner:'Экзаменатор',employee:'Сотрудник',cadet:'Курсант',employee_pending:'Ожидает первого входа'};
 const activeRoles=new Set(['admin','hr','examiner','employee','cadet']);
 const h=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
 const dt=x=>x?new Date(x).toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):'Ещё не входил';
@@ -52,15 +52,6 @@ function render(role,currentId){
  '<div class="metric"><b>'+staff+'</b><span>С доступом к кабинету</span></div>'+
  '<div class="metric"><b>'+waiting+'</b><span>Заявок на доступ</span></div></div>'+
  (unconfirmed?'<p class="hint">'+unconfirmed+' учётных записей ожидают подтверждения электронной почты.</p>':'')+
- '<section class="section access-grant"><div class="section-heading"><div><span class="form-step">НАЗНАЧЕНИЕ РОЛИ</span><h2>Выдать доступ</h2></div></div>'+
- '<p class="hint">Пользователь регистрируется самостоятельно и подтверждает почту. После этого администратор назначает роль. Можно назначить роль существующему аккаунту по адресу электронной почты.</p>'+
- '<form id="access-grant-form"><div class="fields">'+
- '<label>Электронная почта<input id="access-grant-email" type="email" required placeholder="user@example.com" autocomplete="off"></label>'+
- '<label>Роль<select id="access-grant-role"><option value="hr">Редактор</option><option value="examiner">Экзаменатор</option><option value="admin">Администратор</option></select></label>'+
- '<label class="wide">Имя для отображения<input id="access-grant-name" maxlength="120" placeholder="Необязательно"></label></div>'+
- '<div class="actions"><button class="btn primary" type="submit">Назначить роль</button>'+
- '<a class="btn" href="https://supabase.com/dashboard/project/lejagyuibxdnvpmxoggy/auth/users" target="_blank" rel="noopener noreferrer">Пригласить пользователя в Supabase</a></div>'+
- '<div id="access-grant-message" role="alert"></div></form></section>'+
  '<section class="section access-accounts"><div class="section-heading"><div><span class="form-step">УЧЁТНЫЕ ЗАПИСИ</span><h2>Пользователи</h2></div><span class="sort-note">До 500 аккаунтов</span></div>'+
  '<div class="member-toolbar"><input id="access-search" type="search" placeholder="Поиск по почте или имени" aria-label="Поиск пользователей">'+
  '<label class="rank-filter">Доступ<select id="access-filter"><option value="">Все пользователи</option>'+
@@ -82,7 +73,7 @@ function bind(api,role,currentId,callbacks){
   if(busy)return false;
   if(nextRole==='admin'&&!window.confirm('Назначить администратора? Пользователь получит полный доступ к кадровому кабинету и управлению ролями.'))return false;
   busy=true;
-  const buttons=[...document.querySelectorAll('#access-editor button,#access-grant-form button')];
+  const buttons=[...document.querySelectorAll('#access-editor button')];
   buttons.forEach(b=>b.disabled=true);
   try{
    const result=await api.rpc('fso_access_set_role',{p_user:userId,p_role:nextRole,p_display_name:displayName});
@@ -91,15 +82,6 @@ function bind(api,role,currentId,callbacks){
    return true;
   }catch(ex){feedback(msgId,ex.message||'Не удалось изменить права',true);return false}
   finally{busy=false;buttons.forEach(b=>b.disabled=false)}
- };
- const grant=document.getElementById('access-grant-form');
- if(grant)grant.onsubmit=async event=>{
-  event.preventDefault();
-  const email=document.getElementById('access-grant-email').value.trim().toLocaleLowerCase('ru-RU');
-  const target=users.find(u=>String(u.email||'').toLocaleLowerCase('ru-RU')===email);
-  if(!target){feedback('access-grant-message','Учётная запись не найдена. Пользователь должен сначала зарегистрироваться на сайте и подтвердить почту.',true);return}
-  await submit(target.user_id,document.getElementById('access-grant-role').value,
-    document.getElementById('access-grant-name').value.trim()||target.display_name||'','access-grant-message');
  };
  const search=document.getElementById('access-search'),filter=document.getElementById('access-filter');
  function updateRows(){
