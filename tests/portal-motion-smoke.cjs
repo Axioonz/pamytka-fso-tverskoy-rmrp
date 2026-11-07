@@ -43,7 +43,9 @@ const BASE='http://127.0.0.1:8765/';
   await page.locator('.nv-more-panel [data-page="detention"]').click();
   await page.locator('#detention-steps .det-step').first().waitFor({state:'visible'});
   assert.ok(await page.getByText('60 минут',{exact:true}).isVisible());
-  assert.ok(await page.getByText('15 минут',{exact:true}).isVisible());
+  assert.ok(await page.getByText('5 + 5 минут',{exact:true}).isVisible());
+  assert.ok(await page.getByText('2 минуты',{exact:true}).isVisible());
+  assert.equal(await page.locator('#detention-screen .det-stat').count(),4);
   await page.waitForTimeout(440);
   await page.screenshot({path:'/tmp/fso-motion-detention.png',fullPage:false});
   // Legal reference library remains interactive under the redesigned styles.
