@@ -77,26 +77,25 @@ const BASE='http://127.0.0.1:8765/';
   await page.locator('#nv-more .rail-button[data-page="detention"]').click();
   await page.locator('#detention-screen').waitFor({state:'visible'});
   const detSteps=page.locator('#detention-steps .det-step');
-  assert.equal(await detSteps.count(),9);
+  assert.equal(await detSteps.count(),4);
   assert.deepEqual(await detSteps.locator('h2').allTextContents(),[
-   'Представиться и сообщить причину',
-   'Проверить основание и зафиксировать время',
-   'Сообщить права и предложить адвоката',
-   'Вызвать адвоката и выдержать сроки',
-   'Предоставить беседу с адвокатом и звонок',
-   'Особый порядок для госслужащих и адвокатов',
-   'Учитывать остановку процессуального срока',
-   'Оформить результат и сохранить материалы',
-   'Передать задержанного'
+   'Применить средства задержания',
+   'Представиться и назвать статьи',
+   'Провести личный обыск',
+   'Доставить и передать задержанного'
   ]);
   assert.equal(await page.locator('#detention-screen .det-hint').count(),0);
   assert.equal(await page.locator('#detention-screen .det-step-reason').count(),0);
   assert.equal(await page.getByText('Подсказка',{exact:true}).count(),0);
-  assert.ok((await detSteps.first().locator('.det-step-action').innerText()).includes('удостоверение'));
-  assert.ok((await detSteps.last().locator('.det-step-action').innerText()).includes('МВД или СК'));
+  assert.ok((await detSteps.nth(1).locator('.det-step-action').innerText()).includes('удостоверение'));
+  assert.equal(await page.locator('#detention-supplements .det-condition').count(),7);
+  assert.ok((await page.locator('#detention-record-note').innerText()).includes('72 часа'));
+  assert.ok((await page.locator('#detention-supplements').innerText()).includes('Статья 22 ПК'));
+  assert.equal(await page.locator('#detention-steps').getByText('Вызвать адвоката и выдержать сроки').count(),0);
+  assert.ok((await detSteps.last().locator('.det-step-action').innerText()).includes('МВД или Следственному комитету'));
   assert.ok((await detSteps.last().locator('.det-norm-text').first().innerText()).includes('Задержанные лица незамедлительно передаются'));
   const quotes=await page.locator('#detention-steps .det-norm-text').count();
-  assert.ok(quotes>=18,'The expanded steps should retain source-law extracts');
+  assert.ok(quotes>=6,'Core steps must retain exact legal extracts');
   assert.equal(await page.locator('#detention-steps .det-norms-heading').first().innerText(),'ТЕКСТ ЗАКОНА');
   assert.equal(await page.locator('.det-speech-card').count(),3);
   assert.ok((await page.locator('#det-speech-basis').innerText()).includes('статьи 10 Федерального закона'));
