@@ -276,7 +276,7 @@ if(['roster','archive','blacklist'].includes(screen)){
      screen==='blacklist'?members.filter(m=>blacklist.some(x=>x.member_id===m.id&&!x.removed_at)):
      members.filter(m=>['active','cadet'].includes(m.status));
    document.getElementById('roster-rows').innerHTML=rows(source.filter(m=>(!selectedRank||rankKey(m.rank)===rankKey(selectedRank))&&
-      [m.employee_number,m.first_name,m.last_name,m.position,m.rank,m.discord].some(x=>String(x||'').toLocaleLowerCase('ru-RU').includes(term))));
+      [m.employee_number,m.first_name,m.last_name,m.position,m.department,m.rank,m.discord].some(x=>String(x||'').toLocaleLowerCase('ru-RU').includes(term))));
    document.querySelectorAll('[data-person]').forEach(b=>b.onclick=()=>{selected=b.dataset.person;screen='detail';render()});
   }
   if(search)search.oninput=updateRoster;
