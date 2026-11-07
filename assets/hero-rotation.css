@@ -59,18 +59,6 @@ html.nv-preview .nv-hero-carousel .nv-hero-dot:focus-visible{
   html.nv-preview .nv-hero-carousel .nv-hero-dot::before{transition:none!important}
 }
 
-/* Источники реальных фотографий Кремля, ссылки на Wikimedia Commons. */
-html.nv-preview .nv-hero-carousel .nv-hero-photo-credit{
-  position:absolute;right:25px;bottom:91px;z-index:4;
-  padding:5px 8px;border-radius:5px;
-  color:rgba(231,241,250,.88);background:rgba(4,13,23,.56);
-  font-size:10px;line-height:1.25;text-decoration:none;
-  text-shadow:0 1px 4px rgba(0,0,0,.65);
-}
-html.nv-preview .nv-hero-carousel .nv-hero-photo-credit:hover,
-html.nv-preview .nv-hero-carousel .nv-hero-photo-credit:focus-visible{
-  color:#fff;text-decoration:underline;background:rgba(4,13,23,.85);
-}
-@media(max-width:620px){
- html.nv-preview .nv-hero-carousel .nv-hero-photo-credit{right:16px;bottom:72px;font-size:9px}
-}
+/* Спокойная ссылка на источники внизу страницы вместо текста поверх фото. */
+html.nv-preview .nv-footer .nv-footer-photo-sources{font-size:10px;color:var(--muted);text-decoration:underline;text-underline-offset:3px;margin-top:5px}
+html.nv-preview .nv-footer .nv-footer-photo-sources:hover{color:var(--text)}
