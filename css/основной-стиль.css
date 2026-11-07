@@ -1246,3 +1246,25 @@ body.tg-law-open{overflow:hidden}
  .reference-modal .reference-context-grid>.reference-context-link{padding:15px 16px}
  .reference-modal #reference-modal-body>.ref-law-text{padding:15px 16px;font-size:14px}
 }
+
+/* Practical detention guide: deadlines, officer scripts, and FSO-specific handoff. */
+.det-priority{margin:-13px 0 28px;padding:17px 21px;background:color-mix(in srgb,var(--accent-strong) 7%,var(--surface));border:1px solid color-mix(in srgb,var(--accent-strong) 27%,var(--line));border-radius:13px;line-height:1.65}
+.det-priority strong{display:block;color:var(--text);font-size:14px;font-weight:750;margin-bottom:6px}
+.det-priority p{font-size:12px;color:var(--muted);margin:0}
+.det-priority b{color:var(--text);font-weight:700}
+.det-speech{padding:24px 27px 25px;margin-bottom:28px;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.det-speech-heading{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:flex-end;justify-content:space-between;padding-bottom:19px;border-bottom:1px solid var(--line)}
+.det-speech-heading>div{flex:1 1 240px;min-width:0}
+.det-speech-heading>p{max-width:310px;font-size:12px;line-height:1.6;margin:0;color:var(--muted)}
+.det-speech-kicker{font-size:10px;letter-spacing:.12em;color:var(--accent-strong);font-weight:800}
+.det-speech-heading h2{font-size:clamp(21px,2.5vw,29px);color:var(--text);margin:7px 0 0;line-height:1.2}
+.det-speech-list{display:grid;gap:0}
+.det-speech-card{padding:20px 0 17px;border-bottom:1px solid var(--line)}
+.det-speech-card:last-child{border-bottom:0;padding-bottom:0}
+.det-speech-top{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.det-speech-top h3{font-size:14px;font-weight:750;line-height:1.3;margin:0;color:var(--text)}
+.det-copy{border:1px solid var(--line);color:var(--text);background:var(--surface2);padding:8px 12px;min-height:34px;border-radius:8px;font-size:11px;cursor:pointer;white-space:nowrap}
+.det-copy:hover,.det-copy:focus-visible{border-color:var(--accent-strong);color:var(--accent-strong)}
+.det-speech-text{font-size:13px;line-height:1.75;color:var(--text);margin:0 0 9px;overflow-wrap:break-word}
+.det-speech-card small{display:block;font-size:11px;color:var(--muted);line-height:1.55}
+@media(max-width:680px){.det-speech{padding:20px 17px}.det-speech-top{align-items:flex-start}.det-priority{padding:16px}}
