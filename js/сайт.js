@@ -274,7 +274,9 @@ function addStepContent(container,item){
 let detentionObserver=null;
 function renderDetention(){
  const list=$('detention-steps'),nav=$('detention-nav'),extra=$('detention-extra');
+ const supplements=$('detention-supplements'),recordNote=$('detention-record-note');
  list.replaceChildren();nav.replaceChildren();extra.replaceChildren();
+ if(supplements)supplements.replaceChildren();if(recordNote)recordNote.replaceChildren();
  if(detentionObserver){detentionObserver.disconnect();detentionObserver=null;}
  const detItems=publicMaterials.filter(x=>x.sectionId==='detention');
  const guide=detItems.find(x=>Array.isArray(x.steps)&&x.steps.length);
@@ -299,6 +301,43 @@ function renderDetention(){
   btn.addEventListener('click',()=>{section.scrollIntoView({behavior:'smooth',block:'start'});buttons.forEach(b=>b.classList.remove('active'));btn.classList.add('active')});nav.append(btn);buttons.push(btn);
  });
  if('IntersectionObserver' in window){detentionObserver=new IntersectionObserver((entries)=>{for(const entry of entries){if(entry.isIntersecting){const ix=shownSteps.findIndex((_,i)=>entry.target.id==='det-step-'+(i+1));if(ix>=0)buttons.forEach((b,j)=>b.classList.toggle('active',j===ix))}}},{rootMargin:'-5% 0px -70% 0px',threshold:0});list.querySelectorAll('.det-step').forEach(x=>detentionObserver.observe(x));}
+ // Legal conditions are NOT steps of the ordinary FSO detention sequence.
+ if(supplements&&Array.isArray(guide.supplements)&&guide.supplements.length){
+  const head=document.createElement('div');head.className='det-conditions-head';
+  const caption=document.createElement('span');caption.className='det-speech-kicker';caption.textContent='ОТДЕЛЬНО ОТ ОСНОВНОГО ПОРЯДКА';
+  const title=document.createElement('h2');title.textContent='Условия, права и особые случаи';
+  const intro=document.createElement('p');intro.textContent='Используйте нужный блок только при соответствующих обстоятельствах. Эти действия не являются обязательными этапами каждого задержания.';
+  head.append(caption,title,intro);supplements.append(head);
+  const grid=document.createElement('div');grid.className='det-conditions-grid';supplements.append(grid);
+  for(const condition of guide.supplements){
+   const card=document.createElement('article');card.className='det-condition';
+   const tag=document.createElement('span');tag.className='det-condition-tag';tag.textContent=condition.tag||'ДОПОЛНЕНИЕ';
+   const h=document.createElement('h3');h.textContent=condition.title||'';card.append(tag,h);
+   const body=document.createElement('p');body.textContent=condition.action||'';card.append(body);
+   if(Array.isArray(condition.norms)&&condition.norms.length){
+    const details=document.createElement('details');details.className='det-condition-norms';
+    const summary=document.createElement('summary');summary.textContent='Нормативные основания';details.append(summary);
+    for(const entry of condition.norms){
+     const item=document.createElement('div');item.className='det-norm';
+     const cite=document.createElement('cite');cite.textContent=entry.citation||'Норма';
+     const quote=document.createElement('p');quote.className='det-norm-text';quote.textContent=entry.text||'';
+     item.append(cite,quote);details.append(item);
+    }
+    card.append(details);
+   }
+   grid.append(card);
+  }
+ }
+ if(recordNote&&guide.recordNote){
+  const note=guide.recordNote;
+  recordNote.className='det-record-note';
+  const top=document.createElement('div');top.className='det-record-time';top.textContent='72 часа';
+  const info=document.createElement('div');
+  const heading=document.createElement('h2');heading.textContent=note.heading||'Хранение записи';
+  const body=document.createElement('p');body.textContent=note.text||'';
+  const cite=document.createElement('small');cite.textContent=note.citation||'';
+  info.append(heading,body,cite);recordNote.append(top,info);
+ }
  const other=detItems.filter(x=>x!==guide);extra.hidden=!other.length;
  for(const item of other){const article=document.createElement('article');const h=document.createElement('h3');h.textContent=item.title;article.append(h);if(item.summary){const p=document.createElement('p');p.textContent=item.summary;article.append(p)}if(Array.isArray(item.steps)){
    for(const stage of item.steps){const title=document.createElement('h4');title.textContent=stage.title;article.append(title);const action=document.createElement('p');action.textContent=stage.action||'';article.append(action);for(const n of stage.norms||[]){const norm=document.createElement('div');norm.className='det-norm';const citation=document.createElement('cite');citation.textContent=n.citation||'';const txt=document.createElement('p');txt.className='det-norm-text';txt.textContent=n.text||'';norm.append(citation,txt);article.append(norm)}}
