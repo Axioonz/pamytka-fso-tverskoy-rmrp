@@ -304,6 +304,22 @@ function renderDetention(){
    for(const stage of item.steps){const title=document.createElement('h4');title.textContent=stage.title;article.append(title);const action=document.createElement('p');action.textContent=stage.action||'';article.append(action);for(const n of stage.norms||[]){const norm=document.createElement('div');norm.className='det-norm';const citation=document.createElement('cite');citation.textContent=n.citation||'';const txt=document.createElement('p');txt.className='det-norm-text';txt.textContent=n.text||'';norm.append(citation,txt);article.append(norm)}}
   }else{const p=document.createElement('p');p.textContent=item.body||'';article.append(p)}extra.append(article)}
 }
+document.addEventListener('click',async event=>{
+ const button=event.target.closest('[data-det-copy]');
+ if(!button)return;
+ const target=document.getElementById(button.dataset.detCopy);
+ if(!target)return;
+ const label=button.textContent;
+ try{
+  await navigator.clipboard.writeText(target.textContent.trim());
+  button.textContent='Скопировано';
+  window.setTimeout(()=>{if(button.isConnected)button.textContent=label},1600);
+ }catch{
+  button.textContent='Не удалось скопировать';
+  window.setTimeout(()=>{if(button.isConnected)button.textContent=label},2000);
+ }
+});
+
 document.addEventListener('click',event=>{
  const shortcut=event.target.closest('[data-det-step]');if(!shortcut)return;
  const step=Number(shortcut.dataset.detStep)+1;go('detention');
