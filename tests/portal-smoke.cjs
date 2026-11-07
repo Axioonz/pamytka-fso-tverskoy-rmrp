@@ -205,7 +205,7 @@ async function launchWithRole(browser,role){
  await page.locator('#member-position').fill('Курсант');
  await page.locator('#member-rank').selectOption('Рядовой');
  await page.locator('#member-discord').fill('demo.test');
- await page.locator('#member-status').selectOption('cadet');
+ await page.locator('#member-department').selectOption('Академия');
  assert.equal(await page.locator('#member-rank optgroup').count(),5);
  assert.equal(await page.locator('#member-rank option:not([disabled])').count(),16);
  await page.locator('#member-rank').selectOption('Генерал-майор');
@@ -220,13 +220,10 @@ async function launchWithRole(browser,role){
  assert.equal(await page.evaluate(()=>window.__fsoMock.db.fso_profiles.find(p=>p.user_id==='managed-member-2').role),'employee_pending');
  assert.ok(!Object.prototype.hasOwnProperty.call(await page.evaluate(()=>window.__fsoMock.db.fso_members.find(m=>m.id==='member-2')),'password'));
  assert.ok((await page.evaluate(()=>window.__fsoMock.functionCalls)).some(x=>x.action==='issue'&&x.login==='serov_0100'));
- await page.locator('#issue-reason').fill('Нарушение служебного регламента');
- await page.locator('#issue-proof').fill('https://example.com/evidence');
- await page.locator('#issue-form button[type="submit"]').click();
- await page.locator('.record strong').filter({hasText:'Предупреждение'}).first().waitFor();
+ assert.equal(await page.locator('#issue-form').count(),0,'Выдача взысканий в личном деле удалена');
  const capture=await page.evaluate(()=>({people:window.__fsoMock.db.fso_members.length,rpcs:window.__fsoMock.rpcs.map(x=>x.name)}));
  assert.equal(capture.people,2);
- assert.ok(capture.rpcs.includes('fso_issue_discipline'));
+ assert.ok(!capture.rpcs.includes('fso_issue_discipline'));
  await page.getByRole('button',{name:'Сотрудники'}).click();
  assert.deepEqual(await page.locator('#roster-rows .employee-name').allTextContents(),['Алексей Проверочный','Иван Тестовый']);
  await page.locator('#rank-filter').selectOption('Генерал-майор');
@@ -335,11 +332,11 @@ async function launchWithRole(browser,role){
  await page.getByRole('button',{name:'Управление доступом'}).click();
  await page.getByRole('heading',{name:'Центр управления доступом'}).waitFor();
  assert.equal(await page.locator('#access-users tr').count(),2);
- await page.locator('#access-grant-email').fill('editor@example.test');
- await page.locator('#access-grant-role').selectOption('hr');
- await page.locator('#access-grant-name').fill('Кадровый редактор');
- await page.locator('#access-grant-form button[type="submit"]').click();
- await page.locator('#access-users tr').filter({hasText:'editor@example.test'}).getByText('Редактор',{exact:true}).waitFor();
+ assert.equal(await page.locator('#access-grant-form').count(),0,'Выдача доступа по email удалена');
+ await page.locator('#access-users tr').filter({hasText:'editor@example.test'}).getByRole('button',{name:'Настроить'}).click();
+ await page.locator('#access-role').selectOption('hr');
+ await page.locator('#access-edit-form button[type="submit"]').click();
+ await page.locator('#access-users tr').filter({hasText:'editor@example.test'}).getByText('Руководство',{exact:true}).waitFor();
  await page.locator('#access-users tr').filter({hasText:'editor@example.test'}).getByRole('button',{name:'Настроить'}).click();
  await page.locator('#access-role').selectOption('examiner');
  await page.locator('#access-edit-form button[type="submit"]').click();
@@ -379,7 +376,7 @@ async function launchWithRole(browser,role){
  assert.equal(await page.getByRole('button',{name:'Управление доступом'}).count(),0);
  assert.equal(await page.locator('#roster-rows .status-label').first().innerText(),'Сотрудник');
  await page.locator('#new-member').click();
- assert.deepEqual(await page.locator('#member-status option').allTextContents(),['Курсант','Сотрудник']);
+ assert.deepEqual(await page.locator('#member-department option').allTextContents(),['АС','Академия','УЛО']);
  assert.deepEqual(errors,[]);
  await page.close();
  }
