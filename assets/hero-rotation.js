@@ -69,6 +69,21 @@
       sync();
     }
   },{passive:true});
+
+  // Загружаем реальные фотографии отдельно, чтобы при сетевой ошибке
+  // карточка всё равно показывала существующую локальную подложку.
+  for(const slide of slides){
+    const source=slide.dataset.heroPhoto;
+    if(!source)continue;
+    const photo=new Image();
+    photo.decoding='async';
+    photo.onload=()=>{
+      if(slide.isConnected)slide.style.setProperty('--nv-hero-image','url("'+source+'")');
+    };
+    photo.onerror=()=>console.warn('Не загружена фотография Кремля:',source);
+    photo.src=source;
+  }
+
   show(0);
   sync();
 })();
