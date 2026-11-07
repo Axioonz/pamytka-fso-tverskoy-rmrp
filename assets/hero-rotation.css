@@ -1,0 +1,60 @@
+/* Первый экран: плавное переключение карточек разделов. */
+html.nv-preview .nv-hero-carousel{
+  position:relative;display:block;padding:0;overflow:hidden;
+  background-color:#0b1827;background-image:none;isolation:isolate;
+}
+html.nv-preview .nv-hero-carousel::after{display:none}
+html.nv-preview .nv-hero-carousel::before{z-index:5}
+html.nv-preview .nv-hero-carousel .nv-hero-slide{
+  position:absolute;inset:0;z-index:1;box-sizing:border-box;
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:26px;overflow:hidden;
+  background-image:
+    linear-gradient(180deg,rgba(4,12,20,.78),rgba(6,15,25,.19) 43%,rgba(3,12,23,.90) 100%),
+    var(--nv-hero-image);
+  background-size:cover,cover;
+  background-position:center,var(--nv-hero-position,center);
+  background-repeat:no-repeat;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .95s ease,visibility 0s linear .95s;
+}
+html.nv-preview .nv-hero-carousel .nv-hero-slide.is-active{
+  z-index:2;opacity:1;visibility:visible;pointer-events:auto;
+  transition:opacity .95s ease,visibility 0s;
+}
+html.nv-preview .nv-hero-carousel .nv-image-index{max-width:calc(100% - 122px);font-size:9px;line-height:1.55;text-shadow:0 2px 10px rgba(0,0,0,.6)}
+html.nv-preview .nv-hero-carousel .nv-image-foot strong{text-shadow:0 3px 22px rgba(0,0,0,.55)}
+html.nv-preview .nv-hero-carousel .nv-hero-pagination{
+  position:absolute;z-index:6;top:26px;right:26px;
+  display:flex;gap:6px;align-items:center;
+}
+html.nv-preview .nv-hero-carousel .nv-hero-dot{
+  display:block;flex:0 0 auto;position:relative;
+  width:23px;height:18px;padding:0;border:0;border-radius:3px;
+  background:transparent;cursor:pointer;
+}
+html.nv-preview .nv-hero-carousel .nv-hero-dot::before{
+  content:"";position:absolute;top:8px;left:0;right:0;height:3px;
+  border-radius:3px;background:rgba(224,240,255,.45);
+  transition:background .25s ease,box-shadow .25s ease;
+}
+html.nv-preview .nv-hero-carousel .nv-hero-dot.is-active::before,
+html.nv-preview .nv-hero-carousel .nv-hero-dot:hover::before{
+  background:#e9f6ff;box-shadow:0 0 11px rgba(167,215,255,.5);
+}
+html.nv-preview .nv-hero-carousel .nv-hero-dot:focus-visible{
+  outline:2px solid #e9f6ff;outline-offset:3px;
+}
+@media(max-width:850px){
+  html.nv-preview .nv-hero-carousel .nv-hero-slide{padding:26px}
+}
+@media(max-width:620px){
+  html.nv-preview .nv-hero-carousel .nv-hero-slide{padding:19px}
+  html.nv-preview .nv-hero-carousel .nv-hero-pagination{top:20px;right:19px;gap:5px}
+  html.nv-preview .nv-hero-carousel .nv-hero-dot{width:17px}
+  html.nv-preview .nv-hero-carousel .nv-image-index{max-width:calc(100% - 92px);font-size:8px}
+}
+@media(prefers-reduced-motion:reduce){
+  html.nv-preview .nv-hero-carousel .nv-hero-slide{transition:none!important}
+  html.nv-preview .nv-hero-carousel .nv-hero-dot::before{transition:none!important}
+}
