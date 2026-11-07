@@ -342,7 +342,7 @@ function bind(ctx,api,screen,refresh,navigate){
       args={...args,p_rank:member.rank,p_position:position};
     }else if(kind==='department'){
       const department=document.getElementById('lead-department').value.trim();
-      if(!departments.includes(department)||department===(member.department||'')){
+      if(!['АС','Академия','УЛО'].includes(department)||department===(member.department||'')){
          notice('Выберите другое подразделение',true);return;
        }
       rpc='fso_transfer_department';
