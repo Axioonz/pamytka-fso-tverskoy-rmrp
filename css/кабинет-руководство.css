@@ -70,3 +70,20 @@ html.cb-next #main.wrap>nav.tabs>button{min-height:41px}
  .lead-feed-row{grid-template-columns:1fr;gap:4px}.lead-event{grid-template-columns:1fr;gap:7px}
  .lead-date-pair{grid-template-columns:1fr}.lead-request{padding:13px}
 }
+
+/* Единая форма кадровых решений. */
+.lead-decision-group[hidden]{display:none!important}
+.lead-decision-group{display:grid;gap:10px}
+.lead-decision-group>label{display:grid;gap:8px}
+.lead-form>label{display:grid;gap:8px}
+.lead-form .lead-decision-group textarea{min-height:94px}
+.lead-form .lead-decision-group .hint{margin:0}
+.lead-form .lead-current{display:flex;flex-wrap:wrap;gap:10px}
+.lead-form .lead-current span{min-width:155px;flex:1 1 160px}
+.lead-form .actions .btn:disabled{opacity:.45;cursor:not-allowed}
+.lead-sanction{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:13px 0;border-bottom:1px solid #2b4052}
+.lead-sanction:last-child{border-bottom:0}
+.lead-sanction>span:first-child{display:grid;gap:5px;min-width:0}
+.lead-sanction strong{font-size:13px;color:#d9ecfa}
+.lead-sanction small{font-size:11px;color:#a6bdcd;line-height:1.5;overflow-wrap:anywhere}
+@media(max-width:620px){.lead-sanction{align-items:flex-start;flex-direction:column}}

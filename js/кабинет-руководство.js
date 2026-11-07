@@ -10,7 +10,7 @@ const active=m=>m&&['active','cadet'].includes(m.status);
 const name=m=>m?m.first_name+' '+m.last_name:'Сотрудник не найден';
 const types={leave:'Отпуск',inactivity:'Временная неактивность',dayoff:'Отгул',promotion:'Повышение',transfer:'Перевод',reinstatement:'Восстановление',other:'Другое обращение'};
 const states={pending:'На рассмотрении',approved:'Одобрено',rejected:'Отклонено'};
-const eventsTitles={dayoff_approved:'Отгул одобрен',dayoff_finished:'Отгул завершён',dayoff_cancelled:'Отгул отменён',joined:'Приём в подразделение',rank_changed:'Изменение звания',position_changed:'Изменение должности',
+const eventsTitles={dayoff_approved:'Отгул одобрен',dayoff_finished:'Отгул завершён',dayoff_cancelled:'Отгул отменён',joined:'Приём в подразделение',rank_changed:'Изменение звания',position_changed:'Изменение должности',department_changed:'Перевод в отдел',
  status_changed:'Изменение статуса службы',request_submitted:'Рапорт подан',request_approved:'Рапорт одобрен',
  request_rejected:'Отказ по рапорту',leave_approved:'Отпуск оформлен',leave_finished:'Выход из отпуска',
  leave_cancelled:'Отпуск отменён',absence_approved:'Неактивность оформлена',
@@ -124,6 +124,7 @@ function memberEvents(member){
   const prior=ev.old_value||{},now=ev.new_value||{};
   const detail=ev.event_type==='rank_changed'?safe((prior.rank||'Не указано')+' → '+(now.rank||'Не указано')):
    ev.event_type==='position_changed'?safe((prior.position||'Не указана')+' → '+(now.position||'Не указана')):
+   ev.event_type==='department_changed'?safe((prior.department||'Не назначен')+' → '+(now.department||'Не назначен')):
    ev.event_type==='status_changed'?safe((prior.status||'Не указан')+' → '+(now.status||'Не указан')):'';
   return '<div class="lead-event"><time>'+safe(when(ev.occurred_at))+'</time>'+
    '<div><strong>'+safe(eventsTitles[ev.event_type]||ev.event_type)+'</strong>'+
@@ -148,17 +149,50 @@ function decisionPage(ctx,chosen){
  if(!manager(ctx.role))return '<div class="message error">Недостаточно полномочий.</div>';
  const members=ctx.members.filter(active),person=members.find(m=>m.id===chosen)||members[0];
  if(!person)return '<h1>Кадровые решения</h1><p>В действующем составе нет сотрудников.</p>';
- const options=rankGroups.map(([title,...ranks])=>'<optgroup label="'+safe(title)+'">'+ranks.map(r=>'<option value="'+safe(r)+'" '+(person.rank===r?'selected':'')+'>'+safe(r)+'</option>').join('')+'</optgroup>').join('');
- return '<div class="eyebrow">FSO / КАДРОВОЕ РЕШЕНИЕ</div><h1>Повышения и назначения</h1>'+
- '<p class="head-subtitle">Отдельное оформление изменения звания и должности с обязательным основанием. Решение сохраняется в истории службы.</p>'+
+ const ranks=rankGroups.flatMap(([, ...items])=>items);
+ const currentRank=ranks.indexOf(person.rank);
+ const rankSelect=(id,check)=>'<select id="'+id+'">'+ranks.filter((r,i)=>check(i)).map(r=>'<option value="'+safe(r)+'">'+safe(r)+'</option>').join('')+'</select>';
+ const promotion=rankSelect('lead-rank-up',i=>currentRank>=0&&i<currentRank);
+ const demotion=rankSelect('lead-rank-down',i=>currentRank>=0&&i>currentRank);
+ const activeActions=ctx.actions.filter(a=>a.member_id===person.id&&a.status==='active');
+ const warnings=activeActions.filter(a=>a.kind==='warning').length;
+ const reprimands=activeActions.filter(a=>a.kind==='reprimand').length;
+ const sanctionLabel=a=>(a.kind==='warning'?'Предупреждение':'Выговор')+' · '+when(a.issued_at)+' · '+a.reason.slice(0,95);
+ const sanctioned=activeActions.map(a=>'<option value="'+safe(a.id)+'">'+safe(sanctionLabel(a))+'</option>').join('');
+ const departments=[...new Set(ctx.members.map(m=>m.department?.trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ru'));
+ const departmentChoices=departments.map(s=>'<option value="'+safe(s)+'"></option>').join('');
+ const kindOptions=[
+   ['promotion','Повышение в звании'],['demotion','Понижение в звании'],
+   ['position','Назначение на должность'],['department','Перевод в отдел'],
+   ['warning','Выдать предупреждение'],['reprimand','Выдать выговор'],
+   ['remove','Снять взыскание']
+ ].map(([key,title])=>'<option value="'+key+'">'+title+'</option>').join('');
+ const activeList=activeActions.length?activeActions.map(a=>
+  '<div class="lead-sanction"><span><strong>'+safe(a.kind==='warning'?'Предупреждение':'Выговор')+
+  '</strong><small>'+safe(when(a.issued_at))+' · '+safe(a.reason)+'</small></span><span class="lead-status">Действует</span></div>').join(''):
+  '<p class="hint">Действующих взысканий нет.</p>';
+ return '<div class="eyebrow">FSO / КАДРОВЫЙ УЧЁТ</div><h1>Кадровые решения</h1>'+
+ '<p class="head-subtitle">Повышения, понижения, назначения, переводы и дисциплинарные взыскания. Каждое действие проводится с основанием и фиксируется на сервере.</p>'+
  '<section class="section"><form id="lead-decision-form" class="lead-form">'+
  personSelect('lead-person',members,person.id)+
- '<div class="lead-current"><span>Текущее звание · <b>'+safe(person.rank||'Не указано')+'</b></span>'+
- '<span>Текущая должность · <b>'+safe(person.position||'Не указана')+'</b></span></div>'+
- '<div class="fields"><label>Новое звание<select id="lead-rank">'+options+'</select></label>'+
- '<label>Новая должность<input id="lead-position" maxlength="200" value="'+safe(person.position||'')+'"></label></div>'+
- '<label>Основание решения<textarea id="lead-decision-reason" required minlength="5" maxlength="2000" placeholder="Причина повышения, понижения или кадрового назначения"></textarea></label>'+
- '<div class="actions"><button type="submit" class="btn primary">Оформить решение</button></div></form></section>'+memberEvents(person);
+ '<div class="lead-current"><span>Звание · <b>'+safe(person.rank||'Не указано')+'</b></span>'+
+ '<span>Должность · <b>'+safe(person.position||'Не указана')+'</b></span>'+
+ '<span>Отдел · <b>'+safe(person.department||'Не назначен')+'</b></span>'+
+ '<span>Предупреждения · <b>'+warnings+'/3</b></span><span>Выговоры · <b>'+reprimands+'/3</b></span></div>'+
+ '<label>Вид кадрового решения<select id="lead-decision-kind" required>'+kindOptions+'</select></label>'+
+ '<div class="lead-decision-group" data-lead-kind="promotion"><label>Новое звание'+promotion+'</label></div>'+
+ '<div class="lead-decision-group" data-lead-kind="demotion" hidden><label>Новое звание'+demotion+'</label></div>'+
+ '<div class="lead-decision-group" data-lead-kind="position" hidden><label>Новая должность<input id="lead-position" maxlength="200" placeholder="Официальное название должности" value="'+safe(person.position||'')+'"></label></div>'+
+ '<div class="lead-decision-group" data-lead-kind="department" hidden><label>Новый отдел<input id="lead-department" maxlength="120" minlength="2" list="lead-department-list" placeholder="Название отдела" value="'+safe(person.department||'')+'"></label><datalist id="lead-department-list">'+departmentChoices+'</datalist><p class="hint">Название отдела указывается точно, без создания новых подразделений на сайте.</p></div>'+
+ '<div class="lead-decision-group" data-lead-kind="remove" hidden><label>Действующее взыскание<select id="lead-sanction">'+sanctioned+'</select></label></div>'+
+ '<label>Основание решения<textarea id="lead-decision-reason" required minlength="5" maxlength="2000" placeholder="Укажите причину и обстоятельства решения"></textarea></label>'+
+ '<div class="lead-decision-group" data-lead-kind="warning" hidden><p class="hint">Три действующих предупреждения автоматически преобразуются в один выговор.</p></div>'+
+ '<div class="lead-decision-group" data-lead-kind="reprimand" hidden><p class="hint">Выговор учитывается по правилу 0/3.</p></div>'+
+ '<div class="lead-decision-group" data-lead-kind="proof" hidden><label>Доказательства, ссылки HTTPS<textarea id="lead-proof" rows="3" placeholder="https://... (одна ссылка в строке)"></textarea></label><p class="hint">Нужно от 1 до 15 ссылок. Для выдачи и снятия взысканий доказательства обязательны.</p></div>'+
+ '<p id="lead-decision-help" class="hint" aria-live="polite"></p>'+
+ '<div class="actions"><button type="submit" class="btn primary">Оформить решение</button></div></form></section>'+
+ '<section class="section"><h2>Действующие взыскания</h2>'+activeList+'</section>'+
+ memberEvents(person);
 }
 function requestPage(ctx){
  const self=!officer(ctx.role);
@@ -258,18 +292,76 @@ function bind(ctx,api,screen,refresh,navigate){
  const decisionPerson=document.getElementById('lead-person');
  if(decisionPerson)decisionPerson.onchange=()=>navigate('personnel',decisionPerson.value);
  const decision=document.getElementById('lead-decision-form');
- if(decision)decision.onsubmit=async e=>{
-  e.preventDefault();
-  const memberId=document.getElementById('lead-person').value;
-  const member=ctx.members.find(m=>m.id===memberId);
-  const rank=document.getElementById('lead-rank').value;
-  const position=document.getElementById('lead-position').value.trim();
-  if(rank===member.rank && position===(member.position||'')){notice('Укажите новое звание или должность',true);return;}
-  if(!window.confirm('Сохранить кадровое решение для '+name(member)+'?'))return;
-  await action(api,'fso_personnel_decision',
-    {p_member:memberId,p_rank:rank,p_position:position,p_reason:document.getElementById('lead-decision-reason').value.trim()},
-    refresh,decision.querySelector('[type="submit"]'));
- };
+ if(decision){
+  const decisionKind=document.getElementById('lead-decision-kind');
+  const groups=[...decision.querySelectorAll('[data-lead-kind]')];
+  const member=ctx.members.find(m=>m.id===document.getElementById('lead-person').value);
+  const submit=decision.querySelector('[type="submit"]');
+  const help=document.getElementById('lead-decision-help');
+  function updateDecisionKind(){
+    const kind=decisionKind.value;
+    const proofNeeded=['warning','reprimand','remove'].includes(kind);
+    groups.forEach(group=>{
+      const match=group.dataset.leadKind===kind || (group.dataset.leadKind==='proof'&&proofNeeded);
+      group.hidden=!match;
+      group.querySelectorAll('input,select,textarea').forEach(control=>control.disabled=!match);
+    });
+    const rankElement=document.getElementById(kind==='promotion'?'lead-rank-up':'lead-rank-down');
+    const canRank=!(kind==='promotion'||kind==='demotion')||Boolean(rankElement?.options.length);
+    const canRemove=kind!=='remove'||Boolean(document.getElementById('lead-sanction')?.options.length);
+    submit.disabled=!canRank||!canRemove;
+    help.textContent=!canRank?'Для выбранного сотрудника нет доступного звания в этом направлении.':
+     !canRemove?'У сотрудника нет действующих взысканий для снятия.':'';
+    document.getElementById('lead-proof').required=proofNeeded;
+  }
+  decisionKind.onchange=updateDecisionKind;
+  updateDecisionKind();
+  decision.onsubmit=async event=>{
+    event.preventDefault();
+    const kind=decisionKind.value;
+    const reason=document.getElementById('lead-decision-reason').value.trim();
+    if(!member||reason.length<5||reason.length>2000){notice('Укажите сотрудника и основание от 5 до 2000 символов',true);return;}
+    let rpc='',args={p_member:member.id,p_reason:reason};
+    const ranks=rankGroups.flatMap(([, ...values])=>values);
+    if(kind==='promotion'||kind==='demotion'){
+      const rank=document.getElementById(kind==='promotion'?'lead-rank-up':'lead-rank-down').value;
+      const before=ranks.indexOf(member.rank),after=ranks.indexOf(rank);
+      if(before<0||after<0||(kind==='promotion'&&after>=before)||(kind==='demotion'&&after<=before)){
+        notice('Новое звание не соответствует выбранному виду решения',true);return;
+      }
+      rpc='fso_personnel_decision';
+      args={...args,p_rank:rank,p_position:member.position||''};
+    }else if(kind==='position'){
+      const position=document.getElementById('lead-position').value.trim();
+      if(!position||position===(member.position||'')){notice('Укажите другую должность',true);return;}
+      rpc='fso_personnel_decision';
+      args={...args,p_rank:member.rank,p_position:position};
+    }else if(kind==='department'){
+      const department=document.getElementById('lead-department').value.trim();
+      if(department.length<2||department.length>120||department===(member.department||'')){
+        notice('Укажите другой отдел (от 2 до 120 символов)',true);return;
+      }
+      rpc='fso_transfer_department';
+      args={...args,p_department:department};
+    }else{
+      const proof=document.getElementById('lead-proof').value.trim().split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+      if(proof.length<1||proof.length>15||proof.some(x=>!/^https:\/\/\S+$/.test(x))){
+        notice('Добавьте от 1 до 15 ссылок HTTPS, каждую с новой строки',true);return;
+      }
+      if(kind==='remove'){
+        const actionId=document.getElementById('lead-sanction').value;
+        const sanction=ctx.actions.find(x=>x.id===actionId&&x.member_id===member.id&&x.status==='active');
+        if(!sanction){notice('Выберите действующее взыскание',true);return;}
+        rpc='fso_remove_discipline';args={p_action:actionId,p_reason:reason,p_evidence:proof};
+      }else if(kind==='warning'||kind==='reprimand'){
+        rpc='fso_issue_discipline';args={...args,p_kind:kind,p_evidence:proof};
+      }else{return;}
+    }
+    const selectedLabel=decisionKind.selectedOptions[0]?.textContent||'кадровое решение';
+    if(!window.confirm('Подтвердить '+selectedLabel.toLowerCase()+' для '+name(member)+'?'))return;
+    await action(api,rpc,args,refresh,submit);
+  };
+ }
  const kind=document.getElementById('lead-request-kind');
  const req=document.getElementById('lead-request-form');
  if(req)req.onsubmit=async e=>{
