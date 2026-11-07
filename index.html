@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="./css/понятия.css">
 <link rel="stylesheet" href="./assets/posts-map/posts-map.css?v=20261107-clickable-buildings">
 <link rel="stylesheet" href="./assets/posts-map/post-duty.css?v=20261106-account">
+<link rel="stylesheet" href="./assets/posts-map/home-activity.css?v=20261107-home-map">
 
 <!--
   ИСПРАВЛЕНИЯ ВНЕШНЕГО ВИДА
@@ -476,9 +477,75 @@ body.about-locked{overflow:hidden}
     </div>
   </section>
 
-  <section class="nv-roadmap" aria-labelledby="nv-roadmap-title">
-    <div><small class="nv-eyebrow">БУДУЩАЯ ФУНКЦИЯ</small><h2 id="nv-roadmap-title">Карта активных постов</h2><p>Когда появится карта сервера, здесь будут отображаться только посты, на которых сейчас несут службу сотрудники, и их количество. Пока функция не реализована.</p></div>
-    <button type="button" data-page="posts">Посты и патрули <span>↗</span></button>
+  <section class="nv-activity-map" aria-labelledby="nv-roadmap-title" id="nv-activity-map">
+    <div class="nv-am-top">
+      <div>
+        <small class="nv-eyebrow">ОБСТАНОВКА НА ПОСТАХ</small>
+        <h2 id="nv-roadmap-title">Карта активных постов</h2>
+        <p>Расположение пяти КПП и количество сотрудников на каждом посту. Сведения обновляются автоматически.</p>
+      </div>
+      <div class="nv-am-stats" aria-live="polite">
+        <span><b id="nv-am-active">—</b><small>Активных КПП</small></span>
+        <span><b id="nv-am-total">—</b><small>Сотрудников</small></span>
+      </div>
+    </div>
+    <div class="nv-am-view" id="nv-am-view">
+      <svg id="nv-am-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1790 1518" role="group" aria-label="Схема расположения зданий и пяти КПП" preserveAspectRatio="xMidYMid meet">
+        <title>Обстановка на пяти КПП</title>
+        <image href="./assets/posts-map/map.svg?v=20261107-clickable-buildings" x="0" y="0" width="1790" height="1518" pointer-events="none" aria-hidden="true"/>
+        <g class="nv-am-objects" aria-label="Объекты на карте">
+          <g class="nv-am-place" data-home-place="fso" role="button" tabindex="0" aria-label="Здание ФСО" transform="translate(255 506) scale(2)">
+            <circle r="29" fill="transparent"/><rect x="-22" y="-24" width="44" height="44" rx="11" fill="#112c41" stroke="#369ad9" stroke-width="2"/>
+            <path d="M0 -15L13 -10V-1Q13 9 0 14Q-13 9 -13 -1V-10Z" fill="none" stroke="#a5dfff" stroke-width="2.1"/><path d="M-6 -1L-1 4L8 -6" fill="none" stroke="#63c7ff" stroke-width="2.7"/>
+          </g>
+          <g class="nv-am-place" data-home-place="duma" role="button" tabindex="0" aria-label="Государственная дума" transform="translate(149 742) scale(2)">
+            <circle r="29" fill="transparent"/><rect x="-22" y="-24" width="44" height="44" rx="11" fill="#133229" stroke="#37bd8b" stroke-width="2"/>
+            <path d="M-14 -5L0 -14L14 -5M-14 -3H14M-11 0V10M-3 0V10M5 0V10M13 0V10M-15 11H15M-16 14H16" fill="none" stroke="#adf6d6" stroke-width="2.1"/>
+          </g>
+          <g class="nv-am-place" data-home-place="government" role="button" tabindex="0" aria-label="Дом Правительства" transform="translate(1215 1412) scale(2)">
+            <circle r="29" fill="transparent"/><rect x="-21" y="-23" width="44" height="44" rx="11" fill="#392b16" stroke="#d6a447" stroke-width="2"/>
+            <path d="M-13 -6L1 -14L15 -6V-3H-13ZM-11 1H13M-10 2V9M-3 2V9M5 2V9M12 2V9M-14 11H16M-15 14H17" fill="none" stroke="#ffe7ac" stroke-width="2"/>
+          </g>
+        </g>
+        <g class="nv-am-leaders" aria-hidden="true"><path d="M1254 1366L1236 1312M1282 1379L1320 1432"/></g>
+        <g class="nv-am-posts" aria-label="КПП">          <g class="nv-am-post" data-home-post="1" role="button" tabindex="0" aria-label="КПП №1, нет данных" transform="translate(579.1 527.9)">
+            <circle class="nv-am-post-hit" r="43"/><circle class="nv-am-post-halo" r="29"/>
+            <circle class="nv-am-post-ring" r="19"/><circle class="nv-am-post-core" r="13"/>
+            <text class="nv-am-post-num" y="5">1</text>
+            <g class="nv-am-post-count" aria-hidden="true" hidden><rect x="20" y="-41" width="45" height="32" rx="12"/><text x="42" y="-20">0</text></g>
+          </g>
+          <g class="nv-am-post" data-home-post="2" role="button" tabindex="0" aria-label="КПП №2, нет данных" transform="translate(386.1 621.3)">
+            <circle class="nv-am-post-hit" r="43"/><circle class="nv-am-post-halo" r="29"/>
+            <circle class="nv-am-post-ring" r="19"/><circle class="nv-am-post-core" r="13"/>
+            <text class="nv-am-post-num" y="5">2</text>
+            <g class="nv-am-post-count" aria-hidden="true" hidden><rect x="20" y="-41" width="45" height="32" rx="12"/><text x="42" y="-20">0</text></g>
+          </g>
+          <g class="nv-am-post" data-home-post="3" role="button" tabindex="0" aria-label="КПП Гос. думы, нет данных" transform="translate(160.1 689.6)">
+            <circle class="nv-am-post-hit" r="43"/><circle class="nv-am-post-halo" r="29"/>
+            <circle class="nv-am-post-ring" r="19"/><circle class="nv-am-post-core" r="13"/>
+            <text class="nv-am-post-num" y="5">3</text>
+            <g class="nv-am-post-count" aria-hidden="true" hidden><rect x="20" y="-41" width="45" height="32" rx="12"/><text x="42" y="-20">0</text></g>
+          </g>
+          <g class="nv-am-post" data-home-post="4" role="button" tabindex="0" aria-label="КПП 2-го этажа, нет данных" transform="translate(1236 1312)">
+            <circle class="nv-am-post-hit" r="43"/><circle class="nv-am-post-halo" r="29"/>
+            <circle class="nv-am-post-ring" r="19"/><circle class="nv-am-post-core" r="13"/>
+            <text class="nv-am-post-num" y="5">4</text>
+            <g class="nv-am-post-count" aria-hidden="true" hidden><rect x="20" y="-41" width="45" height="32" rx="12"/><text x="42" y="-20">0</text></g>
+          </g>
+          <g class="nv-am-post" data-home-post="5" role="button" tabindex="0" aria-label="КПП 5-го этажа, нет данных" transform="translate(1320 1432)">
+            <circle class="nv-am-post-hit" r="43"/><circle class="nv-am-post-halo" r="29"/>
+            <circle class="nv-am-post-ring" r="19"/><circle class="nv-am-post-core" r="13"/>
+            <text class="nv-am-post-num" y="5">5</text>
+            <g class="nv-am-post-count" aria-hidden="true" hidden><rect x="20" y="-41" width="45" height="32" rx="12"/><text x="42" y="-20">0</text></g>
+          </g>
+        </g>
+      </svg>
+      <div class="nv-am-hint" id="nv-am-hint" role="status" aria-live="polite">Загрузка данных о дежурствах…</div>
+    </div>
+    <div class="nv-am-bottom">
+      <div class="nv-am-legend"><span><i class="nv-am-key nv-am-key-active"></i>Есть сотрудники</span><span><i class="nv-am-key nv-am-key-idle"></i>Пост свободен</span></div>
+      <button type="button" data-page="posts" class="nv-am-open">Открыть карту постов <span>↗</span></button>
+    </div>
   </section>
   <footer class="nv-footer"><div><strong>ФСО / Тверской</strong><p>Неофициальный служебный портал RMRP.</p></div><div><button data-page="reference">Справочник</button><button data-page="laws">Законодательство</button><button data-page="posts">Посты и патрули</button></div></footer>
 </section>
@@ -3313,6 +3380,7 @@ if(!window.FSO_REFERENCE_META||!Object.keys(window.FSO_REFERENCE_META).length)wi
 <script src="./assets/posts-map/posts-map.js?v=20261107-landmark-footprints"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/dist/umd/supabase.js"></script>
 <script src="./assets/posts-map/post-duty.js?v=20261107-clickable-buildings"></script>
+<script src="./assets/posts-map/home-activity.js?v=20261107-home-map"></script>
 </body>
 </html>
 

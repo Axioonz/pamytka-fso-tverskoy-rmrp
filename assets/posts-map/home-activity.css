@@ -1,0 +1,53 @@
+/* Главная: компактная карта активных постов. Отдельный компонент, без заступления. */
+.nv-home .nv-activity-map{margin:54px 0 0;padding:24px 26px 20px;border:1px solid var(--line,#304355);border-radius:22px;background:linear-gradient(150deg,rgba(37,94,140,.12),rgba(10,20,30,.5) 65%);box-shadow:0 15px 45px rgba(0,0,0,.1);overflow:hidden}
+.nv-am-top{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:16px}
+.nv-am-top>div:first-child{min-width:0}
+.nv-am-top .nv-eyebrow{display:block;font-size:10px;color:var(--accent,#70b8f0);font-weight:800;letter-spacing:.12em}
+.nv-am-top h2{margin:7px 0 8px;font-size:clamp(20px,2.6vw,27px);font-weight:800;letter-spacing:-.035em;color:var(--text,#f3f8ff)}
+.nv-am-top p{margin:0;color:var(--muted,#a6b8c8);font-size:12px;line-height:1.65;max-width:580px}
+.nv-am-stats{display:flex;gap:8px;flex-shrink:0}
+.nv-am-stats span{display:flex;flex-direction:column;gap:4px;justify-content:center;min-width:100px;padding:9px 13px;border:1px solid var(--line,#2d4559);border-radius:12px;background:rgba(7,20,32,.5)}
+.nv-am-stats b{font-size:25px;line-height:1.1;color:var(--text,#f4f9ff);font-variant-numeric:tabular-nums}
+.nv-am-stats small{font-size:10px;color:var(--muted,#a5b6c6)}
+.nv-am-view{position:relative;height:350px;border-radius:16px;border:1px solid rgba(94,138,170,.27);background:#101923;overflow:hidden}
+#nv-am-svg{width:100%;height:100%;display:block;user-select:none}
+#nv-am-svg image{pointer-events:none}
+.nv-am-post,.nv-am-place{cursor:pointer;outline:none}
+.nv-am-post-hit{fill:transparent}
+.nv-am-post-halo{fill:#718499;fill-opacity:.23;stroke:none}
+.nv-am-post-ring{fill:#182330;stroke:#8498ab;stroke-width:3.2}
+.nv-am-post-core{fill:#74899d}
+.nv-am-post-num{font:800 16px/1 Arial,sans-serif;fill:#fff;text-anchor:middle;pointer-events:none}
+.nv-am-post.is-active .nv-am-post-halo{fill:#47cc91;fill-opacity:.24}
+.nv-am-post.is-active .nv-am-post-ring{fill:#145d46;stroke:#82ecc0}
+.nv-am-post.is-active .nv-am-post-core{fill:#2bbc80}
+.nv-am-post-count rect{fill:#137855;stroke:#9af1c7;stroke-width:2}
+.nv-am-post-count text{font:800 17px Arial,sans-serif;fill:#fff;text-anchor:middle;pointer-events:none}
+.nv-am-post:hover .nv-am-post-halo,.nv-am-post:focus-visible .nv-am-post-halo,.nv-am-place:hover rect,.nv-am-place:focus-visible rect{stroke:#fff;stroke-width:3;fill-opacity:.4}
+.nv-am-place:hover rect{filter:brightness(1.15)}
+.nv-am-place:focus-visible rect{stroke:#fff}
+.nv-am-leaders path{fill:none;stroke:#8bd6ed;stroke-width:2.8;stroke-dasharray:7 5;stroke-opacity:.7;pointer-events:none}
+.nv-am-hint{position:absolute;left:12px;bottom:12px;max-width:min(390px,calc(100% - 24px));padding:8px 12px;border:1px solid rgba(109,166,210,.26);background:rgba(7,17,29,.93);border-radius:9px;color:#c5d7e7;font-size:11px;line-height:1.5;pointer-events:none}
+.nv-am-hint.is-error{border-color:rgba(238,126,126,.5);color:#f2b5b5}
+.nv-am-bottom{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:14px}
+.nv-am-legend{display:flex;align-items:center;flex-wrap:wrap;gap:15px;font-size:11px;color:var(--muted,#a7b9ca)}
+.nv-am-legend span{display:inline-flex;align-items:center;gap:7px}
+.nv-am-key{display:inline-block;width:9px;height:9px;border-radius:50%}
+.nv-am-key-active{background:#37d393;box-shadow:0 0 0 3px rgba(55,211,147,.12)}
+.nv-am-key-idle{background:#8296a8}
+.nv-home .nv-am-open{flex:0 0 auto;padding:12px 16px;border:1px solid var(--line-hover,#54738e);border-radius:10px;background:var(--surface,#111e2c);color:var(--text,#e8f5ff);font-family:inherit;font-size:12px;font-weight:750;cursor:pointer}
+.nv-home .nv-am-open:hover,.nv-home .nv-am-open:focus-visible{border-color:var(--accent,#6cbefb);background:var(--surface2,#192c3d)}
+.nv-am-open span{margin-left:12px}
+@media(max-width:660px){
+ .nv-home .nv-activity-map{margin-top:30px;padding:16px 13px;border-radius:17px}
+ .nv-am-top{gap:12px;flex-wrap:wrap}
+ .nv-am-top h2{font-size:21px}
+ .nv-am-stats{width:100%}
+ .nv-am-stats span{flex:1;min-width:0;flex-direction:row;align-items:center;justify-content:flex-start;gap:9px;padding:8px 10px}
+ .nv-am-stats b{font-size:22px}
+ .nv-am-stats small{font-size:10px}
+ .nv-am-view{height:250px;border-radius:12px}
+ .nv-am-bottom{align-items:stretch;flex-direction:column;gap:12px}
+ .nv-am-hint{font-size:10px;padding:7px 9px}
+ .nv-home .nv-am-open{width:100%;text-align:center}
+}
