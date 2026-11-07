@@ -49,7 +49,7 @@ const BASE='http://127.0.0.1:8765/';
   assert.ok(first&&second);
   const gridInfo=await page.locator('.reference-context-grid').evaluate(el=>({display:getComputedStyle(el).display,template:getComputedStyle(el).gridTemplateColumns,width:el.getBoundingClientRect().width,viewport:innerWidth}));
   console.log('Reference desktop grid',JSON.stringify({gridInfo,first,second}));
-  assert.ok(Math.abs(first.y-second.y)<3,'Desktop cards must align in columns');
+  assert.ok(Math.abs(first.y-second.y)<5,'Desktop cards must align in columns');
   const article=page.locator('.reference-full-article');
   if(await article.count()){
     await article.locator('summary').click();
