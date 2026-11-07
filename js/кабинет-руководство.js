@@ -159,13 +159,13 @@ function decisionPage(ctx,chosen){
  const reprimands=activeActions.filter(a=>a.kind==='reprimand').length;
  const sanctionLabel=a=>(a.kind==='warning'?'Предупреждение':'Выговор')+' · '+when(a.issued_at)+' · '+a.reason.slice(0,95);
  const sanctioned=activeActions.map(a=>'<option value="'+safe(a.id)+'">'+safe(sanctionLabel(a))+'</option>').join('');
- const departments=[...new Set(ctx.members.map(m=>m.department?.trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ru'));
- const departmentChoices=departments.map(s=>'<option value="'+safe(s)+'"></option>').join('');
+ const departments=['АС','Академия','УЛО'];
+ const departmentChoices=departments.map(s=>'<option value="'+safe(s)+'" '+(person.department===s?'selected':'')+'>'+safe(s)+'</option>').join('');
  const kindOptions=[
    ['promotion','Повышение в звании'],['demotion','Понижение в звании'],
-   ['position','Назначение на должность'],['department','Перевод в отдел'],
+   ['position','Назначение на должность'],['department','Перевод в подразделение'],
    ['warning','Выдать предупреждение'],['reprimand','Выдать выговор'],
-   ['remove','Снять взыскание']
+   ['remove','Снять взыскание'],['dismiss','Увольнение'],['dismiss_blacklist','Увольнение с занесением в ЧС']
  ].map(([key,title])=>'<option value="'+key+'">'+title+'</option>').join('');
  const activeList=activeActions.length?activeActions.map(a=>
   '<div class="lead-sanction"><span><strong>'+safe(a.kind==='warning'?'Предупреждение':'Выговор')+
@@ -177,18 +177,20 @@ function decisionPage(ctx,chosen){
  personSelect('lead-person',members,person.id)+
  '<div class="lead-current"><span>Звание · <b>'+safe(person.rank||'Не указано')+'</b></span>'+
  '<span>Должность · <b>'+safe(person.position||'Не указана')+'</b></span>'+
- '<span>Отдел · <b>'+safe(person.department||'Не назначен')+'</b></span>'+
+ '<span>Подразделение · <b>'+safe(person.department||'Не назначено')+'</b></span>'+
  '<span>Предупреждения · <b>'+warnings+'/3</b></span><span>Выговоры · <b>'+reprimands+'/3</b></span></div>'+
  '<label>Вид кадрового решения<select id="lead-decision-kind" required>'+kindOptions+'</select></label>'+
  '<div class="lead-decision-group" data-lead-kind="promotion"><label>Новое звание'+promotion+'</label></div>'+
  '<div class="lead-decision-group" data-lead-kind="demotion" hidden><label>Новое звание'+demotion+'</label></div>'+
  '<div class="lead-decision-group" data-lead-kind="position" hidden><label>Новая должность<input id="lead-position" maxlength="200" placeholder="Официальное название должности" value="'+safe(person.position||'')+'"></label></div>'+
- '<div class="lead-decision-group" data-lead-kind="department" hidden><label>Новый отдел<input id="lead-department" maxlength="120" minlength="2" list="lead-department-list" placeholder="Название отдела" value="'+safe(person.department||'')+'"></label><datalist id="lead-department-list">'+departmentChoices+'</datalist><p class="hint">Название отдела указывается точно, без создания новых подразделений на сайте.</p></div>'+
+ '<div class="lead-decision-group" data-lead-kind="department" hidden><label>Новое подразделение<select id="lead-department">'+departmentChoices+'</select></label><p class="hint">Академия соответствует курсантам. АС и УЛО соответствуют сотрудникам.</p></div>'+
  '<div class="lead-decision-group" data-lead-kind="remove" hidden><label>Действующее взыскание<select id="lead-sanction">'+sanctioned+'</select></label></div>'+
  '<label>Основание решения<textarea id="lead-decision-reason" required minlength="5" maxlength="2000" placeholder="Укажите причину и обстоятельства решения"></textarea></label>'+
  '<div class="lead-decision-group" data-lead-kind="warning" hidden><p class="hint">Три действующих предупреждения автоматически преобразуются в один выговор.</p></div>'+
  '<div class="lead-decision-group" data-lead-kind="reprimand" hidden><p class="hint">Выговор учитывается по правилу 0/3.</p></div>'+
- '<div class="lead-decision-group" data-lead-kind="proof" hidden><label>Доказательства, ссылки HTTPS<textarea id="lead-proof" rows="3" placeholder="https://... (одна ссылка в строке)"></textarea></label><p class="hint">Нужно от 1 до 15 ссылок. Для выдачи и снятия взысканий доказательства обязательны.</p></div>'+
+ '<div class="lead-decision-group" data-lead-kind="dismiss" hidden><p class="hint">Личное дело перейдёт в архив. Причина обязательна, доказательства необязательны.</p></div>'+
+  '<div class="lead-decision-group" data-lead-kind="dismiss_blacklist" hidden><p class="hint">Увольнение и занесение в ЧС выполняются одновременно. При ошибке обе операции отменяются.</p></div>'+
+  '<div class="lead-decision-group" data-lead-kind="proof" hidden><label>Доказательства, ссылки HTTPS<textarea id="lead-proof" rows="3" placeholder="https://... (одна ссылка в строке)"></textarea></label><p id="lead-proof-help" class="hint">Нужно от 1 до 15 ссылок. Для выдачи и снятия взысканий доказательства обязательны.</p></div>'+
  '<p id="lead-decision-help" class="hint" aria-live="polite"></p>'+
  '<div class="actions"><button type="submit" class="btn primary">Оформить решение</button></div></form></section>'+
  '<section class="section"><h2>Действующие взыскания</h2>'+activeList+'</section>'+
@@ -301,8 +303,9 @@ function bind(ctx,api,screen,refresh,navigate){
   function updateDecisionKind(){
     const kind=decisionKind.value;
     const proofNeeded=['warning','reprimand','remove'].includes(kind);
+    const proofOptional=['dismiss','dismiss_blacklist'].includes(kind);
     groups.forEach(group=>{
-      const match=group.dataset.leadKind===kind || (group.dataset.leadKind==='proof'&&proofNeeded);
+      const match=group.dataset.leadKind===kind || (group.dataset.leadKind==='proof'&&(proofNeeded||proofOptional));
       group.hidden=!match;
       group.querySelectorAll('input,select,textarea').forEach(control=>control.disabled=!match);
     });
@@ -313,6 +316,7 @@ function bind(ctx,api,screen,refresh,navigate){
     help.textContent=!canRank?'Для выбранного сотрудника нет доступного звания в этом направлении.':
      !canRemove?'У сотрудника нет действующих взысканий для снятия.':'';
     document.getElementById('lead-proof').required=proofNeeded;
+    document.getElementById('lead-proof-help').textContent=proofOptional?'Необязательные доказательства. Не более 15 ссылок HTTPS.':'Для взысканий нужно от 1 до 15 ссылок HTTPS.';
   }
   decisionKind.onchange=updateDecisionKind;
   updateDecisionKind();
@@ -338,18 +342,21 @@ function bind(ctx,api,screen,refresh,navigate){
       args={...args,p_rank:member.rank,p_position:position};
     }else if(kind==='department'){
       const department=document.getElementById('lead-department').value.trim();
-      if(department.length<2||department.length>120||department===(member.department||'')){
-        notice('Укажите другой отдел (от 2 до 120 символов)',true);return;
-      }
+      if(!departments.includes(department)||department===(member.department||'')){
+         notice('Выберите другое подразделение',true);return;
+       }
       rpc='fso_transfer_department';
       args={...args,p_department:department};
     }else{
       const proof=document.getElementById('lead-proof').value.trim().split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
-      if(proof.length<1||proof.length>15||proof.some(x=>!/^https:\/\/\S+$/.test(x))){
+      if((!['dismiss','dismiss_blacklist'].includes(kind)&&proof.length<1)||proof.length>15||proof.some(x=>!/^https:\/\/\S+$/.test(x))){
         notice('Добавьте от 1 до 15 ссылок HTTPS, каждую с новой строки',true);return;
       }
-      if(kind==='remove'){
-        const actionId=document.getElementById('lead-sanction').value;
+      if(kind==='dismiss'||kind==='dismiss_blacklist'){
+         rpc=kind==='dismiss'?'fso_dismiss_member':'fso_dismiss_member_blacklist';
+         args={...args,p_evidence:proof};
+       }else if(kind==='remove'){
+         const actionId=document.getElementById('lead-sanction').value;
         const sanction=ctx.actions.find(x=>x.id===actionId&&x.member_id===member.id&&x.status==='active');
         if(!sanction){notice('Выберите действующее взыскание',true);return;}
         rpc='fso_remove_discipline';args={p_action:actionId,p_reason:reason,p_evidence:proof};
@@ -358,7 +365,7 @@ function bind(ctx,api,screen,refresh,navigate){
       }else{return;}
     }
     const selectedLabel=decisionKind.selectedOptions[0]?.textContent||'кадровое решение';
-    if(!window.confirm('Подтвердить '+selectedLabel.toLowerCase()+' для '+name(member)+'?'))return;
+    if(!window.confirm('Подтвердить '+selectedLabel.toLowerCase()+' для '+name(member)+'?'+(kind==='dismiss_blacklist'?' Сотрудник будет уволен и занесён в чёрный список.':kind==='dismiss'?' Личное дело перейдёт в архив.':'')))return;
     await action(api,rpc,args,refresh,submit);
   };
  }
