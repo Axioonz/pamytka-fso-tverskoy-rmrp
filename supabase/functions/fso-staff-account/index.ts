@@ -90,6 +90,43 @@ Deno.serve(async(req:Request)=>{
    }
    return respond(req,{ok:true,member_id:id,login,first_login:true});
   }
+  if(["dismiss","dismiss_blacklist","blacklist"].includes(action)){
+   if(!operatorRoles.has(await getRole(actor.id)))
+    fail(403,"Увольнение и ЧС доступны только кадровому руководству");
+   const id=String(body.member_id||"");
+   const reason=String(body.reason||"").trim();
+   if(reason.length<5||reason.length>4000)fail(400,"Укажите основание от 5 до 4000 символов");
+   const member=await getMember(id);
+   if(member.user_id===actor.id)fail(403,"Нельзя удалить собственный аккаунт");
+   const linkedUserId=member.user_id;
+   if(action==="blacklist"&&!["dismissed","archived"].includes(member.status))
+    fail(409,"Для внесения в ЧС сотрудник должен быть уволен");
+   if(action!=="blacklist"&&!["active","cadet"].includes(member.status))
+    fail(409,"Сотрудник уже уволен");
+   let rpcName:string;let params:Record<string,unknown>;
+   if(action==="dismiss"||action==="dismiss_blacklist"){
+    const evidence=body.evidence??[];
+    if(!Array.isArray(evidence)||evidence.length>15||evidence.some(x=>typeof x!=="string"||!/^https:\/\/\S+$/.test(x)))
+     fail(400,"Недопустимые ссылки на доказательства");
+    rpcName=action==="dismiss"?"fso_dismiss_member":"fso_dismiss_member_blacklist";
+    params={p_member:id,p_reason:reason,p_evidence:evidence};
+   }else{rpcName="fso_blacklist_add";params={p_member:id,p_reason:reason};}
+   const bearer=req.headers.get("authorization")??"";
+   const scoped=createClient(URL,Deno.env.get("SUPABASE_ANON_KEY")??"",{
+    global:{headers:{Authorization:bearer}},
+    auth:{persistSession:false,autoRefreshToken:false}
+   });
+   const {error:decisionError}=await scoped.rpc(rpcName,params);
+   if(decisionError)fail(409,decisionError.message);
+   if(linkedUserId){
+    const {error:deleteError}=await supabase.auth.admin.deleteUser(linkedUserId);
+    if(deleteError){
+     console.error("Staff account deletion failed",id,deleteError.message);
+     return respond(req,{ok:false,decision_saved:true,error:"Решение оформлено, но удалить аккаунт не удалось. Доступ заблокирован. Требуется удалить учётную запись в Supabase Auth."},503);
+    }
+   }
+   return respond(req,{ok:true,member_id:id,account_deleted:!!linkedUserId});
+  }
   if(action==="reset"){
    if(!operatorRoles.has(await getRole(actor.id)))
     fail(403,"Сбрасывать пароли может только кадровое руководство");
