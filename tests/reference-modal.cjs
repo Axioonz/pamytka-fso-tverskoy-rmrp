@@ -93,7 +93,7 @@ const BASE='http://127.0.0.1:8765/';
   assert.ok((await page.locator('#detention-supplements').innerText()).includes('Статья 22 ПК'));
   assert.equal(await page.locator('#detention-steps').getByText('Вызвать адвоката и выдержать сроки').count(),0);
   assert.ok((await detSteps.last().locator('.det-step-action').innerText()).includes('МВД или Следственному комитету'));
-  assert.ok((await detSteps.last().locator('.det-norm-text').first().innerText()).includes('Задержанные лица незамедлительно передаются'));
+  assert.ok((await detSteps.last().locator('.det-norm-text').nth(1).innerText()).includes('Задержанные лица незамедлительно передаются'));
   const quotes=await page.locator('#detention-steps .det-norm-text').count();
   assert.ok(quotes>=6,'Core steps must retain exact legal extracts');
   assert.equal(await page.locator('#detention-steps .det-norms-heading').first().innerText(),'ТЕКСТ ЗАКОНА');
