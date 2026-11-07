@@ -1268,3 +1268,27 @@ body.tg-law-open{overflow:hidden}
 .det-speech-text{font-size:13px;line-height:1.75;color:var(--text);margin:0 0 9px;overflow-wrap:break-word}
 .det-speech-card small{display:block;font-size:11px;color:var(--muted);line-height:1.55}
 @media(max-width:680px){.det-speech{padding:20px 17px}.det-speech-top{align-items:flex-start}.det-priority{padding:16px}}
+
+/* Detention reference: core legal sequence is distinct from conditional procedures. */
+.det-core-label{padding:4px 0 22px}
+.det-core-label span{font-size:10px;letter-spacing:.14em;font-weight:800;color:var(--accent-strong)}
+.det-core-label h2{font-size:clamp(22px,2.1vw,29px);margin:8px 0 0;color:var(--text)}
+.det-record-note{display:grid;grid-template-columns:145px minmax(0,1fr);gap:22px;align-items:center;margin:16px 0 37px;padding:24px 26px;border:1px solid color-mix(in srgb,var(--accent-strong) 40%,var(--line));border-left:4px solid var(--accent-strong);background:color-mix(in srgb,var(--accent-strong) 10%,var(--surface));border-radius:13px}
+.det-record-time{font-size:clamp(26px,3vw,36px);font-weight:830;letter-spacing:-.055em;color:var(--text);white-space:nowrap}
+.det-record-note h2{font-size:19px;font-weight:760;margin:0 0 9px;color:var(--text)}
+.det-record-note p{font-size:13px;line-height:1.7;color:var(--muted);margin:0 0 9px}
+.det-record-note small{font-size:11px;color:var(--accent-strong)}
+.det-supplements{margin:12px 0 42px;padding-top:25px;border-top:1px solid var(--line)}
+.det-conditions-head{padding:0 0 22px}
+.det-conditions-head h2{font-size:clamp(23px,2.2vw,30px);line-height:1.25;color:var(--text);margin:9px 0}
+.det-conditions-head p{color:var(--muted);font-size:13px;line-height:1.6;margin:0;max-width:700px}
+.det-conditions-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.det-condition{min-width:0;border:1px solid var(--line);border-radius:13px;background:var(--surface);padding:21px}
+.det-condition-tag{display:inline-block;color:var(--accent-strong);font-size:10px;font-weight:800;letter-spacing:.09em;margin-bottom:10px}
+.det-condition h3{font-size:17px;line-height:1.35;color:var(--text);margin:0 0 11px}
+.det-condition>p{font-size:12px;line-height:1.72;color:var(--muted);margin:0}
+.det-condition-norms{margin-top:16px;padding-top:13px;border-top:1px solid var(--line)}
+.det-condition-norms summary{cursor:pointer;color:var(--accent-strong);font-size:12px;line-height:1.6;font-weight:680}
+.det-condition-norms .det-norm{margin-top:11px;max-height:260px;overflow:auto}
+@media(max-width:850px){.det-conditions-grid{grid-template-columns:1fr}.det-record-note{grid-template-columns:1fr;gap:8px}}
+@media(max-width:450px){.det-record-note{padding:17px}.det-condition{padding:18px}}
