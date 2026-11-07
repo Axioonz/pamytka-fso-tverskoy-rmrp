@@ -44,7 +44,7 @@ const BASE='http://127.0.0.1:8765/';
   await page.locator('#detention-steps .det-step').first().waitFor({state:'visible'});
   assert.ok(await page.getByText('60 минут',{exact:true}).isVisible());
   const deadlineLabels=await page.locator('#detention-screen .det-stat b').allTextContents();
-  assert.ok(deadlineLabels.includes('5 + 5 минут'),'Сроки ожидания адвоката отображаются');
+  assert.ok(deadlineLabels.includes('5 минут'),'Срок ожидания адвоката отображается');
   assert.ok(deadlineLabels.includes('2 минуты'),'Право на телефонный звонок отображается');
   assert.equal(await page.locator('#detention-screen .det-stat').count(),4);
   await page.waitForTimeout(440);
