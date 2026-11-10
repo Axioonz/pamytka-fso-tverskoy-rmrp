@@ -18,6 +18,8 @@ jobs:
       - name: Check JavaScript syntax
         run: |
           node --check js/кабинет-supabase.js
+          node --check js/служебные-подразделения.js
+          node --check tests/subdivision-public-smoke.cjs
           node --check js/кабинет-аудит.js
           node --check js/кабинет-доступ.js
           node --check js/курсант-supabase.js
@@ -61,6 +63,7 @@ jobs:
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/fso-test-http.log 2>&1 &
           sleep 2
           node tests/portal-smoke.cjs
+          node tests/subdivision-public-smoke.cjs
           node tests/reference-modal.cjs
           node tests/redesign-smoke.cjs
           node tests/site-v2-smoke.cjs
