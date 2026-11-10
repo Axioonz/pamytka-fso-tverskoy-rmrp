@@ -106,6 +106,16 @@ async function login(ev){ev.preventDefault();const btn=ev.target.querySelector('
  const {error}=await api.auth.signInWithPassword({email,password:v('password')});
  if(error)throw error;await refresh()
  }catch(err){authPage(err.message||'Не удалось войти')}finally{btn.disabled=false}}
+async function ensureSubdivisions(){
+ if(typeof window.FSO_SUBDIVISIONS?.load==='function')return true;
+ return new Promise(resolve=>{
+  const script=document.createElement('script');
+  script.src='./js/кабинет-подразделения.js?v=20261110-login-fix';
+  script.onload=()=>resolve(typeof window.FSO_SUBDIVISIONS?.load==='function');
+  script.onerror=()=>resolve(false);
+  document.head.appendChild(script);
+ });
+}
 async function refresh(){loading();const {data:{user:u},error:ue}=await api.auth.getUser();if(ue||!u){user=null;profile=null;if(location.hash==='#cadet'){window.FSO_CADET.open();return}authPage();return}user=u;const pr=await api.from('fso_profiles').select('user_id,role,display_name').eq('user_id',u.id).maybeSingle();if(pr.error){root.innerHTML=msg('Не удалось прочитать служебный профиль: '+pr.error.message,true);return}profile=pr.data;if(profile?.role==='employee_pending'){
  window.FSO_STAFF_ACCOUNTS.firstLogin(api,refresh,logout,root);return
  }if(!profile||!allowed.includes(profile.role)){waitingPage();return}
@@ -122,7 +132,9 @@ api.rpc('fso_exam_staff_directory')
 questions=q.data||[];examsList=ex.data||[];assignments=as.data||[];examAttempts=at.data||[];examStaff=Array.isArray(staff.data)?staff.data:[];
 }
 if(!['admin','hr','examiner'].includes(profile.role)&&!['requests','leaves','history','subdivisions'].includes(screen))screen='requests';
-await Promise.all([window.FSO_LEADERSHIP.load(api,profile.role),window.FSO_SUBDIVISIONS.load(api)]);
+await window.FSO_LEADERSHIP.load(api,profile.role);
+if(screen==='subdivisions'&&typeof window.FSO_SUBDIVISIONS?.load!=='function')await ensureSubdivisions();
+if(typeof window.FSO_SUBDIVISIONS?.load==='function')await window.FSO_SUBDIVISIONS.load(api);
 if(screen==='audit'&&profile.role==='admin')await window.FSO_AUDIT.load(api,profile.role);
 if(screen==='access'&&profile.role==='admin')await window.FSO_ACCESS.load(api,profile.role);
 render()}
@@ -148,6 +160,10 @@ function bindNav(){
   screen=button.dataset.tab;selected=null;
   if(screen==='audit'&&profile.role==='admin'){loading();await window.FSO_AUDIT.load(api,profile.role)}
   if(screen==='access'&&profile.role==='admin'){loading();await window.FSO_ACCESS.load(api,profile.role)}
+  if(screen==='subdivisions'){
+   if(typeof window.FSO_SUBDIVISIONS?.load!=='function'){loading();await ensureSubdivisions()}
+   if(typeof window.FSO_SUBDIVISIONS?.load==='function')await window.FSO_SUBDIVISIONS.load(api);
+  }
   render();
  });
 }
@@ -160,7 +176,8 @@ function render(){
  let content='';
  if(screen==='home')content=workflow.dashboard(ctx);
  else if(screen==='requests')content=workflow.requestPage(ctx);
- else if(screen==='subdivisions')content=window.FSO_SUBDIVISIONS.render(ctx);
+ else if(screen==='subdivisions')content=typeof window.FSO_SUBDIVISIONS?.render==='function'?window.FSO_SUBDIVISIONS.render(ctx):
+ '<section class="section"><h1>Подразделения</h1><p class="message error">Не удалось загрузить материалы подразделений. Обновите страницу и откройте раздел повторно.</p></section>';
  else if(screen==='leaves')content=workflow.leavePage(ctx);
  else if(screen==='history')content=workflow.historyPage(ctx,selected);
  else if(screen==='personnel')content=workflow.decisionPage(ctx,selected);
@@ -265,7 +282,7 @@ return hero('Экзамены и аттестация','Серверная си�
 (newlyIssuedCode?'<div class="notice"><strong>Сохраните новый код, он показывается только сейчас</strong><p style="font-size:20px;font-weight:850;word-break:break-all">'+e(newlyIssuedCode)+'</p><button class="btn small" id="code-copy" type="button">Скопировать код</button></div>':'')+'</section>'+
 window.FSO_ADMIN_TOOLS.examPanels({exams:examsList,assignments,attempts:examAttempts,members,staff:examStaff,role:profile.role});
 }
-function bindScreen(){if(screen==='subdivisions'){window.FSO_SUBDIVISIONS.bind(api,workflowContext(),refresh,render);return}if(screen==='access'){window.FSO_ACCESS.bind(api,profile.role,user.id,{refresh,render,audit:async()=>{screen='audit';selected=null;loading();await window.FSO_AUDIT.load(api,profile.role);render();const filter=document.getElementById('audit-category');if(filter){filter.value='profile';filter.dispatchEvent(new Event('change'))}}});return}if(screen==='audit'){window.FSO_AUDIT.bind(api,profile.role,members,async()=>{loading();await window.FSO_AUDIT.load(api,profile.role);render()});return}
+function bindScreen(){if(screen==='subdivisions'){if(typeof window.FSO_SUBDIVISIONS?.bind==='function')window.FSO_SUBDIVISIONS.bind(api,workflowContext(),refresh,render);return}if(screen==='access'){window.FSO_ACCESS.bind(api,profile.role,user.id,{refresh,render,audit:async()=>{screen='audit';selected=null;loading();await window.FSO_AUDIT.load(api,profile.role);render();const filter=document.getElementById('audit-category');if(filter){filter.value='profile';filter.dispatchEvent(new Event('change'))}}});return}if(screen==='audit'){window.FSO_AUDIT.bind(api,profile.role,members,async()=>{loading();await window.FSO_AUDIT.load(api,profile.role);render()});return}
  if(['home','requests','leaves','history','personnel'].includes(screen)){
  window.FSO_LEADERSHIP.bind(workflowContext(),api,screen,refresh,(next,member)=>{
   screen=next;selected=member||null;render();
@@ -417,7 +434,7 @@ async function saveMember(ev){
  }catch(err){if(area)area.innerHTML=msg(err.message||'Ошибка сохранения',true)}
  finally{button.disabled=false}
 }
-async function logout(){await api.auth.signOut();user=null;profile=null;members=[];blacklist=[];window.FSO_AUDIT.clear();window.FSO_ACCESS.clear();window.FSO_LEADERSHIP.clear();window.FSO_SUBDIVISIONS.clear();window.FSO_STAFF_ACCOUNTS.forget();members=[];actions=[];examsList=[];assignments=[];examAttempts=[];screen='home';authPage()}
+async function logout(){await api.auth.signOut();user=null;profile=null;members=[];blacklist=[];window.FSO_AUDIT.clear();window.FSO_ACCESS.clear();window.FSO_LEADERSHIP.clear();window.FSO_SUBDIVISIONS?.clear?.();window.FSO_STAFF_ACCOUNTS.forget();members=[];actions=[];examsList=[];assignments=[];examAttempts=[];screen='home';authPage()}
 async function init(){if(!window.supabase?.createClient){root.innerHTML=msg('Не загрузилась библиотека Supabase. Проверьте соединение с интернетом.',true);return}api=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});api.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT'){user=null;profile=null;members=[];actions=[];window.FSO_LEADERSHIP.clear();window.FSO_STAFF_ACCOUNTS.forget();authPage()}});await refresh()}
 init().catch(err=>{root.innerHTML=msg('Не удалось подключиться к серверу: '+(err.message||err),true)});
 })();
