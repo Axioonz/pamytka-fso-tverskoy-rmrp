@@ -26,7 +26,7 @@ function material(title,body,empty){
 function render(ctx){
  const editable=canEdit(ctx);
  const myDepartment=own(ctx)?.department||'';
- if(!selected||(!editable&&!pages.some(p=>p.department===selected)))
+ if(!selected)
   selected=editable?catalog[0]:(pages[0]?.department||myDepartment||catalog[0]);
  const page=pages.find(p=>p.department===selected);
  const access=!!page;
