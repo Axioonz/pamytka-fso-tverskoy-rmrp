@@ -26,7 +26,7 @@ const mockSupabase=fixture.slice(begin,finish);
    await page.locator('.nv-more-panel [data-page="departments"]').click();
   }
   await page.locator('#departments-screen').waitFor({state:'visible'});
-  assert.equal(await page.locator('.sdept-card').count(),3);
+  assert.equal(await page.locator('.sdept-card').count(),4);
   assert.equal(await page.locator('#sdept-login-form').count(),0);
   return {page,errors};
  }
@@ -41,7 +41,7 @@ const mockSupabase=fixture.slice(begin,finish);
    assert.equal(await page.locator('.sdept-news-item').count(),0);
    assert.equal(await page.locator('#sdept-detail a[href*="кабинет"]').count(),0);
    await page.locator('#sdept-back').click();
-   assert.equal(await page.locator('.sdept-card:visible').count(),3);
+   assert.equal(await page.locator('.sdept-card:visible').count(),4);
    assert.deepEqual(errors,[]);
    await page.close();
   }
