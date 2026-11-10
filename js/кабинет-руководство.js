@@ -453,6 +453,7 @@ function bind(ctx,api,screen,refresh,navigate){
  if(kind&&promotionBox&&promotionRank&&req){
   const submit=req.querySelector('button[type="submit"]');
   const hint=document.getElementById('lead-request-rank-help');
+  let rankMemberId=null;
   const syncRank=()=>{
    const isPromotion=kind.value==='promotion';
    promotionBox.hidden=!isPromotion;
@@ -461,10 +462,12 @@ function bind(ctx,api,screen,refresh,navigate){
    if(isPromotion){
     const selected=reqPerson?.value||ctx.members.find(m=>m.user_id===ctx.userId&&active(m))?.id;
     const member=ctx.members.find(m=>m.id===selected);
-    const choices=higherRanks(member?.rank);
-    const previous=promotionRank.value;
-    promotionRank.innerHTML=choices.map(rank=>'<option value="'+safe(rank)+'">'+safe(rank)+'</option>').join('');
+    const choices=higherRanks(member?.rank).reverse();
+    const previous=rankMemberId===selected?promotionRank.value:'';
+    promotionRank.innerHTML='<option value="">Выберите звание</option>'+
+     choices.map(rank=>'<option value="'+safe(rank)+'">'+safe(rank)+'</option>').join('');
     if(choices.includes(previous))promotionRank.value=previous;
+    rankMemberId=selected;
     hint.textContent=choices.length
      ?'Текущее звание · '+(member?.rank||'Не указано')+'. Выберите звание выше текущего.'
      :'Для этого сотрудника нет доступного более высокого звания.';
