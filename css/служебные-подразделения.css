@@ -93,3 +93,27 @@ html[data-theme="light"] .sdept-gate>p{color:#486476}
 @media(max-width:1010px){.sdept-catalog{gap:12px}.sdept-card{min-height:226px;padding:22px}.sdept-card::after{top:23px;left:22px}.sdept-material-grid,.sdept-news-list{grid-template-columns:1fr}.sdept-material{min-height:0}}
 @media(max-width:700px){.sdept-screen{padding:29px 15px 75px}.sdept-intro{margin:0 0 18px;padding-bottom:20px}.sdept-intro h1{font-size:31px}.sdept-catalog{grid-template-columns:1fr;gap:11px}.sdept-card{min-height:155px;padding:22px}.sdept-card-bottom strong{font-size:36px}.sdept-card-academy .sdept-card-bottom strong{font-size:32px}.sdept-card-arrow{width:34px;height:34px;font-size:21px}.sdept-path{margin-bottom:13px}.sdept-detail-hero{padding:27px 24px;min-height:111px}.sdept-detail-hero h2{font-size:37px}.sdept-material{padding:22px}.sdept-news-item{padding:19px}.sdept-gate{margin:14px 0 0;padding:23px}.sdept-news-head{align-items:flex-start}}
 @media(prefers-reduced-motion:reduce){.sdept-card,.sdept-card::after,.sdept-card-arrow{transition:none!important}.sdept-spinner{animation:none!important}}
+
+/* Крупные чёрные карточки. Центрированные названия, сетка занимает весь экран раздела. */
+.sdept-screen{max-width:none;width:100%;padding:clamp(20px,3vw,42px) clamp(14px,3.1vw,48px) 64px}
+.sdept-intro{margin-bottom:22px}
+.sdept-catalog{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(290px,1fr);gap:16px;min-height:calc(100vh - 250px)}
+.sdept-card{display:flex;align-items:center;justify-content:center;min-height:290px;background:#08090b!important;border:1px solid #292c31;border-radius:10px;text-align:center;padding:28px}
+.sdept-card::before,.sdept-card::after{display:none!important}
+.sdept-card strong{font-size:clamp(37px,4vw,65px);letter-spacing:-.045em;line-height:1.12;font-weight:700;color:#f2f2f3;word-break:break-word}
+.sdept-card:hover{background:#121315!important;border-color:#63666a;box-shadow:none;transform:translateY(-2px)}
+.sdept-card:focus-visible{outline-color:#ededed}
+.sdept-detail-hero{background:#0b0c0e!important;border:1px solid #2a2d31;border-radius:10px}
+.sdept-detail-hero h2{color:#f5f5f5}
+.sdept-public{border:1px solid #34373b;border-radius:10px;background:#101114;padding:27px 30px;margin-bottom:20px}
+.sdept-public h3{font-size:19px;letter-spacing:-.02em;margin:0 0 15px;color:#f0f0f2}
+.sdept-public .sdept-copy{font-size:14px;color:#d0d2d5;line-height:1.8}
+.sdept-public-note{margin:15px 0 0;color:#a0a3a8;font-size:12px;line-height:1.65}
+.sdept-public-editor{margin-top:18px}
+.sdept-public-editor summary{cursor:pointer;font-size:12px;color:#c6c6c8}
+.sdept-gate{max-width:none;margin:0;padding:25px 30px;background:#101114;border:1px solid #34373b;border-radius:10px}
+.sdept-gate-icon,.sdept-gate .sdept-overline{display:none}
+.sdept-gate h3{margin:0 0 12px;font-size:19px}
+.sdept-gate>p{margin-bottom:18px}
+.sdept-public-status{min-height:100px;display:flex;align-items:center;justify-content:center;font-size:13px;color:#a0a3a8}
+@media(max-width:700px){.sdept-screen{padding:24px 14px 55px}.sdept-catalog{grid-template-columns:1fr;grid-auto-rows:minmax(170px,1fr);min-height:0;gap:11px}.sdept-card{min-height:170px;padding:21px}.sdept-card strong{font-size:clamp(33px,9vw,45px)}.sdept-public{padding:22px}.sdept-gate{padding:23px}}
