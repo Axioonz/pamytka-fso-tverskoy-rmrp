@@ -401,7 +401,7 @@ async function launchWithRole(browser,role){
  const requestKinds=await page.locator('#lead-request-kind option').evaluateAll(options=>options.map(x=>x.value));
  assert.deepEqual(requestKinds,['promotion','transfer','dismissal','other']);
  assert.equal(await page.locator('#lead-request-kind option[value="reinstatement"]').count(),0);
- for(const [kind,word] of [['promotion','повышении'],['transfer','переводе'],['dismissal','уволить'],['other','вопрос о']]){
+ for(const [kind,word] of [['promotion','повышения'],['transfer','переводе'],['dismissal','уволить'],['other','вопрос о']]){
   await page.locator('#lead-request-kind').selectOption(kind);
   assert.ok((await page.locator('#lead-request-example .lead-example-content').innerText()).toLowerCase().includes(word));
  }
