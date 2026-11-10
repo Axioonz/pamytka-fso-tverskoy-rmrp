@@ -367,8 +367,9 @@ async function launchWithRole(browser,role){
  await page.getByText('Должность · Помощник директора').waitFor();
  await page.getByRole('button',{name:'История службы'}).click();
  await page.locator('#lead-history-person').selectOption('member-2');
- await page.getByText('Изменение звания',{exact:true}).waitFor();
- await page.getByText('Изменение должности',{exact:true}).waitFor();
+ await page.getByText('Понижение в звании',{exact:true}).waitFor();
+ assert.equal(await page.getByText('Изменение должности',{exact:true}).count(),0);
+ assert.equal(await page.getByText('Назначение на должность по служебным заслугам').count(),0);
  await page.getByRole('button',{name:'Сотрудники'}).click();
  await page.getByRole('button',{name:'Экзамены'}).click();
  await page.getByRole('heading',{name:'Экзамены и аттестация'}).waitFor();
