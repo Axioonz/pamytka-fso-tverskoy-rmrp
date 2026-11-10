@@ -352,7 +352,7 @@ body.about-locked{overflow:hidden}
 <button class="rail-button" data-page="escort" aria-label="Сопровождение и кортежи" title="Сопровождение и кортежи"><svg class="icon"><use href="#i-users"/></svg><span>Сопровождение и кортежи</span></button>
 <button class="rail-button" data-page="posts" aria-label="Посты и патрули" title="Посты и патрули"><svg class="icon"><use href="#i-list"/></svg><span>Посты и патрули</span></button>
 <button class="rail-button" data-page="favorites" aria-label="Личная шпаргалка" title="Личная шпаргалка"><svg class="icon"><use href="#i-file"/></svg><span>Личная шпаргалка</span></button>
-<button class="rail-button" data-page="departments" aria-label="Памятки отделов" title="Памятки отделов"><svg class="icon"><use href="#i-book"/></svg><span>Памятки отделов</span></button>
+<button class="rail-button" data-page="departments" aria-label="Подразделения" title="Подразделения"><svg class="icon"><use href="#i-book"/></svg><span>Подразделения</span></button>
 <button class="rail-button" data-page="quiz" aria-label="Проверка знаний" title="Проверка знаний"><svg class="icon"><use href="#i-shield"/></svg><span>Проверка знаний</span></button>
 <div class="rd-rail-heading rd-rail-heading-section">ИНФОРМАЦИЯ</div><button class="rail-button" data-page="laws" aria-label="Законодательство" title="Законодательство"><svg class="icon"><use href="#i-book"/></svg><span>Законодательство</span></button>
  </nav>
@@ -658,8 +658,21 @@ body.about-locked{overflow:hidden}
   </div>
   <p class="cheat-status" id="cheat-status" role="status" aria-live="polite"></p>
 </section>
-<section class="work-screen quiz-coming" id="departments-screen" hidden aria-label="Памятки отделов">
-<div class="fso-section-decor" aria-hidden="true"></div><h1>В разработке</h1></section>
+<section class="work-screen sub-public-screen" id="departments-screen" hidden aria-label="Служебные подразделения">
+  <div class="fso-section-decor" aria-hidden="true"></div>
+  <header class="sub-public-intro">
+    <span class="sub-public-kicker">ВНУТРЕННЯЯ СЛУЖБА</span>
+    <h1>Служебные подразделения</h1>
+    <p>Основные материалы отделов, условия повышения, установленная форма и сообщения руководства. Доступ предоставляется по подразделению, указанному в личном деле.</p>
+  </header>
+  <div class="sub-public-grid" aria-label="Подразделения ФСО">
+    <article class="sub-public-card"><span>01 / ПОДРАЗДЕЛЕНИЕ</span><h2>АС</h2><p>Правила службы, порядок повышения и служебные объявления подразделения.</p></article>
+    <article class="sub-public-card"><span>02 / ПОДРАЗДЕЛЕНИЕ</span><h2>УЛО</h2><p>Сведения об отделе, установленная форма и актуальные материалы руководства.</p></article>
+    <article class="sub-public-card"><span>03 / ПОДГОТОВКА</span><h2>Академия</h2><p>Материалы для курсантов, порядок подготовки и важная информация.</p></article>
+  </div>
+  <div class="sub-public-entry"><div><strong>Доступ к материалам</strong><p>Войдите в личный кабинет. Система откроет материалы вашего подразделения. Руководству доступно управление содержанием.</p></div>
+    <a class="sub-public-link" href="./кабинет.html#subdivisions">Открыть подразделения</a></div>
+</section>
 <section class="work-screen qz-screen" id="quiz-screen" hidden aria-label="Проверка знаний">
 <div class="fso-section-decor" aria-hidden="true"></div>
 </section>
