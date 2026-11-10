@@ -4,7 +4,7 @@ const KEY='sb_publishable_8cdFcw4V8F545924bpdLjg_3yKTHt1d';
 const EXAM_EDGE=URL+'/functions/v1/fso-cadet-exam';
 const root=document.getElementById('main'), toast=document.getElementById('toast');
 const allowed=['admin','hr','examiner','employee','cadet'];const rosterRoles=['admin','hr'];
-let api=null,user=null,profile=null,members=[],blacklist=[],actions=[],audits=[],questions=[],examsList=[],assignments=[],examAttempts=[],examStaff=[],screen='home',selected=null;
+let api=null,user=null,profile=null,members=[],blacklist=[],actions=[],audits=[],questions=[],examsList=[],assignments=[],examAttempts=[],examStaff=[],screen=location.hash==='#subdivisions'?'subdivisions':'home',selected=null;
 let newlyIssuedCode=null,cadetCode='',cadetState=null,cadetIndex=0,cadetPending=false;
 const e=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const v=id=>document.getElementById(id)?.value?.trim()||'';
@@ -121,8 +121,8 @@ api.rpc('fso_exam_staff_directory')
 ]);
 questions=q.data||[];examsList=ex.data||[];assignments=as.data||[];examAttempts=at.data||[];examStaff=Array.isArray(staff.data)?staff.data:[];
 }
-if(!['admin','hr','examiner'].includes(profile.role)&&!['requests','leaves','history'].includes(screen))screen='requests';
-await window.FSO_LEADERSHIP.load(api,profile.role);
+if(!['admin','hr','examiner'].includes(profile.role)&&!['requests','leaves','history','subdivisions'].includes(screen))screen='requests';
+await Promise.all([window.FSO_LEADERSHIP.load(api,profile.role),window.FSO_SUBDIVISIONS.load(api)]);
 if(screen==='audit'&&profile.role==='admin')await window.FSO_AUDIT.load(api,profile.role);
 if(screen==='access'&&profile.role==='admin')await window.FSO_ACCESS.load(api,profile.role);
 render()}
@@ -133,6 +133,7 @@ function nav(active){
  '<nav class="tabs" aria-label="Разделы">'+
  (leadership?'<button data-tab="home" class="'+(active==='home'?'active':'')+'">Обзор</button><button data-tab="roster" class="'+(active==='roster'?'active':'')+'">Сотрудники</button>':'')+
  '<button data-tab="requests" class="'+(active==='requests'?'active':'')+'">Рапорты</button>'+
+ '<button data-tab="subdivisions" class="'+(active==='subdivisions'?'active':'')+'">Подразделения</button>'+
  '<button data-tab="leaves" class="'+(active==='leaves'?'active':'')+'">Отпуска</button>'+
  '<button data-tab="history" class="'+(active==='history'?'active':'')+'">История службы</button>'+
  (cadres?'<button data-tab="personnel" class="'+(active==='personnel'?'active':'')+'">Кадровые решения</button>':'')+
@@ -159,6 +160,7 @@ function render(){
  let content='';
  if(screen==='home')content=workflow.dashboard(ctx);
  else if(screen==='requests')content=workflow.requestPage(ctx);
+ else if(screen==='subdivisions')content=window.FSO_SUBDIVISIONS.render(ctx);
  else if(screen==='leaves')content=workflow.leavePage(ctx);
  else if(screen==='history')content=workflow.historyPage(ctx,selected);
  else if(screen==='personnel')content=workflow.decisionPage(ctx,selected);
@@ -263,7 +265,7 @@ return hero('Экзамены и аттестация','Серверная си�
 (newlyIssuedCode?'<div class="notice"><strong>Сохраните новый код, он показывается только сейчас</strong><p style="font-size:20px;font-weight:850;word-break:break-all">'+e(newlyIssuedCode)+'</p><button class="btn small" id="code-copy" type="button">Скопировать код</button></div>':'')+'</section>'+
 window.FSO_ADMIN_TOOLS.examPanels({exams:examsList,assignments,attempts:examAttempts,members,staff:examStaff,role:profile.role});
 }
-function bindScreen(){if(screen==='access'){window.FSO_ACCESS.bind(api,profile.role,user.id,{refresh,render,audit:async()=>{screen='audit';selected=null;loading();await window.FSO_AUDIT.load(api,profile.role);render();const filter=document.getElementById('audit-category');if(filter){filter.value='profile';filter.dispatchEvent(new Event('change'))}}});return}if(screen==='audit'){window.FSO_AUDIT.bind(api,profile.role,members,async()=>{loading();await window.FSO_AUDIT.load(api,profile.role);render()});return}
+function bindScreen(){if(screen==='subdivisions'){window.FSO_SUBDIVISIONS.bind(api,workflowContext(),refresh,render);return}if(screen==='access'){window.FSO_ACCESS.bind(api,profile.role,user.id,{refresh,render,audit:async()=>{screen='audit';selected=null;loading();await window.FSO_AUDIT.load(api,profile.role);render();const filter=document.getElementById('audit-category');if(filter){filter.value='profile';filter.dispatchEvent(new Event('change'))}}});return}if(screen==='audit'){window.FSO_AUDIT.bind(api,profile.role,members,async()=>{loading();await window.FSO_AUDIT.load(api,profile.role);render()});return}
  if(['home','requests','leaves','history','personnel'].includes(screen)){
  window.FSO_LEADERSHIP.bind(workflowContext(),api,screen,refresh,(next,member)=>{
   screen=next;selected=member||null;render();
@@ -415,7 +417,7 @@ async function saveMember(ev){
  }catch(err){if(area)area.innerHTML=msg(err.message||'Ошибка сохранения',true)}
  finally{button.disabled=false}
 }
-async function logout(){await api.auth.signOut();user=null;profile=null;members=[];blacklist=[];window.FSO_AUDIT.clear();window.FSO_ACCESS.clear();window.FSO_LEADERSHIP.clear();window.FSO_STAFF_ACCOUNTS.forget();members=[];actions=[];examsList=[];assignments=[];examAttempts=[];screen='home';authPage()}
+async function logout(){await api.auth.signOut();user=null;profile=null;members=[];blacklist=[];window.FSO_AUDIT.clear();window.FSO_ACCESS.clear();window.FSO_LEADERSHIP.clear();window.FSO_SUBDIVISIONS.clear();window.FSO_STAFF_ACCOUNTS.forget();members=[];actions=[];examsList=[];assignments=[];examAttempts=[];screen='home';authPage()}
 async function init(){if(!window.supabase?.createClient){root.innerHTML=msg('Не загрузилась библиотека Supabase. Проверьте соединение с интернетом.',true);return}api=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});api.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT'){user=null;profile=null;members=[];actions=[];window.FSO_LEADERSHIP.clear();window.FSO_STAFF_ACCOUNTS.forget();authPage()}});await refresh()}
 init().catch(err=>{root.innerHTML=msg('Не удалось подключиться к серверу: '+(err.message||err),true)});
 })();
