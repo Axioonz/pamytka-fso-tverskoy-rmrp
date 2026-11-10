@@ -1,14 +1,14 @@
 /*
   Иерархия типографики портала
   Display: Unbounded | Короткие крупные названия: Dela Gothic One
-  Служебные заголовки: Manrope | Текст и управление: Onest
+  Служебные заголовки: Manrope | Текст и управление: IBM Plex Sans
   Все три добавленных семейства имеют кириллицу и распространяются по OFL.
 */
 :root{
   --fso-type-display:"Unbounded","Manrope",sans-serif;
   --fso-type-poster:"Dela Gothic One","Unbounded",sans-serif;
-  --fso-type-heading:"Manrope","Onest",system-ui,sans-serif;
-  --fso-type-body:"Onest","Segoe UI",system-ui,sans-serif;
+  --fso-type-heading:"Manrope","IBM Plex Sans",system-ui,sans-serif;
+  --fso-type-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
 }
 
 /* Главная. Выразительное, но умеренное по размеру наборное пятно. */
@@ -99,12 +99,23 @@ html.nv-preview .nv-hero-side h2,
   line-height:1.3;
 }
 
-/* Тексты материалов, формы и таблицы не меняем на декоративные шрифты. */
+/* Основной интерфейс, документы, формы и таблицы: IBM Plex Sans.
+   При этом Unbounded, Dela и Manrope остаются у выделенных заголовков. */
+html body,
+html button,
+html input,
+html textarea,
+html select,
+html option,
+html table,
+html summary,
+html label,
+html.cb-next body,
 html.nv-preview body,
 html.nv-preview button,
 html.nv-preview input,
 html.nv-preview textarea,
-html.nv-preview select{
+html.nv-preview select {
   font-family:var(--fso-type-body);
 }
 
