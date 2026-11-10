@@ -1,7 +1,7 @@
 /* Private subdivision pages. Server determines access using fso_members.department. */
 (()=>{'use strict';
 const safe=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const catalog=['АС','УЛО','Академия'];
+const catalog=['АС','УЛО','УСН','Академия'];
 const date=v=>v?new Date(v).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'}):'';
 const textLinks=v=>String(v||'').split(/(https:\/\/[^\s]+)/g).map(part=>{
  if(!/^https:\/\//.test(part))return safe(part);
