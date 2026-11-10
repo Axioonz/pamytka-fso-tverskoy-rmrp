@@ -188,7 +188,7 @@ function decisionPage(ctx,chosen){
  const reprimands=activeActions.filter(a=>a.kind==='reprimand').length;
  const sanctionLabel=a=>(a.kind==='warning'?'Предупреждение':'Выговор')+' · '+when(a.issued_at)+' · '+a.reason.slice(0,95);
  const sanctioned=activeActions.map(a=>'<option value="'+safe(a.id)+'">'+safe(sanctionLabel(a))+'</option>').join('');
- const departments=['АС','Академия','УЛО'];
+ const departments=['АС','Академия','УЛО','УСН'];
  const departmentChoices=departments.map(s=>'<option value="'+safe(s)+'" '+(person.department===s?'selected':'')+'>'+safe(s)+'</option>').join('');
  const kindOptions=[
    ['promotion','Повышение в звании'],['demotion','Понижение в звании'],
@@ -212,7 +212,7 @@ function decisionPage(ctx,chosen){
  '<div class="lead-decision-group" data-lead-kind="promotion"><label>Новое звание'+promotion+'</label></div>'+
  '<div class="lead-decision-group" data-lead-kind="demotion" hidden><label>Новое звание'+demotion+'</label></div>'+
  '<div class="lead-decision-group" data-lead-kind="position" hidden><label>Новая должность<input id="lead-position" maxlength="200" placeholder="Официальное название должности" value="'+safe(person.position||'')+'"></label></div>'+
- '<div class="lead-decision-group" data-lead-kind="department" hidden><label>Новое подразделение<select id="lead-department">'+departmentChoices+'</select></label><p class="hint">Академия соответствует курсантам. АС и УЛО соответствуют сотрудникам.</p></div>'+
+ '<div class="lead-decision-group" data-lead-kind="department" hidden><label>Новое подразделение<select id="lead-department">'+departmentChoices+'</select></label><p class="hint">Академия соответствует курсантам. АС, УЛО и УСН соответствуют сотрудникам.</p></div>'+
  '<div class="lead-decision-group" data-lead-kind="remove" hidden><label>Действующее взыскание<select id="lead-sanction">'+sanctioned+'</select></label></div>'+
  '<label>Основание решения<textarea id="lead-decision-reason" required minlength="5" maxlength="2000" placeholder="Укажите причину и обстоятельства решения"></textarea></label>'+
  '<div class="lead-decision-group" data-lead-kind="warning" hidden><p class="hint">Три действующих предупреждения автоматически преобразуются в один выговор.</p></div>'+
@@ -373,7 +373,7 @@ function bind(ctx,api,screen,refresh,navigate){
       args={...args,p_rank:member.rank,p_position:position};
     }else if(kind==='department'){
       const department=document.getElementById('lead-department').value.trim();
-      if(!['АС','Академия','УЛО'].includes(department)||department===(member.department||'')){
+      if(!['АС','Академия','УЛО','УСН'].includes(department)||department===(member.department||'')){
          notice('Выберите другое подразделение',true);return;
        }
       rpc='fso_transfer_department';
