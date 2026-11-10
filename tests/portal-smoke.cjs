@@ -215,6 +215,23 @@ async function launchWithRole(browser,role){
 (async()=>{
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
  try{
+ // A missing optional subdivision script must not block login or other cabinet sections.
+ {
+ const page=await browser.newPage({viewport:{width:1280,height:900}});
+ const errors=[];
+ page.on('pageerror',err=>errors.push(err.message));
+ await page.addInitScript({content:'window.__role="admin"'});
+ await page.route('**/cdn.jsdelivr.net/**',route=>route.fulfill({status:200,contentType:'application/javascript',body:mockSupabase}));
+ await page.route('**/js/кабинет-подразделения.js*',route=>route.abort());
+ await page.goto(BASE+'кабинет.html',{waitUntil:'load'});
+ await page.getByRole('heading',{name:'Обзор подразделения'}).waitFor();
+ await page.getByRole('button',{name:'Подразделения'}).click();
+ await page.getByText('Не удалось загрузить материалы подразделений. Обновите страницу и откройте раздел повторно.').waitFor();
+ await page.getByRole('button',{name:'Рапорты'}).click();
+ await page.getByRole('heading',{name:'Рапорты и заявки'}).waitFor();
+ assert.deepEqual(errors,[]);
+ await page.close();
+ }
  // Public entry and code login
  {
  const {page,errors}=await launchWithRole(browser,'anonymous');
