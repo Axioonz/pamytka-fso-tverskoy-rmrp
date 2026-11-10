@@ -99,7 +99,7 @@ async function load(){
  if(!supa){busy=false;message='Не загрузилась библиотека авторизации. Обновите страницу и проверьте подключение к интернету.';render();return}
  try{
   const identity=await supa.auth.getUser();
-  if(identity.error)throw identity.error;
+  if(identity.error&&identity.error.name!=='AuthSessionMissingError'&&identity.error.code!=='session_not_found')throw identity.error;
   user=identity.data?.user||null;pages=[];profile=null;
   if(user){
    const [p,d]=await Promise.all([
@@ -189,5 +189,4 @@ root.addEventListener('submit',async event=>{
   form.append(div);
  }
 });
-el('sdept-back')?.addEventListener('click',back);
 })();
