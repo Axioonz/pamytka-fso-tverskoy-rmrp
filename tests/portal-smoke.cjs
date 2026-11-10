@@ -398,12 +398,30 @@ async function launchWithRole(browser,role){
  const {page,errors}=await launchWithRole(browser,'employee');
  await page.getByRole('heading',{name:'Рапорты и заявки'}).waitFor();
  assert.equal(await page.locator('#lead-request-form').count(),1);
+ const requestKinds=await page.locator('#lead-request-kind option').evaluateAll(options=>options.map(x=>x.value));
+ assert.deepEqual(requestKinds,['promotion','transfer','dismissal','other']);
+ assert.equal(await page.locator('#lead-request-kind option[value="reinstatement"]').count(),0);
+ for(const [kind,word] of [['promotion','повышении'],['transfer','переводе'],['dismissal','уволить'],['other','вопрос о']]){
+  await page.locator('#lead-request-kind').selectOption(kind);
+  assert.ok((await page.locator('#lead-request-example .lead-example-content').innerText()).toLowerCase().includes(word));
+ }
+ await page.locator('#lead-request-kind').selectOption('dismissal');
+ await page.locator('#lead-request-example .lead-example-use').click();
+ assert.ok((await page.locator('#lead-request-text').inputValue()).includes('Прошу уволить'));
+ await page.locator('#lead-request-text').fill('Прошу рассмотреть мой рапорт об увольнении по собственному желанию.');
+ await page.locator('#lead-request-form [type="submit"]').click();
+ assert.ok((await page.evaluate(()=>window.__fsoMock.rpcs)).some(x=>
+  x.name==='fso_request_submit'&&x.args.p_kind==='dismissal'&&x.args.p_member==='member-1'));
  assert.equal(await page.getByRole('button',{name:'Кадровые решения'}).count(),0);
  assert.equal(await page.getByRole('button',{name:'Управление доступом'}).count(),0);
  await page.getByRole('button',{name:'Отпуска'}).click();
  await page.getByRole('heading',{name:'Отпуска и неактивность',level:1}).waitFor();
  assert.equal(await page.locator('#lead-absence-request-form').count(),1);
  assert.equal(await page.locator('[data-lead-review]').count(),0);
+ for(const [kind,word] of [['leave','отпуск'],['inactivity','неактивность'],['dayoff','отгул']]){
+  await page.locator('#lead-absence-kind').selectOption(kind);
+  assert.ok((await page.locator('#lead-absence-example .lead-example-content').innerText()).toLowerCase().includes(word));
+ }
  await page.locator('#lead-absence-kind').selectOption('inactivity');
  await page.locator('#lead-absence-from').fill('2030-08-01');
  await page.locator('#lead-absence-to').fill('2030-08-10');
