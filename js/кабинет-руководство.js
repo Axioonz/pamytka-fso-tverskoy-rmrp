@@ -78,7 +78,7 @@ async function action(api,rpc,args,refresh,button){
 async function load(api,role){
  const queue=[
   api.from('fso_service_events').select('id,member_id,event_type,actor_id,old_value,new_value,reason,occurred_at').order('occurred_at',{ascending:false}).limit(900),
-  api.from('fso_service_requests').select('id,member_id,kind,statement,date_from,date_to,submitted_by,submitted_at,status,reviewed_by,reviewed_at,review_note').order('submitted_at',{ascending:false}).limit(600),
+  api.from('fso_service_requests').select('id,member_id,kind,statement,target_rank,date_from,date_to,submitted_by,submitted_at,status,reviewed_by,reviewed_at,review_note').order('submitted_at',{ascending:false}).limit(600),
   api.from('fso_service_leaves').select('id,member_id,request_id,kind,date_from,date_to,reason,status,approved_by,approved_at,closed_by,closed_at,closure_reason').order('date_to',{ascending:false}).limit(600)
  ];
  if(officer(role))queue.push(api.from('fso_profiles').select('user_id,display_name,role'));
