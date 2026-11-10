@@ -19,10 +19,12 @@ const mockSupabase=fixture.slice(begin,finish);
   page.on('pageerror',err=>errors.push(err.message));
   await page.addInitScript({content:'window.__role='+JSON.stringify(role)});
   await page.route('**/cdn.jsdelivr.net/**',route=>route.fulfill({status:200,contentType:'application/javascript',body:mockSupabase}));
-  await page.goto(BASE+variant,{waitUntil:'domcontentloaded'});
-  await page.locator('#home-title').waitFor({state:'visible'});
-  await page.locator('.nv-more summary').click();
-  await page.locator('.nv-more-panel [data-page="departments"]').click();
+  await page.goto(BASE+variant+(width<=700?'#departments':''),{waitUntil:'domcontentloaded'});
+  if(width>700){
+   await page.locator('#home-title').waitFor({state:'visible'});
+   await page.locator('.nv-more summary').click();
+   await page.locator('.nv-more-panel [data-page="departments"]').click();
+  }
   await page.locator('#departments-screen').waitFor({state:'visible'});
   assert.equal(await page.locator('.sdept-card').count(),3);
   assert.equal(await page.locator('#sdept-login-form').count(),0);
