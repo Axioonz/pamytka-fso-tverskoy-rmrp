@@ -77,7 +77,7 @@ async function action(api,rpc,args,refresh,button){
 }
 async function load(api,role){
  const queue=[
-  api.from('fso_service_events').select('id,member_id,event_type,actor_id,old_value,new_value,reason,occurred_at').order('occurred_at',{ascending:false}).limit(900),
+  api.from('fso_service_events').select('id,member_id,event_type,old_value,new_value,occurred_at').order('occurred_at',{ascending:false}).limit(900),
   api.from('fso_service_requests').select('id,member_id,kind,statement,target_rank,date_from,date_to,submitted_by,submitted_at,status,reviewed_by,reviewed_at,review_note').order('submitted_at',{ascending:false}).limit(600),
   api.from('fso_service_leaves').select('id,member_id,request_id,kind,date_from,date_to,reason,status,approved_by,approved_at,closed_by,closed_at,closure_reason').order('date_to',{ascending:false}).limit(600)
  ];
@@ -94,6 +94,24 @@ async function load(api,role){
   responses.at(-1).data.filter(x=>x.self_registered&&!x.has_profile&&x.confirmed).length:0;
 }
 function errorBanner(){return data.error?'<p class="message error">'+safe(data.error)+'</p>':''}
+function serviceEvent(ev){
+ const prior=ev.old_value||{},current=ev.new_value||{};
+ if(ev.event_type==='rank_changed'){
+  const before=rankOrder.indexOf(prior.rank),after=rankOrder.indexOf(current.rank);
+  if(before<0||after<0||before===after)return null;
+  return {title:after<before?'Повышение в звании':'Понижение в звании',
+   detail:(prior.rank||'')+' → '+(current.rank||'')};
+ }
+ if(ev.event_type==='department_changed'){
+  const to=current.department;
+  return to?{title:'Перевод в подразделение',detail:to}:null;
+ }
+ if(ev.event_type==='dismissed'||
+   (ev.event_type==='status_changed'&&['dismissed','archived'].includes(current.status))){
+  return {title:'Увольнение',detail:''};
+ }
+ return null;
+}
 function dashboard(ctx){
  const current=ctx.members.filter(active);
  const cadets=current.filter(m=>m.status==='cadet');
@@ -114,9 +132,10 @@ function dashboard(ctx){
   ['Незавершённые назначения экзаменов',ctx.role==='hr'?0:incomplete.length,'exams']
  ].filter(x=>x[1]>0);
  if(ctx.role==='admin'&&data.pendingAccess)tasks.unshift(['Заявки на доступ',data.pendingAccess,'access']);
- const recent=data.events.slice(0,8).map(ev=>'<div class="lead-feed-row"><span class="lead-feed-date">'+safe(when(ev.occurred_at))+'</span>'+
- '<strong>'+safe(eventsTitles[ev.event_type]||ev.event_type)+'</strong><span>'+safe(name(ctx.members.find(m=>m.id===ev.member_id)))+'</span>'+
- '<button type="button" class="btn small" data-lead-member="'+safe(ev.member_id)+'">Личное дело</button></div>').join('');
+ const recent=data.events.map(ev=>({event:ev,item:serviceEvent(ev)})).filter(x=>x.item).slice(0,8).map(({event,item})=>
+ '<div class="lead-feed-row"><span class="lead-feed-date">'+safe(short(event.occurred_at))+'</span>'+
+ '<strong>'+safe(item.title)+'</strong><span>'+safe(name(ctx.members.find(m=>m.id===event.member_id)))+'</span>'+
+ '<button type="button" class="btn small" data-lead-member="'+safe(event.member_id)+'">Личное дело</button></div>').join('');
  return '<div class="eyebrow">FSO / КАБИНЕТ РУКОВОДСТВА</div><h1>Обзор подразделения</h1>'+
  '<p class="head-subtitle">Кадровые сведения и решения, требующие внимания руководства.</p>'+errorBanner()+
  '<div class="lead-stats">'+count(current.length,'Действующий состав','roster')+
@@ -131,29 +150,24 @@ function dashboard(ctx){
  (recent||'<p class="hint">Новые кадровые действия будут появляться здесь.</p>')+'</section>';
 }
 function memberEvents(member){
- const items=data.events.filter(x=>x.member_id===member.id);
+ const items=data.events.filter(x=>x.member_id===member.id).map(ev=>({ev,item:serviceEvent(ev)})).filter(x=>x.item);
+ const joined=member.joined_on?'<div class="lead-event"><time>'+safe(short(member.joined_on))+
+  '</time><div><strong>Принят на службу</strong></div></div>':'';
+ const history=items.map(({ev,item})=>'<div class="lead-event"><time>'+safe(short(ev.occurred_at))+
+  '</time><div><strong>'+safe(item.title)+'</strong>'+
+  (item.detail?'<p>'+safe(item.detail)+'</p>':'')+'</div></div>').join('');
+ const fired=!items.some(({item})=>item.title==='Увольнение')&&member.dismissed_on?
+  '<div class="lead-event"><time>'+safe(short(member.dismissed_on))+
+  '</time><div><strong>Увольнение</strong></div></div>':'';
  return '<section class="section lead-history"><div class="section-heading"><div><h2>История службы</h2></div></div>'+
- '<div class="lead-baseline"><small>Дата вступления из личного дела</small><b>'+safe(short(member.joined_on))+'</b>'+
- '<p class="hint">История изменений фиксируется с момента запуска кадрового журнала. Старые изменения не восстанавливаются автоматически.</p></div>'+
- (items.length?items.map(ev=>{
-  const prior=ev.old_value||{},now=ev.new_value||{};
-  const detail=ev.event_type==='rank_changed'?safe((prior.rank||'Не указано')+' → '+(now.rank||'Не указано')):
-   ev.event_type==='position_changed'?safe((prior.position||'Не указана')+' → '+(now.position||'Не указана')):
-   ev.event_type==='department_changed'?safe((prior.department||'Не назначен')+' → '+(now.department||'Не назначен')):
-   ev.event_type==='status_changed'?safe((prior.status||'Не указан')+' → '+(now.status||'Не указан')):'';
-  return '<div class="lead-event"><time>'+safe(when(ev.occurred_at))+'</time>'+
-   '<div><strong>'+safe(eventsTitles[ev.event_type]||ev.event_type)+'</strong>'+
-   (detail?'<p>'+detail+'</p>':'')+
-   (ev.reason?'<p>'+safe(ev.reason)+'</p>':'')+
-   (ev.actor_id?'<small>Исполнитель · '+safe(actor(ev.actor_id))+'</small>':'')+'</div></div>';
- }).join(''):'<p class="hint">Записанных изменений пока нет.</p>')+'</section>';
+  (history||joined||fired?history+fired+joined:'<p class="hint">Кадровых событий пока нет.</p>')+'</section>';
 }
 function historyPage(ctx,chosen){
  const candidates=officer(ctx.role)?ctx.members:ctx.members.filter(m=>m.user_id===ctx.userId);
  const m=candidates.find(m=>m.id===chosen)||candidates[0];
  if(!m)return '<h1>История службы</h1><div class="section">Нет доступного личного дела.</div>';
  return '<div class="eyebrow">FSO / КАДРОВЫЙ УЧЁТ</div><h1>История службы</h1>'+
- '<p class="head-subtitle">Изменения звания, должности, статуса и решений руководства.</p>'+
+ '<p class="head-subtitle">Принятие, повышение, понижение, перевод и увольнение.</p>'+
  (officer(ctx.role)?'<div class="member-toolbar">'+personSelect('lead-history-person',candidates,m.id,false)+'</div>':'')+
  '<h2>'+safe(name(m))+'</h2>'+memberEvents(m);
 }
