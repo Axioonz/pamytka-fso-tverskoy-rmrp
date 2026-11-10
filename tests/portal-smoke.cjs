@@ -283,19 +283,6 @@ async function launchWithRole(browser,role){
  await page.locator('#audit-category').selectOption('');
 
  // A linked employee files their own absence; leadership approves but cannot file for others.
- // Access to subdivision materials follows the linked employee record.
- await page.getByRole('button',{name:'Подразделения'}).click();
- await page.getByRole('heading',{name:'Служебные подразделения'}).waitFor();
- assert.equal(await page.locator('.sub-department').count(),3);
- assert.equal(await page.locator('[data-sub-department="АС"].is-locked').count(),1);
- assert.equal(await page.locator('#sub-material-form').count(),0);
- assert.ok((await page.getByText('Основная инструкция УЛО').innerText()).includes('УЛО'));
- await page.locator('[data-sub-department="АС"]').click();
- await page.getByText('Доступ к этому подразделению определяется записью в личном деле сотрудника.',{exact:false}).waitFor();
- assert.equal(await page.getByText('Основная инструкция УЛО').count(),0);
- await page.locator('[data-sub-department="УЛО"]').click();
- assert.ok((await page.getByText('Основная инструкция УЛО').innerText()).includes('УЛО'));
- await page.getByRole('button',{name:'Рапорты'}).click();
  await page.getByRole('button',{name:'Отпуска'}).click();
  await page.getByRole('heading',{name:'Отпуска и неактивность',level:1}).waitFor();
  assert.equal(await page.locator('#lead-leave-form').count(),0);
@@ -509,6 +496,19 @@ async function launchWithRole(browser,role){
   x.name==='fso_request_submit'&&x.args.p_kind==='dismissal'&&x.args.p_member==='member-1'));
  assert.equal(await page.getByRole('button',{name:'Кадровые решения'}).count(),0);
  assert.equal(await page.getByRole('button',{name:'Управление доступом'}).count(),0);
+ // Access to subdivision materials follows the linked employee record.
+ await page.getByRole('button',{name:'Подразделения'}).click();
+ await page.getByRole('heading',{name:'Служебные подразделения'}).waitFor();
+ assert.equal(await page.locator('.sub-department').count(),3);
+ assert.equal(await page.locator('[data-sub-department="АС"].is-locked').count(),1);
+ assert.equal(await page.locator('#sub-material-form').count(),0);
+ assert.ok((await page.getByText('Основная инструкция УЛО').innerText()).includes('УЛО'));
+ await page.locator('[data-sub-department="АС"]').click();
+ await page.getByText('Доступ к этому подразделению определяется записью в личном деле сотрудника.',{exact:false}).waitFor();
+ assert.equal(await page.getByText('Основная инструкция УЛО').count(),0);
+ await page.locator('[data-sub-department="УЛО"]').click();
+ assert.ok((await page.getByText('Основная инструкция УЛО').innerText()).includes('УЛО'));
+ await page.getByRole('button',{name:'Рапорты'}).click();
  await page.getByRole('button',{name:'Отпуска'}).click();
  await page.getByRole('heading',{name:'Отпуска и неактивность',level:1}).waitFor();
  assert.equal(await page.locator('#lead-absence-request-form').count(),1);
