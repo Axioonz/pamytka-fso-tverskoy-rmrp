@@ -87,3 +87,13 @@ html.cb-next #main.wrap>nav.tabs>button{min-height:41px}
 .lead-sanction strong{font-size:13px;color:#d9ecfa}
 .lead-sanction small{font-size:11px;color:#a6bdcd;line-height:1.5;overflow-wrap:anywhere}
 @media(max-width:620px){.lead-sanction{align-items:flex-start;flex-direction:column}}
+
+/* Contextual examples for reports: distinct from the editable statement. */
+.lead-request-example{border:1px solid #314e63;background:#0d1b27;border-radius:11px;padding:18px 20px;min-width:0}
+.lead-example-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:13px}
+.lead-example-eyebrow{display:block;font-size:10px;letter-spacing:.11em;font-weight:750;color:#8cb6d4;margin-bottom:7px}
+.lead-example-title{font-size:15px;line-height:1.35;color:#e5f1f9;font-weight:720;margin:0}
+.lead-example-content{white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.75;color:#d6e5f0;margin:0 0 12px}
+.lead-example-help{font-size:11px;line-height:1.55;color:#8fa9bb;margin:0}
+.lead-example-use{flex-shrink:0}
+@media(max-width:560px){.lead-request-example{padding:15px}.lead-example-top{align-items:stretch;flex-direction:column;gap:11px}.lead-example-use{align-self:flex-start}}
