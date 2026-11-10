@@ -8,7 +8,20 @@ const manager=r=>['admin','hr'].includes(r);
 const officer=r=>['admin','hr','examiner'].includes(r);
 const active=m=>m&&['active','cadet'].includes(m.status);
 const name=m=>m?m.first_name+' '+m.last_name:'Сотрудник не найден';
-const types={leave:'Отпуск',inactivity:'Временная неактивность',dayoff:'Отгул',promotion:'Повышение',transfer:'Перевод',reinstatement:'Восстановление',other:'Другое обращение'};
+const types={leave:'Отпуск',inactivity:'Временная неактивность',dayoff:'Отгул',promotion:'Повышение',transfer:'Перевод',dismissal:'Увольнение',other:'Другое обращение'};
+const legacyTypes={reinstatement:'Восстановление (старый рапорт)'};
+const exampleTexts={
+ promotion:{title:'Рапорт о повышении',body:'Прошу рассмотреть мою кандидатуру для повышения на должность [желаемая должность] в связи с [служебные результаты и основания для назначения]. Готов пройти предусмотренную для этой должности аттестацию.'},
+ transfer:{title:'Рапорт о переводе',body:'Прошу рассмотреть вопрос о моём переводе из [текущее подразделение] в [желаемое подразделение] в связи с [причина перевода]. Прошу сообщить о принятом решении.'},
+ dismissal:{title:'Рапорт об увольнении',body:'Прошу уволить меня из Федеральной службы охраны по собственному желанию с [желаемая дата] в связи с [причина, если необходимо]. Готов передать служебное имущество и незавершённые дела в установленном порядке.'},
+ other:{title:'Иное служебное обращение',body:'Прошу рассмотреть вопрос о [предмет обращения]. Обстоятельства обращения: [краткое описание ситуации]. Прошу принять решение о [конкретная просьба].'},
+ leave:{title:'Рапорт на отпуск',body:'Прошу предоставить мне отпуск на период с [дата начала] по [дата окончания] по причине [краткое основание].'},
+ inactivity:{title:'Рапорт о временной неактивности',body:'Прошу согласовать временную неактивность в период с [дата начала] по [дата окончания] в связи с [личные обстоятельства].'},
+ dayoff:{title:'Рапорт на отгул',body:'Прошу предоставить мне отгул на [дата] по причине [краткое основание].'}
+};
+function exampleBox(id){return '<aside class="lead-request-example" id="'+safe(id)+'" aria-live="polite">'+
+ '<div class="lead-example-top"><div><span class="lead-example-eyebrow">ОБРАЗЕЦ ОБРАЩЕНИЯ</span><h3 class="lead-example-title"></h3></div><button class="btn small lead-example-use" type="button">Вставить в рапорт</button></div>'+
+ '<p class="lead-example-content"></p><p class="lead-example-help">Замените сведения в квадратных скобках на свои. Образец не отправляется автоматически.</p></aside>'}
 const states={pending:'На рассмотрении',approved:'Одобрено',rejected:'Отклонено'};
 const eventsTitles={dayoff_approved:'Отгул одобрен',dayoff_finished:'Отгул завершён',dayoff_cancelled:'Отгул отменён',joined:'Приём в подразделение',rank_changed:'Изменение звания',position_changed:'Изменение должности',department_changed:'Перевод в отдел',
  status_changed:'Изменение статуса службы',request_submitted:'Рапорт подан',request_approved:'Рапорт одобрен',
@@ -202,7 +215,7 @@ function requestPage(ctx){
  const isManager=manager(ctx.role);
  const rows=data.requests.map(r=>{
   const m=ctx.members.find(x=>x.id===r.member_id);
-  return '<article class="lead-request"><div class="lead-request-head"><strong>'+safe(types[r.kind]||r.kind)+'</strong>'+
+  return '<article class="lead-request"><div class="lead-request-head"><strong>'+safe(types[r.kind]||legacyTypes[r.kind]||r.kind)+'</strong>'+
    '<span class="lead-status lead-'+safe(r.status)+'">'+safe(states[r.status])+'</span></div>'+
    '<div class="lead-request-meta">'+safe(name(m))+' · '+safe(when(r.submitted_at))+' · Подал '+safe(actor(r.submitted_by))+'</div>'+
    (r.date_from?'<p>Период · '+safe(short(r.date_from))+' – '+safe(short(r.date_to))+'</p>':'')+
@@ -213,7 +226,7 @@ function requestPage(ctx){
     '<label>Комментарий руководителя<textarea class="lead-review-text" maxlength="2000" placeholder="Причина отказа или комментарий к решению"></textarea></label>'+
     '<div class="actions"><button class="btn primary" type="button" data-lead-review="'+safe(r.id)+'" data-decision="approved">Одобрить</button>'+
     '<button class="btn danger" type="button" data-lead-review="'+safe(r.id)+'" data-decision="rejected">Отклонить</button></div>'+
-    '<p class="hint">Одобрение отпуска автоматически создаст запись. Повышение и перевод требуют отдельного кадрового решения. Восстановление сотрудника оформляется отдельно.</p></details>':'')+'</article>';
+    '<p class="hint">Отпуск оформляется после одобрения автоматически. Повышение, перевод и увольнение требуют отдельного кадрового решения.</p></details>':'')+'</article>';
  }).join('');
  const form=eligible.length?'<section class="section"><h2>Подать рапорт</h2>'+
  '<form id="lead-request-form" class="lead-form">'+
@@ -221,7 +234,7 @@ function requestPage(ctx){
  '<label>Вид рапорта<select id="lead-request-kind">'+
  Object.entries(types).filter(([key])=>!['leave','inactivity','dayoff'].includes(key)).map(([key,t])=>'<option value="'+key+'">'+safe(t)+'</option>').join('')+'</select></label>'+
  
- '<label>Текст рапорта<textarea id="lead-request-text" minlength="10" maxlength="3000" required placeholder="Содержание обращения и основания"></textarea></label>'+
+ '<label>Текст рапорта<textarea id="lead-request-text" minlength="10" maxlength="3000" required placeholder="Содержание обращения и основания"></textarea></label>'+exampleBox('lead-request-example')+
  '<div class="actions"><button type="submit" class="btn primary">Отправить рапорт</button></div></form></section>':
  '<section class="section"><h2>Подача рапорта</h2><p class="hint">Личное дело пока не привязано к вашему аккаунту. Обратитесь к администратору.</p></section>';
  return '<div class="eyebrow">FSO / ОБРАЩЕНИЯ</div><h1>Рапорты и заявки</h1>'+
@@ -239,7 +252,7 @@ function leavePage(ctx){
  '<label>Вид отсутствия<select id="lead-absence-kind" required><option value="leave">Отпуск</option><option value="inactivity">Временная неактивность</option><option value="dayoff">Отгул (один день)</option></select></label>'+
  '<div class="lead-date-pair"><label>Дата начала<input id="lead-absence-from" type="date" required></label>'+
  '<label>Дата окончания<input id="lead-absence-to" type="date" required></label></div>'+
- '<label>Причина<textarea id="lead-absence-reason" minlength="10" maxlength="3000" required placeholder="Укажите причину отсутствия"></textarea></label>'+
+ '<label>Причина<textarea id="lead-absence-reason" minlength="10" maxlength="3000" required placeholder="Укажите причину отсутствия"></textarea></label>'+exampleBox('lead-absence-example')+
  '<div class="actions"><button type="submit" class="btn primary">Отправить заявку</button></div>'+
  '</form></section>':
  (isManager?'<section class="section"><h2>Оформление заявок</h2><p class="hint">Отпуск и неактивность оформляют сотрудники в своих кабинетах. Руководство рассматривает поступившие заявки. Для собственной заявки необходимо привязать личное дело к аккаунту.</p></section>':
@@ -383,6 +396,34 @@ function bind(ctx,api,screen,refresh,navigate){
     await action(api,rpc,args,refresh,submit);
   };
  }
+ function connectExample(selectId,boxId,textId){
+  const selector=document.getElementById(selectId),box=document.getElementById(boxId);
+  const field=document.getElementById(textId);
+  if(!selector||!box||!field)return;
+  const title=box.querySelector('.lead-example-title');
+  const content=box.querySelector('.lead-example-content');
+  const update=()=>{
+   const sample=exampleTexts[selector.value];
+   if(!sample){box.hidden=true;return;}
+   box.hidden=false;
+   title.textContent=sample.title;
+   content.textContent=sample.body;
+  };
+  selector.addEventListener('change',update);
+  update();
+  const insert=box.querySelector('.lead-example-use');
+  insert.onclick=()=>{
+   const sample=exampleTexts[selector.value];
+   if(!sample)return;
+   if(field.value.trim()&&field.value.trim()!==sample.body&&
+      !window.confirm('Заменить введённый текст образцом?'))return;
+   field.value=sample.body;
+   field.focus();
+   field.dispatchEvent(new Event('input',{bubbles:true}));
+  };
+ }
+ connectExample('lead-request-kind','lead-request-example','lead-request-text');
+ connectExample('lead-absence-kind','lead-absence-example','lead-absence-reason');
  const kind=document.getElementById('lead-request-kind');
  const req=document.getElementById('lead-request-form');
  if(req)req.onsubmit=async e=>{
