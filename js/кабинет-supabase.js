@@ -11,7 +11,7 @@ const v=id=>document.getElementById(id)?.value?.trim()||'';
 const date=x=>x?new Date(String(x).slice(0,10)+'T12:00:00').toLocaleDateString('ru-RU'):'Не указана';
 const roleTitle={admin:'Администратор',hr:'Руководство',examiner:'Экзаменатор',employee:'Сотрудник',cadet:'Курсант'};
 const statusTitle={active:'Сотрудник',cadet:'Курсант',dismissed:'Уволен',archived:'Архив'};
-const subdivisionOptions=['АС','Академия','УЛО'];
+const subdivisionOptions=['АС','Академия','УЛО','УСН'];
 const subdivisionOf=m=>m.department||(m.status==='cadet'?'Академия':'Не назначено');
 const rankGroups=[
  {group:'Высшие офицеры',level:'general',ranks:['Генерал-майор']},
