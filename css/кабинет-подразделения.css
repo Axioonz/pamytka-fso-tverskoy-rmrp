@@ -1,0 +1,53 @@
+/* FSO subdivision workspaces */
+.sub-page-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:23px;flex-wrap:wrap}
+.sub-eyebrow{display:block;font-size:10px;letter-spacing:.16em;color:#81aeca;font-weight:800;margin-bottom:10px}
+.sub-page-heading h1{margin:0 0 10px}
+.sub-page-heading .head-subtitle{margin:0;max-width:640px}
+.sub-access-chip{display:inline-flex;border:1px solid #334c61;border-radius:8px;padding:10px 12px;background:#12202e;font-size:11px;color:#b7d0e0}
+.sub-directory{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 30px}
+.sub-department{min-width:0;display:flex;gap:14px;align-items:center;padding:17px 18px;background:#101c28;border:1px solid #293e51;border-radius:12px;color:#dfeaf4;text-align:left;font:inherit;cursor:pointer;transition:background .15s,border-color .15s}
+.sub-department:hover{background:#152839;border-color:#527997}
+.sub-department.is-active{background:#173247;border-color:#4c7796;box-shadow:inset 0 0 0 1px #294e69}
+.sub-department.is-locked{opacity:.65}
+.sub-department-symbol{width:43px;height:43px;flex-shrink:0;display:grid;place-items:center;background:#1d3649;color:#b8d5e8;border-radius:8px;font-size:13px;font-weight:800}
+.sub-department-copy{display:flex;flex-direction:column;gap:5px;min-width:0;flex:1}
+.sub-department-copy strong{font-size:15px}
+.sub-department-copy small{font-size:11px;color:#96afc0}
+.sub-department-arrow{font-size:15px;color:#89b3d0}
+.sub-content-head{display:flex;gap:20px;justify-content:space-between;align-items:end;margin:0 0 17px;flex-wrap:wrap}
+.sub-content-head h2{font-size:27px;margin:0}
+.sub-updated{font-size:11px;color:#91aabc}
+.sub-material-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:20px}
+.section.sub-material{min-height:180px;padding:23px 24px;margin:0}
+.sub-section-heading{display:flex;align-items:center;gap:11px;margin-bottom:18px}
+.sub-section-heading h2{font-size:18px;margin:0}
+.sub-material-mark{width:4px;height:22px;background:#6895b5;border-radius:3px;flex-shrink:0}
+.sub-text{font-size:13px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere;color:#d5e2ed}
+.sub-text a{color:#9ed0f3;text-decoration:underline;text-underline-offset:3px}
+.sub-empty{font-size:12px;color:#8aa1b2;line-height:1.7;margin:0}
+.sub-locked{max-width:760px}
+.sub-locked h2{margin-top:0}
+.sub-locked p{max-width:680px;line-height:1.7;color:#b5c7d4}
+.sub-editor{margin:20px 0}
+.sub-editor summary,.sub-publish summary{color:#a9d4f3;font-weight:700;font-size:13px;cursor:pointer;list-style-position:inside}
+.sub-editor .hint{margin:13px 0}
+.sub-edit-form{display:grid;gap:17px;margin-top:18px}
+.sub-edit-form label{display:grid;gap:9px;color:#c7d8e4;font-size:12px;font-weight:650}
+.sub-edit-form textarea,.sub-edit-form input{width:100%;border:1px solid #385166;background:#0e1a26;color:#edf5fb;padding:13px;border-radius:8px;font:inherit;font-size:12px;line-height:1.65}
+.sub-edit-form textarea{resize:vertical;min-height:95px}
+.sub-edit-form input{min-height:45px}
+.sub-edit-form textarea:focus,.sub-edit-form input:focus{outline:2px solid #5683a5;outline-offset:1px}
+.sub-news-heading{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.sub-news-heading h2{margin:0}
+.sub-publish{max-width:510px}
+.sub-publish[open]{flex-basis:100%;max-width:100%}
+.sub-publish form{padding-top:10px}
+.sub-notices{display:grid;gap:13px}
+.sub-notice{border:1px solid #2d4253;border-radius:10px;background:#0e1a25;padding:20px 22px}
+.sub-notice-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.sub-notice-date{font-size:10px;color:#91abc0}
+.sub-notice h3{font-size:16px;color:#f0f7fb;margin:7px 0 0}
+.sub-notice-author{font-size:11px;color:#8fa9ba;margin:10px 0 16px}
+.sub-delete{flex-shrink:0}
+@media(max-width:860px){.sub-directory{grid-template-columns:1fr}.sub-material-grid{grid-template-columns:1fr}.sub-department{padding:13px 14px}}
+@media(max-width:540px){.sub-page-heading{gap:13px}.sub-page-heading h1{font-size:25px}.sub-content-head h2{font-size:24px}.section.sub-material{min-height:140px;padding:18px}.sub-notice{padding:16px}}
