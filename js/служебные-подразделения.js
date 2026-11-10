@@ -7,10 +7,11 @@ const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;
 const names={
  'АС':{index:'01',summary:'Служебный порядок, требования подразделения и актуальная информация руководства.',symbol:'АС'},
  'УЛО':{index:'02',summary:'Правила службы, установленные требования и материалы подразделения.',symbol:'УЛО'},
- 'Академия':{index:'03',summary:'Подготовка курсантов, учебные материалы и служебные объявления.',symbol:'А'}
+ 'УСН':{index:'03',summary:'Информация о работе УСН.',symbol:'УСН'},
+ 'Академия':{index:'04',summary:'Подготовка курсантов, учебные материалы и служебные объявления.',symbol:'А'}
 };
 const CONFIG={url:'https://lejagyuibxdnvpmxoggy.supabase.co',key:'sb_publishable_8cdFcw4V8F545924bpdLjg_3yKTHt1d'};
-let api=null,current='',profile=null,user=null,pages=[],message='',busy=false;
+let api=null,current='',profile=null,user=null,pages=[],publicPages=[],publicError='',message='',busy=false;
 const validDep=value=>Object.hasOwn(names,value);
 const when=value=>value?new Date(value).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'}):'';
 const client=()=>{
@@ -73,6 +74,27 @@ function denied(){
   (allowed.length===1?'<button type="button" class="sdept-primary" data-sdept-switch="'+esc(allowed[0])+'">Открыть '+esc(allowed[0])+'</button>':'')+
   '<button type="button" class="sdept-quiet" id="sdept-logout">Сменить учётную запись</button></div>';
 }
+function publicInfo(){
+ const item=publicPages.find(p=>p.department===current);
+ const description=item?.description||'Описание подразделения пока не опубликовано.';
+ const canEdit=['admin','hr'].includes(profile?.role)&&!!user;
+ const form=canEdit?'<details class="sdept-public-editor"><summary>Изменить общую информацию</summary>'+
+  '<form id="sdept-public-form" class="sdept-editor-form">'+
+  '<label>Описание подразделения, доступное всем<textarea name="description" maxlength="3000" rows="5" placeholder="Назначение подразделения и общие сведения">'+esc(item?.description||'')+'</textarea></label>'+
+  '<div class="sdept-form-actions"><button class="sdept-primary" type="submit">Сохранить описание</button></div></form></details>':'';
+ return '<section class="sdept-public"><h3>О подразделении</h3><div class="sdept-copy">'+linked(description)+'</div>'+form+'</section>';
+}
+async function loadPublic(){
+ const supa=client();
+ if(!supa){publicError='Общая информация временно недоступна.';render();return}
+ try{
+  const res=await supa.rpc('fso_subdivisions_public');
+  if(res.error)throw res.error;
+  publicPages=Array.isArray(res.data)?res.data:[];
+  publicError='';
+ }catch(e){publicError='Не удалось загрузить описание подразделения.'}
+ render();
+}
 function render(){
  if(!current)return;
  const area=el('sdept-content');const dept=names[current];
@@ -80,12 +102,12 @@ function render(){
  el('sdept-current-name').textContent=current;
  el('sdept-current-subtitle').textContent=dept.summary;
  el('sdept-hero-glyph').textContent=dept.symbol;
- if(busy){area.innerHTML='<div class="sdept-loading"><span class="sdept-spinner"></span>Загрузка служебных материалов</div>';return}
- if(message){area.innerHTML='<div class="sdept-message" role="alert">'+esc(message)+'</div><button type="button" class="sdept-primary" id="sdept-retry">Повторить</button>';return}
- if(!user){area.innerHTML=auth();return}
+ if(busy){area.innerHTML=publicInfo()+'<div class="sdept-loading"><span class="sdept-spinner"></span>Загрузка служебных материалов</div>';return}
+ if(message){area.innerHTML=publicInfo()+'<div class="sdept-message" role="alert">'+esc(message)+'</div><button type="button" class="sdept-primary" id="sdept-retry">Повторить</button>';return}
+ if(!user){area.innerHTML=publicInfo()+auth();return}
  const page=pages.find(p=>p.department===current);
- if(!page){area.innerHTML=denied();return}
- area.innerHTML='<div class="sdept-access-row"><span class="sdept-access-mark"><span class="sdept-dot"></span> ДОСТУП ПОДТВЕРЖДЁН</span>'+
+ if(!page){area.innerHTML=publicInfo()+denied();return}
+ area.innerHTML=publicInfo()+'<div class="sdept-access-row"><span class="sdept-access-mark"><span class="sdept-dot"></span> ДОСТУП ПОДТВЕРЖДЁН</span>'+
   '<span class="sdept-updated">Обновлено '+esc(when(page.updated_at))+'</span></div>'+
   '<div class="sdept-material-grid">'+pane('Основная информация',page.essentials,'01')+
   pane('Система повышения',page.promotion_rules,'02')+
@@ -122,6 +144,7 @@ function open(dept){
  root.querySelector('.sdept-intro').hidden=true;
  root.scrollIntoView({behavior:'instant',block:'start'});
  load();
+ loadPublic();
 }
 function back(){
  current='';message='';
@@ -157,7 +180,7 @@ root.addEventListener('click',async event=>{
  }
 });
 root.addEventListener('submit',async event=>{
- const form=event.target;if(!form.matches('#sdept-login-form,#sdept-material-form,#sdept-news-form'))return;
+ const form=event.target;if(!form.matches('#sdept-login-form,#sdept-material-form,#sdept-news-form,#sdept-public-form'))return;
  event.preventDefault();
  const btn=form.querySelector('[type="submit"]');btn.disabled=true;
  const fields=new FormData(form);
@@ -168,6 +191,10 @@ root.addEventListener('submit',async event=>{
    const email=login.includes('@')?login:login+'@staff.fso-rmrp.example';
    const res=await client().auth.signInWithPassword({email,password:String(fields.get('password')||'')});
    if(res.error)throw res.error;
+  }else if(form.id==='sdept-public-form'){
+   const res=await client().rpc('fso_subdivision_public_save',{p_department:current,p_description:String(fields.get('description')||'')});
+   if(res.error)throw res.error;
+   await loadPublic();
   }else if(form.id==='sdept-material-form'){
    const res=await client().rpc('fso_subdivision_save',{
     p_department:current,p_essentials:String(fields.get('essentials')||''),
@@ -181,7 +208,7 @@ root.addEventListener('submit',async event=>{
    });
    if(res.error)throw res.error;
   }
-  load();
+  if(form.id!=='sdept-public-form')load();
  }catch(e){
   btn.disabled=false;
   const currentError=form.querySelector('.sdept-inline-error');if(currentError)currentError.remove();
