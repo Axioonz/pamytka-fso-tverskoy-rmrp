@@ -11,7 +11,7 @@ const name=m=>m?m.first_name+' '+m.last_name:'Сотрудник не найде
 const types={leave:'Отпуск',inactivity:'Временная неактивность',dayoff:'Отгул',promotion:'Повышение',transfer:'Перевод',dismissal:'Увольнение',other:'Другое обращение'};
 const legacyTypes={reinstatement:'Восстановление (старый рапорт)'};
 const exampleTexts={
- promotion:{title:'Рапорт о повышении',body:'Прошу рассмотреть мою кандидатуру для повышения на должность [желаемая должность] в связи с [служебные результаты и основания для назначения]. Готов пройти предусмотренную для этой должности аттестацию.'},
+ promotion:{title:'Рапорт на повышение в звании',body:'Прошу рассмотреть мой рапорт о присвоении мне воинского звания «[желаемое звание]» на основании результатов несения службы. В подтверждение предоставляю материалы:\n\nПост КПП:\n1. [ссылка]\n2. [ссылка]\n\nУчастие в сопровождении:\n1. [ссылка]\n2. [ссылка]'},
  transfer:{title:'Рапорт о переводе',body:'Прошу рассмотреть вопрос о моём переводе из [текущее подразделение] в [желаемое подразделение] в связи с [причина перевода]. Прошу сообщить о принятом решении.'},
  dismissal:{title:'Рапорт об увольнении',body:'Прошу уволить меня из Федеральной службы охраны по собственному желанию с [желаемая дата] в связи с [причина, если необходимо]. Готов передать служебное имущество и незавершённые дела в установленном порядке.'},
  other:{title:'Иное служебное обращение',body:'Прошу рассмотреть вопрос о [предмет обращения]. Обстоятельства обращения: [краткое описание ситуации]. Прошу принять решение о [конкретная просьба].'},
@@ -36,6 +36,8 @@ const rankGroups=[
  ['Прапорщики','Старший прапорщик','Прапорщик'],
  ['Солдаты и сержанты','Старшина','Старший сержант','Сержант','Младший сержант','Ефрейтор','Рядовой']
 ];
+const rankOrder=rankGroups.flatMap(([, ...ranks])=>ranks);
+function higherRanks(rank){const at=rankOrder.indexOf(rank);return at>=0?rankOrder.slice(0,at):[];}
 let data={events:[],requests:[],leaves:[],profiles:[],pendingAccess:0,error:''};
 function personOpt(m){return '<option value="'+safe(m.id)+'">'+safe(m.employee_number+' · '+name(m))+'</option>'}
 function personSelect(id,members,picked,onlyActive=true){
@@ -211,7 +213,7 @@ function decisionPage(ctx,chosen){
 }
 function requestPage(ctx){
  const self=!officer(ctx.role);
- const eligible=self?ctx.members.filter(m=>m.user_id===ctx.userId&&active(m)):ctx.members;
+ const eligible=self?ctx.members.filter(m=>m.user_id===ctx.userId&&active(m)):ctx.members.filter(active);
  const isManager=manager(ctx.role);
  const rows=data.requests.map(r=>{
   const m=ctx.members.find(x=>x.id===r.member_id);
@@ -219,7 +221,8 @@ function requestPage(ctx){
    '<span class="lead-status lead-'+safe(r.status)+'">'+safe(states[r.status])+'</span></div>'+
    '<div class="lead-request-meta">'+safe(name(m))+' · '+safe(when(r.submitted_at))+' · Подал '+safe(actor(r.submitted_by))+'</div>'+
    (r.date_from?'<p>Период · '+safe(short(r.date_from))+' – '+safe(short(r.date_to))+'</p>':'')+
-   '<p>'+safe(r.statement)+'</p>'+
+   '<p class="lead-request-statement">'+safe(r.statement)+'</p>'+
+    (r.kind==='promotion'&&r.target_rank?'<p class="lead-request-target"><strong>Запрошенное звание</strong> · '+safe(r.target_rank)+'</p>':'')+
    (r.reviewed_at?'<p class="lead-review-note">Рассмотрел · '+safe(actor(r.reviewed_by))+' · '+safe(when(r.reviewed_at))+
     (r.review_note?' · '+safe(r.review_note):'')+'</p>':'')+
    (isManager&&r.status==='pending'?'<details class="lead-review"><summary>Рассмотреть рапорт</summary>'+
@@ -234,7 +237,8 @@ function requestPage(ctx){
  '<label>Вид рапорта<select id="lead-request-kind">'+
  Object.entries(types).filter(([key])=>!['leave','inactivity','dayoff'].includes(key)).map(([key,t])=>'<option value="'+key+'">'+safe(t)+'</option>').join('')+'</select></label>'+
  
- '<label>Текст рапорта<textarea id="lead-request-text" minlength="10" maxlength="3000" required placeholder="Содержание обращения и основания"></textarea></label>'+exampleBox('lead-request-example')+
+ '<div class="lead-promotion-rank" id="lead-request-promotion" hidden><label>Звание, на которое подаётся рапорт<select id="lead-request-rank" required disabled></select></label><p id="lead-request-rank-help" class="hint" aria-live="polite"></p></div>'+
+  '<label>Текст рапорта<textarea id="lead-request-text" minlength="10" maxlength="3000" required placeholder="Содержание обращения и основания"></textarea></label>'+exampleBox('lead-request-example')+
  '<div class="actions"><button type="submit" class="btn primary">Отправить рапорт</button></div></form></section>':
  '<section class="section"><h2>Подача рапорта</h2><p class="hint">Личное дело пока не привязано к вашему аккаунту. Обратитесь к администратору.</p></section>';
  return '<div class="eyebrow">FSO / ОБРАЩЕНИЯ</div><h1>Рапорты и заявки</h1>'+
@@ -399,40 +403,99 @@ function bind(ctx,api,screen,refresh,navigate){
  function connectExample(selectId,boxId,textId){
   const selector=document.getElementById(selectId),box=document.getElementById(boxId);
   const field=document.getElementById(textId);
-  if(!selector||!box||!field)return;
+  if(!selector||!box||!field)return ()=>{};
   const title=box.querySelector('.lead-example-title');
   const content=box.querySelector('.lead-example-content');
-  const update=()=>{
+  let insertedRank='';
+  const sampleFor=()=>{
    const sample=exampleTexts[selector.value];
+   if(!sample)return null;
+   if(selector.value!=='promotion')return sample;
+   const rank=document.getElementById('lead-request-rank')?.value||'[желаемое звание]';
+   return {...sample,body:sample.body.replace('[желаемое звание]',rank)};
+  };
+  const update=()=>{
+   const sample=sampleFor();
    if(!sample){box.hidden=true;return;}
    box.hidden=false;
    title.textContent=sample.title;
    content.textContent=sample.body;
+   if(selector.value==='promotion'&&insertedRank){
+    const nextRank=document.getElementById('lead-request-rank')?.value||'';
+    if(nextRank&&field.value.includes('воинского звания «'+insertedRank+'»')){
+     field.value=field.value.replace('воинского звания «'+insertedRank+'»','воинского звания «'+nextRank+'»');
+     insertedRank=nextRank;
+    }
+   }
   };
   selector.addEventListener('change',update);
   update();
   const insert=box.querySelector('.lead-example-use');
   insert.onclick=()=>{
-   const sample=exampleTexts[selector.value];
+   const sample=sampleFor();
    if(!sample)return;
    if(field.value.trim()&&field.value.trim()!==sample.body&&
       !window.confirm('Заменить введённый текст образцом?'))return;
    field.value=sample.body;
+   insertedRank=selector.value==='promotion'?(document.getElementById('lead-request-rank')?.value||''):'';
    field.focus();
    field.dispatchEvent(new Event('input',{bubbles:true}));
   };
+  return update;
  }
- connectExample('lead-request-kind','lead-request-example','lead-request-text');
+ const refreshRequestExample=connectExample('lead-request-kind','lead-request-example','lead-request-text');
  connectExample('lead-absence-kind','lead-absence-example','lead-absence-reason');
  const kind=document.getElementById('lead-request-kind');
+ const promotionBox=document.getElementById('lead-request-promotion');
+ const promotionRank=document.getElementById('lead-request-rank');
+ const reqPerson=document.getElementById('lead-request-member');
  const req=document.getElementById('lead-request-form');
+ if(kind&&promotionBox&&promotionRank&&req){
+  const submit=req.querySelector('button[type="submit"]');
+  const hint=document.getElementById('lead-request-rank-help');
+  const syncRank=()=>{
+   const isPromotion=kind.value==='promotion';
+   promotionBox.hidden=!isPromotion;
+   promotionRank.disabled=!isPromotion;
+   promotionRank.required=isPromotion;
+   if(isPromotion){
+    const selected=reqPerson?.value||ctx.members.find(m=>m.user_id===ctx.userId&&active(m))?.id;
+    const member=ctx.members.find(m=>m.id===selected);
+    const choices=higherRanks(member?.rank);
+    const previous=promotionRank.value;
+    promotionRank.innerHTML=choices.map(rank=>'<option value="'+safe(rank)+'">'+safe(rank)+'</option>').join('');
+    if(choices.includes(previous))promotionRank.value=previous;
+    hint.textContent=choices.length
+     ?'Текущее звание · '+(member?.rank||'Не указано')+'. Выберите звание выше текущего.'
+     :'Для этого сотрудника нет доступного более высокого звания.';
+    submit.disabled=!choices.length;
+   }else{
+    promotionRank.innerHTML='';
+    hint.textContent='';
+    submit.disabled=false;
+   }
+   refreshRequestExample();
+  };
+  kind.addEventListener('change',syncRank);
+  if(reqPerson)reqPerson.addEventListener('change',syncRank);
+  promotionRank.addEventListener('change',refreshRequestExample);
+  syncRank();
+ }
  if(req)req.onsubmit=async e=>{
-  e.preventDefault();const memberId=document.getElementById('lead-request-member')?.value||
-    ctx.members.find(m=>m.user_id===ctx.userId&&active(m))?.id;
-  await action(api,'fso_request_submit',{
-   p_member:memberId,p_kind:kind.value,p_statement:document.getElementById('lead-request-text').value.trim(),
-   p_from:null,p_to:null
-  },refresh,req.querySelector('[type="submit"]'));
+  e.preventDefault();const memberId=reqPerson?.value||
+   ctx.members.find(m=>m.user_id===ctx.userId&&active(m))?.id;
+  const statement=document.getElementById('lead-request-text').value.trim();
+  if(kind.value==='promotion'){
+   const target=promotionRank?.value;
+   if(!target){notice('Выберите звание, на которое подаётся рапорт',true);return;}
+   await action(api,'fso_promotion_request_submit',{
+    p_member:memberId,p_target_rank:target,p_statement:statement
+   },refresh,req.querySelector('[type="submit"]'));
+  }else{
+   await action(api,'fso_request_submit',{
+    p_member:memberId,p_kind:kind.value,p_statement:statement,p_from:null,p_to:null
+   },refresh,req.querySelector('[type="submit"]'));
+  }
  };
  document.querySelectorAll('[data-lead-review]').forEach(btn=>btn.onclick=async()=>{
   const row=btn.closest('.lead-review');
