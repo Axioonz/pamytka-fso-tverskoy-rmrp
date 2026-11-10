@@ -327,7 +327,7 @@ async function launchWithRole(browser,role){
  await page.locator('#sub-material-form textarea[name="essentials"]').fill('Новые правила службы АС');
  await page.locator('#sub-material-form textarea[name="promotion"]').fill('Повышение согласно утверждённому регламенту АС');
  await page.locator('#sub-material-form [type="submit"]').click();
- await page.getByText('Новые правила службы АС').waitFor();
+ await page.locator('.sub-material-grid .sub-text').filter({hasText:'Новые правила службы АС'}).waitFor();
  await page.locator('.sub-publish summary').click();
  await page.locator('#sub-announcement-form [name="title"]').fill('Информация начальника');
  await page.locator('#sub-announcement-form [name="body"]').fill('Важное объявление для сотрудников подразделения АС.');
