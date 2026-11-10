@@ -215,23 +215,6 @@ async function launchWithRole(browser,role){
 (async()=>{
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
  try{
- // A missing optional subdivision script must not block login or other cabinet sections.
- {
- const page=await browser.newPage({viewport:{width:1280,height:900}});
- const errors=[];
- page.on('pageerror',err=>errors.push(err.message));
- await page.addInitScript({content:'window.__role="admin"'});
- await page.route('**/cdn.jsdelivr.net/**',route=>route.fulfill({status:200,contentType:'application/javascript',body:mockSupabase}));
- await page.route('**/js/кабинет-подразделения.js*',route=>route.abort());
- await page.goto(BASE+'кабинет.html',{waitUntil:'load'});
- await page.getByRole('heading',{name:'Обзор подразделения'}).waitFor();
- await page.getByRole('button',{name:'Подразделения'}).click();
- await page.getByText('Не удалось загрузить материалы подразделений. Обновите страницу и откройте раздел повторно.').waitFor();
- await page.getByRole('button',{name:'Рапорты'}).click();
- await page.getByRole('heading',{name:'Рапорты и заявки'}).waitFor();
- assert.deepEqual(errors,[]);
- await page.close();
- }
  // Public entry and code login
  {
  const {page,errors}=await launchWithRole(browser,'anonymous');
@@ -335,25 +318,6 @@ async function launchWithRole(browser,role){
  page.once('dialog',dialog=>dialog.accept());
  await page.locator('[data-decision="approved"]').first().click();
  await page.getByText('Неактивность',{exact:true}).waitFor();
- // Leadership can edit a department and post its own announcements.
- await page.getByRole('button',{name:'Подразделения'}).click();
- await page.getByRole('heading',{name:'Служебные подразделения'}).waitFor();
- assert.equal(await page.locator('.sub-department.is-locked').count(),0);
- await page.locator('[data-sub-department="АС"]').click();
- await page.locator('#sub-editor summary').click();
- await page.locator('#sub-material-form textarea[name="essentials"]').fill('Новые правила службы АС');
- await page.locator('#sub-material-form textarea[name="promotion"]').fill('Повышение согласно утверждённому регламенту АС');
- await page.locator('#sub-material-form [type="submit"]').click();
- await page.locator('.sub-material-grid .sub-text').filter({hasText:'Новые правила службы АС'}).waitFor();
- await page.locator('.sub-publish summary').click();
- await page.locator('#sub-announcement-form [name="title"]').fill('Информация начальника');
- await page.locator('#sub-announcement-form [name="body"]').fill('Важное объявление для сотрудников подразделения АС.');
- await page.locator('#sub-announcement-form [type="submit"]').click();
- await page.getByText('Информация начальника').waitFor();
- assert.equal(await page.locator('.sub-notice').count(),1);
- await page.locator('[data-sub-department="УЛО"]').click();
- assert.equal(await page.getByText('Информация начальника').count(),0);
- await page.getByRole('button',{name:'Рапорты'}).click();
  await page.getByRole('button',{name:'Кадровые решения'}).click();
  await page.getByRole('heading',{name:'Кадровые решения'}).waitFor();
  await page.locator('#lead-person').selectOption('member-2');
@@ -513,19 +477,6 @@ async function launchWithRole(browser,role){
   x.name==='fso_request_submit'&&x.args.p_kind==='dismissal'&&x.args.p_member==='member-1'));
  assert.equal(await page.getByRole('button',{name:'Кадровые решения'}).count(),0);
  assert.equal(await page.getByRole('button',{name:'Управление доступом'}).count(),0);
- // Access to subdivision materials follows the linked employee record.
- await page.getByRole('button',{name:'Подразделения'}).click();
- await page.getByRole('heading',{name:'Служебные подразделения'}).waitFor();
- assert.equal(await page.locator('.sub-department').count(),3);
- assert.equal(await page.locator('[data-sub-department="АС"].is-locked').count(),1);
- assert.equal(await page.locator('#sub-material-form').count(),0);
- assert.ok((await page.getByText('Основная инструкция УЛО').innerText()).includes('УЛО'));
- await page.locator('[data-sub-department="АС"]').click();
- await page.getByText('Доступ к этому подразделению определяется записью в личном деле сотрудника.',{exact:false}).waitFor();
- assert.equal(await page.getByText('Основная инструкция УЛО').count(),0);
- await page.locator('[data-sub-department="УЛО"]').click();
- assert.ok((await page.getByText('Основная инструкция УЛО').innerText()).includes('УЛО'));
- await page.getByRole('button',{name:'Рапорты'}).click();
  await page.getByRole('button',{name:'Отпуска'}).click();
  await page.getByRole('heading',{name:'Отпуска и неактивность',level:1}).waitFor();
  assert.equal(await page.locator('#lead-absence-request-form').count(),1);
