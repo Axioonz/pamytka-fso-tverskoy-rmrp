@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="./css/основной-стиль.css?v=20261110-subdivisions">
-<link rel="stylesheet" href="./css/служебные-подразделения.css?v=20261110-site1">
+<link rel="stylesheet" href="./css/служебные-подразделения.css?v=20261110-clean2">
 <link rel="stylesheet" href="./css/понятия.css">
 <link rel="stylesheet" href="./assets/posts-map/posts-map.css?v=20261107-clickable-buildings">
 <link rel="stylesheet" href="./assets/posts-map/post-duty.css?v=20261106-account">
@@ -928,29 +928,22 @@ body.about-locked{overflow:hidden}
   <p class="cheat-status" id="cheat-status" role="status" aria-live="polite"></p>
 </section>
 <section class="work-screen sdept-screen" id="departments-screen" hidden aria-label="Служебные подразделения">
- <header class="sdept-intro">
-  <div class="sdept-intro-meta"><span class="sdept-dot"></span> ФСО / СЛУЖЕБНЫЕ МАТЕРИАЛЫ <span class="sdept-meta-line"></span> ТВЕРСКОЙ</div>
-  <h1>Служебные <span>подразделения</span></h1>
-  <p>Всё необходимое для службы в вашем подразделении. Условия повышения, установленная форма, внутренние материалы и сообщения руководства.</p>
- </header>
+ <header class="sdept-intro"><h1>Подразделения</h1></header>
  <div class="sdept-catalog" id="sdept-catalog" aria-label="Выбор подразделения">
-  <button type="button" class="sdept-card sdept-card-as" data-sdept="АС">
-   <span class="sdept-card-top"><span>01 / ОТДЕЛ</span><span class="sdept-card-symbol" aria-hidden="true">АС</span></span>
-   <span class="sdept-card-bottom"><strong>АС</strong><small>Служебные материалы и требования подразделения</small><span class="sdept-card-action">Открыть материалы <span aria-hidden="true">↗</span></span></span>
+  <button type="button" class="sdept-card sdept-card-as" data-sdept="АС" aria-label="Открыть подразделение АС">
+   <span class="sdept-card-bottom"><strong>АС</strong><span class="sdept-card-arrow" aria-hidden="true">↗</span></span>
   </button>
-  <button type="button" class="sdept-card sdept-card-ulo" data-sdept="УЛО">
-   <span class="sdept-card-top"><span>02 / ОТДЕЛ</span><span class="sdept-card-symbol" aria-hidden="true">УЛ</span></span>
-   <span class="sdept-card-bottom"><strong>УЛО</strong><small>Порядок службы и объявления руководства</small><span class="sdept-card-action">Открыть материалы <span aria-hidden="true">↗</span></span></span>
+  <button type="button" class="sdept-card sdept-card-ulo" data-sdept="УЛО" aria-label="Открыть подразделение УЛО">
+   <span class="sdept-card-bottom"><strong>УЛО</strong><span class="sdept-card-arrow" aria-hidden="true">↗</span></span>
   </button>
-  <button type="button" class="sdept-card sdept-card-academy" data-sdept="Академия">
-   <span class="sdept-card-top"><span>03 / ПОДГОТОВКА</span><span class="sdept-card-symbol" aria-hidden="true">А</span></span>
-   <span class="sdept-card-bottom"><strong>Академия</strong><small>Подготовка курсантов и материалы для обучения</small><span class="sdept-card-action">Открыть материалы <span aria-hidden="true">↗</span></span></span>
+  <button type="button" class="sdept-card sdept-card-academy" data-sdept="Академия" aria-label="Открыть подразделение Академия">
+   <span class="sdept-card-bottom"><strong>Академия</strong><span class="sdept-card-arrow" aria-hidden="true">↗</span></span>
   </button>
  </div>
- <div class="sdept-catalog-foot" id="sdept-catalog-foot"><span>Материалы доступны сотрудникам соответствующих подразделений</span><span>Доступ определяется личным делом</span></div>
+ <div id="sdept-catalog-foot" class="sdept-catalog-foot" hidden></div>
  <section class="sdept-detail" id="sdept-detail" hidden aria-live="polite">
   <div class="sdept-path"><button type="button" id="sdept-back">← Все подразделения</button><span class="sdept-path-sep">/</span><span id="sdept-path-name"></span></div>
-  <div class="sdept-detail-hero"><div class="sdept-hero-content"><span class="sdept-eyebrow">ВНУТРЕННИЙ РАЗДЕЛ</span><h2 id="sdept-current-name"></h2><p id="sdept-current-subtitle"></p></div><div class="sdept-hero-glyph" id="sdept-hero-glyph" aria-hidden="true"></div></div>
+  <div class="sdept-detail-hero"><div class="sdept-hero-content"><h2 id="sdept-current-name"></h2><p id="sdept-current-subtitle" hidden></p></div><div class="sdept-hero-glyph" id="sdept-hero-glyph" hidden aria-hidden="true"></div></div>
   <div id="sdept-content" class="sdept-content" aria-live="polite"></div>
  </section>
 </section>
