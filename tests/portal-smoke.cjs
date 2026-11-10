@@ -79,6 +79,15 @@ function rpc(name,args){
   }
   return Promise.resolve({data:{member_id:m.id},error:null});
  }
+ if(name==='fso_promotion_request_submit'){
+  const member=db.fso_members.find(x=>x.id===args.p_member);
+  const ranks=['Рядовой','Ефрейтор','Младший сержант','Сержант','Старший сержант','Старшина','Прапорщик','Старший прапорщик','Младший лейтенант','Лейтенант','Старший лейтенант','Капитан','Майор','Подполковник','Полковник','Генерал-майор'];
+  if(!member||ranks.indexOf(args.p_target_rank)<=ranks.indexOf(member.rank))
+   return Promise.resolve({data:null,error:{message:'Выберите звание выше текущего',code:'22023'}});
+  const row={id:'request-'+state.rpcs.length,member_id:args.p_member,kind:'promotion',statement:args.p_statement,target_rank:args.p_target_rank,
+   date_from:null,date_to:null,submitted_by:'user-1',submitted_at:new Date().toISOString(),status:'pending'};
+  db.fso_service_requests.unshift(row);return Promise.resolve({data:row.id,error:null});
+ }
  if(name==='fso_request_submit'){
   const member=db.fso_members.find(x=>x.id===args.p_member);
   const selfAbsence=['leave','inactivity'].includes(args.p_kind);
@@ -401,11 +410,35 @@ async function launchWithRole(browser,role){
  const requestKinds=await page.locator('#lead-request-kind option').evaluateAll(options=>options.map(x=>x.value));
  assert.deepEqual(requestKinds,['promotion','transfer','dismissal','other']);
  assert.equal(await page.locator('#lead-request-kind option[value="reinstatement"]').count(),0);
- for(const [kind,word] of [['promotion','повышения'],['transfer','переводе'],['dismissal','уволить'],['other','вопрос о']]){
+ for(const [kind,word] of [['promotion','воинского звания'],['transfer','переводе'],['dismissal','уволить'],['other','вопрос о']]){
   await page.locator('#lead-request-kind').selectOption(kind);
   assert.ok((await page.locator('#lead-request-example .lead-example-content').innerText()).toLowerCase().includes(word));
  }
+ await page.locator('#lead-request-kind').selectOption('promotion');
+ assert.equal(await page.locator('#lead-request-promotion').isVisible(),true);
+ assert.equal(await page.locator('#lead-request-rank').inputValue(),'');
+ const options=await page.locator('#lead-request-rank option').evaluateAll(xs=>xs.map(x=>x.value));
+ assert.ok(options.includes('Старший сержант'));
+ assert.ok(!options.includes('Сержант'));
+ assert.ok(!options.includes('Рядовой'));
+ await page.locator('#lead-request-rank').selectOption('Старший сержант');
+ const promoSample=await page.locator('#lead-request-example .lead-example-content').innerText();
+ assert.ok(promoSample.includes('воинского звания «Старший сержант»'));
+ assert.ok(promoSample.includes('Пост КПП:'));
+ assert.ok(promoSample.includes('Участие в сопровождении:'));
+ assert.ok(promoSample.includes('1. [ссылка]'));
+ await page.locator('#lead-request-example .lead-example-use').click();
+ assert.ok((await page.locator('#lead-request-text').inputValue()).includes('воинского звания «Старший сержант»'));
+ await page.locator('#lead-request-rank').selectOption('Старшина');
+ assert.ok((await page.locator('#lead-request-text').inputValue()).includes('воинского звания «Старшина»'));
+ await page.locator('#lead-request-text').fill('Прошу рассмотреть рапорт о присвоении звания Старшина.\n\nПост КПП:\n1. https://example.test/kpp1\n2. https://example.test/kpp2\n\nУчастие в сопровождении:\n1. https://example.test/escort1\n2. https://example.test/escort2');
+ await page.locator('#lead-request-form [type="submit"]').click();
+ assert.ok((await page.evaluate(()=>window.__fsoMock.rpcs)).some(x=>
+  x.name==='fso_promotion_request_submit'&&x.args.p_target_rank==='Старшина'&&x.args.p_member==='member-1'));
+ await page.getByText('Запрошенное звание',{exact:true}).first().waitFor();
+ assert.ok((await page.locator('.lead-request-statement').first().innerText()).includes('Пост КПП:'));
  await page.locator('#lead-request-kind').selectOption('dismissal');
+ assert.equal(await page.locator('#lead-request-promotion').isVisible(),false);
  await page.locator('#lead-request-example .lead-example-use').click();
  assert.ok((await page.locator('#lead-request-text').inputValue()).includes('Прошу уволить'));
  await page.locator('#lead-request-text').fill('Прошу рассмотреть мой рапорт об увольнении по собственному желанию.');
