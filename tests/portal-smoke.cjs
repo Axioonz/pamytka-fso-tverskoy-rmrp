@@ -4,8 +4,13 @@ const assert = require('node:assert/strict');
 const BASE='http://127.0.0.1:8765/';
 const mockSupabase=String.raw`(()=>{'use strict';
 const role=window.__role||'anonymous';
-const seed=[{id:'member-1',employee_number:'0007',first_name:'Иван',last_name:'Тестовый',position:'Сотрудник',rank:'Сержант',discord:'ivan.test',user_id:'user-1',status:'active',joined_on:'2026-10-10',dismissed_on:null,created_at:'2026-10-10',updated_at:'2026-10-10'}];
+const seed=[{id:'member-1',employee_number:'0007',first_name:'Иван',last_name:'Тестовый',position:'Сотрудник',rank:'Сержант',discord:'ivan.test',user_id:'user-1',department:'УЛО',status:'active',joined_on:'2026-10-10',dismissed_on:null,created_at:'2026-10-10',updated_at:'2026-10-10'}];
 const db={fso_profiles:[{user_id:'user-1',role,display_name:''}],fso_members:seed,fso_disciplinary_actions:[],fso_disciplinary_audit:[],fso_activity_audit:[{id:1,entity_type:'member',entity_id:'member-1',member_id:'member-1',actor_id:'user-1',action:'member.updated',occurred_at:'2026-11-03T10:00:00Z',before_data:{rank:'Рядовой'},after_data:{rank:'Сержант'}}],fso_questions:[{id:'q1',source_key:'quiz2-001',difficulty:1,prompt:'Проверочный вопрос?',is_published:true}],fso_exams:[],fso_exam_assignments:[],fso_exam_attempts:[],fso_exam_items:[],fso_exam_answers:[],fso_service_events:[],fso_service_requests:[],fso_service_leaves:[]};
+const subPages=['АС','УЛО','Академия'].map(department=>({
+ department,essentials:department==='УЛО'?'Основная инструкция УЛО':'',
+ promotion_rules:'',uniform_rules:'',service_contacts:'',
+ updated_at:'2026-11-10T10:00:00Z',announcements:[]
+}));
 const accounts=[
  {user_id:'user-1',email:'admin@example.test',role,display_name:'Администратор',confirmed:true,created_at:'2026-10-01',last_sign_in_at:'2026-11-03T10:00:00Z'},
  {user_id:'user-2',email:'editor@example.test',role:'employee',display_name:'Редактор без роли',confirmed:true,created_at:'2026-10-20',last_sign_in_at:null}
@@ -31,6 +36,30 @@ then(res,rej){return this.run().then(res,rej)}
 };return q}
 function rpc(name,args){
  state.rpcs.push({name,args});
+ if(name==='fso_subdivisions_read'){
+  const my=db.fso_members.find(x=>x.user_id===user.id&&['active','cadet'].includes(x.status));
+  return Promise.resolve({data:subPages.filter(p=>['admin','hr'].includes(role)||p.department===my?.department).map(p=>({...p,announcements:[...p.announcements]})),error:null});
+ }
+ if(name==='fso_subdivision_save'){
+  if(!['admin','hr'].includes(role))return Promise.resolve({data:null,error:{code:'42501',message:'Нет прав'}});
+  const page=subPages.find(p=>p.department===args.p_department);
+  if(!page)return Promise.resolve({data:null,error:{message:'Неизвестное подразделение'}});
+  Object.assign(page,{essentials:args.p_essentials,promotion_rules:args.p_promotion,
+   uniform_rules:args.p_uniform,service_contacts:args.p_contacts});
+  return Promise.resolve({data:{updated:true},error:null});
+ }
+ if(name==='fso_subdivision_announcement_publish'){
+  if(!['admin','hr'].includes(role))return Promise.resolve({data:null,error:{code:'42501',message:'Нет прав'}});
+  const page=subPages.find(p=>p.department===args.p_department);
+  const id='news-'+state.rpcs.length;
+  page.announcements.unshift({id,title:args.p_title,body:args.p_body,author:'Руководитель тестовый',published_at:new Date().toISOString()});
+  return Promise.resolve({data:id,error:null});
+ }
+ if(name==='fso_subdivision_announcement_delete'){
+  if(!['admin','hr'].includes(role))return Promise.resolve({data:null,error:{code:'42501',message:'Нет прав'}});
+  for(const page of subPages)page.announcements=page.announcements.filter(x=>x.id!==args.p_id);
+  return Promise.resolve({data:true,error:null});
+ }
  if(name==='fso_access_list'){
   if(role!=='admin')return Promise.resolve({data:null,error:{message:'Нет доступа',code:'42501'}});
   return Promise.resolve({data:accounts.map(x=>({...x})),error:null});
@@ -254,6 +283,19 @@ async function launchWithRole(browser,role){
  await page.locator('#audit-category').selectOption('');
 
  // A linked employee files their own absence; leadership approves but cannot file for others.
+ // Access to subdivision materials follows the linked employee record.
+ await page.getByRole('button',{name:'Подразделения'}).click();
+ await page.getByRole('heading',{name:'Служебные подразделения'}).waitFor();
+ assert.equal(await page.locator('.sub-department').count(),3);
+ assert.equal(await page.locator('[data-sub-department="АС"].is-locked').count(),1);
+ assert.equal(await page.locator('#sub-material-form').count(),0);
+ assert.ok((await page.getByText('Основная инструкция УЛО').innerText()).includes('УЛО'));
+ await page.locator('[data-sub-department="АС"]').click();
+ await page.getByText('Доступ к этому подразделению определяется записью в личном деле сотрудника.',{exact:false}).waitFor();
+ assert.equal(await page.getByText('Основная инструкция УЛО').count(),0);
+ await page.locator('[data-sub-department="УЛО"]').click();
+ assert.ok((await page.getByText('Основная инструкция УЛО').innerText()).includes('УЛО'));
+ await page.getByRole('button',{name:'Рапорты'}).click();
  await page.getByRole('button',{name:'Отпуска'}).click();
  await page.getByRole('heading',{name:'Отпуска и неактивность',level:1}).waitFor();
  assert.equal(await page.locator('#lead-leave-form').count(),0);
@@ -289,6 +331,25 @@ async function launchWithRole(browser,role){
  page.once('dialog',dialog=>dialog.accept());
  await page.locator('[data-decision="approved"]').first().click();
  await page.getByText('Неактивность',{exact:true}).waitFor();
+ // Leadership can edit a department and post its own announcements.
+ await page.getByRole('button',{name:'Подразделения'}).click();
+ await page.getByRole('heading',{name:'Служебные подразделения'}).waitFor();
+ assert.equal(await page.locator('.sub-department.is-locked').count(),0);
+ await page.locator('[data-sub-department="АС"]').click();
+ await page.locator('#sub-editor summary').click();
+ await page.locator('#sub-material-form textarea[name="essentials"]').fill('Новые правила службы АС');
+ await page.locator('#sub-material-form textarea[name="promotion"]').fill('Повышение согласно утверждённому регламенту АС');
+ await page.locator('#sub-material-form [type="submit"]').click();
+ await page.getByText('Новые правила службы АС').waitFor();
+ await page.locator('.sub-publish summary').click();
+ await page.locator('#sub-announcement-form [name="title"]').fill('Информация начальника');
+ await page.locator('#sub-announcement-form [name="body"]').fill('Важное объявление для сотрудников подразделения АС.');
+ await page.locator('#sub-announcement-form [type="submit"]').click();
+ await page.getByText('Информация начальника').waitFor();
+ assert.equal(await page.locator('.sub-notice').count(),1);
+ await page.locator('[data-sub-department="УЛО"]').click();
+ assert.equal(await page.getByText('Информация начальника').count(),0);
+ await page.getByRole('button',{name:'Рапорты'}).click();
  await page.getByRole('button',{name:'Кадровые решения'}).click();
  await page.getByRole('heading',{name:'Кадровые решения'}).waitFor();
  await page.locator('#lead-person').selectOption('member-2');
