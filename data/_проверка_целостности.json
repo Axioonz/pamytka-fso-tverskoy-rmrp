@@ -2,7 +2,7 @@
   "source_sha256": "c5fa9c21920f9a02e2aa48e10d608efd7ac5a17ef8a995ad86c9f02aeaff14b2",
   "concepts": 11,
   "situations": 8,
-  "references": 110,
+  "references": 106,
   "laws": 31,
   "law_source_hashes": {
     "law-231508": "e9f9212a02a0904012e9756c383615e729e82cc3cfd3cd20814fe429a7526506",
